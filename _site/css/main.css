@@ -10,7 +10,7 @@ html, body { height: 100%; }
 
 body {
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 0.9em;
   line-height: 1.5;
   font-weight: 300;
   background-color: #fdfdfd;
@@ -34,12 +34,7 @@ a:visited { color: #205caa; }
   zoom: 1;
 }
 
-.simple_profile{
-  margin-bottom:20px;
-  color: #aa0000;
-  font-style: italic;
 
-}
 
 
 /* Layout Styles */
@@ -79,6 +74,28 @@ a:visited { color: #205caa; }
   color: #727272;
   letter-spacing: -.5px;
 }
+
+
+/* Site Customized footer */
+
+.simple_profile{
+  margin-bottom:20px;
+  color: #333;
+  font-style: italic;
+}
+.simple_profile td{
+  vertical-align: top;
+}
+
+.simple_profile img{
+  border-radius:20px;
+}
+
+.simple_profile h2{
+  font-size:2em;
+  font-weight:bold;
+}
+
 
 /* Site footer */
 

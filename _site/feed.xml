@@ -5,8 +5,8 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 25 Jul 2015 20:48:17 +0900</pubDate>
-    <lastBuildDate>Sat, 25 Jul 2015 20:48:17 +0900</lastBuildDate>
+    <pubDate>Sat, 25 Jul 2015 22:21:13 +0900</pubDate>
+    <lastBuildDate>Sat, 25 Jul 2015 22:21:13 +0900</lastBuildDate>
     <generator>Jekyll v2.2.0</generator>
     
       <item>
@@ -25,7 +25,7 @@
 
 &lt;h3&gt;Data &amp;amp; References&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&quot;/assets/posts/Neural-Network-for-concrete/concrete.csv&quot;&gt;concrete.csv&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;/assets/posts/Neural-Network-for-concrete/ example.R&quot;&gt;example.R&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/assets/posts/Neural-Network-for-concrete/example.R&quot;&gt;example.R&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;http://www.amazon.com/Machine-Learning-R-Brett-Lantz/dp/1782162143/ref=sr_1_1?ie=UTF8&amp;amp;qid=1437813079&amp;amp;sr=8-1&amp;amp;keywords=machine+learning+with+r&quot;&gt;Machine Learning with R&lt;/a&gt; &lt;/p&gt;
 
 &lt;h3&gt;Neuralnet 설치 &lt;/h3&gt;
