@@ -11,6 +11,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
 
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+
 
 </head>
 
@@ -63,7 +66,7 @@
 
     <article class="post-content">
         <div>
-    <img src="/assets/posts/Neural-Network-for-concrete/concrete.jpg" />
+    <img src="/assets/posts/Neural-Network-for-concrete/concrete.jpg" class="img-responsive img-rounded" />
 </div>
 <p>신경망이라는 주제는 Machine Learning분야에서 80년대부터 계속해서 발전해온 기술입니다.<br />
 맛보기로 R을 사용해서 신경망(Neural Network)을 해보도록 하겠습니다.<br /></p>
@@ -148,7 +151,7 @@ test_data <span class="o">&lt;-</span> concrete<span class="p">[</span>slice_ind
   <span class="p">)</span>
 plot<span class="p">(</span>concrete_model<span class="p">)</span> <span class="c1"># plot the neural networks</span></code></pre></div>
 
-<p><img src="/assets/posts/Neural-Network-for-concrete/neuralnet_hidden_3.png" /></p>
+<p><img src="/assets/posts/Neural-Network-for-concrete/neuralnet_hidden_3.png" class="img-responsive img-rounded" /></p>
 
 <p>위의 그림에 보면 8개의 nodes가 보입니다. 이것을 Input Nodes라고 부릅니다.<br />
 중간에 3개의 원이 있는데 이것을 Hidden Nodes라고 부릅니다.<br />
@@ -181,22 +184,23 @@ cor<span class="p">(</span>model_results<span class="o">$</span>net.result<span 
 </div>
 
 <div class="wrap simple_profile">
-    <table>
-        <tr>
-            <td>
-                <img src="/assets/images/me.jpg">
-            </td>
-            <td style="padding-left:10px;">
-                <h2>Anderson Jo</h2>
-                <span style="color:#990000">
-                Machine Learning, Python, R, Game Server, Data Analysis, Android, Full-Stack</span>
-                <br>
-                경영 마인드를 갖은 진격의 개발자 입니다.<br>
-                Email: <i style="color:#0086B3">a141890@gmail.com</i><br>
-                Kakao Talk: <i style="color:#0086B3">anderson52</i><br>
-            </td>
-        </tr>
-    </table>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="/assets/images/me.jpg">
+        </div>
+        <div class="col-md-8" style="vertical-align: top;">
+            <h2 style="margin-top:0px;">Anderson Jo</h2>
+            <span style="color:#990000">
+                Machine Learning, Python, R, Game Server, <br>
+                Data Analysis, Android, Full-Stack, AWS
+            </span>
+            <br>
+            경영 마인드를 갖은 진격의 개발자 입니다.<br>
+            Email: <i style="color:#0086B3">a141890@gmail.com</i><br>
+            Kakao Talk: <i style="color:#0086B3">anderson52</i><br>
+
+        </div>
+    </div>
 
 </div>
 

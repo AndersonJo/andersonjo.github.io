@@ -5,14 +5,14 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 25 Jul 2015 22:21:13 +0900</pubDate>
-    <lastBuildDate>Sat, 25 Jul 2015 22:21:13 +0900</lastBuildDate>
+    <pubDate>Sat, 25 Jul 2015 23:08:51 +0900</pubDate>
+    <lastBuildDate>Sat, 25 Jul 2015 23:08:51 +0900</lastBuildDate>
     <generator>Jekyll v2.2.0</generator>
     
       <item>
         <title>Neural Network for Concrete Strength using R</title>
         <description>&lt;div&gt;
-    &lt;img src=&quot;/assets/posts/Neural-Network-for-concrete/concrete.jpg&quot; /&gt;
+    &lt;img src=&quot;/assets/posts/Neural-Network-for-concrete/concrete.jpg&quot; class=&quot;img-responsive img-rounded&quot; /&gt;
 &lt;/div&gt;
 &lt;p&gt;신경망이라는 주제는 Machine Learning분야에서 80년대부터 계속해서 발전해온 기술입니다.&lt;br /&gt;
 맛보기로 R을 사용해서 신경망(Neural Network)을 해보도록 하겠습니다.&lt;br /&gt;&lt;/p&gt;
@@ -97,7 +97,7 @@ test_data &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; concrete&lt;spa
   &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete_model&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# plot the neural networks&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/posts/Neural-Network-for-concrete/neuralnet_hidden_3.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/posts/Neural-Network-for-concrete/neuralnet_hidden_3.png&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;위의 그림에 보면 8개의 nodes가 보입니다. 이것을 Input Nodes라고 부릅니다.&lt;br /&gt;
 중간에 3개의 원이 있는데 이것을 Hidden Nodes라고 부릅니다.&lt;br /&gt;

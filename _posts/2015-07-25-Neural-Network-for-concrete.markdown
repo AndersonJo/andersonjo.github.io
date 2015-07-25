@@ -6,7 +6,7 @@ categories: "neural-network"
 asset_path: /assets/posts/Neural-Network-for-concrete/
 ---
 <div>
-    <img src="{{ page.asset_path }}concrete.jpg">
+    <img src="{{ page.asset_path }}concrete.jpg" class="img-responsive img-rounded">
 </div>
 신경망이라는 주제는 Machine Learning분야에서 80년대부터 계속해서 발전해온 기술입니다.<br>
 맛보기로 R을 사용해서 신경망(Neural Network)을 해보도록 하겠습니다.<br>
@@ -108,7 +108,7 @@ plot(concrete_model) # plot the neural networks
 
 {% endhighlight %}
 
-<img src="{{page.asset_path}}neuralnet_hidden_3.png">
+<img src="{{page.asset_path}}neuralnet_hidden_3.png" class="img-responsive img-rounded">
 
 위의 그림에 보면 8개의 nodes가 보입니다. 이것을 Input Nodes라고 부릅니다.<br>
 중간에 3개의 원이 있는데 이것을 Hidden Nodes라고 부릅니다.<br>
