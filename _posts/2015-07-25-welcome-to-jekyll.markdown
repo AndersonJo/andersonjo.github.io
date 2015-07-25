@@ -1,24 +1,28 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
+title:  "Anderson Page Opened"
 date:   2015-07-25 12:56:02
-categories: jekyll update
+categories: init
 ---
 
-You'll find this post in your `_posts` directory - edit this post and re-build (or run with the `-w` switch) to see your changes!
-To add new posts, simply add a file in the `_posts` directory that follows the convention: YYYY-MM-DD-name-of-post.ext.
+안녕하세요 <br>
+개발자 조창민입니다. <br><br>
 
-Jekyll also offers powerful support for code snippets:
+Python, R, Machine Learning, Data Analysis, AWS, Android 등등의 개발 관련하여 포스팅을 할 예정입니다.<br>
+헤헤헤헤헤
 
 {% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+def hello():
+    print 'Hello Wolrd!'
+
+hello()
 {% endhighlight %}
 
-Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll's GitHub repo][jekyll-gh].
+비즈니스및 문의사항은 <i>a141890@gmail.com</i> 로 연락을 주세요. <br>
+제 영문 이력서는 [링크드인][anderson-linkedin]을 확인해주세요.
 
 [jekyll-gh]: https://github.com/jekyll/jekyll
 [jekyll]:    http://jekyllrb.com
+
+[anderson-linkedin]: https://kr.linkedin.com/in/anderdson
+[email]: a141890@gmail.com

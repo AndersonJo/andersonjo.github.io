@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Anderson Jo 헤헤헤</title>
+    <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
+    <link>http://andersonjo.github.io//</link>
+    <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sat, 25 Jul 2015 15:48:03 +0900</pubDate>
+    <lastBuildDate>Sat, 25 Jul 2015 15:48:03 +0900</lastBuildDate>
+    <generator>Jekyll v2.2.0</generator>
+    
+      <item>
+        <title>Anderson Page Opened</title>
+        <description>&lt;p&gt;안녕하세요 &lt;br /&gt;
+개발자 조창민입니다. &lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Python, R, Machine Learning, Data Analysis, AWS, Android 등등의 개발 관련하여 포스팅을 할 예정입니다.&lt;br /&gt;
+헤헤헤헤헤&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Hello Wolrd!&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;비즈니스및 문의사항은 &lt;i&gt;a141890@gmail.com&lt;/i&gt; 로 연락을 주세요. &lt;br /&gt;
+제 영문 이력서는 &lt;a href=&quot;https://kr.linkedin.com/in/anderdson&quot;&gt;링크드인&lt;/a&gt;을 확인해주세요.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 25 Jul 2015 21:56:02 +0900</pubDate>
+        <link>http://andersonjo.github.io//init/2015/07/25/welcome-to-jekyll/</link>
+        <guid isPermaLink="true">http://andersonjo.github.io//init/2015/07/25/welcome-to-jekyll/</guid>
+        
+        
+        <category>init</category>
+        
+      </item>
+    
+  </channel>
+</rss>
