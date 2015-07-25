@@ -11,5 +11,6 @@ github_username:  AndersonJo
 
 
 # Build settings
+highlighter: pygments
 markdown: kramdown
 permalink: pretty
