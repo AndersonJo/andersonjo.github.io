@@ -5,9 +5,132 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 25 Jul 2015 15:48:03 +0900</pubDate>
-    <lastBuildDate>Sat, 25 Jul 2015 15:48:03 +0900</lastBuildDate>
+    <pubDate>Sat, 25 Jul 2015 19:20:24 +0900</pubDate>
+    <lastBuildDate>Sat, 25 Jul 2015 19:20:24 +0900</lastBuildDate>
     <generator>Jekyll v2.2.0</generator>
+    
+      <item>
+        <title>Neural Network for Concrete Strength using R</title>
+        <description>&lt;div&gt;
+    &lt;img src=&quot;/assets/posts/Neural-Network-for-concrete/concrete.jpg &quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;신경망이라는 주제는 Machine Learning분야에서 80년대부터 계속해서 발전해온 기술입니다.&lt;br /&gt;
+맛보기로 R을 사용해서 신경망(Neural Network)을 해보도록 하겠습니다.&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;콘크리트의 퍼포먼스 즉 강도(Strength)를 결정하는데에는 많은 변수들이 있습니다.&lt;br /&gt;
+들어가는 재료들의 양에 따라서 콘크리트의 강도가 달라지기 때문에 여기에는 특별한 수학적 공식을 얻어내기가 쉽지가 않습니다. &lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Neural Network를 이용하면 특별한 수학적 공식 (콘크리트의 강도를 알아내는..) 없이 ANN(Artificial Neural Network)을 트레이닝 시키고
+훈련된 ANN으로 다시 새로운 데이터로 예측을 할 것입니다.&lt;br /&gt; &lt;/p&gt;
+
+&lt;h3&gt;Data &amp;amp; References&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/posts/Neural-Network-for-concrete/concrete.csv&quot;&gt;concrete.csv&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/assets/posts/Neural-Network-for-concrete/example.R&quot;&gt;example.R&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.amazon.com/Machine-Learning-R-Brett-Lantz/dp/1782162143/ref=sr_1_1?ie=UTF8&amp;amp;qid=1437813079&amp;amp;sr=8-1&amp;amp;keywords=machine+learning+with+r&quot;&gt;Machine Learning with R&lt;/a&gt; &lt;/p&gt;
+
+&lt;h3&gt;Neuralnet 설치 &lt;/h3&gt;
+
+&lt;p&gt;여러 Neural Network 라이브러리들이 있지만.. Neuralnet이라는 라이브러리를 사용할 것입니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;install.packages&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;neuralnet&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;일단 코드로 써보자&lt;/h3&gt;
+
+&lt;p&gt;read.csv 함수를 통해서 concrete.csv파일을 읽습니다.&lt;br /&gt;
+stringAsFactors는 R의 데이터타입중에 string을 factor로 읽지 않고  vector로 읽겠다는 뜻이며, F는 FALSE(boolean)값과 같습니다.&lt;br /&gt;
+끝에 [-1]은 첫번째 row 필드값을 exclude시키겠다는 말..&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;포인트는.. cement, flag, ash, water, superplastic, coarseagg, findagg, age 등등 다양한 요소가 모여서 궁극적으로 strength를 
+결정을 하게 됩니다. 각각의 재료및 요소에 따라서 strength의 값이 달라지는데.. 역시 정확한 공식을 얻기는 쉽지 않겠죠..&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;concrete &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; read.csv&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;concrete.csv&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; stringsAsFactors &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;kp&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+  cement  flag ash water superplastic coarseagg findagg age strength
+&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;540.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;162&lt;/span&gt;          &lt;span class=&quot;m&quot;&gt;2.5&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;1040.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;676.0&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;28&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;79.99&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;540.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;162&lt;/span&gt;          &lt;span class=&quot;m&quot;&gt;2.5&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;1055.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;676.0&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;28&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;61.89&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;332.5&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;142.5&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;228&lt;/span&gt;          &lt;span class=&quot;m&quot;&gt;0.0&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;932.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;594.0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;270&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;40.27&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;332.5&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;142.5&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;228&lt;/span&gt;          &lt;span class=&quot;m&quot;&gt;0.0&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;932.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;594.0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;365&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;41.05&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;198.6&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;132.4&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;192&lt;/span&gt;          &lt;span class=&quot;m&quot;&gt;0.0&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;978.4&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;825.5&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;360&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;44.30&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;266.0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;114.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;228&lt;/span&gt;          &lt;span class=&quot;m&quot;&gt;0.0&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;932.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;670.0&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;90&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;47.03&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;데이터를 살펴보니.. 각각의 필드들이 제각각의 범위의 값을 갖고 있습니다. 즉.. Normalize가 필요합니다.&lt;br /&gt;
+여러방법의 normalize가 있는데 우리는 min max normalize를 사용하겠습니다. &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;normalize &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;x &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+concrete &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;as.data.frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;lapply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; normalize&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;kp&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        cement         flag ash        water  superplastic    coarseagg      findagg           age     strength
+&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1.0000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.0000000000&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3210862620&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.07763975155&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.6947674419&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.2057200201&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.07417582418&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.9674847390&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1.0000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.0000000000&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3210862620&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.07763975155&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.7383720930&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.2057200201&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.07417582418&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.7419957643&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.5262557078&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3964941569&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.8482428115&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.00000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3808139535&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.0000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.73901098901&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.4726547901&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.5262557078&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3964941569&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.8482428115&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.00000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3808139535&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.0000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1.00000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.4823719945&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.2205479452&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3683917641&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.5607028754&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.00000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.5156976744&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.5807827396&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.98626373626&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.5228603463&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3744292237&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3171953255&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.8482428115&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.00000000000&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3808139535&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.1906673357&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.24450549451&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.5568705619&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;lapply함수에 바로 dataframe type을 넣을수가 있고 lapply는 각각의 필드마다 normalize함수를 진행하게 됩니다.&lt;br /&gt;
+가장 큰 값은 1이 되었고.. 가장 작은 값은 0으로 normalize를 하였습니다.&lt;br /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+만약 lapply를 사용하지 않고 바로 normalize(concrete) 를 사용하게 되면.. dataframe내에서 가장 큰 값이 1을 갖고, 가장 작은 값이 0을
+갖게 됩니다. 즉 cement필드에서 0~1 또는.. water에서 0~1값을 갖는게 아니라.. 전체 dataframe내에서 normalize를 하게 되며.. 
+이는 우리가 원하는 결과값이 아닙니다.
+&lt;/blockquote&gt;
+
+&lt;p&gt;그 다음으로.. concrete 데이터의 75%를 트레이닝용으로 사용하고, 나머지는 해당 neural network가 제대로 돌아가는지 검증용으로 사용을 할 
+것입니다. &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;max_index &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;strength&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+slice_index &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;max_index &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+training_data &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; concrete&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;slice_index&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt;
+test_data &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; concrete&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;slice_index&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;max_index&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Neural Network 트레이닝 시키기&lt;/h3&gt;
+&lt;p&gt;자 이제 모든 준비가 끝났으니 Neural Network를 트레이닝 시키겠습니다. &lt;br /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;concrete_model &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;
+  neuralnet&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;strength &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt; cement &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; flag &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; ash &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; water &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; superplastic &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; coarseagg &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
+      findagg &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; age&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; data &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; training_data&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; hidden &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete_model&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# plot the neural networks&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/Neural-Network-for-concrete/neuralnet_hidden_3.png &quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;위의 그림에 보면 8개의 nodes가 보입니다. 이것을 Input Nodes라고 부릅니다.&lt;br /&gt;
+중간에 3개의 원이 있는데 이것을 Hidden Nodes라고 부릅니다.&lt;br /&gt;
+마지막 제일 오른쪽에 1개의 원이있는데 이것을 Output Node라고 부릅니다.&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Backpropagation이 있는데.. 트레이닝중에 틀리거나 맞는것이 있을때마다 결과치에 따라서 각각의 Nodes들의 수치를 변경하게 됩니다.&lt;br /&gt;
+즉 각각의 Nodes들에는 서로 연결되어있어서 강하게 연결되어 있는것이 있고, 약하게 연결된것이 있는데.. 
+Backpropagation을 통해서 이 가중치를 변경을 하게 되는 것입니다.&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;아! 참고로 최초로 Nodes들이 연결이 될때는 어떻게 가중치를 주는가? 인데..
+최초에는 랜덤값을 그냥 넣습니다. 따라서 여러분이 집접 저 코드를 돌려보면 매번 다른 값이 나오게 될 것입니다.&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;자! 그렇다면 이렇게 학습된 Neural Network의 성능시험이 필요하지 않을까요?
+처음에 75%데이터를 학습으로 사용했으니, 나머지 데이터를 이용해서 정확하게 예측을 하는지 검사해봅시다.&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3&gt; Neural Network 성능측정 (Prediction) &lt;/h3&gt;
+
+&lt;p&gt;성능측정은 상관관계분석(Correlation)을 통해서 측정을 하게 됩니다.&lt;br /&gt;
+1값이 나올수록 예측의 정확성이 높다는 뜻이고, 0값이 나온다면 예측값이 떨어진다는 뜻입니다. &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;model_results &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; compute&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete_model&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; test_data&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+cor&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;model_results&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;net.result&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; test_data&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;strength&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;m&quot;&gt;0.8201494476&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Sun, 26 Jul 2015 00:00:00 +0900</pubDate>
+        <link>http://andersonjo.github.io//neural-network/2015/07/26/Neural-Network-for-concrete/</link>
+        <guid isPermaLink="true">http://andersonjo.github.io//neural-network/2015/07/26/Neural-Network-for-concrete/</guid>
+        
+        
+        <category>neural-network</category>
+        
+      </item>
     
       <item>
         <title>Anderson Page Opened</title>

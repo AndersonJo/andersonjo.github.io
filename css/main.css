@@ -10,7 +10,7 @@ html, body { height: 100%; }
 
 body {
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
   font-weight: 300;
   background-color: #fdfdfd;
@@ -32,6 +32,13 @@ a:visited { color: #205caa; }
   padding: 0 30px;
   margin: 0 auto;
   zoom: 1;
+}
+
+.simple_profile{
+  margin-bottom:20px;
+  color: #aa0000;
+  font-style: italic;
+
 }
 
 
@@ -215,7 +222,7 @@ a:visited { color: #205caa; }
 .post-content blockquote {
   border-left: 4px solid #e8e8e8;
   padding-left: 20px;
-  font-size: 18px;
+  font-size: 16px;
   opacity: .6;
   letter-spacing: -1px;
   font-style: italic;
@@ -228,13 +235,13 @@ a:visited { color: #205caa; }
 .post pre,
 .post code {
   border: 1px solid #d5d5e9;
-  background-color: #eef;
+  background-color: #f5f5f9;
   padding: 8px 12px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  font-size: 15px;
-  overflow:scroll;
+  font-size: 14px;
+  overflow:auto;
 }
 
 .post code { padding: 1px 5px; }
