@@ -147,5 +147,6 @@ cor(model_results$net.result, test_data$strength)
 
 
 
+
 [anderson-linkedin]: https://kr.linkedin.com/in/anderdson
 [email]: a141890@gmail.com
