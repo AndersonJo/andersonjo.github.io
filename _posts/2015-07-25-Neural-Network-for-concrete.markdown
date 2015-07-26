@@ -135,8 +135,9 @@ cor(model_results$net.result, test_data$strength)
 0.8201494476
 {% endhighlight %}
 
+<h3> Facebook </h3>
 
-
+[Facebook Link][facebook]
 
 
 
@@ -144,9 +145,4 @@ cor(model_results$net.result, test_data$strength)
 [book]: http://www.amazon.com/Machine-Learning-R-Brett-Lantz/dp/1782162143/ref=sr_1_1?ie=UTF8&qid=1437813079&sr=8-1&keywords=machine+learning+with+r
 [csv]: {{page.asset_path}}concrete.csv
 [r]: {{page.asset_path}}example.R
-
-
-
-
-[anderson-linkedin]: https://kr.linkedin.com/in/anderdson
-[email]: a141890@gmail.com
+[facebook]:https://www.facebook.com/groups/codingeverybody/permalink/1027643290609540/

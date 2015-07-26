@@ -5,8 +5,8 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 26 Jul 2015 03:15:53 +0900</pubDate>
-    <lastBuildDate>Sun, 26 Jul 2015 03:15:53 +0900</lastBuildDate>
+    <pubDate>Mon, 27 Jul 2015 00:08:08 +0900</pubDate>
+    <lastBuildDate>Mon, 27 Jul 2015 00:08:08 +0900</lastBuildDate>
     <generator>Jekyll v2.2.0</generator>
     
       <item>
@@ -121,6 +121,10 @@ Backpropagation을 통해서 이 가중치를 변경을 하게 되는 것입니�
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;model_results &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; compute&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete_model&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; test_data&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
 cor&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;model_results&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;net.result&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; test_data&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;strength&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;m&quot;&gt;0.8201494476&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt; Facebook &lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.facebook.com/groups/codingeverybody/permalink/1027643290609540/&quot;&gt;Facebook Link&lt;/a&gt;&lt;/p&gt;
 
 </description>
         <pubDate>Sun, 26 Jul 2015 00:00:00 +0900</pubDate>
