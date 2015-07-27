@@ -132,7 +132,7 @@ Google Closure사용하고 (현재 구글에서 사용하는 기술), MongoDB도
 
 ### CDNetworks - SLA, TDD 도입
 
-Portal 팀에서 선임연구원(과장)으로 아주 잠깐 일했었습니다. 이 회사는 별로 좋은 기억이 없습니다.
+Portal 팀에서 선임연구원(과장)으로 아주 잠깐 일했었습니다.
 
 Django, Python, Angular.js, HighChart, R (Linear Regression)
 
