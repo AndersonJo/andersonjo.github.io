@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Monty Hall Problem - Bayes</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.">
+    <link rel="canonical" href="http://andersonjo.github.io//machine-learning/2015/07/29/Monty-Hall-Problem/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/assets/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+
+
+</head>
+
+
+<body>
+
+<header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/">Anderson Jo 헤헤헤</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+          <a class="page-link" href="/about/">About</a>
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+<div class="page-content">
+    <div class="wrap">
+        <div class="post">
+
+    <header class="post-header">
+        <h1>Monty Hall Problem - Bayes</h1>
+
+        <p class="meta">Jul 29, 2015</p>
+    </header>
+
+    <article class="post-content">
+        <p><img src="/assets/posts/Monty-Hall-Problem/saw-play-a-game.jpg" class="img-responsive img-rounded" /></p>
+
+<p>당신은 전날밤 술에 취했고 깨어나보니 어두운 방에 갖혀 있었다. <br />
+흐릿했던 초점이 돌아오고 정신이 드니 눈앞에 직소가 있었고 옆에는 3개의 문이 있다.<br />
+그리고 직소는 당신과 게임을 하길 원한다.<br />
+게임의 룰은 다음과 같다.</p>
+
+<ol>
+  <li>3개의 문이 있다.</li>
+  <li>단 하나의 문 뒤에 살아나갈수 있는 열쇠가 있다.</li>
+  <li>게임의 시작은 당신이 먼저 열쇠가 있을거 같은 문을 선택을 한다. (선택만하고 문은 열지 않는다)</li>
+  <li>직소는 선택하지 않은 문 2개중에 열쇠가 없는 문을 연다. (즉 직소는 당연히 열쇠가 어디 있는지 알고 있다.)</li>
+  <li>그리고 당신에게 선택이 주어진다. 처음에 선택한 문을 열것인가? 아니면 결정을 바꾸고 다른 문을 선택할 것인가?</li>
+  <li>열쇠가 있는 문을 선택하면 살고, 뒤에 아무것도 없으면 죽는거임</li>
+</ol>
+
+<p>자.. 먼저 아래의 내용을 보시기 전에 당신의 선택은 어떻게 하시겠습니까?</p>
+
+<p>또 그렇게 결정한 이유가 무었입니까?</p>
+
+<h1 id="conditional-probability">Conditional Probability</h1>
+
+<p>보통 2개의 이벤트(상황)이 있는데 서로 영향을 미치는(dependent) 상황일때 사용을 합니다.
+예를 들어서 담배를 많이 필수록 폐암에 걸릴 확률이라든가, 오늘 비가온다면 내일 비가 올 확률이 좀 더 높다든가.. 
+하여튼 어떠한 이벤트의 경우에 따라서 다른 이벤트에 영향을 주는 경우에 Conditional Probability 사용이 가능합니다.</p>
+
+<p>다음은 그냥 몇가지 공식을 적어드립니다. <br />
+그냥 묻지도 따지지도 말고 그냥 왜우면 되요 :) <em>(이런걸 Axiom이라고 하죠..)</em></p>
+
+<ul>
+  <li>A라는 이벤트가 일어날 확률은 <strong>P(A)</strong> 이렇게 적습니다.<br />
+<span style="color:#777; font-size:0.9em;">ex) P(head) 동전의 앞면이 나올 확률</span></li>
+  <li>그런데 B라는 조건하에 A라는 이벤트가 일어날 확률은 <strong>P(A|B)</strong> 이렇게 적습니다. <br />
+<span style="color:#777; font-size:0.9em;">ex) P(암|담배) 담배를 피울때 암에 걸릴 확률</span></li>
+  <li><strong>P(A and B) = P(A)P(B|A)</strong><br />
+<span style="color:#777; font-size:0.9em;">A 와 B는 dependent 이며 A 그리고 B 가 동시에 일어날 경우.. <br />
+ 참고로 A 와 B 가 independent라면 <strong>P(A)P(B)</strong> 로 표현될수 있습니다.<br /> 
+ 가령 동전 A가 앞면이고, 동전 B가 앞면일 확률<br /> 
+ 0.5 * 0.5 = 0.25
+</span></li>
+  <li><strong>P(A and B) = P(B and A)</strong></li>
+</ul>
+
+<p>그런데 말입니다?!
+<img src="/assets/posts/Monty-Hall-Problem/but-the-thing.jpg" class="img-responsive img-rounded" /></p>
+
+<p><img src="/assets/posts/Monty-Hall-Problem/f101.gif" class="img-responsive img-rounded" /></p>
+
+<p><img src="/assets/posts/Monty-Hall-Problem/f102.gif" class="img-responsive img-rounded" /></p>
+
+<p>따라서..</p>
+
+<p><img src="/assets/posts/Monty-Hall-Problem/f103.gif" class="img-responsive img-rounded" /></p>
+
+<p>즉 서로 바꿔 쓸수 있으며 아주 중요한 내용이다. 여기서 조금더 나가면.. 바로.. 그 유명한 Bayes Formula 를 얻을수 있다.</p>
+
+<p>=====================================
+<img src="/assets/posts/Monty-Hall-Problem/formula.gif" class="img-responsive img-rounded" />
+=====================================</p>
+
+<p>위의 공식을 통해서 직소 문제를 풀어보도록 하겠다.</p>
+
+<blockquote>
+  <p>Bayes라고 쓰는 이유는 그냥 옛날 옛적에 베이즈라는 사람이 만들어서 그 사람 이름 딴 거임 ..</p>
+</blockquote>
+
+<h1 id="monty-hall-problem">Monty Hall Problem</h1>
+
+<p>여름이라서 직소를 내보냈는데.. 사실 이 문제는 Monty Hall Problem이라고 해서 실제 외국 TV쇼에서 했었던 문제입니다.
+궁금하면 집접 찾아보시길.. 다른게 있다면 3개중에 한개에는 “자동차”같이 짱짱맨 선물이 있다는거</p>
+
+<p>당시에 학계? 에서는 이 Monty Hall Problem으로 논란?이 된 적도 있었습니다. 실제 당시의 저명한 교수가 TV에 출연해서.. 
+처음 선택한걸 열거나 또는 바꾸거나 확률은 그게 그거다 라고 아주 열띄게 강조도 했었을 정도였으니…</p>
+
+<p>상식적으로 생각하면.. 어차피 3개의 문에 랜덤으로 키가 있는거고.. 나는 그 랜덤 중에서 고르는 것인데..
+처음걸 선택하거나 또는 원래 선택에서 바꾸는게 그렇게 큰 의미가 있을까? 생각이 들 수도 있습니다.</p>
+
+<p>자.. 위에서 배운 Bayes 공식으로 문제를 풀어보도록 하겠습니다.<br />
+대충 상황은 다음과 같다고 가정을 하겠습니다.</p>
+
+<ul>
+  <li>문 A, B, C 가 있다.</li>
+  <li>당신은 A문을 최초로 선택을 했다. (문은 열지 않았다.)</li>
+  <li>직소는 B의 문을 열었고, B문의 뒤에는 아무것도 없었다. (직소는 어디에 열쇠가 있는지 알고 있다.)</li>
+</ul>
+
+<p>첫번째 이벤트 P(Jigsaw Opens B)는 직소가 문 B를 열었다는 것이고.. <br />
+두번째 이벤트 P(Key@..) 는 여러분이 어디 문을 열었을때의 확률입니다.</p>
+
+<p><img src="/assets/posts/Monty-Hall-Problem/monty_formula.gif" class="img-responsive img-rounded" /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: right">P(key@..)</th>
+      <th style="text-align: center">P(jigsaw Opens B|Key@..)</th>
+      <th>P(Key@..)P(jigsaw Opens B|Key@..)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">A문</td>
+      <td style="text-align: right">P(key@A) = 1/3</td>
+      <td style="text-align: center">P(jigsaw Opens B|Key@A) = 1/2</td>
+      <td>1/3 * 1/2 = 1/6</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">B문</td>
+      <td style="text-align: right">P(key@B) = 1/3</td>
+      <td style="text-align: center">P(jigsaw Opens B|Key@B) = 0</td>
+      <td>1/3 * 0 = 0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">C문</td>
+      <td style="text-align: right">P(key@C) = 1/3</td>
+      <td style="text-align: center">P(jigsaw Opens B|Key@C) = 1</td>
+      <td>1/3 * 1 = 1/3</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>공식에 따르면 P(Jigsaw Opens B) 의 확률을 구해야 하는데 어차피 하나마나라서 안해도 됩니다.<br />
+참고로 P(Jigsaw Opens B)의 값은 1/2 입니다. 당신이 문을 선택하고, Jigsaw가 선택할수 있는 문의 확률</p>
+</blockquote>
+
+<ul>
+  <li>P(Key@A) 라는 뜻은 A의 문을 열 확률입니다.</li>
+  <li>P(Jigsaw Opens B|Key@B) 라는 뜻은 키가 B에 있을때, 직소가 B를 열 확률인데.. 당연히 B에 있는데 열리가 없겠죠</li>
+</ul>
+
+<p><span style="color:red">
+<strong>결론적으로 키가 A에 있을 확률은 1/6 이고, B에 있을 확률은 1/3입니다.<br /></strong>
+<strong>즉 2배 차이가 나며 베이즈 확률에 따르면, 원래 선택했던거 말고 바꾸는 것이 살아날 확률을 2배 정도 높입니다</strong>
+</span></p>
+
+<p>아래의 동영상을 보시면.. 중간쯤에 실제로 실험을 합니다.<br />
+검을색 옷을 입은 남자는 자기가 최초에 선택한 컵을 선택하고 기회가 주어졌을때 바꾸지 않습니다.<br />
+빨간색 옷을 입은 남자는 기회가 주어졌을때 무조건 다른것을 선택합니다. <br />
+실제 실험을 했을때 검을색 옷의 남자는 2대의 자동차밖에 못 얻었지만, 빨간색 옷 남자는 16대의 자동차를 얻습니다.<br />
+뭐 2배 이상을 훨씬 뛰어 넘었네요..</p>
+
+<iframe width="420" height="315" src="https://www.youtube.com/embed/o_djTy3G0pg" frameborder="0" allowfullscreen=""></iframe>
+
+<p>자.. 그래서 결론은..<br />
+데이터 사이언티스트들이 이런 Bayes 확률로 어떻게 뭘 할건데? 이런거인데요..<br />
+이거는 언젠가 시간이 나면 다루도록 하겠습니다.<br />
+실무에서는 주로 Text Classification 에서 활용이 되고 있습니다.<br />
+다른 Machine Learning 알고리즘보다 복잡하지 않으면서 강력하게 활용이 될 수 있습니다.</p>
+
+    </article>
+
+</div>
+    </div>
+</div>
+
+<div class="wrap simple_profile">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="/assets/images/me.jpg">
+        </div>
+        <div class="col-md-8" style="vertical-align: top;">
+            <h2 style="margin-top:0px;">Anderson Jo</h2>
+            <span style="color:#990000">
+                Machine Learning, Python, R, Game Server,Data Analysis, Android, Full-Stack, AWS
+            </span>
+            <br>
+            경영 마인드를 갖은 진격의 개발자 입니다.<br>
+            Email: <i style="color:#0086B3">a141890@gmail.com</i><br>
+            Kakao Talk: <i style="color:#0086B3">anderson52</i><br>
+
+        </div>
+    </div>
+
+</div>
+
+<footer class="site-footer">
+    <div class="wrap">
+        <header class="footer-heading">
+            <h2 class="footer-heading" style="margin-bottom:0px;">Anderson Jo 헤헤헤</h2>
+
+        </header>
+
+
+        <div class="footer-col-1 column">
+            <ul>
+                <li>Anderson Jo 헤헤헤</li>
+                <li><a href="mailto:a141890@gmail.com">a141890@gmail.com</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+            <ul>
+                
+                <li>
+                    <a href="https://github.com/AndersonJo">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+            </span>
+                        <span class="username">AndersonJo</span>
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+            <p class="text">개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</p>
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+</body>
+</html>
