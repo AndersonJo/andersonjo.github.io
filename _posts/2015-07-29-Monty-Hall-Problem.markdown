@@ -63,7 +63,7 @@ asset_path: /assets/posts/Monty-Hall-Problem/
 <img src="{{page.asset_path}}formula.gif" class="img-responsive img-rounded">
 =====================================
 
-위의 공식을 통해서 직소 문제를 풀어보도록 하겠다.
+위의 공식을 통해서 직소 문제를 풀어보도록 하겠습니다.
 
 > Bayes라고 쓰는 이유는 그냥 옛날 옛적에 베이즈라는 사람이 만들어서 그 사람 이름 딴 거임 ..
 
