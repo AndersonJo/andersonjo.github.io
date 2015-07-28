@@ -5,9 +5,41 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 27 Jul 2015 00:08:08 +0900</pubDate>
-    <lastBuildDate>Mon, 27 Jul 2015 00:08:08 +0900</lastBuildDate>
-    <generator>Jekyll v2.2.0</generator>
+    <pubDate>Tue, 28 Jul 2015 18:22:49 +0900</pubDate>
+    <lastBuildDate>Tue, 28 Jul 2015 18:22:49 +0900</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Monty Hall Problem - Bayes</title>
+        <description>&lt;p&gt;&lt;img src=&quot;/assets/posts/Monty-Hall-Problem/saw-play-a-game.jpg&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;깨어나보니 직소가 눈앞에 있다!! 훨~ &lt;br /&gt;
+그리고 직소는 당신과 게임을 하길 원한다.&lt;br /&gt;
+게임의 룰은 다음과 같다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;3개의 문이 있다.&lt;/li&gt;
+  &lt;li&gt;단 하나의 문 뒤에 살아나갈수 있는 열쇠가 있다.&lt;/li&gt;
+  &lt;li&gt;게임의 시작은 내가 먼저 열쇠가 있을거 같은 문을 선택을 한다. (선택만하고 문은 열지 않는다)&lt;/li&gt;
+  &lt;li&gt;직소는 선택하지 않은 문 2개중에 열쇠가 없는 문을 연다. (즉 직소는 당연히 열쇠가 어디 있는지 알고 있다.)&lt;br /&gt;&lt;/li&gt;
+  &lt;li&gt;그리고 당신에게 선택이 주어진다. 처음에 선택한 문을 열것인가? 아니면 결정을 바꾸고 다른 문을 선택할 것인가?&lt;/li&gt;
+  &lt;li&gt;열쇠가 있는 문을 선택하면 살고, 뒤에 아무것도 없으면 죽는거임&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;자.. 먼저 아래의 내용을 보시기 전에 당신의 선택은 어떻게 하시겠습니까?&lt;/p&gt;
+
+&lt;h1 id=&quot;conditional-probability&quot;&gt;Conditional Probability&lt;/h1&gt;
+
+&lt;p&gt;보통 2개의 이벤트(상황)이 있는데 서로 영향을 미치는(dependent) 상황일때 사용을 합니다.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 30 Jul 2015 07:00:00 +0900</pubDate>
+        <link>http://andersonjo.github.io//machine-learning/2015/07/30/Monty-Hall-Problem/</link>
+        <guid isPermaLink="true">http://andersonjo.github.io//machine-learning/2015/07/30/Monty-Hall-Problem/</guid>
+        
+        
+        <category>machine-learning</category>
+        
+      </item>
     
       <item>
         <title>Neural Network for Concrete Strength using R</title>
@@ -21,12 +53,12 @@
 들어가는 재료들의 양에 따라서 콘크리트의 강도가 달라지기 때문에 여기에는 특별한 수학적 공식을 얻어내기가 쉽지가 않습니다. &lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;Neural Network를 이용하면 특별한 수학적 공식 (콘크리트의 강도를 알아내는..) 없이 ANN(Artificial Neural Network)을 트레이닝 시키고
-훈련된 ANN으로 다시 새로운 데이터로 예측을 할 것입니다.&lt;br /&gt; &lt;/p&gt;
+훈련된 ANN으로 다시 새로운 데이터로 예측을 할 것입니다.&lt;br /&gt;&lt;/p&gt;
 
 &lt;h3&gt;Data &amp;amp; References&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&quot;/assets/posts/Neural-Network-for-concrete/concrete.csv&quot;&gt;concrete.csv&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;/assets/posts/Neural-Network-for-concrete/example.R&quot;&gt;example.R&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;http://www.amazon.com/Machine-Learning-R-Brett-Lantz/dp/1782162143/ref=sr_1_1?ie=UTF8&amp;amp;qid=1437813079&amp;amp;sr=8-1&amp;amp;keywords=machine+learning+with+r&quot;&gt;Machine Learning with R&lt;/a&gt; &lt;/p&gt;
+&lt;a href=&quot;http://www.amazon.com/Machine-Learning-R-Brett-Lantz/dp/1782162143/ref=sr_1_1?ie=UTF8&amp;amp;qid=1437813079&amp;amp;sr=8-1&amp;amp;keywords=machine+learning+with+r&quot;&gt;Machine Learning with R&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3&gt;Neuralnet 설치 &lt;/h3&gt;
 
@@ -40,7 +72,7 @@
 stringAsFactors는 R의 데이터타입중에 string을 factor로 읽지 않고  vector로 읽겠다는 뜻이며, F는 FALSE(boolean)값과 같습니다.&lt;br /&gt;
 끝에 [-1]은 첫번째 row 필드값을 exclude시키겠다는 말..&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;포인트는.. cement, flag, ash, water, superplastic, coarseagg, findagg, age 등등 다양한 요소가 모여서 궁극적으로 strength를 
+&lt;p&gt;포인트는.. cement, flag, ash, water, superplastic, coarseagg, findagg, age 등등 다양한 요소가 모여서 궁극적으로 strength를
 결정을 하게 됩니다. 각각의 재료및 요소에 따라서 strength의 값이 달라지는데.. 역시 정확한 공식을 얻기는 쉽지 않겠죠..&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;concrete &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; read.csv&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;concrete.csv&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; stringsAsFactors &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
@@ -55,7 +87,7 @@ stringAsFactors는 R의 데이터타입중에 string을 factor로 읽지 않고 
 &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;266.0&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;114.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;228&lt;/span&gt;          &lt;span class=&quot;m&quot;&gt;0.0&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;932.0&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;670.0&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;90&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;47.03&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;데이터를 살펴보니.. 각각의 필드들이 제각각의 범위의 값을 갖고 있습니다. 즉.. Normalize가 필요합니다.&lt;br /&gt;
-여러방법의 normalize가 있는데 우리는 min max normalize를 사용하겠습니다. &lt;/p&gt;
+여러방법의 normalize가 있는데 우리는 min max normalize를 사용하겠습니다.&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;normalize &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;x &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
@@ -76,12 +108,12 @@ concrete &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&
 
 &lt;blockquote&gt;
 만약 lapply를 사용하지 않고 바로 normalize(concrete) 를 사용하게 되면.. dataframe내에서 가장 큰 값이 1을 갖고, 가장 작은 값이 0을
-갖게 됩니다. 즉 cement필드에서 0~1 또는.. water에서 0~1값을 갖는게 아니라.. 전체 dataframe내에서 normalize를 하게 되며.. 
+갖게 됩니다. 즉 cement필드에서 0~1 또는.. water에서 0~1값을 갖는게 아니라.. 전체 dataframe내에서 normalize를 하게 되며..
 이는 우리가 원하는 결과값이 아닙니다.
 &lt;/blockquote&gt;
 
-&lt;p&gt;그 다음으로.. concrete 데이터의 75%를 트레이닝용으로 사용하고, 나머지는 해당 neural network가 제대로 돌아가는지 검증용으로 사용을 할 
-것입니다. &lt;/p&gt;
+&lt;p&gt;그 다음으로.. concrete 데이터의 75%를 트레이닝용으로 사용하고, 나머지는 해당 neural network가 제대로 돌아가는지 검증용으로 사용을 할
+것입니다.&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;max_index &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;strength&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 slice_index &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;max_index &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -104,7 +136,7 @@ plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete_model&lt;span class=&
 마지막 제일 오른쪽에 1개의 원이있는데 이것을 Output Node라고 부릅니다.&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;Backpropagation이 있는데.. 트레이닝중에 틀리거나 맞는것이 있을때마다 결과치에 따라서 각각의 Nodes들의 수치를 변경하게 됩니다.&lt;br /&gt;
-즉 각각의 Nodes들에는 서로 연결되어있어서 강하게 연결되어 있는것이 있고, 약하게 연결된것이 있는데.. 
+즉 각각의 Nodes들에는 서로 연결되어있어서 강하게 연결되어 있는것이 있고, 약하게 연결된것이 있는데..
 Backpropagation을 통해서 이 가중치를 변경을 하게 되는 것입니다.&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;아! 참고로 최초로 Nodes들이 연결이 될때는 어떻게 가중치를 주는가? 인데..
@@ -116,7 +148,7 @@ Backpropagation을 통해서 이 가중치를 변경을 하게 되는 것입니�
 &lt;h3&gt; Neural Network 성능측정 (Prediction) &lt;/h3&gt;
 
 &lt;p&gt;성능측정은 상관관계분석(Correlation)을 통해서 측정을 하게 됩니다.&lt;br /&gt;
-1값이 나올수록 예측의 정확성이 높다는 뜻이고, 0값이 나온다면 예측값이 떨어진다는 뜻입니다. &lt;/p&gt;
+1값이 나올수록 예측의 정확성이 높다는 뜻이고, 0값이 나온다면 예측값이 떨어진다는 뜻입니다.&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;model_results &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; compute&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;concrete_model&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; test_data&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
 cor&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;model_results&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;net.result&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; test_data&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;strength&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -128,11 +160,11 @@ cor&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;model_results&lt;span class=&qu
 
 </description>
         <pubDate>Sun, 26 Jul 2015 00:00:00 +0900</pubDate>
-        <link>http://andersonjo.github.io//neural-network/2015/07/26/Neural-Network-for-concrete/</link>
-        <guid isPermaLink="true">http://andersonjo.github.io//neural-network/2015/07/26/Neural-Network-for-concrete/</guid>
+        <link>http://andersonjo.github.io//machine-learning/2015/07/26/Neural-Network-for-concrete/</link>
+        <guid isPermaLink="true">http://andersonjo.github.io//machine-learning/2015/07/26/Neural-Network-for-concrete/</guid>
         
         
-        <category>neural-network</category>
+        <category>machine-learning</category>
         
       </item>
     

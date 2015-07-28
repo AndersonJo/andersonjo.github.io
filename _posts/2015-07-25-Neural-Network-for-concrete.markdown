@@ -2,7 +2,7 @@
 layout: post
 title:  "Neural Network for Concrete Strength using R"
 date:   2015-07-25 15:00:00
-categories: "neural-network"
+categories: "machine-learning"
 asset_path: /assets/posts/Neural-Network-for-concrete/
 ---
 <div>
@@ -15,12 +15,12 @@ asset_path: /assets/posts/Neural-Network-for-concrete/
 들어가는 재료들의 양에 따라서 콘크리트의 강도가 달라지기 때문에 여기에는 특별한 수학적 공식을 얻어내기가 쉽지가 않습니다. <br>
 
 Neural Network를 이용하면 특별한 수학적 공식 (콘크리트의 강도를 알아내는..) 없이 ANN(Artificial Neural Network)을 트레이닝 시키고
-훈련된 ANN으로 다시 새로운 데이터로 예측을 할 것입니다.<br> 
+훈련된 ANN으로 다시 새로운 데이터로 예측을 할 것입니다.<br>
 
 <h3>Data & References</h3>
 [concrete.csv][csv]<br>
 [example.R][r]<br>
-[Machine Learning with R][book] 
+[Machine Learning with R][book]
 
 <h3>Neuralnet 설치 </h3>
 
@@ -36,7 +36,7 @@ read.csv 함수를 통해서 concrete.csv파일을 읽습니다.<br>
 stringAsFactors는 R의 데이터타입중에 string을 factor로 읽지 않고  vector로 읽겠다는 뜻이며, F는 FALSE(boolean)값과 같습니다.<br>
 끝에 [-1]은 첫번째 row 필드값을 exclude시키겠다는 말..<br><br>
 
-포인트는.. cement, flag, ash, water, superplastic, coarseagg, findagg, age 등등 다양한 요소가 모여서 궁극적으로 strength를 
+포인트는.. cement, flag, ash, water, superplastic, coarseagg, findagg, age 등등 다양한 요소가 모여서 궁극적으로 strength를
 결정을 하게 됩니다. 각각의 재료및 요소에 따라서 strength의 값이 달라지는데.. 역시 정확한 공식을 얻기는 쉽지 않겠죠..
 
 {% highlight r %}
@@ -54,7 +54,7 @@ head(concrete)
 {% endhighlight %}
 
 데이터를 살펴보니.. 각각의 필드들이 제각각의 범위의 값을 갖고 있습니다. 즉.. Normalize가 필요합니다.<br>
-여러방법의 normalize가 있는데 우리는 min max normalize를 사용하겠습니다. 
+여러방법의 normalize가 있는데 우리는 min max normalize를 사용하겠습니다.
 
 {% highlight r %}
 
@@ -79,12 +79,12 @@ lapply함수에 바로 dataframe type을 넣을수가 있고 lapply는 각각의
 
 <blockquote>
 만약 lapply를 사용하지 않고 바로 normalize(concrete) 를 사용하게 되면.. dataframe내에서 가장 큰 값이 1을 갖고, 가장 작은 값이 0을
-갖게 됩니다. 즉 cement필드에서 0~1 또는.. water에서 0~1값을 갖는게 아니라.. 전체 dataframe내에서 normalize를 하게 되며.. 
+갖게 됩니다. 즉 cement필드에서 0~1 또는.. water에서 0~1값을 갖는게 아니라.. 전체 dataframe내에서 normalize를 하게 되며..
 이는 우리가 원하는 결과값이 아닙니다.
 </blockquote>
 
-그 다음으로.. concrete 데이터의 75%를 트레이닝용으로 사용하고, 나머지는 해당 neural network가 제대로 돌아가는지 검증용으로 사용을 할 
-것입니다. 
+그 다음으로.. concrete 데이터의 75%를 트레이닝용으로 사용하고, 나머지는 해당 neural network가 제대로 돌아가는지 검증용으로 사용을 할
+것입니다.
 
 {% highlight r %}
 
@@ -115,7 +115,7 @@ plot(concrete_model) # plot the neural networks
 마지막 제일 오른쪽에 1개의 원이있는데 이것을 Output Node라고 부릅니다.<br>
 
 Backpropagation이 있는데.. 트레이닝중에 틀리거나 맞는것이 있을때마다 결과치에 따라서 각각의 Nodes들의 수치를 변경하게 됩니다.<br>
-즉 각각의 Nodes들에는 서로 연결되어있어서 강하게 연결되어 있는것이 있고, 약하게 연결된것이 있는데.. 
+즉 각각의 Nodes들에는 서로 연결되어있어서 강하게 연결되어 있는것이 있고, 약하게 연결된것이 있는데..
 Backpropagation을 통해서 이 가중치를 변경을 하게 되는 것입니다.<br>
 
 아! 참고로 최초로 Nodes들이 연결이 될때는 어떻게 가중치를 주는가? 인데..
@@ -127,7 +127,7 @@ Backpropagation을 통해서 이 가중치를 변경을 하게 되는 것입니�
 <h3> Neural Network 성능측정 (Prediction) </h3>
 
 성능측정은 상관관계분석(Correlation)을 통해서 측정을 하게 됩니다.<br>
-1값이 나올수록 예측의 정확성이 높다는 뜻이고, 0값이 나온다면 예측값이 떨어진다는 뜻입니다. 
+1값이 나올수록 예측의 정확성이 높다는 뜻이고, 0값이 나온다면 예측값이 떨어진다는 뜻입니다.
 
 {% highlight r %}
 model_results <- compute(concrete_model, test_data[1:8])
