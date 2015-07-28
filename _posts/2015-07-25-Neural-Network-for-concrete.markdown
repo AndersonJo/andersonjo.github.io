@@ -2,7 +2,7 @@
 layout: post
 title:  "Neural Network for Concrete Strength using R"
 date:   2015-07-25 15:00:00
-categories: "machine-learning"
+categories: "neural-network"
 asset_path: /assets/posts/Neural-Network-for-concrete/
 ---
 <div>
