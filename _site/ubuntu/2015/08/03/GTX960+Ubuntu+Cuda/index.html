@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Anderson Jo 헤헤헤</title>
+    <title>GTX960 + Ubuntu 15.04 + Hello World</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.">
-    <link rel="canonical" href="http://andersonjo.github.io//">
+    <link rel="canonical" href="http://andersonjo.github.io//ubuntu/2015/08/03/GTX960+Ubuntu+Cuda/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
@@ -56,40 +56,50 @@
 
 <div class="page-content">
     <div class="wrap">
-        <div class="home">
+        <div class="post">
 
-    <h1>Posts</h1>
+    <header class="post-header">
+        <h1>GTX960 + Ubuntu 15.04 + Hello World</h1>
 
-    <ul class="posts">
-        
-        <li>
-            <span class="post-date">Aug 3, 2015</span>
-            <a class="post-link" href="/ubuntu/2015/08/03/GTX960+Ubuntu+Cuda/">GTX960 + Ubuntu 15.04 + Hello World</a>
-        </li>
-        
-        <li>
-            <span class="post-date">Jul 30, 2015</span>
-            <a class="post-link" href="/machine-learning/2015/07/30/Monty-Hall-Problem/">Monty Hall Problem - Bayes</a>
-        </li>
-        
-        <li>
-            <span class="post-date">Jul 26, 2015</span>
-            <a class="post-link" href="/machine-learning/2015/07/26/Neural-Network-for-concrete/">Neural Network for Concrete Strength using R</a>
-        </li>
-        
-        <li>
-            <span class="post-date">Jul 25, 2015</span>
-            <a class="post-link" href="/init/2015/07/25/welcome-to-jekyll/">Anderson Page Opened</a>
-        </li>
-        
-    </ul>
+        <p class="meta">Aug 3, 2015</p>
+    </header>
 
-    <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+    <article class="post-content">
+        <p>이번에 GTX960 그래픽카드를 질렀습니다.<br /> 
+설치 환경은 Ubuntu 15.04 + GTX960 인데, 혹시 나중에 다시 보게 될까봐 여기에다가 적습니다.</p>
+
+<h1 id="acpi-ppc-probe-failed">ACPI PPC Probe failed</h1>
+
+<p>GTX960 디바이스를 읽지 못해서 생기는 에러입니다. </p>
+
+<p>그냥 warning 정도의 에러인데.. 이것과 상관없이.. 화면이 보이지 않는다면.. </p>
+
+<p><strong>nomodeset</strong> 옵션을 주고 우분투를 설치또는 로그인하면 됩니다.</p>
+
+<blockquote>
+  <p>우분투 설치시에는 F6 (other options)를 눌러서 옵션을 지정할수 있습니다.</p>
+</blockquote>
+
+<h1 id="ubuntu-1504-">Ubuntu 15.04 설치후..</h1>
+
+<h3 id="bit-libraries">32bit Libraries</h3>
+<p>GTX960 Driver를 설치하기전, 32bit 라이브러리를 설치해줍니다. <br />
+해당 라이브러리는 또한 Android Studio사용시 설치 가능하게 해줍니다. </p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 lib32z1-dev</code></pre></div>
+
+<h3 id="oracle-java">Oracle Java</h3>
+<p>오라클 자바도 설치합니다. (이건 Pycharm, Nsight등의 IDE를 돌릴때 사용합니다) </p>
+
+<p>* OpenJDK의 경우 성능이 좀 떨어지는 경우가 있습니다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java9-installer</code></pre></div>
+
+    </article>
 
 </div>
-
-
-
     </div>
 </div>
 
