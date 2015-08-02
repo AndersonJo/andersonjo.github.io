@@ -1,0 +1,100 @@
+<p>이번에 GTX960 그래픽카드를 질렀습니다.<br /> 
+설치 환경은 Ubuntu 15.04 + GTX960 인데, 혹시 나중에 다시 보게 될까봐 여기에다가 적습니다.</p>
+
+<h3 id="acpi-ppc-probe-failed">ACPI PPC Probe failed</h3>
+
+<p>GTX960 디바이스를 읽지 못해서 생기는 에러입니다. </p>
+
+<p>그냥 warning 정도의 에러인데.. 이것과 상관없이.. 화면이 보이지 않는다면.. </p>
+
+<p><strong>nomodeset</strong> 옵션을 주고 우분투를 설치또는 로그인하면 됩니다.</p>
+
+<blockquote>
+  <p>우분투 설치시에는 F6 (other options)를 눌러서 옵션을 지정할수 있습니다.</p>
+</blockquote>
+
+<h3 id="bit-libraries">32bit Libraries</h3>
+<p>GTX960 Driver를 설치하기전, 32bit 라이브러리를 설치해줍니다. <br />
+해당 라이브러리는 또한 Android Studio사용시 설치 가능하게 해줍니다. </p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 lib32z1-dev</code></pre></div>
+
+<h3 id="oracle-java">Oracle Java</h3>
+<p>오라클 자바도 설치합니다. (이건 Nsight등의 IDE를 돌릴때 사용합니다) </p>
+
+<p>* OpenJDK의 경우 성능이 좀 떨어지는 경우가 있습니다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java9-installer</code></pre></div>
+
+<h3 id="optional">벼루 (Optional)</h3>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">sudo apt-get install uim uim-byeoru
+uim-pref-gtk</code></pre></div>
+
+<h3 id="command-prompt--optional">Command Prompt 설정 (Optional)</h3>
+
+<p>.bashrc 파일에 추가</p>
+
+<div class="highlight"><pre><code class="language-shell" data-lang="shell">parse_git_branch<span class="o">()</span> <span class="o">{</span>
+
+    git branch 2&gt; /dev/null <span class="p">|</span> sed -e <span class="s1">&#39;/^[^*]/d&#39;</span> -e <span class="s1">&#39;s/* \(.*\)/ (\1)/&#39;</span>
+
+<span class="o">}</span>
+<span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s1">&#39;\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)&gt;\[\033[00m\]&#39;</span></code></pre></div>
+
+<h3 id="gtx960-driver">GTX960 Driver</h3>
+
+<p><a href="http://www.geforce.com/drivers">http://www.geforce.com/drivers</a></p>
+
+<p>위의 링크에서 드라이버를 다운받고 설치하면됨. </p>
+
+<h3 id="cuda-toolkit">CUDA Toolkit</h3>
+
+<p>아래의 주소에서 RUN파일을 다운로드 받습니다.<br />
+<a href="https://developer.nvidia.com/cuda-downloads">https://developer.nvidia.com/cuda-downloads</a></p>
+
+<ol>
+  <li>다운받은 폴더로 들어갑니다.</li>
+  <li>chmod로 실행파일로 바꿔줍니다.</li>
+  <li>CTRL + ALT + F3 </li>
+  <li>로그인</li>
+  <li>init 3</li>
+  <li>sudo su</li>
+  <li>./NVIDIA*.run 파일 실행</li>
+  <li>reboot</li>
+</ol>
+
+<blockquote>
+  <p>reboot 이후에 로그인시 바로 로그 아웃이 되버리면, Ctrl + Alt + F3 누르고 home 에서 .Xauthority를 삭제시켜준다.</p>
+</blockquote>
+
+<h3 id="cuda-testing">CUDA Testing</h3>
+
+<p>Cuda샘플이 설치된 환경으로 이동한다면…</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> ./1_Utilities/deviceQuery
+make
+./deviceQuery</code></pre></div>
+
+<p>파일이 잘 실행이 되는지 확인을 한다.</p>
+
+<h3 id="nsight">Nsight</h3>
+
+<p>Toolkit 을 설치하게 되면 자동으로 Eclipse Nsight가 설치가 되어 있다.</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello World</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>위의 코드처럼 짠 다음에..</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">nvcc hello.c -o hello
+hello</code></pre></div>
+
+<p>실행하면 뭐.. Hello World 프린트가 찍힌다.</p>
+
