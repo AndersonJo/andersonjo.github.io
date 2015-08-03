@@ -5,9 +5,50 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 03 Aug 2015 15:43:15 +0900</pubDate>
-    <lastBuildDate>Mon, 03 Aug 2015 15:43:15 +0900</lastBuildDate>
+    <pubDate>Mon, 03 Aug 2015 17:33:44 +0900</pubDate>
+    <lastBuildDate>Mon, 03 Aug 2015 17:33:44 +0900</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Naive Bayes</title>
+        <description>&lt;p&gt;Bayes 공식이나 이론은 이미 &lt;a href=&quot;/machine-learning/2015/07/29/Monty-Hall-Problem/&quot;&gt;Monty Hall&lt;/a&gt; 문제를 풀면서 설명을 했습니다.&lt;/p&gt;
+
+&lt;p&gt;오늘은 이 Bayes 공식을 이용한.. 정말 간단하지만 왠만한 복잡도 높은 다른 classification methods 보다 강력한 퍼포먼스(정확도)를
+보여주는 Naive Bayes를 예제와 함께 설명하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;일단 Naive Bayes의 공식은 다음과 같습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/Naive-Bayes/naive-bayes-formula.gif&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;C&lt;sub&gt;L&lt;/sub&gt; 은 클래스 또는 분류를 나타냅니다.&lt;/li&gt;
+  &lt;li&gt;F 는 features&lt;/li&gt;
+  &lt;li&gt;1/Z 는 scaling factor&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/Naive-Bayes/what-the-fuck.jpg&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;대체 뭔 소리여 ㅋㅋ 그냥 예제하나 풀면 다 이해됩니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;sms-spam-classification&quot;&gt;SMS Spam Classification&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/assets/posts/Naive-Bayes/SMSSpamCollection.txt&quot;&gt;데이터 다운로드&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;데이터는 &lt;a href=&quot;http://www.dt.fee.unicamp.br/~tiago/smsspamcollection/&quot;&gt;Unicamp&lt;/a&gt; 에서 가져왔습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Tue, 04 Aug 2015 11:00:00 +0900</pubDate>
+        <link>http://andersonjo.github.io//machine-learning/2015/08/04/Naive-Bayes/</link>
+        <guid isPermaLink="true">http://andersonjo.github.io//machine-learning/2015/08/04/Naive-Bayes/</guid>
+        
+        
+        <category>machine-learning</category>
+        
+      </item>
     
       <item>
         <title>GTX960 + Ubuntu 15.04 + Hello World</title>

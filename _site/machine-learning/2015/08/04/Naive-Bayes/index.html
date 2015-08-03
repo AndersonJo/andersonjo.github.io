@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Anderson Jo 헤헤헤</title>
+    <title>Naive Bayes</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.">
-    <link rel="canonical" href="http://andersonjo.github.io//">
+    <link rel="canonical" href="http://andersonjo.github.io//machine-learning/2015/08/04/Naive-Bayes/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
@@ -56,45 +56,48 @@
 
 <div class="page-content">
     <div class="wrap">
-        <div class="home">
+        <div class="post">
 
-    <h1>Posts</h1>
+    <header class="post-header">
+        <h1>Naive Bayes</h1>
 
-    <ul class="posts">
-        
-        <li>
-            <span class="post-date">Aug 4, 2015</span>
-            <a class="post-link" href="/machine-learning/2015/08/04/Naive-Bayes/">Naive Bayes</a>
-        </li>
-        
-        <li>
-            <span class="post-date">Aug 3, 2015</span>
-            <a class="post-link" href="/ubuntu/2015/08/03/GTX960+Ubuntu+Cuda/">GTX960 + Ubuntu 15.04 + Hello World</a>
-        </li>
-        
-        <li>
-            <span class="post-date">Jul 29, 2015</span>
-            <a class="post-link" href="/machine-learning/2015/07/29/Monty-Hall-Problem/">Monty Hall Problem - Bayes</a>
-        </li>
-        
-        <li>
-            <span class="post-date">Jul 26, 2015</span>
-            <a class="post-link" href="/neural-network/2015/07/26/Neural-Network-for-concrete/">Neural Network for Concrete Strength using R</a>
-        </li>
-        
-        <li>
-            <span class="post-date">Jul 25, 2015</span>
-            <a class="post-link" href="/init/2015/07/25/welcome-to-jekyll/">Anderson Page Opened</a>
-        </li>
-        
-    </ul>
+        <p class="meta">Aug 4, 2015</p>
+    </header>
 
-    <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+    <article class="post-content">
+        <p>Bayes 공식이나 이론은 이미 <a href="/machine-learning/2015/07/29/Monty-Hall-Problem/">Monty Hall</a> 문제를 풀면서 설명을 했습니다.</p>
+
+<p>오늘은 이 Bayes 공식을 이용한.. 정말 간단하지만 왠만한 복잡도 높은 다른 classification methods 보다 강력한 퍼포먼스(정확도)를
+보여주는 Naive Bayes를 예제와 함께 설명하겠습니다.</p>
+
+<p>일단 Naive Bayes의 공식은 다음과 같습니다.</p>
+
+<p><img src="/assets/posts/Naive-Bayes/naive-bayes-formula.gif" class="img-responsive img-rounded" /></p>
+
+<ol>
+  <li>C<sub>L</sub> 은 클래스 또는 분류를 나타냅니다.</li>
+  <li>F 는 features</li>
+  <li>1/Z 는 scaling factor</li>
+</ol>
+
+<p><img src="/assets/posts/Naive-Bayes/what-the-fuck.jpg" class="img-responsive img-rounded" /></p>
+
+<p>대체 뭔 소리여 ㅋㅋ 그냥 예제하나 풀면 다 이해됩니다.</p>
+
+<h1 id="sms-spam-classification">SMS Spam Classification</h1>
+
+<ol>
+  <li><a href="/assets/posts/Naive-Bayes/SMSSpamCollection.txt">데이터 다운로드</a></li>
+</ol>
+
+<blockquote>
+  <p>데이터는 <a href="http://www.dt.fee.unicamp.br/~tiago/smsspamcollection/">Unicamp</a> 에서 가져왔습니다.</p>
+</blockquote>
+
+
+    </article>
 
 </div>
-
-
-
     </div>
 </div>
 
