@@ -3,12 +3,14 @@ layout: post
 title:  "GTX960 + Ubuntu 15.04 + Hello World"
 date:   2015-08-03 02:00:00
 categories: "ubuntu"
-asset_path: /assets/posts/GTX960+Ubuntu+Cuda/
+asset_path: /assets/posts/GTX960+Ubuntu15.04+Hello-World/
 
 ---
 
 이번에 GTX960 그래픽카드를 질렀습니다.<br> 
 설치 환경은 Ubuntu 15.04 + GTX960 인데, 혹시 나중에 다시 보게 될까봐 여기에다가 적습니다.
+
+<img src="{{page.asset_path}}gtx960.jpg" class="img-responsive img-rounded">
 
 ### ACPI PPC Probe failed
 
@@ -53,7 +55,7 @@ uim-pref-gtk
 
 .bashrc 파일에 추가
 
-{% highlight shell%}
+{% highlight bash%}
 parse_git_branch() {
 
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'

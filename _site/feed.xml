@@ -5,20 +5,22 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 02 Aug 2015 12:48:34 +0900</pubDate>
-    <lastBuildDate>Sun, 02 Aug 2015 12:48:34 +0900</lastBuildDate>
-    <generator>Jekyll v2.2.0</generator>
+    <pubDate>Mon, 03 Aug 2015 15:43:15 +0900</pubDate>
+    <lastBuildDate>Mon, 03 Aug 2015 15:43:15 +0900</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
     
       <item>
-        <title>Gtx960+ubuntu+cuda</title>
+        <title>GTX960 + Ubuntu 15.04 + Hello World</title>
         <description>&lt;p&gt;이번에 GTX960 그래픽카드를 질렀습니다.&lt;br /&gt; 
 설치 환경은 Ubuntu 15.04 + GTX960 인데, 혹시 나중에 다시 보게 될까봐 여기에다가 적습니다.&lt;/p&gt;
 
+&lt;p&gt;&lt;img src=&quot;/assets/posts/GTX960+Ubuntu15.04+Hello-World/gtx960.jpg&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
+
 &lt;h3 id=&quot;acpi-ppc-probe-failed&quot;&gt;ACPI PPC Probe failed&lt;/h3&gt;
 
-&lt;p&gt;GTX960 디바이스를 읽지 못해서 생기는 에러입니다. &lt;/p&gt;
+&lt;p&gt;GTX960 디바이스를 읽지 못해서 생기는 에러입니다.&lt;/p&gt;
 
-&lt;p&gt;그냥 warning 정도의 에러인데.. 이것과 상관없이.. 화면이 보이지 않는다면.. &lt;/p&gt;
+&lt;p&gt;그냥 warning 정도의 에러인데.. 이것과 상관없이.. 화면이 보이지 않는다면..&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;nomodeset&lt;/strong&gt; 옵션을 주고 우분투를 설치또는 로그인하면 됩니다.&lt;/p&gt;
 
@@ -28,12 +30,12 @@
 
 &lt;h3 id=&quot;bit-libraries&quot;&gt;32bit Libraries&lt;/h3&gt;
 &lt;p&gt;GTX960 Driver를 설치하기전, 32bit 라이브러리를 설치해줍니다. &lt;br /&gt;
-해당 라이브러리는 또한 Android Studio사용시 설치 가능하게 해줍니다. &lt;/p&gt;
+해당 라이브러리는 또한 Android Studio사용시 설치 가능하게 해줍니다.&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 lib32z1-dev&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;oracle-java&quot;&gt;Oracle Java&lt;/h3&gt;
-&lt;p&gt;오라클 자바도 설치합니다. (이건 Nsight등의 IDE를 돌릴때 사용합니다) &lt;/p&gt;
+&lt;p&gt;오라클 자바도 설치합니다. (이건 Nsight등의 IDE를 돌릴때 사용합니다)&lt;/p&gt;
 
 &lt;p&gt;* OpenJDK의 경우 성능이 좀 떨어지는 경우가 있습니다.&lt;/p&gt;
 
@@ -50,7 +52,7 @@ uim-pref-gtk&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;.bashrc 파일에 추가&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;parse_git_branch&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;parse_git_branch&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 
     git branch 2&amp;gt; /dev/null &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; sed -e &lt;span class=&quot;s1&quot;&gt;&amp;#39;/^[^*]/d&amp;#39;&lt;/span&gt; -e &lt;span class=&quot;s1&quot;&gt;&amp;#39;s/* \(.*\)/ (\1)/&amp;#39;&lt;/span&gt;
 
@@ -61,7 +63,7 @@ uim-pref-gtk&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.geforce.com/drivers&quot;&gt;http://www.geforce.com/drivers&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;위의 링크에서 드라이버를 다운받고 설치하면됨. &lt;/p&gt;
+&lt;p&gt;위의 링크에서 드라이버를 다운받고 설치하면됨.&lt;/p&gt;
 
 &lt;h3 id=&quot;cuda-toolkit&quot;&gt;CUDA Toolkit&lt;/h3&gt;
 
@@ -71,7 +73,7 @@ uim-pref-gtk&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ol&gt;
   &lt;li&gt;다운받은 폴더로 들어갑니다.&lt;/li&gt;
   &lt;li&gt;chmod로 실행파일로 바꿔줍니다.&lt;/li&gt;
-  &lt;li&gt;CTRL + ALT + F3 &lt;/li&gt;
+  &lt;li&gt;CTRL + ALT + F3&lt;/li&gt;
   &lt;li&gt;로그인&lt;/li&gt;
   &lt;li&gt;init 3&lt;/li&gt;
   &lt;li&gt;sudo su&lt;/li&gt;
@@ -112,10 +114,12 @@ hello&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;실행하면 뭐.. Hello World 프린트가 찍힌다.&lt;/p&gt;
 
 </description>
-        <pubDate>Mon, 03 Aug 2015 00:00:00 +0900</pubDate>
-        <link>http://andersonjo.github.io//2015/08/03/GTX960+Ubuntu+Cuda/</link>
-        <guid isPermaLink="true">http://andersonjo.github.io//2015/08/03/GTX960+Ubuntu+Cuda/</guid>
+        <pubDate>Mon, 03 Aug 2015 11:00:00 +0900</pubDate>
+        <link>http://andersonjo.github.io//ubuntu/2015/08/03/GTX960+Ubuntu+Cuda/</link>
+        <guid isPermaLink="true">http://andersonjo.github.io//ubuntu/2015/08/03/GTX960+Ubuntu+Cuda/</guid>
         
+        
+        <category>ubuntu</category>
         
       </item>
     
