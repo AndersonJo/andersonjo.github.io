@@ -69,7 +69,28 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
 [http://www.geforce.com/drivers][gtx-driver]
 
-위의 링크에서 드라이버를 다운받고 설치하면됨. 
+위의 링크에서 드라이버를 다운받으시고.. 기존의 nvidia 관련 라이브러리를 삭제해줍니다.
+
+{% highlight bash%}
+sudo apt-get remove nvidia* && sudo apt-get autoremove
+{% endhighlight %}
+
+이후에 nouveau 라이브러리를 블랙리스트시켜야 추후에 충돌이 없습니다.
+
+{% highlight bash%}
+gksudo gedit /etc/modprobe.d/blacklist-nouveau.conf
+{% endhighlight %}
+
+다음을 추가시켜줍니다.
+
+{% highlight bash%}
+blacklist nouveau
+blacklist lbm-nouveau
+options nouveau modeset=0
+alias nouveau off
+alias lbm-nouveau off
+{% endhighlight %}
+
 
 ### CUDA Toolkit
 
