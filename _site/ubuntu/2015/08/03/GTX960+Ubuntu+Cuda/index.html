@@ -133,6 +133,11 @@ options nouveau <span class="nv">modeset</span><span class="o">=</span>0
 <span class="nb">alias </span>nouveau off
 <span class="nb">alias </span>lbm-nouveau off</code></pre></div>
 
+<p>Kernel nouveau또한 disable시켜줍니다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo </span>options nouveau <span class="nv">modeset</span><span class="o">=</span><span class="m">0</span> <span class="p">|</span> sudo tee -a /etc/modprobe.d/nouveau-kms.conf
+sudo update-initramfs -u</code></pre></div>
+
 <h3 id="cuda-toolkit">CUDA Toolkit</h3>
 
 <p>아래의 주소에서 RUN파일을 다운로드 받습니다.<br />

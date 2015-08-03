@@ -91,6 +91,14 @@ alias nouveau off
 alias lbm-nouveau off
 {% endhighlight %}
 
+Kernel nouveau또한 disable시켜줍니다.
+
+{% highlight bash%}
+echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf
+sudo update-initramfs -u
+{% endhighlight %}
+
+
 
 ### CUDA Toolkit
 
