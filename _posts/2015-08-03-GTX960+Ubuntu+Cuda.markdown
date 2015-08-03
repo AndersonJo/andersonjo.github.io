@@ -102,11 +102,11 @@ make
 {% endhighlight %}
 
 
-파일이 잘 실행이 되는지 확인을 한다.
+파일이 잘 실행이 되는지 확인을 합니다.
 
 ### Nsight
 
-Toolkit 을 설치하게 되면 자동으로 Eclipse Nsight가 설치가 되어 있다.
+Toolkit 을 설치하게 되면 자동으로 Eclipse Nsight가 설치가 되어 있습니다.
 
 
 {% highlight c%}
@@ -129,7 +129,7 @@ hello
 
 {% endhighlight %}
 
-실행하면 뭐.. Hello World 프린트가 찍힌다.
+실행하면 뭐.. Hello World 프린트가 찍힙니다.
 
 
 [gtx-driver]: http://www.geforce.com/drivers
