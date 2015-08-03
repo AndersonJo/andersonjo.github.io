@@ -5,8 +5,8 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 04 Aug 2015 03:15:18 +0900</pubDate>
-    <lastBuildDate>Tue, 04 Aug 2015 03:15:18 +0900</lastBuildDate>
+    <pubDate>Tue, 04 Aug 2015 03:27:34 +0900</pubDate>
+    <lastBuildDate>Tue, 04 Aug 2015 03:27:34 +0900</lastBuildDate>
     <generator>Jekyll v2.2.0</generator>
     
       <item>
@@ -84,6 +84,11 @@ options nouveau &lt;span class=&quot;nv&quot;&gt;modeset&lt;/span&gt;&lt;span cl
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;options nouveau &lt;span class=&quot;nv&quot;&gt;modeset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; sudo tee -a /etc/modprobe.d/nouveau-kms.conf
 sudo update-initramfs -u&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+&lt;blockquote&gt;
+  &lt;p&gt;CUDA Toolkit을 설치시 드라이버만 따로 설치할 필요 없습니다.&lt;br /&gt; 
+Cuda Toolkit안에 드라이버까지 포함되어 있습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;h3 id=&quot;cuda-toolkit&quot;&gt;CUDA Toolkit&lt;/h3&gt;
 
 &lt;p&gt;아래의 주소에서 RUN파일을 다운로드 받습니다.&lt;br /&gt;
@@ -131,6 +136,18 @@ make
 hello&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;실행하면 뭐.. Hello World 프린트가 찍힙니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;saving-a-new-x-configuration&quot;&gt;Saving a new X Configuration&lt;/h3&gt;
+
+&lt;p&gt;Nvidia 드라이버 설치시 자동으로 해주긴 하지만.. 혹시 새롭게 다시 재정의 필요시 다음의 명령어를 실행시켜줍니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo nvidia-xconfig&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;low---&quot;&gt;검은화면, Low 그래픽 화면.. 에러&lt;/h3&gt;
+
+&lt;p&gt;에러가 일어났을 경우에만.. 다음의 라이브러리들을 설치합니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo apt-get install dkms fakeroot build-essential linux-headers-generic&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 </description>
         <pubDate>Mon, 03 Aug 2015 11:00:00 +0900</pubDate>

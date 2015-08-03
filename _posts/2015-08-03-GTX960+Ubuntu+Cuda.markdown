@@ -98,7 +98,8 @@ echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf
 sudo update-initramfs -u
 {% endhighlight %}
 
-
+> CUDA Toolkit을 설치시 드라이버만 따로 설치할 필요 없습니다.<br> 
+> Cuda Toolkit안에 드라이버까지 포함되어 있습니다.
 
 ### CUDA Toolkit
 
@@ -163,3 +164,21 @@ hello
 
 [gtx-driver]: http://www.geforce.com/drivers
 [cuda-toolkit]: https://developer.nvidia.com/cuda-downloads
+
+### Saving a new X Configuration
+
+Nvidia 드라이버 설치시 자동으로 해주긴 하지만.. 혹시 새롭게 다시 재정의 필요시 다음의 명령어를 실행시켜줍니다.
+
+{% highlight bash%}
+sudo nvidia-xconfig
+{% endhighlight %}
+
+
+### 검은화면, Low 그래픽 화면.. 에러
+
+에러가 일어났을 경우에만.. 다음의 라이브러리들을 설치합니다.
+
+{% highlight bash%}
+sudo apt-get install dkms fakeroot build-essential linux-headers-generic
+{% endhighlight %}
+ 
