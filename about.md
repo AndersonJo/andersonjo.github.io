@@ -45,6 +45,17 @@ Neural Network에 관심이 많고, 이것이 미래라고 생각하고 있습�
 ![alt tag]({{page.asset_path}}neural.jpg)
 
 
+### CDNetworks - SLA, TDD 도입
+
+Portal 팀에서 선임연구원(과장)
+
+Django, Python, Angular.js, HighChart, R (Linear Regression)
+
+* 참고로 아래 사진은 Highchart 라이브러리이고 SLA에서 해당 라이브러리를 사용해서 Performance, Availability를 보여주었다.
+
+ ![alt tag]({{page.asset_path}}highchart.jpg)
+
+
 ### 메탈슬러그 레볼루션
 
 한때 카카오톡 게임 1위, 구글플레이 1위를 했었던 게임입니다.<br>
@@ -130,15 +141,7 @@ Google Closure사용하고 (현재 구글에서 사용하는 기술), MongoDB도
  ![alt tag]({{page.asset_path}}tsb04.jpeg)
  ![alt tag]({{page.asset_path}}tsb05.jpeg)
 
-### CDNetworks - SLA, TDD 도입
 
-Portal 팀에서 선임연구원(과장)으로 아주 잠깐 일했었습니다.
-
-Django, Python, Angular.js, HighChart, R (Linear Regression)
-
-* 참고로 아래 사진은 Highchart 라이브러리이고 SLA에서 해당 라이브러리를 사용해서 Performance, Availability를 보여주었다.
-
- ![alt tag]({{page.asset_path}}highchart.jpg)
  
  
 ### 프리랜서
