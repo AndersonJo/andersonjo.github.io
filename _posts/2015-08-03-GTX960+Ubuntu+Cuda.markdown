@@ -119,9 +119,10 @@ sudo update-initramfs -u
 3. CTRL + ALT + F3 
 4. 로그인
 5. init 3
-6. sudo su
-7. ./NVIDIA*.run 파일 실행
-8. reboot
+6. sudo service lightdm stop
+7. sudo su
+8. ./NVIDIA*.run 파일 실행
+9. reboot
 
 > reboot 이후에 로그인시 바로 로그 아웃이 되버리면, Ctrl + Alt + F3 누르고 home 에서 .Xauthority를 삭제시켜준다.
 
