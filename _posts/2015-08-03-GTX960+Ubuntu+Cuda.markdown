@@ -51,6 +51,14 @@ uim-pref-gtk
 {% endhighlight %}
 
 
+### Ubuntu 14 
+
+우분투 14.x 버젼에서만...
+
+{% highlight bash%}
+sudo apt-get install nautilus-open-terminal
+{% endhighlight %}
+
 ### Command Prompt 설정 (Optional)
 
 .bashrc 파일에 추가
