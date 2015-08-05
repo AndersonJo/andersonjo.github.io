@@ -5,9 +5,241 @@
     <description>개발자 조창민입니다. Machine Learning, Python, Django, R, Android, AWS, Game Server, Startup 등등 다양한 경험을 갖고 있는 개발자 입니다.</description>
     <link>http://andersonjo.github.io//</link>
     <atom:link href="http://andersonjo.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 04 Aug 2015 03:27:34 +0900</pubDate>
-    <lastBuildDate>Tue, 04 Aug 2015 03:27:34 +0900</lastBuildDate>
-    <generator>Jekyll v2.2.0</generator>
+    <pubDate>Wed, 05 Aug 2015 14:42:21 +0900</pubDate>
+    <lastBuildDate>Wed, 05 Aug 2015 14:42:21 +0900</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Naive Bayes</title>
+        <description>&lt;p&gt;Bayes 공식이나 이론은 이미 &lt;a href=&quot;/machine-learning/2015/07/29/Monty-Hall-Problem/&quot;&gt;Monty Hall&lt;/a&gt; 문제를 풀면서 설명을 했습니다.&lt;/p&gt;
+
+&lt;p&gt;오늘은 이 Bayes 공식을 이용한.. 정말 간단하지만 왠만한 복잡도 높은 다른 classification methods 보다 강력한 퍼포먼스(정확도)를
+보여주는 Naive Bayes를 예제와 함께 설명하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;일단 Naive Bayes의 공식은 다음과 같습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/Naive-Bayes/naive-bayes-formula.gif&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;C&lt;sub&gt;L&lt;/sub&gt; 은 클래스 또는 분류를 나타냅니다.&lt;/li&gt;
+  &lt;li&gt;F 는 features&lt;/li&gt;
+  &lt;li&gt;1/Z 는 scaling factor&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;위의 공식 맨 오른쪽에 보면 P(F|C) 요런게 있는데 결국 conditional probability입니다.&lt;br /&gt;
+하지만 Naive Bayes는 각각의 multiple 기호 안에 있는 likelihood 들이 모두 independent하다고 가정을 합니다.
+즉 서로 영향을 미치지 않고 동전 앞이 나올지 뒤가 나올지 여러번 던지듯이 서로 연관성이 없다고 가정을 하고 들어갑니다.&lt;/p&gt;
+
+&lt;p&gt;이유는 서로간에 dependent하다면 계산방식이 매우 복잡해지며 효율적인 알고리즘으로 사용하기 적합하지 않기 때문입니다.
+그럼에도 Naive Bayes는 왠만한 복잡도 있는 machine learning 알고리듬에 비해서 매우 강력한 성능을 보여줍니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/posts/Naive-Bayes/what-the-fuck.jpg&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;대체 뭔 소리여 ㅋㅋㅋ&lt;br /&gt; 
+그냥 예제하나 풀면 다 이해됩니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;references&quot;&gt;References&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/assets/posts/Naive-Bayes/data.csv&quot;&gt;데이터 다운로드&lt;/a&gt;&lt;br /&gt;
+&lt;em&gt;데이터는 &lt;a href=&quot;http://www.dt.fee.unicamp.br/~tiago/smsspamcollection/&quot;&gt;Unicamp&lt;/a&gt; 에서 가져왔습니다.&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.amazon.com/Machine-Learning-R-Brett-Lantz/dp/1782162143/ref=sr_1_1?ie=UTF8&amp;amp;qid=1438737465&amp;amp;sr=8-1&amp;amp;keywords=machine+learning+with+r&quot;&gt;Machine Learning With R&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;sms-spam-classification&quot;&gt;SMS Spam Classification&lt;/h1&gt;
+
+&lt;p&gt;문자중에는 스팸 문자도 있고, 친구한테서 온 문자들도 있습니다.&lt;br /&gt;
+아마도 스팸문자 안에는 ‘할인’, ‘비아그라’, ‘세일’ 같은 단어들이 많을거라 생각됩니다.&lt;br /&gt;
+친구나 연인끼리의 문자를 보냈다면 ‘지금’, ‘집’, ‘어디’, ‘간다’, ‘사랑’ 같은 단어들이 좀 더 많이 있지 않을까 추측해 봅니다.&lt;/p&gt;
+
+&lt;p&gt;자! 포인트는 이러한 스팸에서 나오는 단어들 그리고 친구나 연인끼리의 문자에서 나오는 단어들을 features로 삼아서 
+확률적으로 해당 문자가 스팸인지 또는 햄(ham : 스팸이 아닌 문자)인지 알아낼수 있지 않을까요?&lt;/p&gt;
+
+&lt;p&gt;중요 포인트는 ‘할인’, ‘비아그라’, ‘세일’ 같은 단어가 나왔다고 무조건 스팸문자는 아니고, &lt;br /&gt;
+또한 ‘집’, ‘어디’, ‘간다’, ‘사랑’ 이라는 단어가 나왔다고 무조건 친구나 연인이 보낸 문자로 가정 지으면 안됩니다.&lt;/p&gt;
+
+&lt;p&gt;아래 예제에서는 스팸에서 나온 문자들은 스팸일 확률을 높이는 단어들로 묶고, 햄에서 나온 단어들은 스팸이 아닌 확률로 좀더 높입니다.&lt;/p&gt;
+
+&lt;p&gt;일단 예제에서 사용되는 용어부터 정의하겠습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;용어&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;내용&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;spam&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;스팸문자&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;ham&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;스팸이 아닌 문자&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;라이브러리들을 설치및 import해 줍니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;install.packages&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;tm&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Text Mining Library&lt;/span&gt;
+install.packages&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;wordcloud&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+install.packages&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;e1071&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+install.packages&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;gmodels&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;wordcloud&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;tm&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;e1071&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;gmodels&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;데이터를 읽습니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;sms &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; read.delim&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;data.csv&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; header&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; sep&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;\t&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kp&quot;&gt;colnames&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;type&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;text&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+sms&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;text &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;as.vector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;text&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;그 다음으로 Data Preparation이 필요합니다. &lt;br /&gt;
+문자안에 들어있는 단어들을 통해서 Bayes 확률적으로 이것이 spam 인지 ham인지 알기 위해서는 필요없는 단어들은 제거해주는게 좋습니다.
+예를 들어서 but, at, were, was, in 같은 단어들은 그닥 필요가 없으며, 숫자같은 경우 숫자만으로는 spam인지 ham인지 구분짓기가 힘들기 때문에..
+숫자또한 제거해 줍니다.&lt;/p&gt;
+
+&lt;p&gt;참고로 corpus는 하나의 글 뭉탱이라고 생각하면 되며, 그냥 sms$text 전체 말뭉치라고 생각하면 됩니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;corpus &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; Corpus&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;VectorSource&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;text&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+corpus.clean &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; tm_map&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; content_transformer&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;tolower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+corpus.clean &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; tm_map&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.clean&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; removeNumbers&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+corpus.clean &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; tm_map&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.clean&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; removeWords&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; stopwords&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+corpus.clean &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; tm_map&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.clean&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; removePunctuation&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+corpus.clean &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; tm_map&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.clean&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; stripWhitespace&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+dtm &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; DocumentTermMatrix&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.clean&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;그 다음으로 75% 데이터는 트레이닝용으로 그리고 나머지는 Naive Bayes를 이용한 스팸 분류가 잘 되는지 퍼포먼스 테스트용으로 사용하겠습니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;sms_raw.train &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; sms&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;as.integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+sms_raw.test &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; sms&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;as.integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+dtm.train &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; dtm&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;as.integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;dtm&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),]&lt;/span&gt;
+dtm.test &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; dtm&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;as.integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;dtm&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;dtm&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+corpus.train &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; corpus.clean&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;as.integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.clean&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+corpus.test &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;  corpus.clean&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;as.integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.clean&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.clean&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;단어들을 구름 뭉탱으로 봅시다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;wordcloud&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;subset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;spam&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;text&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; min.freq &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; random.order &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+wordcloud&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;subset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; type&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;ham&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;text&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; min.freq &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; random.order &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;F&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div style=&quot;text-align:center; font-size:2em;&quot;&gt;Spam&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/posts/Naive-Bayes/spam.png&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
+
+&lt;div style=&quot;text-align:center; font-size:2em;&quot;&gt;Ham&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/posts/Naive-Bayes/ham.png&quot; class=&quot;img-responsive img-rounded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;DocumentTermMatrix는 각각의 문자들 마다 전체 단어중 몇개가 들어 있는지를 나타냅니다.&lt;br /&gt;
+예를 들어서. … 다음과 같이 나올수 있습니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;sales&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;free&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;now&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;love&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;2&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;inspect(sms.train) 해보면 정확하게 볼 수 있는데.. 각각의 SMS 문자마다 전체 단어 중에서 몇개 나왔는지 보여주기 때문에.. 
+R 에서 보면 좀 난감한게 좀 있습니다.&lt;/p&gt;
+
+&lt;p&gt;findFreqTerms 같은경우는 전체중에서 5번 이상 나온 단어들만 사용해서 분석하겠다는 뜻입니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;sms.train &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; DocumentTermMatrix&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.train&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;findFreqTerms&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;dtm.train&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+sms.test &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;  DocumentTermMatrix&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;corpus.test&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;findFreqTerms&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;dtm.test&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;apply함수를 통해서 각각의 메세지를 ‘Yes’, ‘No’ 만 갖고있는 factor로 만들어줌&lt;/p&gt;
+
+&lt;p&gt;* 여리서 MARGIN=1 은 columns를 가르키고, MARGIN=2는 rows를 가르킵니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;convert_counts &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+  x &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;ifelse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  x &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; levels&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; labels&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;No&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;Yes&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+sms.train &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms.train&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MARGIN&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; convert_counts&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+sms.test &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms.test&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; MARGIN&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; convert_counts&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;training-and-predicting-a-model&quot;&gt;Training and Predicting a model&lt;/h1&gt;
+
+&lt;p&gt;e1071 라이브러리를 사용해서 naive bayes를 처리하도록 하겠습니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;sms_classifier &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; naiveBayes&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms.train&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; sms_raw.train&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;type&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; laplace&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+sms_predictions &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; predict&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms_classifier&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; sms.test&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+CrossTable&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sms_predictions&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; sms_raw.test&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;type&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+   Cell Contents
+&lt;span class=&quot;o&quot;&gt;|-------------------------|&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;                       N &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; Chi&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;square contribution &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           N &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; Row Total &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           N &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; Col Total &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;         N &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; Table Total &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;|-------------------------|&lt;/span&gt;
+
+ 
+Total Observations &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; Table&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;1394&lt;/span&gt; 
+
+ 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; sms_raw.test&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;type 
+sms_predictions &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;       ham &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;      spam &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; Row Total &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;----------------|-----------|-----------|-----------|&lt;/span&gt;
+            ham &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;      &lt;span class=&quot;m&quot;&gt;1200&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;        &lt;span class=&quot;m&quot;&gt;16&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;      &lt;span class=&quot;m&quot;&gt;1216&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;    &lt;span class=&quot;m&quot;&gt;19.277&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;128.373&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.987&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.013&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.872&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.990&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.088&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.861&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.011&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;----------------|-----------|-----------|-----------|&lt;/span&gt;
+           spam &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;        &lt;span class=&quot;m&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;       &lt;span class=&quot;m&quot;&gt;166&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;       &lt;span class=&quot;m&quot;&gt;178&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;131.691&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;876.974&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.067&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.933&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.128&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.010&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.912&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.009&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.119&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;----------------|-----------|-----------|-----------|&lt;/span&gt;
+   Column Total &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;      &lt;span class=&quot;m&quot;&gt;1212&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;       &lt;span class=&quot;m&quot;&gt;182&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;      &lt;span class=&quot;m&quot;&gt;1394&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+                &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.869&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;0.131&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;----------------|-----------|-----------|-----------|&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Tue, 04 Aug 2015 11:00:00 +0900</pubDate>
+        <link>http://andersonjo.github.io//machine-learning/2015/08/04/Naive-Bayes/</link>
+        <guid isPermaLink="true">http://andersonjo.github.io//machine-learning/2015/08/04/Naive-Bayes/</guid>
+        
+        
+        <category>machine-learning</category>
+        
+      </item>
     
       <item>
         <title>GTX960 + Ubuntu 15.04 + Hello World</title>
@@ -18,9 +250,9 @@
 
 &lt;h3 id=&quot;acpi-ppc-probe-failed&quot;&gt;ACPI PPC Probe failed&lt;/h3&gt;
 
-&lt;p&gt;GTX960 디바이스를 읽지 못해서 생기는 에러입니다. &lt;/p&gt;
+&lt;p&gt;GTX960 디바이스를 읽지 못해서 생기는 에러입니다.&lt;/p&gt;
 
-&lt;p&gt;그냥 warning 정도의 에러인데.. 이것과 상관없이.. 화면이 보이지 않는다면.. &lt;/p&gt;
+&lt;p&gt;그냥 warning 정도의 에러인데.. 이것과 상관없이.. 화면이 보이지 않는다면..&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;nomodeset&lt;/strong&gt; 옵션을 주고 우분투를 설치또는 로그인하면 됩니다.&lt;/p&gt;
 
@@ -30,12 +262,12 @@
 
 &lt;h3 id=&quot;bit-libraries&quot;&gt;32bit Libraries&lt;/h3&gt;
 &lt;p&gt;GTX960 Driver를 설치하기전, 32bit 라이브러리를 설치해줍니다. &lt;br /&gt;
-해당 라이브러리는 또한 Android Studio사용시 설치 가능하게 해줍니다. &lt;/p&gt;
+해당 라이브러리는 또한 Android Studio사용시 설치 가능하게 해줍니다.&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 lib32z1-dev&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;oracle-java&quot;&gt;Oracle Java&lt;/h3&gt;
-&lt;p&gt;오라클 자바도 설치합니다. (이건 Nsight등의 IDE를 돌릴때 사용합니다) &lt;/p&gt;
+&lt;p&gt;오라클 자바도 설치합니다. (이건 Nsight등의 IDE를 돌릴때 사용합니다)&lt;/p&gt;
 
 &lt;p&gt;* OpenJDK의 경우 성능이 좀 떨어지는 경우가 있습니다.&lt;/p&gt;
 
@@ -97,7 +329,7 @@ Cuda Toolkit안에 드라이버까지 포함되어 있습니다.&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;다운받은 폴더로 들어갑니다.&lt;/li&gt;
   &lt;li&gt;chmod로 실행파일로 바꿔줍니다.&lt;/li&gt;
-  &lt;li&gt;CTRL + ALT + F3 &lt;/li&gt;
+  &lt;li&gt;CTRL + ALT + F3&lt;/li&gt;
   &lt;li&gt;로그인&lt;/li&gt;
   &lt;li&gt;init 3&lt;/li&gt;
   &lt;li&gt;sudo su&lt;/li&gt;
