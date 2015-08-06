@@ -73,6 +73,34 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 {% endhighlight %}
 
 
+### Current Nvidia Card
+
+현재 그래픽 카드 모델을 알고 싶을때는...
+{% highlight bash%}
+lspci -vnn | grep -i VGA -A 12
+{% endhighlight %}
+
+그래픽 카드 모델명을 알았으면.. [http://www.nvidia.com/Download/index.aspx][nvidia-download]로 들어갑니다.
+
+모델명을 입력하고 검색하면.. 어떤 버젼을 다운받아야 하는지 나옵니다. 
+
+예를 들어서 352 같은것..
+
+
+### apt-get으로 설치하기
+
+먼저 xorg-edgers ppa를 등록을 시킵니다.<br>
+그리고 바로 위에서 알아낸 버젼으로 인스톨을 합니다.
+
+{% highlight bash%}
+sudo add-apt-repository ppa:xorg-edgers/ppa -y
+sudo apt-get update
+sudo apt-get install nvidia-352
+{% endhighlight %}
+
+apt-get으로 설치가 싫으면.. 아래의 집접 Nvidia홈페이지에서 다운받아서 하는 방법으로 해도 됩니다.
+
+
 ### GTX960 Driver 
 
 [http://www.geforce.com/drivers][gtx-driver]
@@ -198,4 +226,7 @@ sudo nvidia-xconfig
 {% highlight bash%}
 sudo apt-get install dkms fakeroot build-essential linux-headers-generic
 {% endhighlight %}
- 
+
+
+
+[nvidia-download]: http://www.nvidia.com/Download/index.aspx
