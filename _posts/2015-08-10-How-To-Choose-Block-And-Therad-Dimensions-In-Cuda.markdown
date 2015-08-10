@@ -7,6 +7,9 @@ asset_path: /assets/posts/How-To-Choose-Block-And-Thread/
 
 ---
 
+<img src="{{page.asset_path}}gtx960.jpg" class="img-responsive img-rounded">
+*\*위의 사진은 나의 애마.. GTX960*
+
 Neural Network, Image Recognition, Voice Recognition 등등 <br>
 게임 이외의 다양한 분야에서 GPU의 활용은 어느때보다도 핵인기? 인듯 합니다.
 
