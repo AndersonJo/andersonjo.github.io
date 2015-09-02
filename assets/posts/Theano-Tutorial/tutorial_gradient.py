@@ -5,21 +5,29 @@
 @homepage: http://andersonjo.github.io/
 """
 from matplotlib import pylab
+import numpy as np
+
 from theano import tensor as T
 from theano import function
-import numpy as np
 from theano import shared
 
+
+# Define scalars and vectors
 m = T.dscalar('m')
 b = T.dscalar('b')
 x = T.dvector('x')
 y = T.dvector('y')
+N = T.iscalar('N')
+inc = T.iscalar('inc')
+
+# Define Error Function
 error_function = function([x, y, m, b], (y - (m * x + b)) ** 2)
 
-total_error_value = shared(0)
-inc = T.iscalar('inc')
-total_error = function([inc], total_error_value, updates=[(total_error_value, total_error_value + inc)])
+# Define b_gradient or y-intercept
+b_gradient = function([x, y, m, b, N], T.sum(2. / N * -(y - (m * x + b))))
 
+# Define m_gradient or slope
+m_gradient = function([x, y, m, b, N], T.sum(2. / N * -x * (y - (m * x + b))))
 
 
 def graph(data):
@@ -28,11 +36,36 @@ def graph(data):
     pylab.show()
 
 
+def graph_with_line(data, m, b):
+    N = len(data)
+    line = data[:, 0] * m + b
+
+    pylab.scatter(data[:, 0], data[:, 1])
+    pylab.plot(data[:, 0], line)
+    pylab.grid()
+    pylab.show()
+
+
+def run_gradient_descent(data, learning_rate, num_iterations):
+    _b = 0
+    _m = 0
+    _N = len(data)
+    for i in range(num_iterations):
+        _b -= (b_gradient(data[:, 0], data[:, 1], _m, _b, _N) * learning_rate)
+        _m -= (m_gradient(data[:, 0], data[:, 1], _m, _b, _N) * learning_rate)
+    return [_m, _b]
+
+
 def main():
     data = np.loadtxt(open('data.csv', 'r'), delimiter=',')
     init_m = 0
     init_b = 0
-    print error_function(data[:, 0], data[:, 1], init_m, init_b)
+    learning_rate = 0.0001
+    num_iterations = 1000
+    # print error_function(data[:, 0], data[:, 1], init_m, init_b)
+    m, b = run_gradient_descent(data, learning_rate, num_iterations)
+    print error_function(data[:, 0], data[:, 1], m, b)
+    graph_with_line(data, m, b)
 
 
 if __name__ == '__main__':
