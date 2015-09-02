@@ -147,10 +147,85 @@ no_default_updates=True 값을 하면 g()함수를 불렀을때 random state값�
 
 주의하실 점은 **Random Stream은 오직 CPU에서만** 작동을 하게 됩니다. (GPU방법은 따로 있습니다.)
 
-## 04 - Recognizing Hand-written Numbers
+## 04 - Gradient Descent for Linear Regression
+
+* [Gradient Descent Wikipedia][gd-wiki]
+* [Download data.csv][gd-data]
+* [Code][gd-py]
+
+어떤 Machine Learning 알고리즘이 잘만들어진 알고리즘인지 측정을 하고, 그것에 따라서 수치를 조정하는 방법이 Gradient Descent입니다. 
+
+데이터에는 다음과 같은 그래프를 볼 수 있습니다.
+
+<img src="{{ page.asset_path }}gd-data.png" class="img-responsive img-rounded">
+
+우리는 여기에서 저 그래프위에 선을 하나 그린다고 생각을 하겠습니다.
+해당 선은 저 점들과 가장 일치하는 선이겠죠. 
+
+먼저 이 문제를 해결하기 위해서는 Error Function (또는 Cost Function)을 통하여 해당 Line이 제대로 그려졌는지 확인이 필요합니다. 
+
+<img src="{{ page.asset_path }}cost-error.png" class="img-responsive img-rounded">
+
+1차함수의 선을 그리기 위해서는 mx+b 를 합니다. m은 slope이고, b는 constant로서 x=0일때 y-intercept를 뜻합니다. 
+mx+b로 나온값에 실제 y값을 빼줘서 얼마나 오차가 나는지 확인을 하고, squared 제곱의 의미는 그냥 음수가 나오지 않도록 하기 위함입니다. 
+
+
+{% highlight python %}
+m = T.dscalar('m')
+b = T.dscalar('b')
+x = T.dvector('x')
+y = T.dvector('y')
+error_function = function([x, y, m, b], (y - (m * x + b)) ** 2)
+
+total_error_value = shared(0)
+inc = T.iscalar('inc')
+total_error = function([inc], total_error_value, updates=[(total_error_value, total_error_value + inc)])
+{% endhighlight %}
+
+초기 m, b값은 그냥 0으로 줍니다. 얼마나 오차가 나는지 한번 살펴 봅니다.
+
+{% highlight python %}
+def main():
+    data = np.loadtxt(open('data.csv', 'r'), delimiter=',')
+    init_m = 0
+    init_b = 0
+    print error_function(data[:, 0], data[:, 1], init_m, init_b)
+    
+[  1005.33421975   4730.35770901   3914.05167879   5118.92058397
+   7609.23429968   6117.04159022   6342.84387127   3501.26514857
+   5674.79606602   5083.81547264   3043.25193497   6802.76016245
+   3845.10656209   5684.08491107   6631.85339334   3687.35589337
+   6871.16717487   9482.84431289   2386.04438721   3235.01737984
+   7035.61361019  14063.87682129   3277.77083174   2641.11135957
+   5682.24264549   5589.88956505   9111.66712845   9068.63215211
+   6249.2829212    6960.91054165   4014.3363105    1715.02706918
+   5870.21698483   9364.3489863    5488.45833513   4433.98097653
+   6047.93685757   2572.47669943   3859.46229933   3697.88609762
+   2775.49673638   3430.42436746   6873.401766     3772.99497455
+  13281.21475477   2076.67856571   2925.0849832    7743.0237162
+   2779.97775718   8756.48998958   6426.6317191    4238.23284942
+   4298.41534656   4261.59419717   5392.64657904   5060.8608798
+   6257.25766394   7485.80357201   7181.32483175   3523.47310284
+   3804.92048537   4878.68780665   7412.91574855   3493.85487957
+   4885.96549388   2012.64307281   7309.91959392   9127.2585336
+   4935.33428972   2779.5813377    2539.42120334   4050.35492192
+   5219.66528698   3342.28665662  10869.543231     7506.83968493
+   8369.83054884   3050.53636425   6328.27197574   2011.26455282
+   6433.2467682    6912.71684298   3105.10725537   6027.06629426
+   9811.18278215   6260.07666692   4842.61470413   4831.71007062
+   5429.85713517   3765.89697248   4511.89699644   7339.04103009
+  13191.41173742   8122.25824265   9588.29135157   6648.28086595
+   5200.11638213   7264.4950756    4385.74504727   2857.37226088]
+{% endhighlight %}
+
+숫자값들이 큰것을 볼 수 있습니다. 이 만큼 오차가 나고 있다는 뜻입니다. 
+우리는 저 값들을 줄이고자 합니다. 
+
+## 05 - Recognizing Hand-written Numbers
 
 * [Download mnist.pkl.gz][mnist]
 * [Reference web page][deep-learning-get-started]
+
 
 <img src="{{ page.asset_path }}small_mnist.png" class="img-responsive img-rounded">
 
@@ -177,4 +252,8 @@ with gzip.open('mnist.pkl.gz', 'rb') as f:
 [tutorial_shared_variable]: {{page.asset_path}}tutorial_shared_variable.py
 [tutorial_random]: {{page.asset_path}}tutorial_random.py
 [deep-learning-get-started]: http://deeplearning.net/tutorial/gettingstarted.html
+[gd-wiki]: https://en.wikipedia.org/wiki/Gradient_descent
+[gd-data]: {{page.asset_path}}data.csv
+[gd-py]: {{page.asset_path}}tutorial_gradient.py
+
 [mnist]: http://deeplearning.net/data/mnist/mnist.pkl.gz
