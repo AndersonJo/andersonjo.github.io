@@ -7,22 +7,25 @@ asset_path: /assets/images/about/
 
 안녕하세요 Anderson Jo 입니다.
 
-8살때 처음 프로그래밍 시작해서 초등학교 6학년때는 게임도 만들어보고.. 중학교때는 1400원 받으면서 컴퓨터 고쳐주러 다녔습니다.
-고등학교때는 웹프리랜서로 일을 시작했고.. 한때 메탈밴드에서 보컬, DJ하면서 음악에 심취한 적도 있습니다. 
+처음 프로그래밍을 시작한것은 부모님이 바쁘셔서 아시는분이 운영하시는 컴퓨터학원에 저를 등록시킨게 처음이었습니다. 
+검은 화면에 뭔가 글자를 치면 보글보글(흑백), 페르시안 왕자가 되는걸 보고 오직 게임을 하기 위해서 열씸히 도스를 익혔습니다. 
 
-군대는 수색대 나왔습니다. 허허허
-전역한 이후로 스타트업 꽤 오래 하다가 지쳐서 게임회사도 들어가서 일하고, 강사도 해보고, 네트워크회사 (뭐 여긴 잠시이긴 하지만..)
-에서도 일하고.. 다시 스타트업하려다가 비즈니스 모델이 안좋아서 망하고 허허
+도스 책사서 공부하는데 디렉토리의 개념이 이해가 안되더군요.. 한달동안 책 붙잡고 무슨 수능공부하듯이 밑줄그으면서 공부했던게 아직도 잊혀지지 않습니다.
+초등학교 6학년때는 게임도 만들고, 중학교때는 컴퓨터 수리하러 다녔습니다. 
+고등학교때는 3D Max로 인테리어 디자인도 하고, 플래쉬에 엄청 빠져서 예술적인 웹싸이트? 도 만들어보고  (3D 그래픽이 화려한 플래쉬 싸이트), 
+엽기 싸이트만들고, 친구들 싸이트, 교내 싸이트 만드니까 반응이 매우 좋았습니다. 그때부터 사장님들 찾아다니면서 프리랜서 뛰었습니다.
+웹싸이트는 없어졌지만 아직도 친구들이 올린 뽀샾 사진들, 선생님 합성 사진들보면 그 시절을 떠올리곤 합니다. 
 
-좋았던 일보다는 망하거나 실패하거나 힘들었던 일이 더 많은거 같습니다. 뭐 지금도 별로 나아진건 없고요..
-그런데 중요한건 남들보다 더 많이 실패해봤기 때문에 다른 사람이 못보는 나름의 안목은 있습니다. 
+20대에는 뭔가 망하거나 실패해본게 너무나 많습니다. 스타트업에 뛰어들었는데 기술력많으로 회사를 운영하는게 아니더군요. 
+마케팅, 영업, 제휴능력, 사람과의 관계들.. 여기저기 부딛치고 넘어지면서 체험하면서 배우게 되더군요. 
+제가 이런말 할 능력은 안되지만.. 왜 사업에 실패하는지는 알겠더군요 그리고 나름의 안목도 생기더군요. 
 
 - 어떤 사업을 할때는 반드시 그 시장안에서 1등을 해야하는 사업을 할것
 - 좋은 개발자, 팀원을 얻는 것이 가장 중요 
 - 사업에 따라서 기술 보다는 그냥 발로 뛰어다니는게 더 좋을수도 있다는 것
 - 돈되는 사업 따라하지 말것.. 더 멀리보고 뛸것
 - 사업을 하기 위해서는 신념이 있어야 한다는 것 (Tenacity)
-- 돈이 안벌린다고 가치가 없다는 말은 아님.. 돈이 안벌려도 가치가 있는 일이 있음
+- 돈이 안 벌린다고 가치가 없다는 말은 아님.. 돈이 안 벌려도 가치가 있는 일이 있음
 
 비유적으로..
 
@@ -53,7 +56,20 @@ Django, Python, Angular.js, HighChart, R (Linear Regression)
 
 * 참고로 아래 사진은 Highchart 라이브러리이고 SLA에서 해당 라이브러리를 사용해서 Performance, Availability를 보여주었다.
 
- ![alt tag]({{page.asset_path}}highchart.jpg)
+![alt tag]({{page.asset_path}}highchart.jpg)
+![alt tag]({{page.asset_path}}sla01.png)
+![alt tag]({{page.asset_path}}sla02.png)
+![alt tag]({{page.asset_path}}sla03.png)
+
+
+### HBI연구소 강의
+
+Python, Django, Pandas, Numpy, Data Analysis, Web Crawling, AWS 등등을 강의했습니다.
+
+![alt tag]({{page.asset_path}}aws.png)
+![alt tag]({{page.asset_path}}django.png)
+![alt tag]({{page.asset_path}}pandas.png)
+
 
 
 ### 메탈슬러그 레볼루션
@@ -116,11 +132,11 @@ Collective Intelligence가 들어갔으며 웨딩플래너를 추천해주는데
 
 > Android, Django, Python, AWS, CentOS, Web Crawling
  
- ![alt tag]({{page.asset_path}}mket_style_01.png)
- ![alt tag]({{page.asset_path}}mket_style_02.png)
- ![alt tag]({{page.asset_path}}mket_style_03.png)
- ![alt tag]({{page.asset_path}}mket_style_04.png)
- ![alt tag]({{page.asset_path}}mket_style_05.png)
+![alt tag]({{page.asset_path}}mket_style_01.png)
+![alt tag]({{page.asset_path}}mket_style_02.png)
+![alt tag]({{page.asset_path}}mket_style_03.png)
+![alt tag]({{page.asset_path}}mket_style_04.png)
+![alt tag]({{page.asset_path}}mket_style_05.png)
  
  
 ### TinySocialBox - Chorme App
@@ -135,11 +151,11 @@ Google Closure사용하고 (현재 구글에서 사용하는 기술), MongoDB도
 
 페이스북의 페이지와 비슷하다고 보면 됩니다.
 
- ![alt tag]({{page.asset_path}}tsb01.jpeg)
- ![alt tag]({{page.asset_path}}tsb02.jpeg)
- ![alt tag]({{page.asset_path}}tsb03.jpeg)
- ![alt tag]({{page.asset_path}}tsb04.jpeg)
- ![alt tag]({{page.asset_path}}tsb05.jpeg)
+![alt tag]({{page.asset_path}}tsb01.jpeg)
+![alt tag]({{page.asset_path}}tsb02.jpeg)
+![alt tag]({{page.asset_path}}tsb03.jpeg)
+![alt tag]({{page.asset_path}}tsb04.jpeg)
+![alt tag]({{page.asset_path}}tsb05.jpeg)
 
 
  
