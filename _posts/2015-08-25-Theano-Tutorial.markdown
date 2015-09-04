@@ -147,7 +147,46 @@ no_default_updates=True 값을 하면 g()함수를 불렀을때 random state값�
 
 주의하실 점은 **Random Stream은 오직 CPU에서만** 작동을 하게 됩니다. (GPU방법은 따로 있습니다.)
 
-## 04 - Gradient Descent for Linear Regression
+
+## 04 - Zero-One Loss
+
+[Download zero_one_loss.py][tutorial_zero_one]
+
+예측의 Performance 를 fine-tuning 하기 함수중의 하나로 zero-one loss function은 machine learning 에서 많이 사용되는 함수중에 하나입니다.
+먼저 argmax tensor는 가장 큰 값(maximum)의 index 를 리턴킵니다.
+전체의 공식을 처음부터 다 쓰는게 아니라 하나하나씩 쓰면서 알아보도록 하겠습니다.
+
+{% highlight python %}
+x = T.dvector('x')
+f = function([x], T.argmax(x))
+print f([1, 2, 3, 4, 5])  # 4
+print f([5, 4, 3, 2, 1])  # 0
+{% endhighlight %}
+
+T.neq 는 not equal(!=) 과 같습니다. 여기에서는 T.argmax != 0 과 같습니다. 
+0과 다르면 True 값인 1이 리턴이되고 아니면 0이 리턴이 됩니다.
+
+{% highlight python %}
+f = function([x], T.neq(T.argmax(x), 0))
+print f([1, 2, 3, 4, 5])  # 1
+print f([5, 4, 3, 2, 1])  # 0
+{% endhighlight %}
+
+최종적인 zero-one loss function의 모습입니다.
+
+{% highlight python %}
+x = T.dvector('x')
+f = function([x], T.sum(T.neq(T.argmax(x), 0)))
+print f([1, 2, 3, 4, 5])  # 1
+print f([5, 4, 3, 2, 1])  # 0
+{% endhighlight %}
+
+## 05 - Negative Log-Likelihood Loss 
+
+zero-one loss function의 문제점은 defferentiable하지 않기 때문에 연산처리가 많이 소모가 됩니다.
+
+
+## 06 - Gradient Descent for Linear Regression
 
 * [Gradient Descent Wikipedia][gd-wiki]
 * [Download data.csv][gd-data]
@@ -297,7 +336,9 @@ Gradient Descent를 통해서 y-intercept와 slope을 조정한뒤에 error func
 [tutorial_sin]: {{page.asset_path}}tutorial_sin.py
 [tutorial_shared_variable]: {{page.asset_path}}tutorial_shared_variable.py
 [tutorial_random]: {{page.asset_path}}tutorial_random.py
+[tutorial_zero_one]: {{page.asset_path}}tutorial_zero_one_loss.py
 [deep-learning-get-started]: http://deeplearning.net/tutorial/gettingstarted.html
+
 [gd-wiki]: https://en.wikipedia.org/wiki/Gradient_descent
 [gd-data]: {{page.asset_path}}data.csv
 [gd-py]: {{page.asset_path}}tutorial_gradient.py
