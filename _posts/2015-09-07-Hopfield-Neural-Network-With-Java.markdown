@@ -39,12 +39,11 @@ RealMatrix b = MatrixUtils.createRealMatrix(dataB);
 #### Addition
 
 {% highlight java %}
-{% raw %}
 
 a.add(b);
 // { {4.0,5.0,6.0},
 //   {3.0,6.0,5.0} }
-{% endraw %}
+
 {% endhighlight %}
 
 #### Multiplication
@@ -52,21 +51,21 @@ a.add(b);
 먼저 a, b의 matrix의 dimension이 서로 맞지 않으니 transpose로 row와 columns을 서로 바꾸도록 합니다.
 
 {% highlight java %}
-{% raw %}
+
 b  = b.transpose();
 b;
-// {{3.0,3.0},{3.0,2.0},{3.0,0.0}}
+// { {3.0,3.0},{3.0,2.0},{3.0,0.0} }
 
 a.multiply(b); // Dot Multiplication
-// {{18.0,7.0},{27.0,8.0}}
+// { {18.0,7.0},{27.0,8.0} }
 
 a.scalarMultiply(3);
-// {{3.0,6.0,9.0},{0.0,12.0,15.0}}
+// { {3.0,6.0,9.0},{0.0,12.0,15.0} }
 
 a.preMultiply(b)
 // { { 3.0, 18.0, 24.0 }, { 3.0, 14.0, 19.0 }, { 3.0, 6.0, 9.0 } }
 
-{% endraw %}
+
 {% endhighlight %}
 
 #### Identity Matrix
@@ -75,23 +74,22 @@ a.preMultiply(b)
 마찬가지로 Identity Matrix가 있는데 row, column이 동일하고 대각선으로 1이 있는 모습니다.
 
 {% highlight java %}
-{% raw %}
+
 double[][] dataA = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
 
 RealMatrix a = MatrixUtils.createRealMatrix(dataA);
 RealMatrix b = MatrixUtils.createRealIdentityMatrix(3);
 
 System.out.println(ReflectionToStringBuilder.toString(b));
-// {{1.0,0.0,0.0},
-//  {0.0,1.0,0.0},
-//  {0.0,0.0,1.0}}
+// { {1.0,0.0,0.0},
+//   {0.0,1.0,0.0},
+//   {0.0,0.0,1.0} }
 
 a.multiply(b);
-// {{1.0,2.0,3.0},
-//  {4.0,5.0,6.0},
-//  {7.0,8.0,9.0}}
+// { {1.0,2.0,3.0},
+//   {4.0,5.0,6.0},
+//   {7.0,8.0,9.0} }
 
-{% endraw %}
 {% endhighlight %}
 
 ## Bipolar Notation
@@ -130,7 +128,6 @@ Autoassociative 라는 뜻은 어떤 한 패턴을 인지하면 해당 패턴을
 먼저 contribution matrix 를 만듭니다. 여기에서는 [0, 1, 0, 1] 로 만들도록 하겠습니다. 
 
 {% highlight java %}
-{% raw %}
 double[] data = { 0, 1, 0, 1 };
 double[] data2 = new double[4];
 double[] data3 = {1, 0, 0, 1};
@@ -142,8 +139,7 @@ RealMatrix inputPatternMatrix = MatrixUtils.createRealMatrix(1, 4);
 inputPatternMatrix.setRow(0, data); // {{0, 1, 0, 1}}
 
 RealMatrix contributionMatrix = MatrixUtils.createRowRealMatrix(data2); 
-// {{-1},{1},{-1},{1}}
-{% endraw %}
+// { {-1},{1},{-1},{1} }
 {% endhighlight %}
 
 #### Connection
@@ -152,27 +148,23 @@ contributionMatrix가 만들어졌으면 자기 자신을 multiplication해줍�
 즉 모든 neural들을 연결시켜주는것과 같습니다.
 
 {% highlight java %}
-{% raw %}
 contributionMatrix = contributionMatrix.preMultiply(contributionMatrix.transpose());
-//{{1.0,-1.0,1.0,-1.0},
-// {-1.0,1.0,-1.0,1.0},
-// {1.0,-1.0,1.0,-1.0},
-// {-1.0,1.0,-1.0,1.0}}
-{% endraw %}
+//{ {1.0,-1.0,1.0,-1.0},
+//  {-1.0,1.0,-1.0,1.0},
+//  {1.0,-1.0,1.0,-1.0},
+//  {-1.0,1.0,-1.0,1.0} }
 {% endhighlight %}
 
 이렇게 나온 결과물에 다시 Identity Matrix를 subtract해줍니다.
 이렇게 해주는 이유는 자기 자신의 neuron과는 연결이 되어 있지 않기 때문입니다.
 
 {% highlight java %}
-{% raw %}
 RealMatrix identityMatrix = MatrixUtils.createRealIdentityMatrix(4);
 contributionMatrix = contributionMatrix.subtract(identityMatrix);
-//{{0.0,-1.0,1.0,-1.0},
-// {-1.0,0.0,-1.0,1.0},
-// {1.0,-1.0,0.0,-1.0},
-// {-1.0,1.0,-1.0,0.0}}
-{% endraw %}
+//{ {0.0,-1.0,1.0,-1.0},
+//  {-1.0,0.0,-1.0,1.0},
+//  {1.0,-1.0,0.0,-1.0},
+//  {-1.0,1.0,-1.0,0.0} }
 {% endhighlight %}
 
 #### Verification
@@ -181,25 +173,22 @@ contributionMatrix = contributionMatrix.subtract(identityMatrix);
 동일한 값이 나오는지 확인이 필요합니다. 
 
 {% highlight java %}
-{% raw %}
 RealMatrix result = contributionMatrix.multiply(inputPatternMatrix.transpose());
 HopfieldTutorial.filterOne(result);
 System.out.println(ReflectionToStringBuilder.toString(result.transpose()));
-// {{0, 1, 0, 1}}
+// { {0, 1, 0, 1} }
 
-{% endraw %}
 {% endhighlight %}
 
 동일한 0, 1, 0, 1이 나오는 것을 확인할수 있습니다. 여기서 filterOne은 1이 아니면 0으로 값을 변경해주는 함수 입니다.
 
 {% highlight java %}
-{% raw %}
 RealMatrix wrongMatrix = MatrixUtils.createColumnRealMatrix(data3);
-// {{1},{0},{0},{1}}
+// { {1},{0},{0},{1} }
 result = contributionMatrix.multiply(wrongMatrix);
 HopfieldTutorial.filterOne(result);
-// 	{{0},{0},{0},{0}}
-{% endraw %}
+// { {0},{0},{0},{0} }
+
 {% endhighlight %}
 
 [github-ann]: https://github.com/AndersonJo/Neural-Network-Tutorial
