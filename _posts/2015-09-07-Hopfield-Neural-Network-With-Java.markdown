@@ -191,4 +191,5 @@ HopfieldTutorial.filterOne(result);
 
 {% endhighlight %}
 
+
 [github-ann]: https://github.com/AndersonJo/Neural-Network-Tutorial
