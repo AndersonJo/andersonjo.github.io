@@ -15,7 +15,7 @@ asset_path: /assets/posts/Hopfield-Neural-Network/
 
 gradle로 관련 라이브러리들을 쉽게 설치가능합니다.
 
-{% highlight shell %}
+{% highlight bash %}
 
 gradle build
 gradle eclipse
