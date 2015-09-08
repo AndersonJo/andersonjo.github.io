@@ -4,7 +4,6 @@ title:  "How to choose Block and Thread dimensions in CUDA"
 date:   2015-08-10 02:00:00
 categories: "cuda"
 asset_path: /assets/posts/How-To-Choose-Block-And-Thread/
-
 ---
 
 <img src="{{page.asset_path}}gtx960.jpg" class="img-responsive img-rounded">

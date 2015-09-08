@@ -4,7 +4,6 @@ title:  "GTX960 + Ubuntu 15.04 + Hello World"
 date:   2015-08-03 02:00:00
 categories: "ubuntu"
 asset_path: /assets/posts/GTX960+Ubuntu15.04+Hello-World/
-
 ---
 
 이번에 GTX960 그래픽카드를 질렀습니다.<br> 

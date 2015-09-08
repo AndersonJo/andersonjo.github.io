@@ -4,7 +4,6 @@ title:  "Naive Bayes"
 date:   2015-08-04 02:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Naive-Bayes/
-
 ---
 Bayes 공식이나 이론은 이미 [Monty Hall][bayes] 문제를 풀면서 설명을 했습니다.
 

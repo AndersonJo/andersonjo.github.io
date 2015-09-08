@@ -194,7 +194,7 @@ a:visited {
 /* ----------------------------------------------------------*/
 
 .home h1 {
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 .posts {
@@ -202,20 +202,25 @@ a:visited {
 }
 
 .posts li {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .posts .post-link {
-    font-size: 24px;
+    font-size: 20px;
     letter-spacing: -1px;
     line-height: 1;
 }
 
 .posts .post-date {
-    display: block;
     font-size: 15px;
     color: #818181;
 }
+
+.posts .post-category {
+    font-size: 15px;
+    color: #ac2925;
+}
+
 
 /* Post styles */
 /* ----------------------------------------------------------*/
