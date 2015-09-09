@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Installing Hadoop on Ubuntu"
+title:  "Installing Hadoop 2.7 on Ubuntu 15.04"
 date:   2015-09-08 01:00:00
 categories: "hadoop"
 asset_path: /assets/posts/Installing-Hadoop-On-Ubuntu/
@@ -86,6 +86,7 @@ sudo chown -R hduser:hadoop hadoop-2.7.1/
 
 export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 export HADOOP_HOME=/usr/local/hadoop-2.7.1
+export HADOOP_CONF_DIR=$HADOOP_HOME/conf
 export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.1/conf
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
@@ -103,11 +104,12 @@ unset JAVA_TOOL_OPTIONS
 압축을 풀고 **hadoop-2.7.1-src/hadoop-common-project/hadoop-common/src/main/conf** 에 가보면 필요한 설정파일들이 존재합니다.
 
 * [core-site.xml][conf-core-site.xml]
+* [hdfs-site.xml][conf-hdfs-site.xml]
 * [conf-hadoop-env.sh][conf-hadoop-env.sh]
 
-최소한 conf/core-site.xml 그리고 conf/hadoop-env.sh 가 존재해야 합니다. 
+최소한 $HADOOP_HOME/conf/core-site.xml 그리고 conf/hadoop-env.sh 가 존재해야 합니다.
 
-#### hadoop.env.sh
+#### conf/hadoop.env.sh
 
 JAVA_HOME에 대한 경로를 변경시켜주세요. 
 
@@ -116,29 +118,43 @@ export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 {% endhighlight %}
 
 
-#### *-site.xml
+#### conf/core-site.xml
 
 여기에서 포트 설정, 데이터 파일 저장 위치 등등의 주요 설정들을 할수 있습니다.<br>
 설정은 key-value pair로 이루어집니다.  또한 final 의 의미는 user application에 의해서 설정값이  overriden 되지 않도록 설정하는 것입니다.
 
-conf/core-site.xml
 
-{% highlight bash %}
+{% highlight xml %}
 <configuration>
     <property>
         <name>fs.default.name</name>
         <value>hdfs://localhost:9000</value>
     </property>
+</configuration>
+{% endhighlight %}
+
+
+#### conf/hdfs.site.xml
+
+자세한 내용은 [hdfs-default.xml][hdfs-wiki] 문서를 봐주세요 :)
+
+{% highlight xml %}
+<configuration>
     <property>
-        <name>dfs.data.dir</name>
-        <value>/home/hduser/hdfs/data/</value>
+        <name>dfs.replication</name>
+        <value>3</value>
     </property>
     <property>
-        <name>dfs.name.dir</name>
-        <value>/home/hduser/hdfs/name/</value>
+        <name>dfs.namenode.name.dir</name>
+        <value>/home/hduser/hdfs/name</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/home/hduser/hdfs/data</value>
     </property>
 </configuration>
 {% endhighlight %}
+
 
 | Name | Value |
 |:-----|:------|
@@ -150,7 +166,7 @@ conf/core-site.xml
 
 #### Starting HDFS
 
-먼저 filesystem 을 format시켜줍니다.
+먼저 filesystem 을 format시켜줍니다. (최소한 최초 한번은 format이 필요합니다. 안하면 에러납니다.)
 
 {% highlight bash %}
 hdfs namenode -format
@@ -245,6 +261,8 @@ hduser:hadoop>file ./lib/native/libhadoop.so.1.0.0
           
 [supported-java]: http://wiki.apache.org/hadoop/HadoopJavaVersions
 [hadoop-download]: http://www.apache.org/dyn/closer.cgi
+[hdfs-wiki]: http://hadoop.apache.org/docs/r2.4.1/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
 
 [conf-core-site.xml]: {{ page.asset_path }}core-site.xml
+[conf-hdfs-site.xml]: {{ page.asset_path }}hdfs-site.xml
 [conf-hadoop-env.sh]: {{ page.asset_path }}hadoop-env.sh
