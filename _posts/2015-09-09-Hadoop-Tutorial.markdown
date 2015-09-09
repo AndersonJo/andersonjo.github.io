@@ -73,8 +73,20 @@ hdfs dfs -ls /user/anderson
 hdfs dfs -cat /user/anderson/data.jpg
 {% endhighlight %}
 
+put 의 반대 get
+
+{% highlight bash %}
+hdfs dfs -get /user/anderson/data.jpg
+{% endhighlight %}
 
 
+## DFSADMIN
+
+dfs 는 각각의 파일을 관리하는데 사용된다면 dfsadmin은 시스템 전체적인 관리에 주로 사용됩니다.
+
+{% highlight bash %}
+hdfs dfsadmin -report
+{% endhighlight %}
 
 
 
