@@ -152,6 +152,10 @@ export JAVA_HOME=/usr/lib/jvm/java-7-oracle
         <name>dfs.datanode.data.dir</name>
         <value>/home/hduser/hdfs/data</value>
     </property>
+    <property>
+        <name>dfs.permissions</name>
+        <value>false</value>
+    </property>
 </configuration>
 {% endhighlight %}
 
@@ -162,6 +166,7 @@ export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 | dfs.data.dir | DataNode가 어디에 Data를 저장시킬지에 대한 경로입니다. |
 | dfs.name.dir | NameNode metadata가 저장되는 위치 입니다. |
 | dfs.replication | replication의 숫자이고 기본값으로 3으로 지정되어 있습니다. <br>이보다 더 작은 숫자는 reliability에 문제가 될 수 있습니다. |
+| dfs.permissions | 기본값이 true이고, false이면 hduser 뿐만 아니라 모든 유저가 hdfs사용 가능합니다. |
 
 
 #### Starting HDFS

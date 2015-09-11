@@ -89,6 +89,117 @@ hdfs dfsadmin -report
 {% endhighlight %}
 
 
+## MapReduce in Python
+
+* [Download techcrunch.csv][techcrunch.csv]
+* [Download mapper.py][mapper.py]
+* [Download reducer.py][reducer.py]
+
+techcrunch.csv는 미국에서 투자받은 회사정보 입니다.<br>
+알고 싶은것은 회사당 총 투자금액이 얼마가 되는지 입니다. 
+
+먼저 hdfs 에 하둡에서 필요한 데이터를 올려줍니다.
+{% highlight bash %}
+hdfs dfs -mkdir /techcrunch
+hdfs dfs -put techcrunch.csv /techcrunch
+{% endhighlight %}
+
+그 다음으로 Python으로 mapper 그리고 reducer 를 만들어줄것인데, 매번 디버깅 할때마다 
+hdfs에서 가져와서 하면 작업의 효율성이 떨어지니 다음과 같은 방식으로 디버깅을 합니다.
+
+{% highlight bash %}
+cat techcrunch.csv | ./mapper.py | sort -k1,1 | ./reducer.py
+{% endhighlight %}
+
+
+#### mapper.py
+
+{% highlight python %}
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+import sys
+
+last_turf = None
+turf_count = 0
+
+for line in sys.stdin:
+    # remove leading and trailing whitespace
+    line = line.split(',')
+    company = line[1].strip()
+    raise_amt = line[7].strip()
+
+    print '%s,%s' % (company, raise_amt)
+
+{% endhighlight %}
+
+
+
+#### reducer.py
+
+{% highlight python %}
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+import sys
+
+current_company = None
+total_amt = 0
+
+# input comes from STDIN
+for line in sys.stdin:
+    company, raise_amt = line.split(',', 1)
+
+    try:
+        raise_amt = int(raise_amt)
+    except ValueError:
+        continue
+
+    if current_company == company:
+        total_amt += raise_amt
+    else:
+        if current_company:
+            print '%s\t%s' % (current_company, total_amt)
+        total_amt = raise_amt
+        current_company = company
+
+if current_company == company:
+    print '%s\t%s' % (current_company, total_amt)
+
+{% endhighlight %}
+
+
+#### Running Map Reduce
+
+Java기반의 MR이 아닌 다른 언어(여기에서는 Python)으로 할때는 Streaming으로 데이터를 보내서 분석을 하게 됩니다.
+코드에서 나왔듯이 한줄 한줄씩 처리를 하게 됩니다. 
+streaming을 사용하기 위해서는 /usr/local/hadoop-2.7.1/share/hadoop/tools/lib/hadoop-streaming-2.7.1.jar 파일을 사용합니다.
+
+{% highlight bash %}
+hadoop jar hadoop-streaming-2.7.1.jar -mapper ./mapper.py  -reducer ./reducer.py  -input /techcrunch.csv -output /output
+
+hdfs dfs -cat /output/part-0000023andMe	9000000
+# 3Jam	4000000
+# 4HomeMedia	2850000
+# 5min	5300000
+# 750 Industries	1000000
+# ...
+{% endhighlight %}
+
+
+
+
+#### Tips for MapReduce
+
+Java로 MR을 짜게 되면 처리의 속도가 높고, Python같은 언어로 하게 되면 개발시간이 줄어들게 됩니다. 
+제가 주로 하는 방식은 Python으로 먼저 짜고, Performance이슈가 있다면 Java로 코딩을 합니다.
+
+
+
+
+
 
 
 [hdfs-commands]: http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html
+[techcrunch.csv]: {{ page.asset_path }}techcrunch.csv
+[mapper.py]: {{ page.asset_path }}mapper.py
+[reducer.py]: {{ page.asset_path }}reducer.py
