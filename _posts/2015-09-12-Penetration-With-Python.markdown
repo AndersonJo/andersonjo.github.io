@@ -1,0 +1,265 @@
+---
+layout: post
+title:  "Penetration With Python"
+date:   2015-09-12 01:00:00
+categories: "hacking"
+asset_path: /assets/posts/Penetration-With-Python/
+---
+<div>
+    <img src="{{ page.asset_path }}security-breach-data-breach.jpg" class="img-responsive img-rounded">
+</div>
+
+Python은 쉽고 빠르게 해킹을 할 수 있게 만들어주는 툴입니다.<br>
+TCP기초부터 Penetration Test 그리고 nmap까지 사용법을 써보도록 하겠습니다.<br>
+참고로 필자는 Warning.or.kr 을 HTTP 변조를 통해서 해킹했었던 개발자입니다. 헤헷 (뭐 별건 아니지만)<br>
+
+
+
+
+
+
+## TCP
+
+**다운로드 받기**
+
+* [tutorial01_httplib.py][tutorial01_httplib.py]
+* [tutorial02_socket.py][tutorial02_socket.py]
+* [tutorial03_udp.py][tutorial03_udp.py]
+* [tutorial04_tcp.py][tutorial04_tcp.py]
+
+*기본적인 통신방법들 http, socket, udp 등등은 어렵지 않기 때문에  그냥 예제로만 올려놨습니다. <br>
+해당 문서는 Python으로 Penetration에 관한 문서이기 때문에 TCP는 나중에 자세하게 다루도록 하겠습니다.
+
+
+#### Basic
+
+TCP는 일단 1981년 [RFC 793][ref-tcp-rfc]정의 되어 있는 기술이고, 그 이후로 세부내용과 발전이 있어왔습니다.<br>
+패킷의 이동의 경우 sequential integers(1, 2, 3..) 이렇게 쓰이는 것이 아니라, 
+transmitted bytes 를 카운트 합니다. 예를 들어서 1024-byte packet 이고 sequence number가 10000번 이라면.. 
+다음에 올 sequence number는 11024 가 됩니다. 
+초기 sequence number는 랜덤값으로 정해집니다. 이유는 매번 0에서 시작을 하게 된다면 중간에 누군가 interrupt할 수 있는 가능성이 있기 때문입니다.
+
+window (한번에 보낼수 있는 packet의 싸이즈)가 제한하는 데이터양에 따라서 데이터를 주고 받을 수 있습니다.
+TCP의 reliable nature로 인해서, sender는 ACK를 받기 전까지 일정한 (limited size)양의 데이터만 보낼수 있습니다.
+이때 중요한 점은 window가 허용하는 한 가능한한 많은 packets을 ACK 받기 전에 보낼수 있다는 것입니다.  
+
+**"congestion window"**는 sender에 의해서 관리가 되며, **"receive window"**(또는 그냥 **"window"**)는 receiver에 의해서 관리됩니다.
+Congestion window는 destination까지 가는 도중의 라우터에서 congestion이 일어나지 않도록 관리를 하는데, 
+최초 packet을 보낼때 매우 작은 congesion window값 (즉 작은 용량을 보냄)을 보내고, 매번 패킷을 보낼때마다 조금씩 늘려나갑니다.
+계속 늘리다가 data loss가 일어나게 된다면 congestion window값을 반으로 (half) 줄여버립니다.
+이는 어딘가에서 buffer overflow가 일어나게 됐다고 가정하는 것이고 일반적으로 그럴 가능성이 대부분 맞습니다.
+
+<img src="{{ page.asset_path }}tcp-com.png" class="img-responsive img-rounded">
+
+TCP는 UDP나 다른 통신에 비해서 꽤 무거운? 편입니다. <br>
+먼저 TCP Connection 을 establish하기 위해서는 3개의 packets 필요합니다. (SYN, SYN-ACK, ACK)<br>
+또한 Disconnect하기 위해서는 3개의 packets이 또 필요합니다. (FIN, FIN-ACK, ACK)
+
+SYN, SYN-ACK, ACK를 Handshake 라고 합니다.
+
+
+
+#### Nagle's algorithm
+
+만약에 정말 작은 양의 데이터를 보낼때는 어떻게 될까?<br>
+이런 경우는 ssh등에서 많이 일어나는데, 가량 글자 하나 칠때마다 데이터를 보내야 한다면 매우 비효율적일 것입니다. 
+
+packet은 20 bytes for TCP 그리고 20 bytes for IPV4로 총 40bytes로 이루어져 있습니다.. 
+이때 그냥 1byte를 보내고자 한다면.. 특히 ssh같은 경우 글자 하나 칠때마다 receiver로 보내야 한다면, 매번 41bytes를 보내는 것입니다. 
+즉 1byte 하나 보낼려고 40bytes를 보내는 것입니다. (이런 경우 congestion collapse로 이어질수 있습니다.)
+
+이렇게 작은 용량을 여러번 보낼때의 문제를 해결하기 위해서 Nagle's 알고리듬이 나온것입니다. 
+
+Nagle's algorithm 은 작은 용량의 packet들을 일단 버퍼에다가 쌓은 다음에 보내는 방식인데, 
+구체적으로는 어떤 한 packet을 보냈고, sender가 acknowledgement를 받을때까지 버퍼에 쌓고 ACK를 받으면 버퍼에 쌓아둔 작은 용량의 
+packet들을 한번에 모아서 보내는 방식입니다. 
+
+{% highlight python %}
+if there is new data to send
+  if the window size >= MSS and available data is >= MSS
+    send complete MSS segment now
+  else
+    if there is unconfirmed data still in the pipe
+      enqueue data in the buffer until an acknowledge is received
+    else
+      send data immediately
+    end if
+  end if
+end if
+{% endhighlight %}
+\* 위키피디아 참고 : [Nagle's Algorithm][ref-nagle]
+
+**해당 알고리즘은 TCP_NODELAY 옵션에 의해서 off 시킬수도 있습니다.**
+
+
+#### Slow Start Algorithm
+
+TCP Connection에서 최초 연결이 될때, receiver까지 도착을 하는데.. 그 중간의 라우터들이 현재 congested된 상황인지 아닌지 알 수가 없습니다.
+그래서 congestion window로 sender가 보낼수 있는 packet의 사이즈를 정하게 되는데, 일단 최초 TCP Connection시에는 작은 양의 데이터를 보내다가 
+점차 늘리는 알고리즘을 말합니다.
+
+Slow Start 알고리듬은 Exponentially increase시킵니다. 만약 Linear하게 증가시킨다면 네트워크가 받을수 있는 한계지점 까지 도달하는데 많은 패킷양이 
+소요될수 있기 때문입니다. 즉 1 -> 2 -> 4 -> 8 -> 16 .. 이런식으로 증가됩니다.
+
+
+#### Fast Retrasmit
+
+일반적으로 TCP는 타이머([Round Trip Delay Time][ref-rto] : 데이터를 receiver에게 보낸후 다시 sender가 acknowledge를 받는 시간)
+에 의해서 lost segment가 있는지 알아냅니다. 이 특정 시간이상을 초가할때까지 ACK가 오지 않으면 다시 재전송(retransmit)을 하게 됩니다.
+
+하지만 packet이 lost됐는지 알기위해서 RTO시간이 지나길 기다리는 것은 효율적이지 못하기 때문에, Fast Retransmit 알고리듬을 사용하게 됩니다.
+Fast Retransmit 알고리듬은 duplicate acknowledgement를 통해서 재전송을 할지 결정을 하게 됩니다.
+
+<img src="{{ page.asset_path }}fast-retransmit-1.gif" class="img-responsive img-rounded">
+
+위의 예제에서 3, 4 packets을 정상적으로 보냈지만, 5번 packet에서 loss가 일어났습니다.
+(참고로 TCP는 반드시 ACK를 받아야지 다음 패킷을 넘기는 lock-step방식이 아니라 일단 window 싸이즈가 허용하는한 여러 packets들을 한꺼번에 보내는 방식입니다.)
+ 
+3번을 보내고 난후, ACK4번을 받고, 4번을 보내고 난후 sender는 ACK 5를 expect할 수 있습니다.
+(즉 3번 packet보내면 그 다음 packet번호인 4번을 receiver가 sender에게 전달합니다.)
+
+하지만 5번에서 loss가 일어났기 때문에 receiver는 ACK 5을 packet을 받을때마다 반복적으로 sender에게 보냅니다.<br>
+sender는 반복적으로 동일한 packet을 받았을때 duplicate acknowledgement로 판단하고  loss가 일어났다는 것을 알게 됩니다.
+
+최종적으로 sender는 패킷 5번을 다시 재전송하게 됩니다.
+
+## TCP Example in Python
+
+먼저 Active Socket과 Passive Socket이 있습니다.
+
+| Type | Description |
+|:----|:----|
+|Passive Socket | Passive Socket은 실제 데이터를 주고 받는 소켓이 아닙니다. <br>단지 OS에게 새로운 connection을 특정 port로 받겠다고 알려주고, <br>새로운 connection을 만드는데 사용됩니다. |
+|Active Socket | 실제 client socket과 연결된 소켓입니다. <br>Active Socket을 통해서 실제 데이터를 주고 받습니다. <br>local IP, local Port, remote IP, remote Port 정보를 갖고 있습니다 |  
+
+
+
+{% highlight python %}
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+HOST = '127.0.0.1'
+PORT = 50000
+RECEIVE_SIZE = 2
+
+
+def recv_msg(sock):
+    data = []
+    received_length = 0
+    data_length = struct.unpack('>I', sock.recv(4))[0]
+    while received_length < data_length:
+        p = sock.recv(RECEIVE_SIZE)
+        data.append(p)
+        received_length += RECEIVE_SIZE
+
+    response = ''.join(data)
+    print response
+    return response
+
+
+def send_msg(sock, message):
+    message = message.encode('UTF-8')
+    length = len(message)
+    packed = struct.pack('>I', length)
+    sock.sendall(packed + message)
+
+
+if sys.argv[1:] == ['server']:
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind((HOST, PORT))
+    sock.listen(1)
+
+    while True:
+        print 'Listening at', sock.getsockname()
+        active_socket, sockname = sock.accept()
+        print 'New Active Socket:', sockname
+        print 'Passive Socket:', active_socket.getsockname(), ', Active Socket:', active_socket.getpeername()
+        message = recv_msg(active_socket)
+        print 'Server received %s' % message
+        return_message = u'사요나라~! 졸려..'
+        send_msg(active_socket, return_message)
+        active_socket.close()
+    print 'Reply sent, socket clossed'
+else:
+    sock.connect((HOST, PORT))
+    print 'Client has been assigned socket name', sock.getsockname()
+
+    text = raw_input('메세지:').decode('UTF-8')
+    send_msg(sock, text)
+    reply = recv_msg(sock)
+    print 'the Server said:', reply
+    sock.close()
+    print 'Good bye'
+{% endhighlight %}
+
+먼저 server를 실행하면 다음과 같이 나옵니다.
+
+{% highlight bash %}
+>>python tutorial04_tcp.py server
+Listening at ('127.0.0.1', 50000)
+{% endhighlight %}
+
+코드를 하나하나씩 보도록 하겠습니다.
+
+#### Creating a Passive Socket
+
+{% highlight python %}
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+{% endhighlight %}
+
+* AF_INET: 인터넷 프로토콜 사용하겠다는 뜻입니다.
+* SOCK_STREAM: 보통 SOCK_STREAM 또는 SOCK_DGRAM(UDP)가 사용이 됩니다.
+
+{% highlight python %}
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind((HOST, PORT))
+sock.listen(1)
+{% endhighlight %}
+
+SOL_SOCKET은 SOCKET레벨에서 어떤 옵션을 설정하겠다는 뜻입니다.<br>
+SO_REUSEADDR은 예를 들어서 서버를 강제 종료했는데 아직 port가 죽지 않았을때.. 옵션을 주지 않았을때.. 서버를 다시 재시작시키면 
+해당 포트가 사용중이라고 나옵니다. OS가 해당포트를 처리하도록 기다릴수도 있지만.. 
+SO_REUSEADDR을 사용하면 OS에서는 기존의 Socket에 사용된 File Description을 그대로 재사용하게 됩니다.
+
+bind를 해주면 passive socket을 만들어지게 됩니다. 
+즉 해당 50000포트로 connection연결을 해도 좋다라고 OS에게 말해주는 것입니다.
+
+sock.listen(1)의 경우는 아직 accept되지 않은 소켓들을 버퍼의 양이라고 생각하면 됩니다.
+connection을 하기 위해서는 최소값이 0이며, 해당 값이상이 넘어가서 connection시도가 있을시에는 OS에서 연결거부를 하게됩니다.
+
+
+#### Active Socket
+
+{% highlight python %}
+active_socket, sockname = sock.accept()
+{% endhighlight %}
+
+Client로 부터 connection을 받고 accept를 하게 되면 실제 해당 클라이언트와 통신을 할 수 있는 active socket이 만들어지게 됩니다.
+이때 OS는 임의로 포트를 할당을 하게 됩니다.
+
+#### stream-orient protocol
+
+무슨 말이냐 하면 읽고 쓰는데 스트리밍방식이기 때문에 얼마나 읽을지, 얼마나 양을 쓸지 결정을 해야 합니다.
+
+{% highlight python %}
+sock.recv(RECEIVE_SIZE)
+{% endhighlight %}
+
+recv(int값) 함수를 호출하면 클라이언트한테서 어떤 값이 서버로 넘어올때까지 기다리게 됩니다. 
+문제는 해당 int값을 넘어버리는 많은 양의 데이터가 넘어올때는 어떻게 처리할거냐 입니다.
+
+여러 방법들이 있습니다. 시작점, 끝나는 점에 서로 약속된 문자를 집어넣는다거나... 
+예제의 경우는 C Struct를 이용해서 얼마만큼의 데이터를 주고받을지 항상 패킷의 앞에 써놓도록 해놨습니다.
+
+집접한번 해보시면 이해가 빠를겁니다. :)<br>
+TCP는 대충 이정도만..
+
+
+
+[tutorial01_httplib.py]: {{ page.asset_path }}tutorial01_httplib.py
+[tutorial02_socket.py]: {{ page.asset_path }}tutorial02_socket.py
+[tutorial03_udp.py]: {{ page.asset_path }}tutorial03_udp.py
+[tutorial04_tcp.py]: {{ page.asset_path }}tutorial04_tcp.py
+
+[ref-tcp-rfc]: https://www.rfc-editor.org/rfc/rfc793.txt
+[ref-nagle]: https://en.wikipedia.org/wiki/Nagle%27s_algorithm
+[ref-rto]: https://en.wikipedia.org/wiki/Round-trip_delay_time
