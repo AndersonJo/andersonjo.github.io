@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Hopfield Neural Network with Java"
+title:  "Hopfield Neural Network"
 date:   2015-09-07 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Hopfield-Neural-Network/
@@ -22,7 +22,7 @@ gradle eclipse
 
 {% endhighlight %}
 
-## Matrix - Apache Math
+## Matrix with Java
 
 Matrix 라이브러리로  Jama 그리고 Apache Common Math 도 있는데 필자는 Apache Common Math를 사용하도록 하겠습니다.
 기본적으로 다음과 같은 값을 준비합니다.
@@ -112,7 +112,6 @@ Bipolar -1 은 (-1 + 1)/2= 0 이 됩니다.
 
 
 
-
 ## Hopfield Neural Network
 
 <img src="{{ page.asset_path }}hopfield.jpg" class="img-responsive img-rounded">
@@ -137,6 +136,7 @@ for (int i = 0; i < data.length; i++) {
 
 RealMatrix inputPatternMatrix = MatrixUtils.createRealMatrix(1, 4);
 inputPatternMatrix.setRow(0, data); // {{0, 1, 0, 1}}
+// {{0.0,1.0,0.0,1.0}}
 
 RealMatrix contributionMatrix = MatrixUtils.createRowRealMatrix(data2); 
 // { {-1},{1},{-1},{1} }
@@ -174,6 +174,8 @@ contributionMatrix = contributionMatrix.subtract(identityMatrix);
 
 {% highlight java %}
 RealMatrix result = contributionMatrix.multiply(inputPatternMatrix.transpose());
+// { {-2},{1},{-2},{1} }
+
 HopfieldTutorial.filterOne(result);
 System.out.println(ReflectionToStringBuilder.toString(result.transpose()));
 // { {0, 1, 0, 1} }
@@ -190,6 +192,76 @@ HopfieldTutorial.filterOne(result);
 // { {0},{0},{0},{0} }
 
 {% endhighlight %}
+
+
+
+## Matrix with Python
+
+추가로 Python 업데이트 합니다.
+
+{% highlight python %}
+import numpy as np
+
+a = np.matrix('1 2 3; 0 4 5')
+b = np.matrix('2 5 0; 1 3 4')
+# a [[1 2 3]
+#    [0 4 5]]
+
+# b [[2 1]
+#    [5 3]
+#    [0 4]]
+
+{% endhighlight %}
+
+#### Dot Multipliation
+
+{% highlight python %}
+a * b
+# [[12 19]
+#  [20 32]]
+{% endhighlight %}
+
+
+
+## Hopfield Network with Python
+
+{% highlight python %}
+import numpy as np
+
+a = np.matrix('0 1 0 1')
+contribution = np.apply_along_axis(lambda x: 2 * x - 1, 0, a)
+# [[-1  1 -1  1]]
+
+contribution = contribution.T * contribution
+# [[ 1 -1  1 -1]
+#  [-1  1 -1  1]
+#  [ 1 -1  1 -1]
+#  [-1  1 -1  1]]
+
+contribution = contribution - np.identity(4)
+# [[ 0. -1.  1. -1.]
+#  [-1.  0. -1.  1.]
+#  [ 1. -1.  0. -1.]
+#  [-1.  1. -1.  0.]]
+
+a.T
+# [[0]
+#  [1]
+#  [0]
+#  [1]]
+
+answer = contribution.dot(a.T)
+# [[-2.]
+#  [ 1.]
+#  [-2.]
+#  [ 1.]]
+
+answer = np.apply_along_axis(lambda x: 1 if x == 1 else 0, 0, answer.T)
+{% endhighlight %}
+
+
+
+
 
 
 [github-ann]: https://github.com/AndersonJo/Neural-Network-Tutorial
