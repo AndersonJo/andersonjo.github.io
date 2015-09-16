@@ -1,21 +1,16 @@
 ---
 layout: post
-title:  "Penetration With Python"
+title:  "TCP 101"
 date:   2015-09-12 01:00:00
-categories: "hacking"
-asset_path: /assets/posts/Penetration-With-Python/
+categories: "network"
+asset_path: /assets/posts/TCP-101/
 ---
 <div>
-    <img src="{{ page.asset_path }}security-breach-data-breach.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}internet-cables.jpg" class="img-responsive img-rounded">
 </div>
 
-Python은 쉽고 빠르게 해킹을 할 수 있게 만들어주는 툴입니다.<br>
-TCP기초부터 Penetration Test 그리고 nmap까지 사용법을 써보도록 하겠습니다.<br>
-참고로 필자는 Warning.or.kr 을 HTTP 변조를 통해서 해킹했었던 개발자입니다. 헤헷 (뭐 별건 아니지만)<br>
-
-
-
-
+TCP는 기본적으로 서버 개발자가 알아야할 내용중의 하나입니다.<br>
+최대한 쉽게 설명해서 TCP가 무엇인지에 관해서 써봤습니다 :) <br>
 
 
 ## TCP
@@ -251,7 +246,7 @@ recv(int값) 함수를 호출하면 클라이언트한테서 어떤 값이 서�
 예제의 경우는 C Struct를 이용해서 얼마만큼의 데이터를 주고받을지 항상 패킷의 앞에 써놓도록 해놨습니다.
 
 집접한번 해보시면 이해가 빠를겁니다. :)<br>
-TCP는 대충 이정도만..
+대충 이정도만.. 나중에 시간나면.. node.js로 TCP서버 구축하는거 여기에다가 추가 시키겠습니다.
 
 
 
