@@ -4,8 +4,11 @@ layout: default
 
 <div class="home">
     <div ng-controller="AndersonPostContoller">
+        asdf
         <script>
-            var global_post_data = [{% for post in site.posts %} {{post | jsonify | strip_html}}, {% endfor %}];
+
+            var global_post_data = [{% for post in site.posts %}
+            {"date":"{{post.date}}", "categories": ["{{post.categories}}"], "url": "{{post.url}}", "title": "{{post.title}}"}, {% endfor %}];
         </script>
 
         <div class="form-group">
