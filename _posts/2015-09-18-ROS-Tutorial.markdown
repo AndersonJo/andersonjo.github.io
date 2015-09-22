@@ -378,8 +378,13 @@ if __name__ == '__main__':
     listener()
 {% endhighlight %}
 
+## <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> rviz
 
+{% highlight python %}
+rosrun rviz rviz
+{% endhighlight %}
 
+<img src="{{ page.asset_path }}rviz01.png" class="img-responsive img-rounded">
 
 [ref-lily]: https://www.lily.camera/
 [ref-catin]: http://wiki.ros.org/catkin/workspaces
