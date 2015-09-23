@@ -15,9 +15,9 @@ Feedforward는 뉴론간의 연결이 서로 전방향으로만 연결된것을 
 먼저 바로 배우기전에 Machine이 어떻게 학습을 하는지 부터 배우도록 하겠습니다.
  
 
-## How a Machine learns
+## <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> How a Machine learns
 
-#### Root Mean Square - RMS Error
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Root Mean Square - RMS Error
 
 RMS Method는 예측에 대한 에러률을 알아냅니다.
 
@@ -57,7 +57,7 @@ Coefficients:
 중요한것은 이렇게 Linear Regression을 만들었는데 오차가 얼마나 나는가를 측정하는 것입니다.<br>
 코드 그리고 공식에서 보듯이 실제 y값과 예측 y값과의 차이입니다.
 
-#### Hebbian Theory
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Hebbian Theory
 
 서로 연결된 뉴런들이 동시에 activate된다면 서로 더 연결이 더 강해지지 않을까하는 추측을 50년전 Hebb라는 사람이 생각을 했었고.. 
 그 생각을 이론으로 만들어 낸것이  Hebb's Theory입니다. 
@@ -71,6 +71,26 @@ RMS의 경우는 Supervised Learning이었습니다. 즉 예상수치가 있고,
 
 * [Download hebb.py][hebb.py]
 * [Reference][ref-hebb]
+
+#### **Formula** ####
+
+**input**값으로 x vector가 있습니다.
+<img src="{{ page.asset_path }}Hebb1.png" class="img-responsive img-rounded">
+
+**weight**값으로 -1~1사이의 random 값이 들어가 있는 vector가 있습니다. 
+<img src="{{ page.asset_path }}Hebb2.png" class="img-responsive img-rounded">
+
+**output**은 다음과 같이 나옵니다.
+<img src="{{ page.asset_path }}Hebb3.png" class="img-responsive img-rounded">
+
+**Delta**값은 다음과 같이 나옵니다.(η은 Learning Rate입니다.)
+<img src="{{ page.asset_path }}Hebb4.png" class="img-responsive img-rounded">
+
+예제에서는 단순히 delta값을 weight 값에 더하였습니다.<br>
+이렇게하면 weight 값은 점점 극명하게 커지거나 작아지거나 하게 됩니다.<br>
+Limit을 두기 위해서는 다음과 같은 Normalization을 할 수 있습니다.
+
+<img src="{{ page.asset_path }}Hebb5.png" class="img-responsive img-rounded">
 
 {% highlight python %}
 class Hebb(object):
@@ -162,7 +182,7 @@ WeightA(1) * InputA(1) 그리고 Weight(-1) * InputB(-1) = **1 그리고 1**<br>
 즉 둘다 양수이기 때문에 양수로 강해지게 됩니다.
 
 
-## Feedforward Neural Network
+## <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Feedforward Neural Network
 
 
 
