@@ -13,7 +13,7 @@ TCP는 기본적으로 서버 개발자가 알아야할 내용중의 하나입�
 최대한 쉽게 설명해서 TCP가 무엇인지에 관해서 써봤습니다 :) <br>
 
 
-## TCP
+## <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> TCP
 
 **다운로드 받기**
 
@@ -26,7 +26,7 @@ TCP는 기본적으로 서버 개발자가 알아야할 내용중의 하나입�
 TCP의 좀더 자세한 내용은 다음번 아티클에서 다루고, 여기에서는 기본적인 내용을 다루도록 하겠습니다.
 
 
-#### Basic
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Basic
 
 TCP는 일단 1981년 [RFC 793][ref-tcp-rfc]정의 되어 있는 기술이고, 그 이후로 세부내용과 발전이 있어왔습니다.<br>
 패킷의 이동의 경우 sequential integers(1, 2, 3..) 이렇게 쓰이는 것이 아니라, 
@@ -52,9 +52,19 @@ TCP는 UDP나 다른 통신에 비해서 꽤 무거운? 편입니다. <br>
 
 SYN, SYN-ACK, ACK를 Handshake 라고 합니다.
 
+#### <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> IP Classes
 
+| Class | 1st Octet DEC Range | 1st Octet Bin |
+|:------|:------|:------|
+| A | 1 ~ 127 | **0000**0001 ~ 01111111 |
+| B | 128 ~ 191 | **1000**0000 ~ 10111111 |
+| C | 192 ~ 223 | **1100**0000 ~ 11011111 |
+| D | 224 ~ 239 | **1110**0000 ~ 11101111 |
+| E | 240 ~ 250 | **1111**0000 ~ 11111111 |
 
-#### Nagle's algorithm
+그냥 참고 사항.. 
+
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Nagle's algorithm
 
 만약에 정말 작은 양의 데이터를 보낼때는 어떻게 될까?<br>
 이런 경우는 ssh등에서 많이 일어나는데, 가량 글자 하나 칠때마다 데이터를 보내야 한다면 매우 비효율적일 것입니다. 
@@ -87,7 +97,7 @@ end if
 **해당 알고리즘은 TCP_NODELAY 옵션에 의해서 off 시킬수도 있습니다.**
 
 
-#### Slow Start Algorithm
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Slow Start Algorithm
 
 TCP Connection에서 최초 연결이 될때, receiver까지 도착을 하는데.. 그 중간의 라우터들이 현재 congested된 상황인지 아닌지 알 수가 없습니다.
 그래서 congestion window로 sender가 보낼수 있는 packet의 사이즈를 정하게 되는데, 일단 최초 TCP Connection시에는 작은 양의 데이터를 보내다가 
@@ -97,7 +107,7 @@ Slow Start 알고리듬은 Exponentially increase시킵니다. 만약 Linear하�
 소요될수 있기 때문입니다. 즉 1 -> 2 -> 4 -> 8 -> 16 .. 이런식으로 증가됩니다.
 
 
-#### Fast Retrasmit
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Fast Retrasmit
 
 일반적으로 TCP는 타이머([Round Trip Delay Time][ref-rto] : 데이터를 receiver에게 보낸후 다시 sender가 acknowledge를 받는 시간)
 에 의해서 lost segment가 있는지 알아냅니다. 이 특정 시간이상을 초가할때까지 ACK가 오지 않으면 다시 재전송(retransmit)을 하게 됩니다.
@@ -118,7 +128,7 @@ sender는 반복적으로 동일한 packet을 받았을때 duplicate acknowledge
 
 최종적으로 sender는 패킷 5번을 다시 재전송하게 됩니다.
 
-## TCP Example in Python
+## <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> TCP Example in Python
 
 먼저 Active Socket과 Passive Socket이 있습니다.
 
@@ -195,7 +205,7 @@ Listening at ('127.0.0.1', 50000)
 
 코드를 하나하나씩 보도록 하겠습니다.
 
-#### Creating a Passive Socket
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Creating a Passive Socket
 
 {% highlight python %}
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -222,7 +232,7 @@ sock.listen(1)의 경우는 아직 accept되지 않은 소켓들을 버퍼의 �
 connection을 하기 위해서는 최소값이 0이며, 해당 값이상이 넘어가서 connection시도가 있을시에는 OS에서 연결거부를 하게됩니다.
 
 
-#### Active Socket
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Active Socket
 
 {% highlight python %}
 active_socket, sockname = sock.accept()
@@ -231,7 +241,7 @@ active_socket, sockname = sock.accept()
 Client로 부터 connection을 받고 accept를 하게 되면 실제 해당 클라이언트와 통신을 할 수 있는 active socket이 만들어지게 됩니다.
 이때 OS는 임의로 포트를 할당을 하게 됩니다.
 
-#### stream-orient protocol
+#### <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> stream-orient protocol
 
 무슨 말이냐 하면 읽고 쓰는데 스트리밍방식이기 때문에 얼마나 읽을지, 얼마나 양을 쓸지 결정을 해야 합니다.
 
@@ -247,6 +257,10 @@ recv(int값) 함수를 호출하면 클라이언트한테서 어떤 값이 서�
 
 집접한번 해보시면 이해가 빠를겁니다. :)<br>
 대충 이정도만.. 나중에 시간나면.. node.js로 TCP서버 구축하는거 여기에다가 추가 시키겠습니다.
+
+
+
+
 
 
 
