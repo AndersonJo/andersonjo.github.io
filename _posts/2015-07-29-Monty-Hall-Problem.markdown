@@ -3,6 +3,7 @@ layout: post
 title:  "Monty Hall Problem - Bayes"
 date:   2015-07-29 02:00:00
 categories: "machine-learning"
+tags: ['Conditional Probability']
 asset_path: /assets/posts/Monty-Hall-Problem/
 ---
 

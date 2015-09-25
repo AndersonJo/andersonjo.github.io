@@ -3,6 +3,7 @@ layout: post
 title:  "Feedforward Neural Network"
 date:   2015-09-18 01:00:00
 categories: "neural-network"
+tags: ['RMS Error', "Hebb's Rule", "아버지 아들 키"]
 asset_path: /assets/posts/Feedforward-Neural-Network/
 ---
 <div>
@@ -89,6 +90,7 @@ RMS의 경우는 Supervised Learning이었습니다. 즉 예상수치가 있고,
 예제에서는 단순히 delta값을 weight 값에 더하였습니다.<br>
 이렇게하면 weight 값은 점점 극명하게 커지거나 작아지거나 하게 됩니다.<br>
 Limit을 두기 위해서는 다음과 같은 Normalization을 할 수 있습니다.
+
 
 <img src="{{ page.asset_path }}Hebb5.png" class="img-responsive img-rounded">
 

@@ -3,6 +3,7 @@ layout: post
 title:  "Theano Tutorial"
 date:   2015-08-25 01:00:00
 categories: "machine-learning"
+tags: ['Gradient Descent']
 asset_path: /assets/posts/Theano-Tutorial/
 ---
 <div>

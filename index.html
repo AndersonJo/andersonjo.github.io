@@ -6,17 +6,15 @@ layout: default
     <div ng-controller="AndersonPostContoller">
         <script>
             var global_post_data = [{% for post in site.posts %}
-            {"date":"{{post.date}}", "categories": ["{{post.categories}}"], "url": "{{post.url}}", "title": "{{post.title}}"}, {% endfor %}];
+            {"date":"{{post.date}}", "categories": ["{{post.categories}}"], "url": "{{post.url}}", "title": "{{post.title}}", "tags":{{post.tags | jsonify}} }, {% endfor %}];
         </script>
-
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Search" ng-model="searchText">
 
-            <div style="font-family:'Jeju Gothic', serif; text-align:right; color:#D50F36; margin-top:5px;">
+            <div style="font-family:'Jeju Gothic', serif;color:#D50F36; margin-top:5px;">
                 {(bible_statement)}
             </div>
         </div>
-
 
         <h1>Posts</h1>
         <ul class="posts" ng-cloak>
@@ -26,9 +24,11 @@ layout: default
                 <span class="post-category" ng-repeat="category in post.categories">{(category)} </span>
 
                 <div>
-                    <a class="post-link" href="{( post.url )}" data-toggle="popover"
+                    <a class="post-link post-tag" href="{( post.url )}" data-toggle="popover"
+                       tooltip='{(post.tags | tagFilter)}'
+                       tooltip-placement="right"
                        data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-                        {(post.title )}
+                        {(post.title)}
                     </a>
                 </div>
             </li>
@@ -36,8 +36,14 @@ layout: default
 
     </div>
     <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-
-
+    <style>
+        .posts .tooltip-inner {
+            color: #fff;
+            font-size:1.2em;
+            background-color: #0A4183;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, .25);
+        }
+    </style>
 </div>
 
 

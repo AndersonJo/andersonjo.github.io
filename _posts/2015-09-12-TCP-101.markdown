@@ -3,6 +3,7 @@ layout: post
 title:  "TCP 101"
 date:   2015-09-12 01:00:00
 categories: "network"
+tags: ["Nagle", "Slow Start", "Fast Retransmit", "socket"]
 asset_path: /assets/posts/TCP-101/
 ---
 <div>

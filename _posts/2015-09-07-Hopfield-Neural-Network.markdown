@@ -3,6 +3,7 @@ layout: post
 title:  "Hopfield Neural Network"
 date:   2015-09-07 01:00:00
 categories: "neural-network"
+tags: ['matrix', 'bipolar']
 asset_path: /assets/posts/Hopfield-Neural-Network/
 ---
 <div>

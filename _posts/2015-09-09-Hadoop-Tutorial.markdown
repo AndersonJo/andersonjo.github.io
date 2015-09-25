@@ -3,6 +3,7 @@ layout: post
 title:  "Hadoop Tutorial"
 date:   2015-09-09 01:00:00
 categories: "hadoop"
+tags: ['hdfs', 'upload file', 'dfsadmin', 'mapreduce']
 asset_path: /assets/posts/Hadoop-Tutorial/
 ---
 <div>

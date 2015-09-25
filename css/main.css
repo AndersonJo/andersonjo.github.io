@@ -222,6 +222,7 @@ a:visited {
 }
 
 
+
 /* Post styles */
 /* ----------------------------------------------------------*/
 
@@ -371,7 +372,6 @@ a:visited {
 .post table tr th :last-child, .post table tr td :last-child {
     margin-bottom: 0;
 }
-
 
 /* Syntax highlighting styles */
 /* ----------------------------------------------------------*/

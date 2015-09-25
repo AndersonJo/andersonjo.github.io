@@ -1,4 +1,4 @@
-var app = angular.module('andersonApp', []);
+var app = angular.module('andersonApp', ['ui.bootstrap']);
 
 app.config([
     '$interpolateProvider', function ($interpolateProvider) {
@@ -13,6 +13,12 @@ app.filter('andersonDate', function () {
         var month = date.getMonth();
         month = month_abbr[month];
         return month + ' ' + date.getDate() + ' ' + date.getFullYear() + ' ';
+    }
+});
+
+app.filter('tagFilter', function(){
+    return function(input){
+        return input.join(', ')
     }
 });
 
