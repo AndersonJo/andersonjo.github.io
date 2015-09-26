@@ -186,10 +186,20 @@ WeightA(1) * InputA(1) 그리고 Weight(-1) * InputB(-1) = **1 그리고 1**<br>
 
 ## <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Feedforward Neural Network
 
+* [xor.py][xor.py]
+* [activation.py][activation.py]
+* [feedforward.py][feedforward.py]
+
+Feedforward Connection은 [Concrete Strength][ref-concrete]처럼 전방향으로만 레이어간에 연결이 되어진 모델의 뉴럴 네트워크입니다.
+
+
 
 
 
 [hebb.py]: {{ page.asset_path }}hebb.py
+[xor.py]: {{ page.asset_path }}xor.py
+[activation.py]: {{ page.asset_path }}activation.py
+[feedforward.py]: {{ page.asset_path }}feedforward.py
 
-[ref-concrete]: http://andersonjo.github.io/neural-network/2015/07/25/Neural-Network-for-concrete/
+[ref-concrete]: /neural-network/2015/07/26/Neural-Network-for-concrete/
 [ref-hebb]: https://wiki.eyewire.org/en/Hebb's_rule
