@@ -1,5 +1,7 @@
-from feedforward import FeedforwardNetwork, FeedLayer, Backpropagation
 import numpy as np
+
+from feedforward import FeedforwardNetwork, FeedLayer
+
 
 def main():
     network = FeedforwardNetwork()
@@ -20,13 +22,13 @@ def main():
         for i in range(len(input)):
             r = network.compute(input[i])
             network.train([r], expect[i], learning_rate, momemtum)
-            print 'Result..', r, expect[i]
-        print 'Epoch %d '% epoch,  '='*50
+            if epoch%100 == 0:
+                print 'Result..', r, expect[i]
+        if epoch%100 == 0:
+            print 'Epoch %d '% epoch,  '='*50
         epoch += 1
 
     print network
-
-
 
     # train = Backpropagation(network, input, expect, learning_rate, momemtum)
 

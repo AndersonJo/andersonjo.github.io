@@ -190,8 +190,14 @@ WeightA(1) * InputA(1) 그리고 Weight(-1) * InputB(-1) = **1 그리고 1**<br>
 * [activation.py][activation.py]
 * [feedforward.py][feedforward.py]
 
-Feedforward Connection은 [Concrete Strength][ref-concrete]처럼 전방향으로만 레이어간에 연결이 되어진 모델의 뉴럴 네트워크입니다.
+Feedforward Connection은 [Concrete Strength][ref-concrete]처럼 전방향으로만 레이어간에 연결이 되어진 모델의 뉴럴 네트워크입니다.<br>
+특징으로는..
 
+* 가장 단순한 형태의 첫번째 뉴럴 네트워크 
+* Cycle 또는 loop이 없는 형태
+* recurrent neural network와는 다름
+* 실무에서 쓰일수 있는 가장 단순한 형태의 뉴럴 네트워크
+* Multi-Layer Perceptron 으로도 불림
 
 
 

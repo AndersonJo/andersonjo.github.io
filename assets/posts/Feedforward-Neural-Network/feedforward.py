@@ -153,11 +153,3 @@ class FeedLayer(object):
         s.append('\t' + str(self._weights).replace('\n', '\n\t'))
         return '\n'.join(s)
 
-
-class Backpropagation(object):
-    def __init__(self, network, input, expect, learning_rate, momemtum):
-        self._network = network
-        self._input = input
-        self._expect = expect
-        self._learning_rate = learning_rate
-        self._momemtum = momemtum
