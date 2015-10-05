@@ -103,6 +103,23 @@ __global__ void add(int *a, int *b, int *result){
 중요 포인트는 tid += blockDim.x * gridDim.x 인데.. 즉.. <br>
 블럭갯수 * 쓰레드갯수를 통해서 전체 쓰레드 갯수를 구하는 것입니다.
 
+### Common Mistake
+
+아주 중요한 부분인데.. CUDA에서 여러개의 쓰레드가 동시에 돌아가는데.. 마찬가지로 Race Condition이 나올수 있다.<br>
+
+예를 들어서 ***result** 변수에 동시에 여러 쓰레드가 합산을 하려고 쓰면은.. <br>
+**의도하지 않은 이상한 값**이 들어간다. (result는 이때 array가 아닌 단순 integer)
+
+{% highlight c %}
+while(tid<N){
+	*result = a[tid] + b[tid];
+	tid += blockDim.x * gridDim.x;
+}
+{% endhighlight %}
+
+Device안에서 어떤 값에 assignment할때는 매우 조심해서 해야한다.<br> 
+단순히 read정도라면 상관없지만.. write에 있어서는 조심해야한다.
+
 
 ### Result
 결론적으로 add<<<x, y>>>> 에서 x값, y값 어떻게 넣어도 (Hardware limitaions를 넘지 않는 선에서..)
