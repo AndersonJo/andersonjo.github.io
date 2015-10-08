@@ -183,4 +183,98 @@ static PyObject * md5_gpu_crack_wrapper(PyObject * self, PyObject * args, PyObje
 | kwlist[] = { "keyname" } | kwargs의 key names | 
 
 
+## Message Digest
+
+#### MD5 
+
+MD5, SHA-256, SHA-512처럼 One-way Hash Function을 말합니다.<br>
+즉.. arbitrary sized data를 받고 일정한 크기의 (fixed-length)를 갖은 Hash Value를 내놓는 알고리즘들을 말합니다.
+
+{% highlight python %}
+from hashlib import sha512
+sha = sha512()
+sha.update('password!')
+sha.hexdigest()
+# '35fddd95911c6e8ced55b83b4dddcb9a06a2af8471d412ad7427878369d3d18bb7ac00ec561a41d819596540d2edf600df56376c906f49ff5c93d04c0c42546d'
+{% endhighlight %}
+
+## Shared-Key Encryption (Symmetric)
+
+간단하게.. Sender와 Receiver사이에 하나의 Key 를 서로 공유합니다. 해당 Key를 이용해서 Message를 Encrypt 또는 Decrypt 할수 있습니다.
+Symmetric Key는 매우 간단하고 단순하지만 문제는 Shared Key를 서로 Private으로 전달할 방법이 있어야 한다는 것입니다.
+이 문제를 극복한 것이 Public Key Encryption입니다. (Public Key Encryption은 Public Key를 non-secure way로 내보내지만 Private Key는 Trasmit 되지 않습니다.)
+
+* 동일한 키가 Sender 와 Receiver에게서 사용이 됩니다.
+* Public Key Encryption 에 비해서 더 빠릅니다.
+* 키가 안전하게 보관이 되어야만 합니다.
+* Twofish, Serpent, AES, Blowfish, CAST5, RC4, 3DES, SEED
+
+
+먼저 설치..
+
+{% highlight bash %}
+sudo apt-get install libffi-dev
+sudo pip install cryptography
+{% endhighlight %}
+
+#### Fernet (Symmetric Encryption)
+
+cryptography 라이브러리에서 제공하는 Symmetric Encryption 툴.. 
+
+{% highlight python %}
+from cryptography.fernet import Fernet
+key = Fernet.generate_key() # 'sxir3dIM7NtsyUPsLkau6pPr4whGPgpx1eHBmDA-hQw='
+f = Fernet(key)
+token = f.encrypt(b"My Secret Weapon")
+f.decrypt(token) # 'My Secret Weapon'
+{% endhighlight %}
+
+#### AES (Symmetric Encryption)
+
+
+{% highlight python%}
+import os
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+backend = default_backend()
+key = os.urandom(32)
+iv = os.urandom(16)
+cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=backend)
+encryptor = cipher.encryptor()
+ct = encryptor.update(b"a secret message") + encryptor.finalize()
+decryptor = cipher.decryptor()
+decryptor.update(ct) + decryptor.finalize()
+# 'a secret message'
+{% endhighlight %}
+
+## Public Key Encryption
+
+* Public Key 와 Private Key를 두개를 사용합니다.
+* 제3자가 Public Key를 갖었다 하더라도, Private키 없이는 Decrypt할 수 없습니다.
+* Encryption은 Public Key만 있어도 할 수 있습니다.
+* Symmetric Encryption에 비해서 느립니다.
+
+{% highlight python %}
+from Crypto.PublicKey import RSA
+from Crypto import Random
+random_generator = Random.new().read
+key = RSA.generate(1024, random_generator)
+# <_RSAobj @0x7f60cf1b57e8 n(1024),e,d,p,q,u,private>
+
+public_key = key.publickey()
+enc_data = public_key.encrypt('abcdefgh', 32)
+# ('\x11\x86\x8b\xfa\x82\xdf\xe3sN ~@\xdbP\x85
+# \x93\xe6\xb9\xe9\x95I\xa7\xadQ\x08\xe5\xc8$9\x81K\xa0\xb5\xee\x1e\xb5r
+# \x9bH)\xd8\xeb\x03\xf3\x86\xb5\x03\xfd\x97\xe6%\x9e\xf7\x11=\xa1Y<\xdc
+# \x94\xf0\x7f7@\x9c\x02suc\xcc\xc2j\x0c\xce\x92\x8d\xdc\x00uL\xd6.
+# \x84~/\xed\xd7\xc5\xbe\xd2\x98\xec\xe4\xda\xd1L\rM`\x88\x13V\xe1M\n X
+# \xce\x13 \xaf\x10|\x80\x0e\x14\xbc\x14\x1ec\xf6Rs\xbb\x93\x06\xbe',)
+
+key.decrypt(enc_data)
+# 'abcdefgh'
+
+
+{% endhighlight %}
+
+
 [git-gpu-cracker]: https://github.com/AndersonJo/MD5-GPU-Cracker
