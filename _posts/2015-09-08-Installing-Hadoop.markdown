@@ -241,6 +241,8 @@ protoc --version
 tar xvf hadoop-2.7.1-src.tar.gz
 cd hadoop-2.7.1-src
 mvn package -Pdist,native -DskipTests -Dtar
+sudo cp -R hadoop-dist/target/hadoop-2.7.1 /usr/local/
+
 {% endhighlight %}
 
 빌드가 끝난후 hadoop-dist/target/hadoop-2.7.1 디렉토리를 /usr/local 에다가 복사합니다.<br>
