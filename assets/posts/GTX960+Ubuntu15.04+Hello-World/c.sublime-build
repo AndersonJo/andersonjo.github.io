@@ -1,0 +1,6 @@
+{
+	"cmd" : ["gcc ${file_name} -o ${file_base_name} && ${file_path}/${file_base_name}"],
+	"shell" : true,
+	"selector" : "source.c",
+	"working_dir" : "$file_path",
+}
