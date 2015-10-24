@@ -164,6 +164,7 @@ Coefficients:
 {% endhighlight %}
 
 Python Pandas를 사용해서 a 와 b값을 찾도록 해보겠습니다.
+
 {% highlight python %}
 import pandas as pd
 
@@ -178,7 +179,41 @@ slope = cats['Bwt'].cov(cats['Hwt']) / cats['Bwt'].var()
          
 intercept = cats['Hwt'].mean() - slope * cats['Bwt'].mean()
 # -0.356662432885
+{% endhighlight %}
 
+
+# Python
+
+
+{% highlight python %}
+import pandas as pd
+from pandas.stats.api import ols
+
+cats = pd.read_csv('cats.csv')
+
+ols(y=cats['Hwt'], x=cats['Bwt'])
+#-------------------------Summary of Regression Analysis-------------------------
+# 
+# Formula: Y ~ <x> + <intercept>
+# 
+# Number of Observations:         144
+# Number of Degrees of Freedom:   2
+# 
+# R-squared:         0.6466
+# Adj R-squared:     0.6441
+# 
+# Rmse:              1.4524
+# 
+# F-stat (1, 142):   259.8348, p-value:     0.0000
+# 
+# Degrees of Freedom: model 1, resid 142
+# 
+# -----------------------Summary of Estimated Coefficients------------------------
+#       Variable       Coef    Std Err     t-stat    p-value    CI 2.5%   CI 97.5%
+# --------------------------------------------------------------------------------
+#              x     4.0341     0.2503      16.12     0.0000     3.5436     4.5246
+#      intercept    -0.3567     0.6923      -0.52     0.6072    -1.7135     1.0002
+# ---------------------------------End of Summary---------------------------------
 {% endhighlight %}
 
 

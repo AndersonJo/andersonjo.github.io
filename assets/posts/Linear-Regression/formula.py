@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas.stats.api import ols
 
 cats = pd.read_csv('cats.csv')
 slope = (sum((cats['Bwt'] - cats['Bwt'].mean()) *
@@ -11,3 +12,4 @@ print slope
 intercept = cats['Hwt'].mean() - slope * cats['Bwt'].mean()
 print intercept
 
+print ols(y=cats['Hwt'], x=cats['Bwt'])
