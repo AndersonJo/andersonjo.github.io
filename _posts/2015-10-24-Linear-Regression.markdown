@@ -151,6 +151,8 @@ cooks distance plot에서 보듯이 144번은 outlier입니다.
 
 <img src="{{ page.asset_path }}formula_b.png" class="img-responsive img-rounded">
 
+<img src="{{ page.asset_path }}formula_simple.png" class="img-responsive img-rounded">
+
 <img src="{{ page.asset_path }}formula_a.png" class="img-responsive img-rounded">
 
 sample data였던 cats의 Linear Regression.
@@ -169,6 +171,9 @@ cats = pd.read_csv('cats.csv')
 slope = (sum((cats['Bwt'] - cats['Bwt'].mean()) *
              (cats['Hwt'] - cats['Hwt'].mean())) /
          sum((cats['Bwt'] - cats['Bwt'].mean()) ** 2))
+# 4.03406269846
+         
+slope = cats['Bwt'].cov(cats['Hwt']) / cats['Bwt'].var()
 # 4.03406269846
          
 intercept = cats['Hwt'].mean() - slope * cats['Bwt'].mean()
