@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Regression"
+title:  "Linear Regression"
 date:   2015-10-24 01:00:00
 categories: "machine-learning"
-asset_path: /assets/posts/Regression/
-tags: ['R', 'Hadoop', 'Python']
+asset_path: /assets/posts/Linear-Regression/
+tags: ['Linear Regression']
 ---
 <div>
     <img src="{{ page.asset_path }}dog.jpg" class="img-responsive img-rounded">
