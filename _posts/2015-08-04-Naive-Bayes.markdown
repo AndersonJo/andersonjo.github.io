@@ -4,7 +4,12 @@ title:  "Naive Bayes"
 date:   2015-08-04 02:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Naive-Bayes/
+tags: ['Email Spam Filtering', 'Text Mining']
 ---
+<div>
+    <img src="{{ page.asset_path }}email.jpg" class="img-responsive img-rounded">
+</div>
+
 Bayes 공식이나 이론은 이미 [Monty Hall][bayes] 문제를 풀면서 설명을 했습니다.
 
 오늘은 이 Bayes 공식을 이용한.. 정말 간단하지만 왠만한 복잡도 높은 다른 classification methods 보다 강력한 퍼포먼스(정확도)를

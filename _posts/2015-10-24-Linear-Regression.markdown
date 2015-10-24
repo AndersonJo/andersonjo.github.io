@@ -4,7 +4,6 @@ title:  "Linear Regression"
 date:   2015-10-24 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Linear-Regression/
-tags: ['Linear Regression']
 ---
 <div>
     <img src="{{ page.asset_path }}dog.jpg" class="img-responsive img-rounded">
