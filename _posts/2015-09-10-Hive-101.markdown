@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "Hive 101"
+date:   2015-9-10 01:00:00
+categories: "hadoop"
+asset_path: /assets/posts/Hive-101/
+---
+<div>
+    <img src="{{ page.asset_path }}hive.jpg" class="img-responsive img-rounded">
+</div>
+
+# Installing Hive
+
+### Installing Hive 
+
+[Download Page][download-page]에 들어가서 Hive를 다운 받습니다.
+
+{% highlight bash %}
+tar -zxvf apache-hive-1.2.1-bin.tar.gz
+sudo mkdir /usr/lib/hive
+sudo mv apache-hive-1.2.1-bin/* /usr/lib/hive/
+{% endhighlight %}
+
+### Setting Hive Environment
+
+{% highlight bash %}
+export HIVE_HOME="/usr/lib/hive"
+export PATH=$PATH:$HIVE_HOME/bin
+{% endhighlight %}
+
+
+
+
+[download-page]:http://apache.claz.org/hive/stable/
+
+[fire_and_theft.csv]: {{ page.asset_path }}fire_and_theft.csv
+[cats.csv]: {{ page.asset_path }}cats.csv

@@ -73,10 +73,16 @@ export HADOOP_CONF_DIR=$HADOOP_HOME/conf
 export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.1/conf
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
+export HIVE_HOME="/usr/lib/hive"
 export CUDAHOME=/usr/local/cuda-7.5
 export PATH=$PATH:$HADOOP_HOME/bin:$CUDAHOME/bin
 export PATH=$PATH:$ANDROID_HOME:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$HIVE_HOME/bin
 unset JAVA_TOOL_OPTIONS
+
+
+
+
 {% endhighlight %}
 
 
@@ -108,7 +114,17 @@ import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc5
 Ctrl + Shift + p 누른 후 Package control: Install Package 명령어로 Package 설치
 
 
+### Ruby IRC (Optional)
 
+~ 위치에 .irbrc 파일에 다음을 저장합니다.
+
+{% highlight ruby %}
+require 'irb/completion'
+require 'map_by_method'
+require 'what_methods'
+require 'pp'
+IRB.conf[:AUTO_INDENT]=true
+{% endhighlight %}
 
 
 
