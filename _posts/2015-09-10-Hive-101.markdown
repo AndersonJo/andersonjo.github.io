@@ -38,12 +38,6 @@ sudo mv apache-hive-1.2.1-bin/* /usr/lib/hive/
 
 ### Setting Hive Environment
 
-{% highlight bash %}
-export HIVE_HOME="/usr/lib/hive"
-export PATH=$PATH:$HIVE_HOME/bin
-{% endhighlight %}
-
-
 .bashrc에 다음을 넣습니다.
 
 {% highlight bash %}
