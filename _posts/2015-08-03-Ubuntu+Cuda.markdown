@@ -127,6 +127,45 @@ IRB.conf[:AUTO_INDENT]=true
 {% endhighlight %}
 
 
+### Postgres
+
+설치..
+{% highlight bash %}
+sudo apt-get install postgresql-client
+sudo apt-get install postgresql postgresql-contrib
+apt-cache search postgres
+{% endhighlight %}
+
+postgres 패스워드 변경
+{% highlight text %}
+sudo -u postgres psql postgres
+\password postgres
+{% endhighlight %}
+
+peer -> md5 로 고친다.
+
+{% highlight bash %}
+sudo vi /etc/postgresql/9.4/main/pg_hba.conf
+local   all             postgres                                md5
+local   all             all                                     md5
+sudo service postgresql restart
+{% endhighlight %}
+
+### MySQL
+
+{% highlight text %}
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+
+[mysqld_safe]
+default-character-set=utf8
+
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+{% endhighlight %}
+
+
 
 ### Current Nvidia Card
 
