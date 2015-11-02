@@ -54,8 +54,42 @@ export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
 export HIVE_HOME="/usr/lib/hive"
 {% endhighlight %}
 
+### yarn-site.xml
+
+{% highlight xml %}
+<configuration>
+   <property>
+      <name>yarn.nodemanager.aux-services</name>
+      <value>mapreduce_shuffle</value>
+   </property>
+   <property>
+      <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+      <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+   </property>
+</configuration>
+
+{% endhighlight %}
+
+
+### mapred-site.xml.template
+
+{% highlight bash %}
+cp mapred-site.xml.template mapred-site.xml
+{% endhighlight %}
+
+
+### Verifying
+
+{% highlight bash %}
+start-dfs.sh
+start-yarn.sh
+{% endhighlight %}
+
+Hadoop Configuration 화면이 나와야 합니다.
+
+<strong style="color:red;">[http://localhost:50070][dfs]</strong>
 
 [download-page]:http://apache.claz.org/hive/stable/
 
-[fire_and_theft.csv]: {{ page.asset_path }}fire_and_theft.csv
+[dfs]: http://localhost:50070
 [cats.csv]: {{ page.asset_path }}cats.csv
