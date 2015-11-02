@@ -9,6 +9,21 @@ asset_path: /assets/posts/Hive-101/
     <img src="{{ page.asset_path }}hive.jpg" class="img-responsive img-rounded">
 </div>
 
+# Hadoop Ecosystem 
+
+| Tool | Description |
+|:--|:--|
+| Scoop | HDFS 와 RDBMS 사이의 데이터를 Import, Export할 수 있는 툴 |
+| Pig | Procedural language platform으로서 Map Reduce를 위한 스크립트를 짜게 해줌 |
+| Hive | Map Reduce에 대해서 SQL Query 타입 유형의 스크립트를 짜게 해줌 |
+ 
+Map Reduce를 할 수 있는 방법 
+
+* 기존의 Java Map Reduce 방법 
+* Pig로 스크립트를 짜서 structured or semi structured data를 처리함 
+* Hive로 SQL Query문으로 structured data를 처리함 (Hive Query Language)
+
+
 # Installing Hive
 
 ### Installing Hive 
@@ -29,6 +44,21 @@ export PATH=$PATH:$HIVE_HOME/bin
 {% endhighlight %}
 
 
+.bashrc에 다음을 넣습니다.
+
+{% highlight bash %}
+export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+export HADOOP_HOME=/usr/local/hadoop-2.7.1
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_CONF_DIR=$HADOOP_HOME/conf
+export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.1/conf
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
+export HIVE_HOME="/usr/lib/hive"
+{% endhighlight %}
 
 
 [download-page]:http://apache.claz.org/hive/stable/
