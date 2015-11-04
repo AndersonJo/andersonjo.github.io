@@ -2,8 +2,9 @@
 layout: post
 title:  "Elasticsearch 101"
 date:   2015-11-04 01:00:00
-categories: "analytics"
+categories: "elasticsearch"
 asset_path: /assets/posts/Elasticsearch-101/
+tags: ['logstash']
 ---
 <div>
     <img src="{{ page.asset_path }}logo-elastic.png" class="img-responsive img-rounded">
