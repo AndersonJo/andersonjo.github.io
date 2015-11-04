@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "GTX960 + Ubuntu 15.04"
+title:  "Ubuntu 15.04 + GTX960"
 date:   2015-08-03 02:00:00
 categories: "ubuntu"
 asset_path: /assets/posts/GTX960+Ubuntu15.04+Hello-World/
@@ -77,12 +77,22 @@ export HADOOP_CONF_DIR=$HADOOP_HOME/conf
 export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.1/conf
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
-export HIVE_HOME="/usr/lib/hive"
+export HIVE_HOME="/usr/local/hive"
+export DERBY_HOME=/usr/local/derby
 export CUDAHOME=/usr/local/cuda-7.5
-export PATH=$PATH:$HADOOP_HOME/bin:$CUDAHOME/bin
+
+export CLASSPATH=$CLASSPATH:$HIVE_HOME/lib/*:.
+export CLASSPATH=$CLASSPATH:$HADOOP_HOME/lib/*:.
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derbytools.jar
+
+export PATH=$PATH:$HADOOP_HOME/bin
+export PATH=$PATH:$CUDAHOME/bin
 export PATH=$PATH:$ANDROID_HOME:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$HIVE_HOME/bin
+export PATH=$PATH:$DERBY_HOME/bin
 unset JAVA_TOOL_OPTIONS
+
 {% endhighlight %}
 
 

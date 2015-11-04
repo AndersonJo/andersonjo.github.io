@@ -32,7 +32,7 @@ Map Reduce를 할 수 있는 방법
 
 {% highlight bash %}
 tar -zxvf apache-hive-1.2.1-bin.tar.gz
-sudo mkdir /usr/lib/hive
+sudo mkdir /usr/local/hive
 sudo mv apache-hive-1.2.1-bin/* /usr/lib/hive/
 {% endhighlight %}
 
@@ -51,7 +51,13 @@ export HADOOP_CONF_DIR=$HADOOP_HOME/conf
 export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.1/conf
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
-export HIVE_HOME="/usr/lib/hive"
+export HIVE_HOME="/usr/local/hive"
+
+export CLASSPATH=$CLASSPATH:$HIVE_HOME/lib/*:.
+export CLASSPATH=$CLASSPATH:$HADOOP_HOME/lib/*:.
+
+export PATH=$PATH:$HADOOP_HOME/bin
+export PATH=$PATH:$HIVE_HOME/bin
 {% endhighlight %}
 
 ### yarn-site.xml
@@ -70,17 +76,30 @@ export HIVE_HOME="/usr/lib/hive"
 
 {% endhighlight %}
 
+### mapred-site.xml
 
-### mapred-site.xml.template
+mapred-site.xml은 어떤 MapReduce 엔진을 사용하는지 지정을 합니다.<br>
+먼저 
 
 {% highlight bash %}
 cp mapred-site.xml.template mapred-site.xml
 {% endhighlight %}
 
+{% highlight xml %}
+<configuration>
+   <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+   </property>
+</configuration>
+{% endhighlight %}
+
+
 
 ### Verifying
 
 {% highlight bash %}
+hdfs namenode -format
 start-dfs.sh
 start-yarn.sh
 {% endhighlight %}
@@ -89,7 +108,70 @@ Hadoop Configuration 화면이 나와야 합니다.
 
 <strong style="color:red;">[http://localhost:50070][dfs]</strong>
 
-[download-page]:http://apache.claz.org/hive/stable/
 
+### Configuring Hive
+
+HIVE_HOME안의 conf디렉토리에 있는 hive-env.sh를 설정해주면 됩니다.<br>
+conf 디렉토리 안에는 이미 템플렛 파일이 있기 때문에 그냥 카피해주면 됩니다.
+
+{% highlight bash %}
+cp hive-env.sh.template hive-env.sh
+{% endhighlight %}
+
+
+# Apache Derby
+
+### Installing Derby
+
+Apache Derby는 Java로 만들어진 Relational Database입니다.<br>
+[Derby Download Page][derby-download-page] 에 접속해서 wget으로 받습니다.
+
+다운받은 파일을 풀고 /usr/local/derby 위치고 카피시켜줍니다.
+
+{% highlight bash %}
+sudo mv db-derby-10.12.1.1-bin /usr/local/derby
+cd /usr/local
+sudo chown -R hduser:hadoop derby
+{% endhighlight %}
+
+
+### Configuring Derby
+
+.bashrc에 다음을 추가합니다.
+
+{% highlight bash %}
+export DERBY_HOME=/usr/local/derby
+export PATH=$PATH:$DERBY_HOME/bin
+
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derbytools.jar
+{% endhighlight %}
+
+메타데이터가 저장될 공간을 만들면 끝입니다.
+{% highlight bash %}
+mkdir $DERBY_HOME/data
+{% endhighlight %}
+
+# Metastore of Hive
+
+{% highlight bash %}
+cd $HIVE_HOME/conf
+cp hive-default.xml.template hive-site.xml
+{% endhighlight %}
+
+
+# Verifying Hive Installation
+
+{% highlight bash %}
+hdfs dfs -mkdir /hive/warehouse
+hdfs dfs -mkdir -p /hive/warehouse
+hdfs dfs -chmod g+w /tmp
+hdfs dfs -chmod g+w /hive/warehouse
+hive
+{% endhighlight %}
+
+
+[download-page]:http://apache.claz.org/hive/stable/
+[derby-download-page]:https://db.apache.org/derby/derby_downloads.html
 [dfs]: http://localhost:50070
 [cats.csv]: {{ page.asset_path }}cats.csv
