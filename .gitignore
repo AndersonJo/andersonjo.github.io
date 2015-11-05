@@ -7,3 +7,6 @@ Gemfile.lock
 *.gz
 *.pkl
 *.pyc
+
+# Node.js
+node_modules

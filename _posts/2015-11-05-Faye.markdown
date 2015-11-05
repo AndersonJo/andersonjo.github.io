@@ -1,0 +1,80 @@
+---
+layout: post
+title:  "Faye"
+date:   2015-11-04 01:00:00
+categories: "chat"
+asset_path: /assets/posts/Faye/
+tags: ['chat']
+---
+<div>
+    <img src="{{ page.asset_path }}faye_companies.png" class="img-responsive img-rounded">
+</div>
+
+Socket.IO의 경우 서버3대 + L4로 잡아서 돌려봤는데.. 100만유저 게임에서 각각의 컴퓨터가 메모리를 2기가만으로도 충분할 정도로.. 
+빠르게 잘 돌아갔었습니다. (물론 Socket.IO자체의 버그때문에 한동안 개고생하긴 했지만..)<br>
+오늘은 Faye라는 다른 Chatting Server를 사용해보고자 합니다.  
+
+# Installing Faye
+
+### Installing Faye for Node.js
+
+{% highlight bash %}
+npm install faye
+{% endhighlight %}
+
+### Installing Faye for Ruby
+
+{% highlight bash %}
+gem install faye
+{% endhighlight %}
+
+
+# Setting up
+
+### Basic Setting up
+
+{% highlight bash %}
+var http = require('http'),
+    faye = require('faye');
+
+var bayeux = new faye.NodeAdapter({mount: '/faye', timeout: 45});
+
+// Handle non-Bayeux requests
+var server = http.createServer(function(request, response) {
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.end('Hello, non-Bayeux request');
+});
+
+bayeux.attach(server);
+server.listen(8000);
+{% endhighlight %}
+
+NodeAdapter 클래스는 다음과 같은 값을 받습니다.
+
+| mount | http://localhost:8000/faye 이 주소로 faye를 서비스 하겠다는 뜻 |
+| timeout | request를 받은 후 response를 보낼때까지의 connection을 유지하는 시간 (초단위) | 
+| engine | faye-redis 또는 faye-redis-sharded  |
+| ping | keep-alive ping을 몇초단위로 보낼것인가 |
+
+또한 Faye는 HTTP Server와 bayeux.attach(server); <-- 이런 방식으로 연결이 되어야만 합니다.
+
+### Adding Websocket Extension
+
+웹소켓에서 지원하는 extension을 추가도 가능합니다. <br>
+아래의 경우에서는 permessage-deflate extension을 추가합니다.
+
+{% highlight bash %}
+var faye    = require('faye'),
+    deflate = require('permessage-deflate');
+
+var bayeux = new faye.NodeAdapter({mount: '/faye', timeout: 45});
+bayeux.addWebsocketExtension(deflate);
+{% endhighlight %}
+
+# Extension
+
+Server 그리고 Client둘다 message가 in 그리고 out할때 중간에 뭔가 로직을 넣을수 있는 extension을 지원을 합니다.<br>
+Extension은 incoming() 또는 outgoing() 함수이며, function(message, callback) 처럼 2번째 argument는 callback을 받음으로서 
+asynchronous 로 처리를 합니다.
+
+**글 쓰고 있는 중입니다.**

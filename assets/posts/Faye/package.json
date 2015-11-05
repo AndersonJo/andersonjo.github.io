@@ -1,0 +1,10 @@
+{
+  "name": "faye-tutorial",
+  "version": "0.0.1",
+  "dependencies": {
+    "faye": "*",
+    "cluster": "*",
+    "mocha": "*",
+    "assert": "*"
+  }
+}
