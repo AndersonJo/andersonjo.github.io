@@ -1,0 +1,36 @@
+---
+layout: post
+title:  "Chef + Docker 101"
+date:   2015-11-05 01:00:00
+categories: "devops"
+asset_path: /assets/posts/Chef-101/
+tags: ['docker']
+---
+<div>
+    <img src="{{ page.asset_path }}chef_logo.png" class="img-responsive img-rounded">
+</div>
+
+# Installation
+
+### Installing Docker
+
+가상 컴퓨터를 위해서 사용합니다.
+
+{% highlight bash %}
+sudo apt-get update
+wget -qO- https://get.docker.com/ | sh
+{% endhighlight %}
+
+### Installing Chef Development Toolkit
+
+[Development Toolkit Download][dev-toolkit-url]
+{% highlight bash %}
+sudo dpkg -i chefdk_0.9.0-1_amd64.deb
+{% endhighlight %}
+
+
+# Configuring Resource
+
+
+
+[dev-toolkit-url]: https://downloads.chef.io/chef-dk/ubuntu/
