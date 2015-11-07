@@ -29,8 +29,132 @@ sudo dpkg -i chefdk_0.9.0-1_amd64.deb
 {% endhighlight %}
 
 
-# Configuring Resource
+# Resource 
 
+리소스는 어떤 하나의 인프라스트럭쳐를 가르키는 것입니다. 예를 들어서 어떤 패키지가 설치 되어야 하며, 
+어떤 서비스가 돌아가야 하며, 어떤 파일이 생성되어야 한는지에 관한 것입니다.
+
+### File Resource
+
+**Creating a file resource**<br>
+hello.rb라는 파일로 다음 소스를 넣고, chef-apply hello.rb를 돌리면 motd라는 파일안에 hello chef가 들어가게 됩니다.
+
+{% highlight ruby %}
+file 'motd' do
+	action :create # <- 안써도됨.. create는 default값
+	content 'hello chef'
+end
+{% endhighlight %}
+
+{% highlight bash %}
+chef-apply hello.rb
+cat motd
+# hello chef
+{% endhighlight %}
+
+**Deleting a file resource**<br>
+action :delete 명령어는 파일 리소스를 삭제 시킵니다.
+
+{% highlight ruby %}
+file 'motd' do
+	action :delete
+end
+{% endhighlight %}
+
+{% highlight bash %}
+chef-apply goodbye.rb
+{% endhighlight %}
+
+### Package Resource
+
+chef-apply webserver.rb 를 돌리면 apt package로 nginx를 설치하게 됩니다.
+
+{% highlight ruby %}
+# webserver.rb
+package 'nginx'
+{% endhighlight %}
+
+{% highlight bash %}
+chef-apply webserver.rb
+[sudo] password for anderson: 
+Recipe: (chef-apply cookbook)::(chef-apply recipe)
+  * apt_package[nginx] action install
+    - install version 1.9.3-1ubuntu1 of package nginx
+{% endhighlight %}
+
+
+**Start and enable Nginx service**
+Nginx를 설치하고 
+
+{% highlight ruby %}
+package 'nginx'
+
+service 'nginx' do
+	supports :status => true
+	action [:enable, :start]
+end
+{% endhighlight %}
+
+{% highlight bash %}
+chef-apply webserver.rb
+Recipe: (chef-apply cookbook)::(chef-apply recipe)
+  * apt_package[nginx] action install (up to date)
+  * service[nginx] action enable (up to date)
+  * service[nginx] action start (up to date)
+
+ps -fA | grep nginx
+root     28521     1  0 17:55 ?        00:00:00 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+www-data 28522 28521  0 17:55 ?        00:00:00 nginx: worker process                           
+www-data 28523 28521  0 17:55 ?        00:00:00 nginx: worker process                           
+www-data 28524 28521  0 17:55 ?        00:00:00 nginx: worker process                           
+www-data 28525 28521  0 17:55 ?        00:00:00 nginx: worker process                           
+www-data 28526 28521  0 17:55 ?        00:00:00 nginx: worker process                           
+www-data 28527 28521  0 17:55 ?        00:00:00 nginx: worker process                           
+www-data 28528 28521  0 17:55 ?        00:00:00 nginx: worker process                           
+www-data 28529 28521  0 17:55 ?        00:00:00 nginx: worker process                           
+anderson 31881 15575  0 18:05 pts/11   00:00:00 grep --color=auto nginx
+{% endhighlight %}
+
+Stop and disable nginx
+
+{% highlight ruby %}
+service 'nginx' do
+  action [:stop, :disable]
+end
+{% endhighlight %}
+
+### In Order
+
+* 순서대로 실행이 됩니다. (즉 package가 설치되고, nginx서비스가 실행됩니다.)<br>
+action [:enable, :start] 이 경우도 enable되고 start가 됩니다. (enable은 boot가 되고 나서 실행시키게 한다는 뜻)
+
+
+# Build a continous delivery pipeline
+
+<img src="{{ page.asset_path }}delivery-scenario.png" class="img-responsive img-rounded">
+
+#### Delivery Cluster
+Chef Delivery installation을 구성하는 machines 들입니다.
+최소, 하나의 Delivery cluster는 Chef Delivery, Chef server, Build Node 그리고 Acceptance, Union, Rehearsal, Delivered stages를 돌리는 environments를 포함하고 있습니다.
+또한 Delivery cluster는 Chef Supermarket 그리고 Chef Analytics server를 추가적으로 포함할수 있습니다.
+
+
+#### Acceptance, Union, Rehearsal, and Delivered environments
+
+Delivery는 build artifacts, 또는 pipeline의 최종 output을 environments로 디플로이 시킵니다.<br>
+예를 들어서 SQL Server를 윈도우 서버 환경으로 디플로이 시킬수 있습니다. <br>
+또는 웹 컨텐츠 또는 미디아를 Amazon S3 Bucket으로 디플로이 시킬수도 있습니다. 
+
+
+#### Administrator's workstation 
+
+이곳에서 administrator는 Delivery cluster를 설치 그리고 관리를 합니다.<br>
+workstation 뿐만 아니라 AWS Server (SSH) 또한 될 수 있습니다.
+
+#### Team member's workstation 
+
+사용자들은 Delivery에 자신의 컴퓨터로 부터 접속을 합니다.<br>
+일반적으로 projects를 생성하고 build cookbooks를 쓰고, 새로운 features들을 pipeline으로 보내고, 다른 사람들의 submits을 approve 또는 review합니다.
 
 
 [dev-toolkit-url]: https://downloads.chef.io/chef-dk/ubuntu/
