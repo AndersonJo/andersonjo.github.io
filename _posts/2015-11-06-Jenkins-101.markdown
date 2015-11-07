@@ -1,0 +1,72 @@
+---
+layout: post
+title:  "Jenkins 101"
+date:   2015-11-06 01:00:00
+categories: "devops"
+asset_path: /assets/posts/Jenkins-101/
+tags: ['Continous Integration']
+---
+<div>
+    <img src="{{ page.asset_path }}logo-title.png" class="img-responsive img-rounded">
+</div>
+
+# Installation
+
+#### Installing Jenkins
+
+{% highlight bash %}
+wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-get update
+sudo apt-get install jenkins
+{% endhighlight %}
+
+* /etc/init.d/jenkins 가 생성됩니다.
+* cut -d: -f1 /etc/passwd 명령어를 치면 나오듯이 jenkins 유저가 생성됩니다.
+* 로그는 /var/log/jenkins/jenkins.log 여기에 쌓입니다.
+* Jenkins의 기본 port는 8080<br>
+즉 http://localhost:8080/ 에 들어가보면 configuration화면을 볼 수 있습니다.
+
+#### Configuration
+
+/etc/default/jenkins 파일을 변경해서 Post및 여러가지를 변경할수 있습니다.
+
+
+# Github, Bitbucket and Gitlab Plugins
+
+Manage Jenkins -> Manage Plugins 에서 해당 plugins을 설치하면 됩니다.
+
+Linux에서는 jenkins라는 유저가 따로 만들어져서 관리가 되고 있습니다.<br>
+중요한 점은 private repository를 pull하고자 할때.. id_rsa 파일을 볼 수 없다는 점입니다. 
+
+먼저 기존의 id_rsa를 열고 전체 내용을 카피합니다.<br>
+그 이후 다음과 같이 합니다.
+
+{% highlight bash %}
+sudo su jenkins
+cd ~/.ssh/  # /var/lib/jenkins/.ssh
+vi id_rsa   # 카피한 내용을 전부 넣습니다. 
+{% endhighlight %}
+
+
+# Managing Jenking
+
+#### Security (Password) 
+
+먼저 Manage Jenkins -> Setup Security 버튼을 누릅니다. <br>
+Enable security 체크박스를 선택후 Jenkins' Own user database 그리고 알맞는 형태를 선택하면 앞으로는 로그인을 해야지만 Jenkins를 이용할수 있게 됩니다.
+
+만약 어떤 사고로 인해 Security를 초기화 해야 한다면..
+
+{% highlight bash %}
+sudo vi /var/lib/jenkins/config.xml
+{% endhighlight %}
+
+안의 파일을 다음의 Elements로 바꿔줍니다. 
+
+{% highlight xml %}
+<authorizationStrategy class="hudson.security.AuthorizationStrategy$Unsecured"/>
+<securityRealm class="hudson.security.SecurityRealm$None"/>
+{% endhighlight %}
+
+[dev-toolkit-url]: https://downloads.chef.io/chef-dk/ubuntu/
