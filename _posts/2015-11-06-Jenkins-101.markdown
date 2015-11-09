@@ -43,7 +43,16 @@ Linux에서는 jenkins라는 유저가 따로 만들어져서 관리가 되고 �
 그 이후 다음과 같이 합니다.
 
 {% highlight bash %}
+sudo adduser jenkins admin
 sudo su jenkins
+sudo passwd jenkins # If you don't know the password
+
+mkdir ~/Downloads
+cd ~/Downloads
+
+git config –global user.name “YOURUSERNAME”
+git config –global user.email “YOUREMAILADDRESS”
+
 cd ~/.ssh/  # /var/lib/jenkins/.ssh
 vi id_rsa   # 카피한 내용을 전부 넣습니다. 
 {% endhighlight %}
@@ -92,7 +101,37 @@ sudo chown -R ubuntu:ubuntu /var/cache/jenkins/
 sudo chown -R ubuntu:ubuntu /var/log/jenkins/
 {% endhighlight%}
 
+# Example..
 
+#### 
 
+순서대로 하면 됩니다.
+
+{% highlight bash %}
+sudo su jenkins
+cd ~
+{% endhighlight%}
+
+vi ~/init.sh 파일을 만듭니다.
+
+{% highlight bash %}
+#!/bin/bash -xl
+export PATH=$PATH:$HOME/.rvm/gems/ruby-2.1.0-dev/bin/
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+rvm use ruby-dev-2.1.0
+bundle
+{% endhighlight%}
+
+Jenkins 에서는 .. Execute Shell에..
+
+{% highlight bash %}
+bash ~/init.sh
+{% endhighlight%}
+
+여기서 sh ~/init.sh 하면 안됩니다.
+
+포인트는 rake plugin 이런거 사용하지 말고, 그냥 init.sh 같은 쉡스크립트에 모두 할거 집어넣고.. 
+jenkins에서는 bash init.sh 이런 방식으로 돌리면 됩니다.
 
 [dev-toolkit-url]: https://downloads.chef.io/chef-dk/ubuntu/
