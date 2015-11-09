@@ -136,6 +136,14 @@ require 'pp'
 IRB.conf[:AUTO_INDENT]=true
 {% endhighlight %}
 
+### RVM (Optional)
+
+특정 버젼을 자동 실행합니다.
+{% highlight bash %}
+bash -l -c 'rvm use ruby-dev-2.1.0'
+{% endhighlight %}
+
+
 
 ### Postgres
 
