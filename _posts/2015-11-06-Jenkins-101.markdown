@@ -48,6 +48,9 @@ cd ~/.ssh/  # /var/lib/jenkins/.ssh
 vi id_rsa   # 카피한 내용을 전부 넣습니다. 
 {% endhighlight %}
 
+{% highlight bash %}
+bash -l -c 'rvm use ruby-dev-2.1.0'
+{% endhighlight %}
 
 # Managing Jenking
 
