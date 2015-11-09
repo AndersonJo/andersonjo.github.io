@@ -69,4 +69,27 @@ sudo vi /var/lib/jenkins/config.xml
 <securityRealm class="hudson.security.SecurityRealm$None"/>
 {% endhighlight %}
 
+#### Changing User
+
+{% highlight bash %}
+sudo vi /etc/default/jenkins
+{% endhighlight%}
+
+다음의 부분을 고칩니다.
+
+{% highlight bash %}
+$JENKINS_USER="manula"
+{% endhighlight%}
+
+Ownership 을 변경해줍니다.
+
+{% highlight bash %}
+sudo chown -R ubuntu:ubuntu /var/lib/jenkins
+sudo chown -R ubuntu:ubuntu /var/cache/jenkins/
+sudo chown -R ubuntu:ubuntu /var/log/jenkins/
+{% endhighlight%}
+
+
+
+
 [dev-toolkit-url]: https://downloads.chef.io/chef-dk/ubuntu/
