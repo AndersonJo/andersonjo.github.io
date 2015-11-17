@@ -12,6 +12,8 @@ tags: ['']
 
 # Server Socket Descriptors
 
+### Increasing Socket Descriptors
+
 일반적으로 하나의 서버는 65535개의 connections을 받는다고 착각하는 분들이 꽤 있습니다. <br>
 이유도 그럴듯한게.. 하나의 Listening IP Address에 여러개의 ports에 연결을 한다는... 
 즉 ports는 2**16인 65536개가 있는데 이중 0번 포트는 제외한 65535개를 이용한다는.... 음..
@@ -30,4 +32,25 @@ sudo bash -c 'ulimit -n 1048576'
 {% highlight bash %}
 sudo su
 echo 200005800 > /proc/sys/fs/nr_open
+{% endhighlight %}
+
+### Client Port Numbers
+
+일단 Linux 서버에서 outgoing ports의 갯수를 확인해봅니다.
+{% highlight bash %}
+sysctl net.ipv4.ip_local_port_range
+net.ipv4.ip_local_port_range = 32768	60999
+{% endhighlight %}
+
+즉 밖으로 나가는데 사용될수 있는 ephemeral ports는 32768~60999까지 사용되며 1~32767까지는 OS가 사용하게 됩니다.
+사용가능한 ports의 갯수가 적기 때문에 굉장히 규모가 크거나, high bandwidth가 필요할때 이러한 튜닝을 하게 됩니다.
+
+{% highlight bash %}
+sudo sysctl -w net.ipv4.ip_local_port_range="500 65535"
+{% endhighlight %}
+
+또는
+
+{% highlight bash %}
+sudo echo 1024 65535 > /proc/sys/net/ipv4/ip_local_port_range
 {% endhighlight %}
