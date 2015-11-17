@@ -1,0 +1,33 @@
+---
+layout: post
+title:  "1 million concurrent connections"
+date:   2015-11-12 01:00:00
+categories: "network"
+asset_path: /assets/posts/Million-Connections/
+tags: ['']
+---
+<div>
+    <img src="{{ page.asset_path }}city.jpg" class="img-responsive img-rounded">
+</div>
+
+# Server Socket Descriptors
+
+일반적으로 하나의 서버는 65535개의 connections을 받는다고 착각하는 분들이 꽤 있습니다. <br>
+이유도 그럴듯한게.. 하나의 Listening IP Address에 여러개의 ports에 연결을 한다는... 
+즉 ports는 2**16인 65536개가 있는데 이중 0번 포트는 제외한 65535개를 이용한다는.... 음..
+뭐 하여튼 포인트는 65535개 이상으로 사용가능하고, 메모리 많다면 천만개까지도 늘릴수 있습니다. 
+실제는 하나의 Listening IP Address와 하나의 Listening Port를 사용하지만, 각각의 클라이트마다 다른 Socket Descriptors를 사용하게 됩니다. 
+
+Process당 socket descriptors의 최고치를 늘리는 것은 ulimit 명령어로 간단합니다. 
+
+{% highlight bash %}
+sudo bash -c 'ulimit -n 1048576'
+{% endhighlight %}
+
+1048576은 ubuntu에서 기본적으로 제한해놓은 socket descriptors의 갯수입니다. (즉 2^20 == 1048576) 
+그 이상으로 늘리기 위해서는 리눅스에서 걸어놓은 제한을 늘려야 합니다.
+
+{% highlight bash %}
+sudo su
+echo 200005800 > /proc/sys/fs/nr_open
+{% endhighlight %}
