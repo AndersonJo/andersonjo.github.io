@@ -1,0 +1,82 @@
+---
+layout: post
+title:  "SSL + Nginx + RSA"
+date:   2015-11-25 01:00:00
+categories: "network"
+asset_path: /assets/posts/SSL/
+tags: ['rsa', 'nginx']
+---
+<div>
+    <img src="{{ page.asset_path }}logo.jpg" class="img-responsive img-rounded">
+</div>
+
+
+# Certificate Signing Requests (CSRs)
+
+먼저 certificate authority (CA)로 부터 SSL certificate을 얻기 위해서는 CSR를 먼저 만들어야 합니다.
+CSR 은 public key와 약간의 정보로 이루어져 있으며, 이것을 기반으로 certificate이 만들어집니다.
+CSR을 만들때 certificate을 구분짓게 해주는 정보를 넣어야 하는데 이것을 Distinguised Name (DN)이라고 합니다.
+
+DN에는 Common Name(CN) 이 들어가야 하는데 이것은 Fully Qualified Domain Name (FQDN)이며 또한 
+당신의 Business, Organization등의 정보를 함께 넣습니다. 
+
+
+### Generating Private Key and CSR
+
+[https://www.digicert.com/easy-csr/openssl.htm][https://www.digicert.com/easy-csr/openssl.htm]에 들어가시면 
+쉽게 CSR을 만들수 있습니다.
+
+<img src="{{ page.asset_path }}capture01.png" class="img-responsive img-rounded">
+
+{% highlight bash %}
+openssl req -new -newkey rsa:2048 -nodes -out star_andersonjo_com.csr -keyout star_andersonjo_com.key -subj "/C=KR/ST=Seoul/L=Seoul/O=Anderson/OU=Development/CN=*.andersonjo.com"
+{% endhighlight %}
+
+다음의 코드를 치면 Propt로 Private Key및 CSR을 만들수 있습니다.
+
+{% highlight bash %}
+opessl req -newkey rsa:2048 -nodes -keyout domain.key -out domain.csr
+{% endhighlight %}
+
+{% highlight bash %}
+anderson:~>openssl req -newkey rsa:2048 -nodes -keyout x.key -out x.csr
+Generating a 2048 bit RSA private key
+...............+++
+.................+++
+writing new private key to 'x.key'
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:KR
+State or Province Name (full name) [Some-State]:Seoul
+Locality Name (eg, city) []:Seoul
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Anderson
+Organizational Unit Name (eg, section) []:Development
+Common Name (e.g. server FQDN or YOUR name) []:anderson.com
+Email Address []:a141890@gmail.com
+{% endhighlight %}
+
+### Generating a CSR from an Existing Private Key
+
+{% highlight bash %}
+openssl req  -key domain.key -new -out domain.csr
+{% endhighlight %}
+
+-key 는 이미 존재하는 private key를 가르킵니다.
+
+### Generate a CSR from an Existing Certificate and Private Key
+
+이미 갖고 있는 certificate을 renew 하거나 또는 CA 원래의 CSR를 갖고있지 않을때 사용하면 됩니다. (흔치는 않죠)<br>
+이미 갖고 있는 certificate에서 정보를 추출하기 때문에 CSR를 다시 만들필요가 없습니다.
+
+{% highlight bash %}
+openssl x509 -in domain.crt -signkey domain.key -x509toreq -out domain.csr
+{% endhighlight %}
+ 
+
+[https://www.digicert.com/easy-csr/openssl.htm]: https://www.digicert.com/easy-csr/openssl.htm

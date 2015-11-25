@@ -54,3 +54,5 @@ sudo sysctl -w net.ipv4.ip_local_port_range="500 65535"
 {% highlight bash %}
 sudo echo 1024 65535 > /proc/sys/net/ipv4/ip_local_port_range
 {% endhighlight %}
+
+즉 이렇게 설정해 놓으면 
