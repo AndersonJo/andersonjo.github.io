@@ -1,0 +1,129 @@
+---
+layout: post
+title:  "UFW - Firewall"
+date:   2015-12-01 01:00:00
+categories: "network"
+asset_path: /assets/posts/UFW/
+tags: ['iptables', 'firewall']
+---
+<div>
+    <img src="{{ page.asset_path }}security.jpg" class="img-responsive img-rounded">
+</div>
+
+# UFW 101 
+
+#### Install UFW
+
+{% highlight bash %}
+sudo apt-get install ufw
+{% endhighlight %}
+
+#### Status
+
+{% highlight bash %}
+ sudo ufw status verbose
+{% endhighlight %}
+
+status명령어를 치면 다음과 같이 열려있거나 닫혀있는 포트를 볼 수 있습니다. 
+
+{% highlight bash %}
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22                         ALLOW       Anywhere
+22 (v6)                    ALLOW       Anywhere (v6)
+{% endhighlight %}
+
+#### Enable or Disable
+
+enable시키기 전에 sudo ufw allow ssh 를 먼저 해야 ssh 연결이 끊기지 않습니다.
+
+{% highlight bash %}
+sudo ufw enable
+{% endhighlight %}
+
+{% highlight bash %}
+sudo ufw disable
+{% endhighlight %}
+
+
+#### Default Configuration
+
+UFW가 쉬운 이유중에 하나는 일단 모든 incoming connections에 대해서 denying 시켜버리고 outgoing connections은 
+모두 allowing시킵니다. 기본적인 세팅이 이렇고 추가적인 rule을 통해서 관리하기 때문에 조금더 세팅이 쉽습니다.
+
+{% highlight bash %}
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+{% endhighlight %}
+
+# Allow Connections
+
+#### SSH
+
+{% highlight bash %}
+sudo ufw allow ssh
+sudo ufw allow 22
+{% endhighlight %}
+
+#### HTTP or HTTPs
+
+{% highlight bash %}
+sudo ufw allow http
+sudo ufw allow 80
+
+sudo ufw allow https
+sudo ufw allow 443
+{% endhighlight %}
+
+
+# Allow Specific IP Address
+
+#### Allow IP to All
+해당 IP 주소에서 오는 것은 모두 allow합니다.
+
+{% highlight bash %}
+sudo ufw allow from 15.15.15.51
+{% endhighlight %}
+
+#### Allow IP to specific port
+
+특정 IP주소가 특정 PORT에 allow를 시킵니다.
+
+{% highlight bash %}
+sudo ufw allow from 121.166.154.133 to any port 22
+{% endhighlight %}
+
+#### Allow Subnets to specific port
+
+192.168.0.* 에 걸리는 모든 IP주소를 22port에 allow시킵니다.
+
+{% highlight bash %}
+sudo ufw allow from 192.168.0.0/255.255.255.0 to any port 22
+sudo ufw allow from 192.168.0.0/24 to any port 22
+{% endhighlight %}
+
+# Delete Rules
+
+{% highlight bash %}
+sudo ufw status numbered
+{% endhighlight %}
+
+numbered를 붙이면 다음과 같이 인덱스 번호가 붙어서 나오게 됩니다.
+
+{% highlight bash %}
+Status: active
+
+     To                         Action      From
+     --                         ------      ----
+[ 1] 22                         ALLOW IN    Anywhere
+[ 2] 22/tcp                     ALLOW IN    Anywhere
+[ 3] 443                        ALLOW IN    Anywhere
+{% endhighlight %}
+
+{% highlight bash %}
+sudo ufw delete 3
+{% endhighlight %}
+
+

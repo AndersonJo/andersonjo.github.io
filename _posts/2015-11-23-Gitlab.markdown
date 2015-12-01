@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "Gitlab"
+date:   2015-11-23 01:00:00
+categories: "network"
+asset_path: /assets/posts/Gitlab/
+tags: ['']
+---
+<div>
+    <img src="{{ page.asset_path }}gitlab.png" class="img-responsive img-rounded">
+</div>
