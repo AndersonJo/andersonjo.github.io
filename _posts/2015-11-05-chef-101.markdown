@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Chef + Docker 101"
+title:  "Chef 101"
 date:   2015-11-05 01:00:00
 categories: "devops"
 asset_path: /assets/posts/Chef-101/

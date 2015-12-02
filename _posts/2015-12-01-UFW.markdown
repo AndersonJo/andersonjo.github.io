@@ -102,6 +102,7 @@ sudo ufw allow from 121.166.154.133 to any port 22
 {% highlight bash %}
 sudo ufw allow from 192.168.0.0/255.255.255.0 to any port 22
 sudo ufw allow from 192.168.0.0/24 to any port 22
+sudo ufw allow from 192.168.0.0/24 to any port 3306:3310 proto tcp
 {% endhighlight %}
 
 # Delete Rules

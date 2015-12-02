@@ -1,0 +1,468 @@
+---
+layout: post
+title:  "Docker and MariaDB Replication"
+date:   2015-12-02 01:00:00
+categories: "docker"
+asset_path: /assets/posts/Docker-MariaDB-Replication/
+tags: ["port forwarding"]
+---
+<div>
+    <img src="{{ page.asset_path }}docker.png" class="img-responsive img-rounded">
+</div>
+
+Installing Docker on Ubuntu <br>
+[https://docs.docker.com/engine/installation/ubuntulinux/][https://docs.docker.com/engine/installation/ubuntulinux/]
+
+# Install Docker
+
+#### Install Docker
+
+먼저 gpg 키를 등록시킵니다.
+{% highlight bash %}
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+{% endhighlight %}
+
+우분투의 버젼을 체크 합니다.
+{% highlight bash %}
+lsb_release -a
+
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 15.10
+Release:	15.10
+Codename:	wily
+{% endhighlight %}
+
+
+{% highlight bash %}
+sudo vi /etc/apt/sources.list.d/docker.list
+{% endhighlight %}
+
+열고 기존의 내용이 있다면 지우고 우분투 버젼에 따라 다음 내용을 넣습니다.<br> 
+**(다음 deb 중에  하나만 써야 합니다)**
+
+{% highlight bash %}
+# Ubuntu Wily 15.10
+deb https://apt.dockerproject.org/repo ubuntu-wily main
+
+# Ubuntu Vivid 15.04
+deb https://apt.dockerproject.org/repo ubuntu-vivid main
+
+# Ubuntu Trusty 14.04 (LTS)
+deb https://apt.dockerproject.org/repo ubuntu-trusty main
+{% endhighlight %}
+
+{% highlight bash %}
+sudo apt-get update
+sudo apt-get install linux-image-extra-$(uname -r)
+apt-get purge lxc-docker
+apt-cache policy docker-engine
+
+sudo apt-get install docker-engine
+sudo service docker start
+{% endhighlight %}
+
+# Docker Configuration
+
+#### docker group 
+
+기본적으로 Docker Deamon은 TCP Port대신에 Unix Socket으로 연결이 됩니다. Unix Socket은 root에 소유된 것이므로, 
+Docker를 실행하기 위해서는 항상 반드시 sudo로 해주어야 합니다.
+
+sudo를 피하기 위해서는 docker group을 만들어주고, 여기에 users 를 등록시켜주면 됩니다.
+
+먼저 ubuntu 유저로 (유저 이름이 ubuntu) 로그인 합니다.<br>
+docker group을 만들고 ubuntu user를 추가시켜줍니다.
+
+{% highlight bash %}
+sudo usermod -aG docker ubuntu
+{% endhighlight %}
+
+로그 아웃후 다시 로그인 합니다.<br>
+sudo 없이 docker가 실행되는지 확인해 봅니다.
+
+{% highlight bash %}
+docker hello-world
+{% endhighlight %}
+
+#### Enable UFW forwarding
+
+Docker 는 기본적으로 container networking을 하기 위해서 bridge를 사용합니다.<br>
+문제는 ufw 는 모든 forwarding traffic을 drop시켜버립니다. 따라서 ufw의 forwarding policy를 설정해주어야 합니다.
+
+또한 외부 host에서 docker container에 접속하기 위해서는 2376포트를 열어주어야 합니다.
+2376포트는 Docker의 기본 포트입니다.
+
+{% highlight bash %}
+sudo vi /etc/default/ufw
+{% endhighlight %}
+
+다음을 DROP에서 ACCEPT로 바꿔줍니다.
+
+{% highlight bash %}
+DEFAULT_FORWARD_POLICY="ACCEPT"
+{% endhighlight %}
+
+{% highlight bash %}
+sudo ufw reload
+sudo ufw allow 2375/tcp
+{% endhighlight %}
+
+#### Configure Docker to start on boot
+
+{% highlight bash %}
+sudo systemctl enable docker
+{% endhighlight %}
+
+
+#### Install Ubuntu Libraries
+
+{% highlight bash %}
+apt-get update 
+apt-get install -y sudo
+apt-get install -y mercurial
+apt-get install -y git
+apt-get install -y python python-dev
+apt-get install -y curl
+apt-get install -y vim
+apt-get install -y strace
+apt-get install -y diffstat
+apt-get install -y pkg-config
+apt-get install -y cmake
+apt-get install -y build-essential
+apt-get install -y tcpdump
+apt-get install -y screen
+apt-get install -y man
+apt-get install -y net-tools
+apt-get install -y openssh-server
+service ssh restart
+{% endhighlight %}
+
+
+# Docker 101
+
+#### Quick Start
+
+{% highlight bash %}
+docker info
+docker pull ubuntu       
+{% endhighlight %}
+
+#### Interactive Mode
+
+root로 로그인
+
+{% highlight bash %}
+docker run --name dev -it ubuntu:15.10 /bin/bash
+{% endhighlight %}
+
+ubuntu유저로 로그인
+
+{% highlight bash %}
+docker --user ubuntu --name dev -it ubuntu:15.10 /bin/bash
+{% endhighlight %}
+
+Advanced 로그인
+
+{% highlight bash %}
+docker run -d -P --user ubuntu --name dev -h docker -t andersonjo/ubuntu bash
+{% endhighlight %}
+
+
+#### Delete all containers
+
+{% highlight bash %}
+docker rm $(docker ps -a -q)
+{% endhighlight %}
+
+#### Delete all images
+
+{% highlight bash %}
+docker rmi $(docker images -q)
+{% endhighlight %}
+
+#### Commit 
+
+docker run을 하게 되면 실제로는 새로운 container를 생성하게 됩니다.
+
+{% highlight bash %}
+docker ps -a
+
+CONTAINER ID        IMAGE               COMMAND             CREATED
+58920ce9c7b3        ubuntu:15.10        "bash"              3 minutes ago
+{% endhighlight %}
+
+여기에서 CONTAINER ID를 잡아서 commit 시킵니다
+
+{% highlight bash %}
+docker commit 58920ce9c7b3 andersonjo/ubuntu
+{% endhighlight %}
+
+#### Push
+
+{% highlight bash %}
+docker push andersonjo/ubuntu
+{% endhighlight %}
+
+
+#### Attach
+
+{% highlight bash %}
+docker run -d -p --user ubuntu --name dev -t andersonjo/ubuntu bash
+docker attach dev
+{% endhighlight %}
+
+Background에서 돌아가고 있는 running container에 접속하기 위해서는 다음과 같이 합니다.
+
+{% highlight bash %}
+docker exec -it <CONTAINER ID or NAME> bash
+{% endhighlight %}
+
+#### IP Address
+
+{% highlight bash %}
+docker inspect <CONTAINER NAME>  | grep IPAddress
+{% endhighlight %}
+
+
+#### Export and Import 
+
+여러번  commit을 시키게 되면은 history가 남게 되는데.. 이런 history를 지우는 방법이 있습니다.<br>
+export 는 history를 남기지 않은채 tar파일로 저장하는 명령어 입니다.
+
+{% highlight bash %}
+docker export dev | docker import - andersonjo/ubuntu
+{% endhighlight %}
+
+# Dockerfile
+
+#### Basic
+
+Dockerfile 은 우선 FROM <이미지> 명령어부터 시작을 합니다.
+
+{% highlight bash %}
+FROM andersonjo/ubuntu
+MAINTAINER Anderson Jo
+USER ubuntu
+WORKDIR ~/
+
+RUN apt-get update
+RUN echo "Hello World!"
+EXPOSE 22
+{% endhighlight %}
+
+build -t를 하면 새로운 이미지가 생성이 됩니다.
+
+{% highlight bash %}
+sudo docker build -t [이미지 이름]
+{% endhighlight %}
+
+#### CMD
+
+RUN은 이미지를 만들때 사용이 되고, CMD는 이미지가 만들어진후 docker run을 통해서 이미지로 부터  instantiated 될때 
+실행되는 명령어 입니다.
+
+
+# Networks
+
+#### Basic Networks
+
+{% highlight bash %}
+docker network ls
+NETWORK ID          NAME                DRIVER
+adcf91619326        bridge              bridge              
+80360f12ec4e        none                null                
+15bd40f71d98        host                host 
+{% endhighlight %}
+
+위의 3가지 networks는 docker의 기본적인 네트워크입니다.
+
+bridge 네트워크는 ifconfig를 치면 나오는 docker0 를 나타냅니다.<br>
+docker run --net=<NETWORK> 이런식으로 network를 지정하지 않는한, 
+기본적으로 모든 container는 docker0에 붙습니다.
+
+{% highlight bash %}
+ifconfig
+docker0   Link encap:Ethernet  HWaddr 02:42:d4:28:54:7e  
+          inet addr:172.17.0.1  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:d4ff:fe28:547e/64 Scope:Link
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:23343 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:36673 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:1502621 (1.5 MB)  TX bytes:48796224 (48.7 MB)
+{% endhighlight %}
+
+만약에 docker run --net=none 으로 시작할 경우 해당 docker는 network를 할 수 없습니다.<br>
+inspect를 통해서 자세한 정보를 얻을수 있습니다.
+
+{% highlight bash %}
+docker network inspect bridge
+{% endhighlight %}
+
+# User defined networks
+
+새로운 bridge network 또는 overlay network를 만들어서 containers를 isolate하는데 사용할수 있습니다.
+또한 network plugin 그리고  remote network를 만들수도 있습니다.
+
+#### Bridge Network
+
+{% highlight bash %}
+docker network create --driver bridge isolated_nw
+docker run --net=<NETWORK>
+{% endhighlight %}
+
+--net 을 통해서 해당 network를 사용하도록 할 수 있습니다.<br>
+동일한 network를 공유하는 containers들 끼리는 서로 network communication이 가능합니다.
+
+<img src="{{ page.asset_path }}bridge_network.png" class="img-responsive img-rounded">
+
+single host안에 상대적으로 작은 network를 구성시 bridge network가 좋습니다. 
+하지만 매우 큰 networks를 구성해야 한다면 overlay를 사용하는것이 좋습니다.
+ 
+overlay, plugin 등등의 내용은 아래의 링크를 참조<br>
+[http://docs.docker.com/engine/userguide/networking/dockernetworks/][http://docs.docker.com/engine/userguide/networking/dockernetworks/]
+
+
+# SSH Service
+
+[https://docs.docker.com/engine/examples/running_ssh_service/][https://docs.docker.com/engine/examples/running_ssh_service/]
+
+{% highlight bash %}
+docker run -d -P --user ubuntu --name dev -h docker -t andersonjo/ubuntu bash
+{% endhighlight %}
+
+-P 는 모든 container의 ports를 hosts에 엽니다. (반드시 대문자)<br>
+container에 들어가서 netstat으로 port가 열려있는지 확인해봅니다.
+
+{% highlight bash %}
+docker exec -it dev bash
+netstat -tln
+{% endhighlight %}
+
+모든 ports가 열려 있는지 확인합니다.
+
+{% highlight bash %}
+docker inspect dev  | grep PublishAllPorts
+{% endhighlight %}
+
+{% highlight bash %}
+sudo apt-get install -y openssh-server
+sudo service ssh restart
+sudo sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+sudo sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+echo "export VISIBLE=now" >> ~/.profile
+{% endhighlight %}
+
+# MariaDB
+
+{% highlight bash %}
+docker pull mariadb
+docker run --name mariadb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=1234 -d mariadb
+docker exec -it mariadb bash
+apt-get update
+apt-get install vim
+vi /etc/mysql/my.cnf
+{% endhighlight %}
+
+run실행할때 -p 3306:3306 이부분이 중요합니다.<br>
+실질적으로 host 에서 3306 port mapping 시켜줍니다.
+
+{% highlight bash %}
+[mysqld_safe]
+default-character-set=utf8
+
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+{% endhighlight %}
+
+{% highlight bash %}
+docker restart mariadb
+mysql -h 172.17.0.2 -u root -p
+{% endhighlight %}
+
+# UFW Port Forward
+
+#### Check Port Forwarding
+
+{% highlight bash %}
+sudo vi /etc/default/ufw
+DEFAULT_FORWARD_POLICY="ACCEPT"
+{% endhighlight %}
+
+{% highlight bash %}
+sudo vi /etc/ufw/sysctl.conf
+net.ipv4.ip_forward=1
+net/ipv6/conf/default/forwarding=1
+net/ipv6/conf/all/forwarding=1
+{% endhighlight %}
+
+#### NAT
+
+NAT를 ufw의 configuration에 넣어줍니다.<br>
+filter rules 전에 다음의 설정을 넣어줍니다.
+
+{% highlight bash %}
+sudo vi /etc/ufw/before.rules
+
+# NAT table rules
+*nat
+:POSTROUTING ACCEPT [0:0]
+
+# Forward traffic through eth0 - Change to match you out-interface
+-A POSTROUTING -s 192.168.1.0/24 -o eth0 -j MASQUERADE
+
+# don't delete the 'COMMIT' line or these nat table rules won't
+# be processed
+COMMIT
+{% endhighlight %}
+
+{% highlight bash %}
+sudo ufw disable && sudo ufw enable
+{% endhighlight %}
+
+#### Port Forwarding
+
+{% highlight bash %}
+# NAT table rules
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+# Port Forwardings
+-A PREROUTING -i wlp2s0 -p tcp --dport 3306 --to-destination 172.17.0.1
+
+# Forward traffic through eth0 - Change to match you out-interface
+-A POSTROUTING -s 192.168.1.0/24 -o wlp2s0 -j MASQUERADE
+
+# don't delete the 'COMMIT' line or these nat table rules won't
+# be processed
+COMMIT
+{% endhighlight %}
+
+# IPTALBES Port Forwarding
+
+먼저 port forwarding이 허용되는지 확인해야 합니다.<br>
+
+{% highlight bash %}
+cat /proc/sys/net/ipv4/conf/wlp2s0/forwarding
+1
+cat /proc/sys/net/ipv4/conf/eth0/forwarding 
+1
+{% endhighlight %}
+
+1값을 리턴시키면 허용하는 것입니다.<br>
+만약 1이 아니라면 다음과 같이 할 수 있습니다.
+
+{% highlight bash %}
+echo '1' | sudo tee /proc/sys/net/ipv4/conf/eth0/forwarding
+{% endhighlight %}
+
+
+
+
+[https://docs.docker.com/engine/installation/ubuntulinux/]: https://docs.docker.com/engine/installation/ubuntulinux/
+[https://docs.docker.com/engine/examples/running_ssh_service/]: https://docs.docker.com/engine/examples/running_ssh_service/
+[http://docs.docker.com/engine/userguide/networking/dockernetworks/]: http://docs.docker.com/engine/userguide/networking/dockernetworks/
