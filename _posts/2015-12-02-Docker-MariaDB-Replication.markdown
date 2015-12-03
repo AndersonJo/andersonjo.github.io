@@ -85,6 +85,8 @@ sudo 없이 docker가 실행되는지 확인해 봅니다.
 docker hello-world
 {% endhighlight %}
 
+#### iptables option
+
 docker run -p port:port 또는 -P 옵션을 할때 docker는 iptables에서 해당 포트를 public으로 만듭니다.<br>
 이는 심지어 ufw default deny incoming 을 해도 ufw는 막지를 못합니다. <br>
 docker가 마음대로 iptalbes를 변경 못하도록 하기 위해서는 다음과 같이 옵션을 주면 됩니다.
@@ -93,6 +95,20 @@ docker가 마음대로 iptalbes를 변경 못하도록 하기 위해서는 다�
 sudo vi /etc/default/docker 
 DOCKER_OPTS = "--iptables=false"
 {% endhighlight %}
+
+iptalbes에서 확인해봅니다.
+
+{% highlight bash %}
+sudo iptables -L -n --line-numbers | grep 3306
+1    ACCEPT     tcp  --  0.0.0.0/0            172.17.0.2           tcp dpt:3306
+{% endhighlight %}
+
+다음과 같이 지울수 있습니다.
+{% highlight bash %}
+sudo iptables -D DOCKER 1
+{% endhighlight %}
+
+-D <체인이름> <헤더번호>
 
 #### Enable UFW forwarding
 
