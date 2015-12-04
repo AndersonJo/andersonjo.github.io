@@ -22,11 +22,15 @@ tags: ["port forwarding"]
 {% highlight bash %}
 cd mariadb/10.0
 docker build -t mariadb .
-docker run -p 3306:3306 --name mariadb -e MYSQL_ROOT_PASSWORD=1234 -d mariadb
 {% endhighlight %}
 
 
 # Configuring Master
+
+{% highlight bash %}
+docker run -p 3306:3306 --name mariadb -e MYSQL_ROOT_PASSWORD=1234 -d mariadb
+{% endhighlight %}
+
 
 {% highlight bash %}
 [client]
