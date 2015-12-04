@@ -2,7 +2,7 @@
 layout: post
 title:  "MariaDB Replication"
 date:   2015-12-04 01:00:00
-categories: "db"
+categories: "database"
 asset_path: /assets/posts/MariaDB-Replication/
 tags: ["port forwarding"]
 ---

@@ -2,7 +2,7 @@
 layout: post
 title:  "MariaDB Galera Cluster"
 date:   2015-12-03 01:00:00
-categories: "db"
+categories: "database"
 asset_path: /assets/posts/MariaDB-Galera-Cluster/
 tags: ["port forwarding"]
 ---
