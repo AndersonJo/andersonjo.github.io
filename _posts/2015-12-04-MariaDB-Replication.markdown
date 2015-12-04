@@ -135,4 +135,14 @@ MariaDB [(none)]> CHANGE MASTER TO
 {% endhighlight %}
 
 
+#### Master 에서 에러날시 
+
+Master에서 에러가 나면  slave에서는 에러가 난 부분부터 동기화를 중단합니다.<br>
+에러부분을 자동으로 skip 하기 위해서는 slave db -> my.cnf -> [mysqld] 안에다가 다음을 추가합니다.
+
+{% highlight sql %} 
+slave-skip-errors=all
+{% endhighlight %}
+
+
 [https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile]: https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile
