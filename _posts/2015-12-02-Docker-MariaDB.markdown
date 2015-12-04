@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "Docker and MariaDB Replication"
+title:  "Docker and MariaDB"
 date:   2015-12-02 01:00:00
 categories: "docker"
-asset_path: /assets/posts/Docker-MariaDB-Replication/
+asset_path: /assets/posts/Docker-MariaDB/
 tags: ["port forwarding"]
 ---
 <div>
@@ -465,24 +465,6 @@ sudo ufw disable && sudo ufw enable
 # don't delete the 'COMMIT' line or these nat table rules won't
 # be processed
 COMMIT
-{% endhighlight %}
-
-# IPTALBES Port Forwarding
-
-먼저 port forwarding이 허용되는지 확인해야 합니다.<br>
-
-{% highlight bash %}
-cat /proc/sys/net/ipv4/conf/wlp2s0/forwarding
-1
-cat /proc/sys/net/ipv4/conf/eth0/forwarding 
-1
-{% endhighlight %}
-
-1값을 리턴시키면 허용하는 것입니다.<br>
-만약 1이 아니라면 다음과 같이 할 수 있습니다.
-
-{% highlight bash %}
-echo '1' | sudo tee /proc/sys/net/ipv4/conf/eth0/forwarding
 {% endhighlight %}
 
 
