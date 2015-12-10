@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Docker and MariaDB"
+title:  "Docker"
 date:   2015-12-02 01:00:00
 categories: "docker"
 asset_path: /assets/posts/Docker-MariaDB/
-tags: ["port forwarding"]
+tags: ["mariadb"]
 ---
 <div>
     <img src="{{ page.asset_path }}docker.png" class="img-responsive img-rounded">
@@ -193,6 +193,20 @@ Advanced 로그인
 docker run -d -P --user ubuntu --name dev -h docker -t andersonjo/ubuntu bash
 {% endhighlight %}
 
+
+#### VIM Ansi Mode
+
+Docker 에서 vi를 실행시킬때 이상현상이 일어난다면 다음과 vim에서 다음과 같은 명령어를 쳐줍니다.
+
+{% highlight bash %}
+:set term=builtin_ansi
+{% endhighlight %}
+
+또는 다음과 같이 합니다.
+
+{% highlight bash %}
+:set nocompatible
+{% endhighlight %}
 
 #### Delete all containers
 
