@@ -44,6 +44,11 @@ sudo apt-get install uim uim-byeoru
 uim-pref-gtk
 {% endhighlight %}
 
+### XClip (Optional)
+
+{% highlight bash%}
+sudo apt-get install xclip
+{% endhighlight %}
 
 ### Open Nautilus (Ubuntu 14.04)
 

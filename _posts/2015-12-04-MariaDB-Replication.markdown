@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "MariaDB Replication"
+title:  "MariaDB Replication via Docker"
 date:   2015-12-04 01:00:00
 categories: "database"
 asset_path: /assets/posts/MariaDB-Replication/
@@ -116,6 +116,17 @@ log_slave_updates
 
 * replicate-do-db = db_name
 * replicate-do-table = db_name.table_name
+
+만약 전체 테이블에 대한 Replication을 구축하고 싶다면 다음과 같이 합니다.
+{% highlight bash %}
+binlog-ignore-db=information_schema
+binlog-ignore-db=mysql
+
+replicate-ignore-db=information_schema
+replicate-ignore-db=mysql
+{% endhighlight %}
+
+Restart시켜줍니다.
 
 {% highlight bash %}
 docker restart slave
