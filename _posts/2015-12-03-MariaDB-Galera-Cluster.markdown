@@ -33,17 +33,36 @@ Galera Replication는 transaction commit을 할때 <br>
 sudo apt-get install mariadb-server
 {% endhighlight %}
 
-#### Dockerinzing MariaDB 
+#### Dockerinzing MariaDB
 
-[https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile][https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile]
-
-해당 git을 clone하고 10.0 폴더 안에서 docker build시키면 됩니다. <br>
-참고로 docker pull mariadb 해서 이미지 받으면 5.5 입니다. 
+먼저 Network를 만듭니다.
 
 {% highlight bash %}
+docker network create mynetwork
+docker network ls
+
+NETWORK ID          NAME                DRIVER
+5ad5a14327d4        mynetwork           bridge              
+89c3406dab1e        bridge              bridge              
+b6ce7303a798        none                null                
+33ae8e65897a        host                host
+{% endhighlight %} 
+
+docker를 실행할때 --net=<네트워크 이름> 을 통해서 어디 네트워크를 사용할지 결정할수 있습니다.<br>
+기본적으로 --net 옵션을 주지 않는다면 bridge (docker0 네트워크) 라는 network를 기본적으로 사용하게 됩니다.
+
+
+
+
+{% highlight bash %}
+
+docker run -d --name fission --net=host -p 0.0.0.0:3370:3370 cluster
+
 docker pull mariadb
 docker run -p 3306:3306 --name db01 -e MYSQL_ROOT_PASSWORD=1234 -d mariadb:10.0.22 --wsrep-new-cluster
 {% endhighlight %}
+
+
 
 --wsrep-new-cluster 의 의미는 연결할수 있는 cluster가 없고, 새로운 history UUID를 만듭니다.<br>
 restarting server를 하면 새로운 UUID가 만들어지며, old cluster에 reconnect하지 않습니다.

@@ -20,10 +20,29 @@ tags: ['']
 뭐 하여튼 포인트는 65535개 이상으로 사용가능하고, 메모리 많다면 천만개까지도 늘릴수 있습니다. 
 실제는 하나의 Listening IP Address와 하나의 Listening Port를 사용하지만, 각각의 클라이트마다 다른 Socket Descriptors를 사용하게 됩니다. 
 
+먼저 hard 그리고 soft limit 을 확인하는 방법은 다음과 같이 합니다.<br>
+soft 는 hard의 제한선을 넘을수가 없습니다.
+
+{% highlight bash %}
+ulimit -Hn
+ulimit -Sn
+{% endhighlight %}
+
 Process당 socket descriptors의 최고치를 늘리는 것은 ulimit 명령어로 간단합니다. 
+
 
 {% highlight bash %}
 sudo bash -c 'ulimit -n 1048576'
+{% endhighlight %}
+
+위의 명령어는 사용자별 open files 최고 수치를 변경하는 것입니다. <br>
+여기서 soft와 hard가 구분지어지는데, 위의 명령어는 soft를 변경하는 것이고, soft는 hard의 제한선을 넘지 못합니다. 
+hard 부분을 변경시키기 위해서는  /etc/security/limits.conf 를 변경해주어야 합니다.
+변경 이후에는 re-login 또는 reboot가 필요합니다.
+
+{% highlight bash %}
+*               soft    nofile          10000000
+*               hard    nofile          10000000
 {% endhighlight %}
 
 1048576은 ubuntu에서 기본적으로 제한해놓은 socket descriptors의 갯수입니다. (즉 2^20 == 1048576) 

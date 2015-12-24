@@ -85,7 +85,7 @@ UNLOCK TABLES;
 # Configuring Slave
 
 {% highlight bash %}
-docker run -p 3307:3306 --name slave --link mariadb:master -e MYSQL_ROOT_PASSWORD=1234 -d mariadb
+docker run -p 3307:3306 --name slave --link mariadb:master --volume /home/ubuntu/data/mariadb/:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=1234 -d mariadb
 docker exec -it slave bash
 {% endhighlight %}
 
