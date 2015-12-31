@@ -78,5 +78,12 @@ openssl req  -key domain.key -new -out domain.csr
 openssl x509 -in domain.crt -signkey domain.key -x509toreq -out domain.csr
 {% endhighlight %}
  
+# Nginx with SSL
+
+[https://www.ssls.com][https://www.ssls.com] 에서 먼저 SSL Certificate을 구입합니다.
+
+
+
 
 [https://www.digicert.com/easy-csr/openssl.htm]: https://www.digicert.com/easy-csr/openssl.htm
+[https://www.ssls.com]: https://www.ssls.com

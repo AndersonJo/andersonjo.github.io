@@ -1,0 +1,30 @@
+---
+layout: post
+title:  "ETC - 알면 좋은 거"
+date:   2015-06-11 01:00:00
+categories: "queue"
+asset_path: /assets/posts/ETC/
+tags: []
+---
+<div>
+    <img src="{{ page.asset_path }}power.jpg" class="img-responsive img-rounded">
+</div>
+
+
+# Linux (Ubuntu)
+
+#### 서버 시간 변경하기
+
+포인트는 sudo timedatectl set-ntp 0 를 먼저 해줘야 합니다.<br>
+
+{% highlight bash %}
+sudo timedatectl set-ntp 0
+sudo date -s '1 day ago'
+sudo date -s '2015-12-25'
+{% endhighlight %}
+
+systemd-timedated.service 의 enable시키는 것은.. 
+
+{% highlight bash %}
+sudo timedatectl set-ntp 1
+{% endhighlight %}
