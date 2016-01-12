@@ -286,3 +286,33 @@ channel.queue_bind(queue=queue_name, exchange='logs')
 # Routing
 
 <img src="{{ page.asset_path }}python-four.png" class="img-responsive img-rounded">
+
+* <a href="{{ page.asset_path }}direct_consumer.py">direct_consumer.py</a>
+* <a href="{{ page.asset_path }}direct_producer.py">direct_producer.py</a>
+
+Publish/Subscribe 패턴은 그냥 단순하게 모든 consumers가 다 메세지를 받는 방법이고,<br>
+Routing을 사용하면 좀 더 정밀하게 누가 받을지 선택할 수 있습니다.
+
+즉 Queue 이름으로 Routing 하는게 아니라 Routing Key 값으로 누가 받을지 결정하게 됩니다.
+
+### Producer
+
+중요포인트는 exchange_type 을 **direct** 로 해줍니다.<br>
+또한 routing_key 값에 누가 받을것인지 이름을 넣습니다. (red, blue, error 같은 것들)
+
+{% highlight python %}
+channel.exchange_declare('direct_logs', exchange_type='direct')
+channel.basic_publish('direct_logs', routing_key=routing_key, body=message)
+{% endhighlight %}
+
+
+### Consumer
+
+동일하게 random으로 이름이 만들어지는 Queue 를 하나 만들고, <br>
+해당 Queue를 exchange에 Bind시킬때, **routing_key** 값을 주면 됩니다. 
+
+{% highlight python %}
+result = channel.queue_declare()
+queue_name = result.method.queue
+channel.queue_bind(exchange='direct_logs', queue=queue_name, routing_key=routing_key)
+{% endhighlight %}
