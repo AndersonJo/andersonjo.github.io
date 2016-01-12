@@ -138,8 +138,12 @@ channel.start_consuming()
 
 <img src="{{ page.asset_path }}python-two.png" class="img-responsive img-rounded">
 
+* <a href="{{ page.asset_path }}hello_world.py">new_task.py</a>
+* <a href="{{ page.asset_path }}hello_world.py">worker.py</a>
+
 Time-consuming tasks 를 처리하는 방법입니다.<br> 
 Worker는 **Round-Robin**방식으로 순차적으로 메세지를 할당받게 되고 task를 처리하게 됩니다.
+
 
 
 
@@ -201,3 +205,84 @@ RabbitMQ가 ack를 받으면 그때 메모리상에서 메세지를 삭제 시�
 만약 worker(consumer)가 ack를 보내기 전에 죽어버리면, RabbitMQ는 해당 메세지를 re-enqueue시킵니다.<br>
 re-enqueue의 경우는 오직 worker가 죽었을때만이고, 테스크처리가 아무리 시간상 오래걸려도 상관없습니다.<br>
 * Message acknowledgments 는 기본 자동값으로 켜져 있습니다.
+
+
+
+
+
+
+
+
+
+
+
+# Publish / Subscribe
+
+<img src="{{ page.asset_path }}exchanges.png" class="img-responsive img-rounded">
+
+* <a href="{{ page.asset_path }}e_consumer.py">e_consumer.py</a>
+* <a href="{{ page.asset_path }}e_producer.py">e_producer.py</a>
+
+바로 위의 Worker Queue에서는 하나의 message가 하나의 queue로 보내졌습니다.<br>
+하지만 Publish/Subscribe 형태는 전혀 다릅니다. 즉 하나의 메세지가 여러개의 consumers 로 보내지게 됩니다.
+
+
+### Exchange
+
+이전의 예제에서는 message가 direct로 queue에 들어갔습니다.<br>
+하지만 실제 RabbitMQ는 이런식으로는 잘 쓰이지 않습니다. <br>
+즉 producer는 실제 종종 어떤 queue한테 메세지를 전달할까 보다는, exchange라는 곳에 보내게 됩니다.<br>
+Exchange는 메세지를 어떻게, 어디로, 보낼지 알고 있습니다.
+
+그렇다면 메세지를 어떻게 보낼것인가? append시킬것인가 discard시킬것인가.. 즉.. <br>
+Exchange는 Rule에 따라서 행동이 달라지게 되는데, rule은 exchange type에 따라서 변경이 됩니다. <br>
+
+Exchange의 Type으로는 **direct, topic, headers and fanout** 이런 것들이 있습니다.
+
+{% highlight python %}
+channel.exchange_declare(exchange='logs', type='fanout')
+channel.basic_publish(exchange='logs', routing_key='', body=message)
+{% endhighlight %}
+
+exchange_declare를 통해서 exchange type을 설정해주고, <br>
+basic_publish에서 exchange argument 값을 logs를 설정해서, logs라는 exchange로 메세지가 들어가게끔 합니다.
+만약 exchange='' 이렇게 빈 string을 사용하게 되면, exchange의 default값을 사용한다는 뜻입니다.
+
+{% highlight python %}
+conn = pika.BlockingConnection(pika.ConnectionParameters('172.17.0.1', 5672))
+channel = conn.channel()
+channel.exchange_declare('logs', exchange_type='direct')
+
+while True:
+    message = raw_input('Message:')
+    channel.basic_publish(exchange='logs', routing_key='', body=message)
+
+{% endhighlight %}
+
+### Consumer
+
+
+**channel.queue_declare()** 이렇게 queue의 이름을 명시하지 않으면 자동으로 이름이 생성이 됩니다.<br>
+(예: amq.gen-JzTY20BRgKO-HjmUJj0wLg)<br>
+이전 예제에서는 정확하게 어디 queue에 메세지를 넣을지가 중요하기 때문에, queue의 이름이 중요하지만,<br>
+여기서는 exchange를 사용하므로, queue의 이름이 어디인지가 중요하지 않습니다.
+
+exclusive=True옵션을 주면은.. consumer가 disconnect됨가 동시에 해당 queue도 자동으로 삭제가 됩니다.
+
+{% highlight python %}
+channel.queue_declare(exclusive=True)
+channel.queue_bind(queue=queue_name, exchange='logs')
+{% endhighlight %}
+
+
+
+
+
+
+
+
+
+
+# Routing
+
+<img src="{{ page.asset_path }}python-four.png" class="img-responsive img-rounded">
