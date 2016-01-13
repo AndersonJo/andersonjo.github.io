@@ -309,10 +309,117 @@ channel.basic_publish('direct_logs', routing_key=routing_key, body=message)
 ### Consumer
 
 동일하게 random으로 이름이 만들어지는 Queue 를 하나 만들고, <br>
-해당 Queue를 exchange에 Bind시킬때, **routing_key** 값을 주면 됩니다. 
+해당 Queue를 exchange에 Bind시킬때, **routing_key** 값을 주면 됩니다.
 
 {% highlight python %}
 result = channel.queue_declare()
 queue_name = result.method.queue
 channel.queue_bind(exchange='direct_logs', queue=queue_name, routing_key=routing_key)
+{% endhighlight %}
+
+
+
+
+
+
+
+
+
+# Topics
+
+<img src="{{ page.asset_path }}python-five.png" class="img-responsive img-rounded">
+
+* <a href="{{ page.asset_path }}topic_consumer.py">topic_consumer.py</a>
+* <a href="{{ page.asset_path }}topic_producer.py">topic_producer.py</a>
+
+direct를 통해서 세분화 하긴 했지만, 좀더 정교하게 사용하기 위해서는 topic을 사용합니다.<br>
+예를 들어서 consumer는 *.dogs.* 로 binding 시키고, producer는 routing_key를 korea.dogs.red 로 보내면
+해당 consumer에서 메세지를 받을 수 있습니다.
+
+| Wild Card | Explain |
+|:--|:----------------|
+| * | 단어 하나를 대체 합니다. |
+| # | 0개 또는 여러개의 단어를 대체합니다.
+
+### Producer
+
+exchange_type은 topic으로 설정합니다.
+
+{% highlight python %}
+channel.exchange_declare('logs_animal', exchange_type='topic')
+{% endhighlight %}
+
+routing_key 값으로 'korea.dogs.red' 같은 값을 줍니다.
+
+{% highlight python %}
+channel.basic_publish('logs_animal', routing_key=routing_key, body=message)
+{% endhighlight %}
+
+### Consumer
+
+동일하게 topic으로 exchange_type을 잡고,
+
+{% highlight python %}
+channel.exchange_declare('logs_animal', exchange_type='topic')
+binding_keys = sys.argv[1:] if len(sys.argv) > 1 else '*.dogs.*'
+channel.queue_bind(queue_name, exchange='logs_animal', routing_key=binding_key)
+{% endhighlight %}
+
+
+
+# Topic Final Code
+
+Consumer
+
+{% highlight python %}
+import sys
+
+import pika
+
+conn = pika.BlockingConnection(pika.ConnectionParameters('172.17.0.1', 5672))
+channel = conn.channel()
+channel.exchange_declare('logs_animal', exchange_type='topic')
+result = channel.queue_declare('', exclusive=True)
+queue_name = result.method.queue
+
+# Ex) korea.dogs.red
+binding_keys = sys.argv[1:] if len(sys.argv) > 1 else '*.dogs.*'
+
+for binding_key in binding_keys:
+    print 'Binding to %s' % binding_key
+    channel.queue_bind(queue_name, exchange='logs_animal', routing_key=binding_key)
+
+
+def callback(ch, method, properties, body):
+    print(" [x] %r:%r" % (method.routing_key, body))
+
+
+channel.basic_consume(callback,
+                      queue=queue_name,
+                      no_ack=True)
+
+channel.start_consuming()
+{% endhighlight %}
+
+
+{% highlight python %}
+import pika
+
+conn = pika.BlockingConnection(pika.ConnectionParameters('172.17.0.1', 5672))
+channel = conn.channel()
+channel.exchange_delete('logs_animal')
+channel.exchange_declare('logs_animal', exchange_type='topic')
+
+routing_key = 'korea.dogs.red'
+
+count = 0
+while True:
+    message = raw_input('Message:')
+    if message == 'change':
+        routing_key = raw_input('New Routing Key:')
+        continue
+
+    channel.basic_publish('logs_animal', routing_key=routing_key, body=message)
+    print '[%d] Published to %s - %s' % (count, routing_key, message)
+    count += 1
 {% endhighlight %}
