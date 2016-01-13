@@ -3,8 +3,8 @@ layout: post
 title:  "RabbitMQ 101"
 date:   2015-12-23 01:00:00
 categories: "queue"
-asset_path: /assets/posts/RabbitMQ_Celery/
-tags: []
+asset_path: /assets/posts/RabbitMQ/
+tags: ['Celery']
 ---
 <div>
     <img src="{{ page.asset_path }}bunny.jpg" class="img-responsive img-rounded">
