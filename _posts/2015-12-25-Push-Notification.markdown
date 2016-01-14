@@ -80,7 +80,6 @@ response = gcm.json_request(registration_ids=reg_ids, data=data)
 
 
 
-
 # AWS & Python
 
 ### Send an Email
@@ -135,6 +134,114 @@ for endpoint in platform_app.endpoints.all():
     endpoint.publish(Message=message,
                      MessageStructure='json'
                      )
+{% endhighlight %}
+
+
+### SNS Console
+
+예를 들어서 Android Token을 등록하고 싶다면, Google GCM으로 Application을 만듭니다.
+
+<img src="{{ page.asset_path }}aws01.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+
+Token은 Android Device에서 GCM으로부터 받은 Token값을 넣어주면 Endpoint ARN은 자동으로 생성됩니다.<br>
+여기서 나온 ARN은 카피하고.. Topics로 가서 새로운 Topic을 만듭니다.
+
+<img src="{{ page.asset_path }}aws02.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+
+새로운 Topic에서 create subscription버튼을 누릅니다.
+
+Protocol은 Application으로 하고, Endpoint에는 카피한 ARN을 넣습니다.
+
+<img src="{{ page.asset_path }}aws03.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+
+즉..  Topic subscription --> Application ARN --> Device Token 이런 식으로 서로 참조를 하는 구조입니다.
+
+
+# Using Celery
+
+
+{% highlight python %}
+@shared_task
+def push_via_endpoint(endpoint, message):
+    """
+    Send a push message to an endpoint
+    """
+    sns = boto3.resource('sns')
+    platform_endpoint = sns.PlatformEndpoint(endpoint)
+    message_format = r'''{
+        "default": "Content",
+        "email": "Content",
+        "sqs": "Content",
+        "lambda": "Content",
+        "http": "Content",
+        "https": "Content",
+        "sms": "Content",
+        "APNS": "{\"aps\":{\"alert\": \"Content\"} }",
+        "APNS_SANDBOX":"{\"aps\":{\"alert\":\"Content\"}}",
+        "APNS_VOIP":"{\"aps\":{\"alert\":\"Content\"}}",
+        "APNS_VOIP_SANDBOX": "{\"aps\":{\"alert\": \"Content\"} }",
+        "MACOS":"{\"aps\":{\"alert\":\"Content\"}}",
+        "MACOS_SANDBOX": "{\"aps\":{\"alert\": \"Content\"} }",
+        "GCM": "{ \"data\": { \"message\": \"Content\" } }",
+        "ADM": "{ \"data\": { \"message\": \"Content\" } }",
+        "BAIDU": "{\"title\":\"Content\",\"description\":\"Content\"}",
+        "MPNS" : "<?xml version=\"1.0\" encoding=\"utf-8\"?><wp:Notification xmlns:wp=\"WPNotification\"><wp:Tile><wp:Count>ENTER COUNT</wp:Count><wp:Title>Content</wp:Title></wp:Tile></wp:Notification>",
+        "WNS" : "<badge version\"1\" value\"23\"/>"
+        }'''
+    send_message = message_format % (message, message)
+    platform_endpoint.publish(Message=send_message,
+                              MessageStructure='json')
+
+
+@shared_task
+def push_via_topic(topic_arn, message):
+    print topic_arn, message
+    message_format = r'''{
+        "default": "Content",
+        "email": "Content",
+        "sqs": "Content",
+        "lambda": "Content",
+        "http": "Content",
+        "https": "Content",
+        "sms": "Content",
+        "APNS": "{\"aps\":{\"alert\": \"Content\"} }",
+        "APNS_SANDBOX":"{\"aps\":{\"alert\":\"Content\"}}",
+        "APNS_VOIP":"{\"aps\":{\"alert\":\"Content\"}}",
+        "APNS_VOIP_SANDBOX": "{\"aps\":{\"alert\": \"Content\"} }",
+        "MACOS":"{\"aps\":{\"alert\":\"Content\"}}",
+        "MACOS_SANDBOX": "{\"aps\":{\"alert\": \"Content\"} }",
+        "GCM": "{ \"data\": { \"message\": \"Content\" } }",
+        "ADM": "{ \"data\": { \"message\": \"Content\" } }",
+        "BAIDU": "{\"title\":\"Content\",\"description\":\"Content\"}",
+        "MPNS" : "<?xml version=\"1.0\" encoding=\"utf-8\"?><wp:Notification xmlns:wp=\"WPNotification\"><wp:Tile><wp:Count>ENTER COUNT</wp:Count><wp:Title>Content</wp:Title></wp:Tile></wp:Notification>",
+        "WNS" : "<badge version\"1\" value\"23\"/>"
+        }'''
+    message = message_format.replace('Content', message)
+    sns = boto3.resource('sns')
+    topic = sns.Topic(topic_arn)
+    topic.publish(Message=message, MessageStructure='json')
+
+
+@shared_task
+def sns_create_endpoint(token, data=''):
+    sns = boto3.resource('sns')
+    platform_application = sns.PlatformApplication(settings.ARN_GCM)
+    try:
+        return platform_application.create_platform_endpoint(
+                Token=token,
+                CustomUserData=data
+        ).arn
+    except ClientError as e:
+        print e
+
+
+@shared_task
+def sns_subscribe_topic(topic_arn, endpoint):
+    sns = boto3.resource('sns')
+    topic = sns.Topic(topic_arn)
+    return topic.subscribe(Protocol='application', Endpoint=endpoint)
+
+
 {% endhighlight %}
 
 
