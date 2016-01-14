@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Push Notification"
-date:   2015-12-24 01:00:00
-categories: "android"
+title:  "Push Notification via AWS"
+date:   2015-12-25 01:00:00
+categories: "AWS"
 asset_path: /assets/posts/Push-Notification/
 tags: ['Celery', 'RabbitMQ', 'GCM']
 ---
@@ -127,7 +127,8 @@ for endpoint in platform_app.endpoints.all():
     print endpoint.arn
 
     message = r'''{
-        "GCM": "{\"data\":{\"message\":\"Check out these awesome deals!\",\"url\":\"www.amazon.com\"}}"
+        "GCM": "{\"data\":{\"message\":\"Hello World!\",\"url\":\"www.amazon.com\"}}",
+        "APNS": "{\"aps\":{\"alert\": \"Hello World!\"} }"
     }'''
 
     print message

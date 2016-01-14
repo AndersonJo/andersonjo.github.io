@@ -11,10 +11,10 @@ for endpoint in platform_app.endpoints.all():
     print endpoint.arn
 
     message = r'''{
-        "GCM": "{\"data\":{\"message\":\"Check out these awesome deals!\",\"url\":\"www.amazon.com\"}}"
+        "GCM": "{\"data\":{\"message\":\"Hello World!\",\"url\":\"www.amazon.com\"}}",
+        "APNS": "{\"aps\":{\"alert\": \"Hello World!\"} }"
     }'''
 
     print message
     endpoint.publish(Message=message,
-                     MessageStructure='json'
-                     )
+                     MessageStructure='json')
