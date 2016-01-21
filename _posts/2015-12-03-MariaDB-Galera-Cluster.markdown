@@ -21,17 +21,88 @@ tags: ["port forwarding"]
 * Automatic node joining
 * True parallel replication, on row level
 
-Galera Replication는 transaction commit을 할때 <br>
-해당 transaction write set을 클러스터에 broadcasting 하고 적용하도록 합니다.
 
-#### Installation
+# Installation
 
-10.0 버젼이후부터 Galera Cluster 와 MariaDB가 함께 붙어서 제공되고 있습니다.<br>
-하지만 그 이전버젼은 Galera Cluster를 따로 설치해야 합니다.
+10.1 버젼부터 Galera Cluster가 함께 제공되고 있습니다.<br>
+[https://downloads.mariadb.org/mariadb/repositories/][mariadb-install-page] 여기에 들어가면, <br>
+10.1을 깔수 있으며, 그냥 시키는대로 하면 됩니다.
+
+
+#### my.cnf
 
 {% highlight bash %}
-sudo apt-get install mariadb-server
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+
+skip-host-cache
+skip-name-resolve
+#
+# * Basic Settings
+#
+user            = mysql
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+port            = 3306
+basedir         = /usr
+datadir         = /var/lib/mysql
+tmpdir          = /tmp
+lc_messages_dir = /usr/share/mysql
+lc_messages     = en_US
+skip-external-locking
+
+# Galera Cluster Required
+wsrep_on=ON
+binlog_format = ROW
+innodb_autoinc_lock_mode=2
+innodb_doublewrite=1
+innodb_flush_log_at_trx_commit=0
+
+# Galera Provider Configuration
+wsrep_provider=/usr/lib/galera/libgalera_smm.so
+#wsrep_provider_options="gcache.size=32G"
+
+# Galera Cluster Configuration
+wsrep_cluster_name="test_cluster"
+#wsrep_cluster_address="gcomm://first_ip,second_ip,third_ip"
+
+# Galera Synchronization Congifuration
+wsrep_sst_method=rsync
+#wsrep_sst_auth=user:pass
+
+# Galera Node Configuration
+wsrep_node_address="node_ip"
+wsrep_node_name="node_name"
 {% endhighlight %}
+
+# Running Primary Node
+
+Cluster의 첫번째 Node는 다음과 같이 실행시킵니다.
+
+{% highlight bash %}
+sudo service mysql start --wsrep-new-cluster
+sudo service mysql restart --wsrep_new_cluster
+{% endhighlight %}
+
+상태체크는 다음과 같이 합니다.
+
+{% highlight bash %}
+systemctl status mariadb.service
+{% endhighlight %}
+
+클러스터 상태체크
+
+{% highlight bash %}
+SHOW STATUS LIKE 'wsrep_%';
+{% endhighlight %}
+
+
+
+
+
+
 
 #### Dockerinzing MariaDB
 
@@ -71,3 +142,4 @@ restarting server를 하면 새로운 UUID가 만들어지며, old cluster에 re
 [https://github.com/DominicBoettger/docker-mariadb-galera]: https://github.com/DominicBoettger/docker-mariadb-galera
 [https://github.com/dockerfile/mariadb/blob/master/Dockerfile]: https://github.com/dockerfile/mariadb/blob/master/Dockerfile
 [https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile]: https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile
+[mariadb-install-page]: https://downloads.mariadb.org/mariadb/repositories/
