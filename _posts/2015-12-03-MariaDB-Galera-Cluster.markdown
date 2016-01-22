@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "MariaDB Galera Cluster"
+title:  "MariaDB Galera Cluster via Docker"
 date:   2015-12-03 01:00:00
 categories: "database"
 asset_path: /assets/posts/MariaDB-Galera-Cluster/
-tags: ["port forwarding"]
+tags: ["docker", "wsrep"]
 ---
 <div>
     <img src="{{ page.asset_path }}sea-lions-playing.jpg" class="img-responsive img-rounded">
