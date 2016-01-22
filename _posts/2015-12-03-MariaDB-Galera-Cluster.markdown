@@ -22,11 +22,20 @@ tags: ["port forwarding"]
 * True parallel replication, on row level
 
 
-# Installation
+# Install & Configure Galera Cluster
 
 10.1 버젼부터 Galera Cluster가 함께 제공되고 있습니다.<br>
 [https://downloads.mariadb.org/mariadb/repositories/][mariadb-install-page] 여기에 들어가면, <br>
 10.1을 깔수 있으며, 그냥 시키는대로 하면 됩니다.
+
+#### Setting Firewall
+
+| Port | 사용되는 곳 |
+|:-----|:----------|
+|3306| For MySQL client connections and State Snapshot Transfer that use the mysqldump method.|
+|4567| For Galera Cluster replication traffic, multicast replication uses both UDP transport and TCP on this port.|
+|4568| For Incremental State Transfer.|
+|4444| For all other State Snapshot Transfer.|
 
 
 #### my.cnf
@@ -77,6 +86,20 @@ wsrep_node_address="node_ip"
 wsrep_node_name="node_name"
 {% endhighlight %}
 
+#### Primary Node
+
+중요한점은 Primary Node는 wsrep_cluster_address부분을 아무것도 설정하지 않습니다.
+
+{% highlight bash %}
+wsrep_cluster_address="gcomm://"
+wsrep_node_address="primary_node_ip"
+{% endhighlight %}
+
+##### Additional Cluster Node
+
+
+
+
 # Running Primary Node
 
 Cluster의 첫번째 Node는 다음과 같이 실행시킵니다.
@@ -104,7 +127,62 @@ SHOW STATUS LIKE 'wsrep_%';
 
 
 
-#### Dockerinzing MariaDB
+# Dockerinzing MariaDB
+
+#### Install Dockerized MariaDB 10.1
+
+{% highlight bash %}
+git clone git@github.com:AndersonJo/mariadb10.1-docker.git
+
+docker build -t mariadb .
+docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=1234 --name cluster1 -d mariadb
+{% endhighlight %}
+
+
+#### Connect to each other
+
+Docker의 --link 는 Bidirectional Connection (즉 서로 연결되는 Connection) 을 지원하지 않습니다.<br>
+(아직 Running도 안하는 Container에 연결을 시킬순 없겠죠)<br>
+대신에 서로의 IP 주소로 들어갈수 있습니다.<br>
+inspect로 현재 컨테이너의 IP Address를 알아낼수 있습니다.
+
+{% highlight bash %}
+docker inspect cluster1  | grep IPAddress
+
+# 만약 Container 안이라면..
+cat /etc/hosts
+{% endhighlight %}
+
+#### Create a primary node
+
+{% highlight bash %}
+docker run --name cluster01 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=1234 -d mariadb mysqld --wsrep_new_cluster
+{% endhighlight %}
+
+MySQL에 Cilent로 로그인 한뒤, 다음의 명령어로 status를 확인할수 있습니다.
+
+{% highlight bash %}
+show status like 'wsrep%';
+{% endhighlight %}
+
+--wsrep-new-cluster 의 의미는 연결할수 있는 cluster가 없고, 새로운 history UUID를 만듭니다.<br>
+restarting server를 하면 새로운 UUID가 만들어지며, old cluster에 reconnect하지 않습니다.
+
+
+Primary Node 의 my.cnf 에 반드시 들어가야 할 내용
+
+{% highlight bash %}
+wsrep_cluster_address="gcomm://172.17.0.3"
+wsrep_node_address="172.17.0.2"
+wsrep_node_name="cluster01"
+{% endhighlight %}
+
+wsrep_cluster_address 에는 다른 nodes 의 주소를 , comma 를 통해서 써넣습니다.<br>
+wsrep_node_address 에는 자신의 주소를 적어넣습니다.
+
+
+
+#### Creating Network (Optional)
 
 먼저 Network를 만듭니다.
 
@@ -124,19 +202,6 @@ docker를 실행할때 --net=<네트워크 이름> 을 통해서 어디 네트�
 
 
 
-
-{% highlight bash %}
-
-docker run -d --name fission --net=host -p 0.0.0.0:3370:3370 cluster
-
-docker pull mariadb
-docker run -p 3306:3306 --name db01 -e MYSQL_ROOT_PASSWORD=1234 -d mariadb:10.0.22 --wsrep-new-cluster
-{% endhighlight %}
-
-
-
---wsrep-new-cluster 의 의미는 연결할수 있는 cluster가 없고, 새로운 history UUID를 만듭니다.<br>
-restarting server를 하면 새로운 UUID가 만들어지며, old cluster에 reconnect하지 않습니다.
 
 
 [https://github.com/DominicBoettger/docker-mariadb-galera]: https://github.com/DominicBoettger/docker-mariadb-galera
