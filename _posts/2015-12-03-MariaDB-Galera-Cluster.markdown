@@ -202,6 +202,10 @@ docker를 실행할때 --net=<네트워크 이름> 을 통해서 어디 네트�
 기본적으로 --net 옵션을 주지 않는다면 bridge (docker0 네트워크) 라는 network를 기본적으로 사용하게 됩니다.
 
 
+# 유용한 링크
+
+* [https://mariadb.com/kb/en/mariadb/galera-cluster-system-variables/][https://mariadb.com/kb/en/mariadb/galera-cluster-system-variables/]
+
 
 
 
@@ -209,3 +213,6 @@ docker를 실행할때 --net=<네트워크 이름> 을 통해서 어디 네트�
 [https://github.com/dockerfile/mariadb/blob/master/Dockerfile]: https://github.com/dockerfile/mariadb/blob/master/Dockerfile
 [https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile]: https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile
 [mariadb-install-page]: https://downloads.mariadb.org/mariadb/repositories/
+
+
+[https://mariadb.com/kb/en/mariadb/galera-cluster-system-variables/]: https://mariadb.com/kb/en/mariadb/galera-cluster-system-variables/
