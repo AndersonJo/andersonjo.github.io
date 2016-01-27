@@ -64,6 +64,7 @@ skip-external-locking
 
 # Galera Cluster Required
 wsrep_on=ON
+wsrep_causal_reads=ON
 binlog_format = ROW
 innodb_autoinc_lock_mode=2
 innodb_doublewrite=1
