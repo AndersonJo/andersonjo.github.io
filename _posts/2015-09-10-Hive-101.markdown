@@ -32,7 +32,7 @@ Map Reduce를 할 수 있는 방법
 
 {% highlight bash %}
 tar -zxvf apache-hive-1.2.1-bin.tar.gz
-sudo mkdir /usr/local/hive
+sudo mkdir /usr/lib/hive
 sudo mv apache-hive-1.2.1-bin/* /usr/lib/hive/
 {% endhighlight %}
 

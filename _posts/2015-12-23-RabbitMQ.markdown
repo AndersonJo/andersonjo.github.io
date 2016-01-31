@@ -43,8 +43,15 @@ $ rabbitmqctl stop
 
 {% highlight bash %}
 docker pull rabbitmq
-docker run -d -p 5672:5672 --name rabbitmq rabbitmq
+docker run -p 5672:5672 -p 15672:15672 --name rabbitmq -d rabbitmq
+docker exec -it rabbitmq bash
+rabbitmq-plugins enable rabbitmq_management
 {% endhighlight %}
+
+RabbitMQ Management Tool은 15672 포트로 열리게 됩니다.<br>
+ID, Password는 둘다 guest
+
+
 
 #### Default Access 
 
