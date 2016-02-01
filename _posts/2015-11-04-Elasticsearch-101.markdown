@@ -38,20 +38,15 @@ sudo /bin/systemctl enable elasticsearch.service
 sudo /bin/systemctl start elasticsearch.service
 {% endhighlight %}
 
-
-# Elasticsearch 101
-
-### Run!
-
 {% highlight bash %}
 sudo service elasticsearch start
 {% endhighlight %}
 
+# Configuration
 
-**아직 끝나지 않은 문서입니다. 시간나는대로 Tutorial을 쓰겠습니다.**
+sudo vi /etc/elasticsearch/elasticsearch.yml 에서 host를 변경가능
+{% highlight bash %}
+network.host: 0.0.0.0
+{% endhighlight %}
 
 
-[http://localhost:9200][http://localhost:9200]
-
-
-[http://localhost:9200]: http://localhost:9200

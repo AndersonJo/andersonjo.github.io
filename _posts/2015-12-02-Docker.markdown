@@ -196,7 +196,8 @@ docker run -d -P --user ubuntu --name dev -h docker -t andersonjo/ubuntu bash
 
 #### VIM Ansi Mode
 
-Docker 에서 vi를 실행시킬때 이상현상이 일어난다면 다음과 vim에서 다음과 같은 명령어를 쳐줍니다.
+Docker 에서 vi를 실행시킬때 이상현상이 일어난다면 다음과 vim에서 다음과 같은 명령어를 쳐줍니다.<br>
+또는 .vimrc 파일안에 넣어도 됩니다.
 
 {% highlight bash %}
 :set term=builtin_ansi
@@ -207,6 +208,8 @@ Docker 에서 vi를 실행시킬때 이상현상이 일어난다면 다음과 vi
 {% highlight bash %}
 :set nocompatible
 {% endhighlight %}
+
+
 
 #### Delete all containers
 
