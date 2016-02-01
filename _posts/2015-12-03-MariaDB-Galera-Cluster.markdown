@@ -143,7 +143,7 @@ docker run -p 3306:3306 --name db01 -e MYSQL_ROOT_PASSWORD=1234 -d mariadb:10.0.
 {% endhighlight %}
 
 {% highlight bash %}
-docker run -p 3340:3306 -p 4445:4444 -p 4570-4571:4567-4568 -e MYSQL_ROOT_PASSWORD=1234 -v /home/ubuntu/db/mysql:/var/lib/mysql -v /home/ubuntu/db/log/mysql:/var/log/mysql/ --name cluster01 -d mariadb mysqld --wsrep_new_cluster
+docker run -p 3306:3306 -p 4444:4444 -p 4567-4568:4567-4568 -e MYSQL_ROOT_PASSWORD=1234 -v /home/ubuntu/db/mysql:/var/lib/mysql -v /home/ubuntu/db/log/mysql:/var/log/mysql/ --name cluster -d mariadb mysqld --wsrep_new_cluster
 {% endhighlight %}
 
 
