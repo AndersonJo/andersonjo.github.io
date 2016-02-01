@@ -55,10 +55,12 @@ skip-external-locking
 
 # Galera Cluster Required
 wsrep_on=ON
+wsrep_causal_reads=ON
 binlog_format = ROW
 innodb_autoinc_lock_mode=2
 innodb_doublewrite=1
 innodb_flush_log_at_trx_commit=0
+wsrep_retry_autocommit=10
 
 # Galera Provider Configuration
 wsrep_provider=/usr/lib/galera/libgalera_smm.so
@@ -98,6 +100,14 @@ systemctl status mariadb.service
 SHOW STATUS LIKE 'wsrep_%';
 {% endhighlight %}
 
+wsrep_cluster_address 그리고 wsrep_node_address 이 부분이 중요한데,<br>
+3306이 포트를 찾는게 아니라 4567 포트로 먼저 통신을 하게 됩니다. <br>
+
+{% highlight bash %}
+#wsrep_cluster_address="gcomm://first_ip:4567,second_ip:4567,third_ip:4567"<br>
+wsrep_node_address="ip:4567"
+{% endhighlight %}
+
 
 
 
@@ -126,13 +136,15 @@ docker를 실행할때 --net=<네트워크 이름> 을 통해서 어디 네트�
 
 
 {% highlight bash %}
-
 docker run -d --name fission --net=host -p 0.0.0.0:3370:3370 cluster
 
 docker pull mariadb
 docker run -p 3306:3306 --name db01 -e MYSQL_ROOT_PASSWORD=1234 -d mariadb:10.0.22 --wsrep-new-cluster
 {% endhighlight %}
 
+{% highlight bash %}
+docker run -p 3340:3306 -p 4445:4444 -p 4570-4571:4567-4568 -e MYSQL_ROOT_PASSWORD=1234 -v /home/ubuntu/db/mysql:/var/lib/mysql -v /home/ubuntu/db/log/mysql:/var/log/mysql/ --name cluster01 -d mariadb mysqld --wsrep_new_cluster
+{% endhighlight %}
 
 
 --wsrep-new-cluster 의 의미는 연결할수 있는 cluster가 없고, 새로운 history UUID를 만듭니다.<br>
