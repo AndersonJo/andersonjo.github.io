@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Upstart 101"
-date:   2016-01-31 01:00:00
+date:   2016-01-29 01:00:00
 categories: "linux"
 asset_path: /assets/posts/Upstart/
 tags: ['/etc/init.d', 'ubuntu', 'service']

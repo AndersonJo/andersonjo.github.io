@@ -1,0 +1,96 @@
+---
+layout: post
+title:  "Systemd 101"
+date:   2016-01-30 01:00:00
+categories: "linux"
+asset_path: /assets/posts/Systemd/
+tags: ['/etc/init.d', 'ubuntu', 'service']
+---
+
+<img src="{{ page.asset_path }}logo.png" class="img-responsive img-rounded">
+
+# Overview
+
+Systemd는 unit 과 target 2가지로 구성이 되어 있습니다.<br>
+unit은 .service, .mount, .device 또는 .socket 같은 것들이라고 보면 됩니다.<br>
+systemd 를 사용시 이러한 확장자를 써줘서 명령을 줘야하는데, 만약 확장자를 지정하지 않으면 .service로 인식을 하게 됩니다.<br>
+
+실행시킬 Script파일은 반드시 #!/bin/bash 넣어주고, executable로 만들어줘야 합니다.
+
+# How to write Service
+
+/etc/systemd/system 위치에 .service 파일을 만들어 줍니다.
+
+{% highlight bash %}
+sudo vi /etc/systemd/system/example.service
+{% endhighlight %}
+
+{% highlight bash %}
+[Unit]
+Description=Example Service
+
+[Service]
+Type=oneshot
+ExecStart=실행 시킬 스크립트 위치
+
+[Install]
+WantedBy=multi-user.target
+{% endhighlight %}
+
+
+|NAME	| Description|
+|:------|:-----------|
+|ExecStartPre |Commands that will run before ExecStart. |
+|ExecStart |Main commands to run for this unit. |
+|ExecStartPost |Commands that will run after all ExecStart commands have completed.|
+|ExecReload |Commands that will run when this unit is reloaded via systemctl reload foo.service|
+|ExecStop |Commands that will run when this unit is considered failed or if it is stopped via systemctl stop foo.service|
+|ExecStopPost |Commands that will run after ExecStop has completed.|
+|RestartSec |The amount of time to sleep before restarting a service. Useful to prevent your failed service from attempting to restart itself every 100ms.|
+
+|NAME	| Description|
+|:------|:-----------|
+|Type=simple (default)| systemd considers the service to be started up immediately. The process must not fork. Do not use this type if other services need to be ordered on this service, unless it is socket activated.|
+|Type=forking| systemd considers the service started up once the process forks and the parent has exited. For classic daemons use this type unless you know that it is not necessary. You should specify PIDFile= as well so systemd can keep track of the main process.|
+|Type=oneshot| this is useful for scripts that do a single job and then exit. You may want to set RemainAfterExit=yes as well so that systemd still considers the service as active after the process has exited.|
+|Type=notify| identical to Type=simple, but with the stipulation that the daemon will send a signal to systemd when it is ready. The reference implementation for this notification is provided by libsystemd-daemon.so.|
+|Type=dbus| the service is considered ready when the specified BusName appears on DBus's system bus.|
+|Type=idle| systemd will delay execution of the service binary until all jobs are dispatched. Other than that behavior is very similar to Type=simple.|
+
+
+### More Complicated one
+
+{% highlight bash %}
+[Unit]
+Description=MyApp
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill busybox1
+ExecStartPre=-/usr/bin/docker rm busybox1
+ExecStartPre=/usr/bin/docker pull busybox
+ExecStart=/usr/bin/docker run --name busybox1 busybox /bin/sh -c "while true; do echo Hello World; sleep 1; done"
+
+[Install]
+WantedBy=multi-user.target
+{% endhighlight %}
+
+After=docker.service 라는 뜻은 docker.service 가 active 된 이후에 실행이 된다는 뜻입니다.<br>
+WantedBy=multi-user.target 는 해당 unit이 속한 target group.
+
+Service 를 작성하고 난후는 다음과 같이 테스트 해볼수 있습니다.
+{% highlight bash %}
+sudo systemctl daemon-reload
+sudo systemctl start example.service
+{% endhighlight %}
+
+
+### Start service on Reboot
+
+부팅시에 자동으로 시작하게 만들려면 다음과 같이 합니다.
+
+{% highlight bash %}
+systemctl enable example.service
+{% endhighlight %}
