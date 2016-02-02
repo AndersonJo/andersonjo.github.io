@@ -1,0 +1,90 @@
+---
+layout: post
+title:  "Upstart 101"
+date:   2016-01-31 01:00:00
+categories: "linux"
+asset_path: /assets/posts/Upstart/
+tags: ['/etc/init.d', 'ubuntu', 'service']
+---
+
+<img src="{{ page.asset_path }}upstart-logo.png" class="img-responsive img-rounded">
+
+# Overview of Upstart
+
+* **Job**은 working process이며, task job, service job (background로 돌아감),<br>
+abstract job(사용자가 끄기전까지 계속 forever 돌아감) 등이 있습니다.
+
+* **Events**는 다른 job또는 이벤트를 trigger시키는 것.. starting, started, stopping, stopped 등이 있습니다.
+
+* **Emit Events** initctl emit <event> 등과 같은 명령어로 이벤트를 broadcast시킬수 있음
+
+
+# Job Configuration
+
+* Empty 문서이면 안됨
+* Syntax Error가 없어야 함
+* Stanza (Command Block) 이 최소 하나가 있어야 함
+* **/etc/init/이름.conf** 로 저장
+
+### /etc/init/example.conf
+
+{% highlight bash %}
+# Example Configuration
+
+description  "A test job file for experimenting with Upstart"
+author "Anderson Jo (a141890@gmail.com)"
+
+# When to start the service
+start on runlevel [2345]
+
+# When to stop the service
+stop on runlevel [016]
+
+# Execution
+exec echo last login: $(date) $(whoami) > /home/ubuntu/.last_login
+{% endhighlight %}
+
+실행부분이 exec 로 시작되는게 중요하게 볼 부분입니다.<br>
+init-checkconf를 통해서 집접 바로 실행시켜서 테스트 해볼수 있습니다.
+
+{% highlight bash %}
+init-checkconf /etc/init/example.conf
+{% endhighlight %}
+
+
+**Reload는 다음과 같이 합니다.**
+
+{% highlight bash %}
+initctl reload-configuration
+{% endhighlight %}
+
+실제 서비스 실행은 그냥 평범하게 다음과 같이..
+
+{% highlight bash %}
+sudo service testjob start
+{% endhighlight %}
+
+
+### System Init Daemon VS Upstart
+
+다음과 같은 에러가 뜬다면, System Init Daemon과 충돌이 나서 생기는 문제입니다.<br>
+특히 Ubuntu 15.04에서 이런 문제가 일어날수 있습니다.
+
+{% highlight bash %}
+$init-checkconf /etc/init/example.conf
+ERROR: version of /sbin/init too old
+{% endhighlight %}
+
+upstart-sysv 를 설치함으로서 업그레이드를 해줄수 있습니다.
+
+{% highlight bash %}
+sudo apt-get install upstart-sysv
+{% endhighlight %}
+
+
+
+
+
+
+
+

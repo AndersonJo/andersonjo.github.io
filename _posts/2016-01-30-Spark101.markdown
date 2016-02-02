@@ -1,8 +1,0 @@
----
-layout: post
-title:  "Spark 101"
-date:   2016-01-31 01:00:00
-categories: "analysis"
-asset_path: /assets/posts/Spark101/
-tags: ['hadoop', 'hive', 'rdd', 'mysql', 'mariadb']
----
