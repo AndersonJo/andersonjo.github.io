@@ -32,7 +32,9 @@ DN에는 Common Name(CN) 이 들어가야 하는데 이것은 Fully Qualified Do
 openssl req -new -newkey rsa:2048 -nodes -out star_andersonjo_com.csr -keyout star_andersonjo_com.key -subj "/C=KR/ST=Seoul/L=Seoul/O=Anderson/OU=Development/CN=*.andersonjo.com"
 {% endhighlight %}
 
-다음의 코드를 치면 Propt로 Private Key및 CSR을 만들수 있습니다.
+### Prompt Way
+
+다른 방법으로 다음의 코드를 치면 Propt로 Private Key및 CSR을 만들수 있습니다.
 
 {% highlight bash %}
 opessl req -newkey rsa:2048 -nodes -keyout domain.key -out domain.csr
@@ -61,6 +63,30 @@ Common Name (e.g. server FQDN or YOUR name) []:anderson.com
 Email Address []:a141890@gmail.com
 {% endhighlight %}
 
+### OpenSSL Options
+
+**req**: Certificate 을 만들겠다는 Request
+
+**-new**: 새로운 Certificate Request를 생성합니다. promp문이 나와서 필요한 사항들을 적을수 있게 해줍니다.
+
+**-newkey rsa:2048**: newkey는 a new certificate request와 a new private key 두개를 동시에 만들겠다는 뜻입니다.<br>
+RSA Key 2048 bits 이상되는 키를 만들게됩니다.
+
+**-nodes**: Private Key가 생성이 될때 encrypted가 되지 않습니다.
+
+**-keyout file.key**: Private Key를 어느 파일에 저장할지 지정합니다.
+
+**-out file.csr**: Certificate을 어느 파일에 저장할지 지정합니다.
+
+**-days n**: 만약 -x509 옵션이 사용이 되었다면, Certificate의 유요한 시간을 지정합니다. 기본값은 30일. (-days 365)
+
+**-outform DER\|PEM**: output format 을 어떻게할지 정합니다.
+
+더 자세한 욥션 내용은 [링크][https://www.openssl.org/docs/manmaster/apps/req.html]를 눌러주세요.<br>
+[https://www.openssl.org/docs/manmaster/apps/req.html][https://www.openssl.org/docs/manmaster/apps/req.html]
+
+
+
 ### Generating a CSR from an Existing Private Key
 
 {% highlight bash %}
@@ -82,8 +108,49 @@ openssl x509 -in domain.crt -signkey domain.key -x509toreq -out domain.csr
 
 [https://www.ssls.com][https://www.ssls.com] 에서 먼저 SSL Certificate을 구입합니다.
 
+Certificate을 구입하고나면은 다음과 같은 파일들을 받습니다. (순서가 중요)
 
+STAR_amanda_co_kr.crt<br>
+COMODORSADomainValidationSecureServerCA.crt<br>
+COMODORSAAddTrustCA.crt<br>
+AddTrustExternalCARoot.crt<br>
+
+
+{% highlight bash %}
+cat STAR_amanda_co_kr.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > domain.pem
+{% endhighlight %}
+
+다음과 같이 Nginx를 설정해주면 됩니다.
+
+{% highlight bash %}
+server {
+    listen         80;
+    server_name    domain.co.kr;
+    return         301 https://$server_name$request_uri;
+}
+
+server{
+    listen 443 ssl;
+    server_name domain.co.kr;
+    charset utf-8;
+
+    ssl on;
+    ssl_certificate     /home/ubuntu/ssl/amanda.pem;
+    ssl_certificate_key /home/ubuntu/ssl/star_amanda_co_kr.key;
+}
+{% endhighlight %}
+
+# AWS Elastic Load Balance
+
+{% highlight bash %}
+openssl rsa -in star_domain_com.key -outform PEM >aws.private.pem
+openssl x509 -inform PEM -in STAR_domain_com.crt >aws.public.pem
+cat COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > aws.chain.pem
+{% endhighlight %}
+
+만들어진 파일 내용들을 ELB 에다가 갖다 붙여넣기 하면 끝.
 
 
 [https://www.digicert.com/easy-csr/openssl.htm]: https://www.digicert.com/easy-csr/openssl.htm
+[https://www.openssl.org/docs/manmaster/apps/req.html]: https://www.openssl.org/docs/manmaster/apps/req.html
 [https://www.ssls.com]: https://www.ssls.com
