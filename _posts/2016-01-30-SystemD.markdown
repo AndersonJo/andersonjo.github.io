@@ -3,11 +3,11 @@ layout: post
 title:  "Systemd 101"
 date:   2016-01-30 01:00:00
 categories: "linux"
-asset_path: /assets/posts/Systemd/
+static: /assets/posts/Systemd/
 tags: ['/etc/init.d', 'ubuntu', 'service']
 ---
 
-<img src="{{ page.asset_path }}logo.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}logo.png" class="img-responsive img-rounded">
 
 # Overview
 

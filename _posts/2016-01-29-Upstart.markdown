@@ -3,11 +3,11 @@ layout: post
 title:  "Upstart 101"
 date:   2016-01-29 01:00:00
 categories: "linux"
-asset_path: /assets/posts/Upstart/
+static: /assets/posts/Upstart/
 tags: ['/etc/init.d', 'ubuntu', 'service']
 ---
 
-<img src="{{ page.asset_path }}upstart-logo.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}upstart-logo.png" class="img-responsive img-rounded">
 
 # Overview of Upstart
 
