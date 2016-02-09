@@ -75,7 +75,7 @@ sudo apt-get install openssh-server
 그 이후에 hduser가 사용할수 있도록 권한을 변경시켜줍니다.
 
 {% highlight bash %}
-sudo chown -R hduser:hadoop hadoop-2.7.1/
+sudo chown -R hduser:hadoop hadoop-2.7.2/
 {% endhighlight %}
 
 #### .bashrc
@@ -85,12 +85,13 @@ sudo chown -R hduser:hadoop hadoop-2.7.1/
 {% highlight bash %}
 
 export JAVA_HOME=/usr/lib/jvm/java-7-oracle
-export HADOOP_HOME=/usr/local/hadoop-2.7.1
+export HADOOP_HOME=/usr/local/hadoop-2.7.2
 export HADOOP_CONF_DIR=$HADOOP_HOME/conf
-export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.1/conf
+export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.2/conf
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
 export PATH=$PATH:$HADOOP_HOME/bin
+export PATH=$PATH:$HADOOP_HOME/sbin
 unset JAVA_TOOL_OPTIONS
 {% endhighlight %}
 
@@ -98,10 +99,10 @@ unset JAVA_TOOL_OPTIONS
 
 ## Hadoop Configuration
 
-실제 풀어보면 conf디렉토리가 missing인 상태입니다. 하둡 다운로드 페이지에서 hadoop-2.7.1.tar.gz 파일을 다운로드 받으셨을텐데..
-이것 이외에도 src가 더 붙은 hadoop-2.7.1-src.tar.gz  이런 파일이 있는데 여기안에 설정파일들이 들어있습니다.
+실제 풀어보면 conf디렉토리가 missing인 상태입니다. 하둡 다운로드 페이지에서 hadoop-2.7.2.tar.gz 파일을 다운로드 받으셨을텐데..
+이것 이외에도 src가 더 붙은 hadoop-2.7.2-src.tar.gz  이런 파일이 있는데 여기안에 설정파일들이 들어있습니다.
 
-압축을 풀고 **hadoop-2.7.1-src/hadoop-common-project/hadoop-common/src/main/conf** 에 가보면 필요한 설정파일들이 존재합니다.
+압축을 풀고 **hadoop-2.7.2-src/hadoop-common-project/hadoop-common/src/main/conf** 에 가보면 필요한 설정파일들이 존재합니다.
 
 * [core-site.xml][conf-core-site.xml]
 * [hdfs-site.xml][conf-hdfs-site.xml]
@@ -225,7 +226,7 @@ protoc --version
 
 [Hadoop Download][hadoop-download] 
 
-다운로드 페이지에서 hadoop-2.7.1-src.tar.gz 파일을 다운로드 합니다. (소스 코드 파일)
+다운로드 페이지에서 hadoop-2.7.2-src.tar.gz 파일을 다운로드 합니다. (소스 코드 파일)
 압축을 해제시키고 압축을 해제한 폴더로 들어갑니다.
 
 * package 는  build 명령어
@@ -238,15 +239,15 @@ protoc --version
 **hduser로 로그인해서 해야합니다. 반드시!**
 
 {% highlight bash %}
-tar xvf hadoop-2.7.1-src.tar.gz
-cd hadoop-2.7.1-src
+tar xvf hadoop-2.7.2-src.tar.gz
+cd hadoop-2.7.2-src
 mvn package -Pdist,native -DskipTests -Dtar
-sudo cp -R hadoop-dist/target/hadoop-2.7.1 /usr/local/
+sudo cp -R hadoop-dist/target/hadoop-2.7.2 /usr/local/
 
 {% endhighlight %}
 
-빌드가 끝난후 hadoop-dist/target/hadoop-2.7.1 디렉토리를 /usr/local 에다가 복사합니다.<br>
-또는 이미 설치가 되있는 상태라면, hadoop-dist/target/hadoop-2.7.1/lib/native 안의 내용물만 복사하면 됩니다.
+빌드가 끝난후 hadoop-dist/target/hadoop-2.7.2 디렉토리를 /usr/local 에다가 복사합니다.<br>
+또는 이미 설치가 되있는 상태라면, hadoop-dist/target/hadoop-2.7.2/lib/native 안의 내용물만 복사하면 됩니다.
 
 확인 하는 방법..
 {% highlight bash %}

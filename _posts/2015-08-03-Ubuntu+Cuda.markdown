@@ -73,13 +73,13 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
 export ANDROID_HOME=/home/anderson/apps/android-sdk
 export JAVA_HOME=/usr/lib/jvm/java-7-oracle
-export HADOOP_HOME=/usr/local/hadoop-2.7.1
+export HADOOP_HOME=/usr/local/hadoop-2.7.2
 export HADOOP_MAPRED_HOME=$HADOOP_HOME
 export HADOOP_COMMON_HOME=$HADOOP_HOME
 export HADOOP_HDFS_HOME=$HADOOP_HOME
 export YARN_HOME=$HADOOP_HOME
 export HADOOP_CONF_DIR=$HADOOP_HOME/conf
-export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.1/conf
+export HADOOP_CLASSPATH=$HADOOP_HOME/conf
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
 export HIVE_HOME="/usr/local/hive"
@@ -92,6 +92,7 @@ export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar
 export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derbytools.jar
 
 export PATH=$PATH:$HADOOP_HOME/bin
+export PATH=$PATH:$HADOOP_HOME/sbin
 export PATH=$PATH:$CUDAHOME/bin
 export PATH=$PATH:$ANDROID_HOME:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$HIVE_HOME/bin

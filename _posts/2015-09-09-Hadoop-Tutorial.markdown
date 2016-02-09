@@ -173,7 +173,7 @@ if current_company == company:
 
 Java기반의 MR이 아닌 다른 언어(여기에서는 Python)으로 할때는 Streaming으로 데이터를 보내서 분석을 하게 됩니다.
 코드에서 나왔듯이 한줄 한줄씩 처리를 하게 됩니다. 
-streaming을 사용하기 위해서는 /usr/local/hadoop-2.7.1/share/hadoop/tools/lib/hadoop-streaming-2.7.1.jar 파일을 사용합니다.
+streaming을 사용하기 위해서는 /usr/local/hadoop-2.7.2/share/hadoop/tools/lib/hadoop-streaming-2.7.2.jar 파일을 사용합니다.
 
 {% highlight bash %}
 hadoop jar hadoop-streaming-2.7.1.jar -mapper ./mapper.py  -reducer ./reducer.py  -input /techcrunch.csv -output /output
