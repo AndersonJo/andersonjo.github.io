@@ -265,6 +265,11 @@ LOAD DATA LOCAL INPATH '/usr/local/hive/examples/files/kv2.txt' OVERWRITE INTO T
 LOAD DATA LOCAL INPATH '/usr/local/hive/examples/files/kv3.txt' OVERWRITE INTO TABLE invites PARTITION (ds='2016-02-12');
 {% endhighlight %}
 
+### Select and Filters
+
+{% highlight sql %}
+SELECT * FROM invites WHERE ds = '2016-02-11';
+{% endhighlight %}
 
 # Pycharm Settings
 
