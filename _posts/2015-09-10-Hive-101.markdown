@@ -248,6 +248,24 @@ invites라는 테이블을 만들고, 그안에 데이터는 2개가 있습니�
 ds 는 partition에 사용되는데, 테이블안의 데이터로 포함되지는 않고, 가상의 데이터입니다.
 
 
+### DML Operations
+
+DML은 [Data Manipulation Language][dml]을 가르킵니다.<br>
+ctrl-a로 나뉘어져있는 2개의 columns이 있는 파일을 로드할 수 있습니다.
+
+{% highlight sql %}
+LOAD DATA LOCAL INPATH '/usr/local/hive/examples/files/kv1.txt' OVERWRITE INTO TABLE pokes;
+{% endhighlight %}
+
+* **LOCAL**단어가 빠지면 Hadoop HDFS 에서 해당 파일을 찾게 됩니다. HDFS에서 가져올시, 실제로는 HDFS상에서는 파일 이동이기때문에 매우 빠른 처리를 합니다.
+* **OVERWRITE**는 기존의 테이블을 삭제하고 데이터를 넣겠다는 뜻이고, 만약 omitted 된다면 기존의 데이터에 append시킵니다.
+
+{% highlight sql %}
+LOAD DATA LOCAL INPATH '/usr/local/hive/examples/files/kv2.txt' OVERWRITE INTO TABLE invites PARTITION (ds='2016-02-11');
+LOAD DATA LOCAL INPATH '/usr/local/hive/examples/files/kv3.txt' OVERWRITE INTO TABLE invites PARTITION (ds='2016-02-12');
+{% endhighlight %}
+
+
 # Pycharm Settings
 
 다음과 같이 드라이버를 잡아줍니다.
@@ -258,9 +276,12 @@ ds 는 partition에 사용되는데, 테이블안의 데이터로 포함되지�
 
 <img src="{{ page.asset_path }}autocommit.png" class="img-responsive img-rounded">
 
+<img src="{{ page.asset_path }}haha.png" class="img-responsive img-rounded">
+
 
 
 [download-page]:http://apache.claz.org/hive/stable/
 [derby-download-page]:https://db.apache.org/derby/derby_downloads.html
 [dfs]: http://localhost:50070
 [cats.csv]: {{ page.asset_path }}cats.csv
+[dml]: https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML
