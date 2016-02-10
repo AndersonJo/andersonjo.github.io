@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Test"
-date:   2016-02-12 01:00:00
+title:  "Test HAHAHA"
+date:   2016-01-28 01:00:00
 categories: "linux"
 static: /assets/posts/Test/
 ---
