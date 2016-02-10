@@ -14,8 +14,6 @@ tags: ['hadoop', 'hive']
 [다운로드 페이지][download]에서 Spark를 다운 받습니다.
 
 
-[download]: http://spark.apache.org/downloads.html
-
 적절한곳에 압축을 풀어주고, 설치를 합니다.<br>
 (아래의 SPARK_HOME은 스파크가 설치할 곳으로 수정해주셔야 합니다.)
 
@@ -31,3 +29,6 @@ export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip
 import pyspark
 {% endhighlight %}
 
+
+
+[download]: http://spark.apache.org/downloads.html
