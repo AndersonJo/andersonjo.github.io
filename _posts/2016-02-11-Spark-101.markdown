@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Spark 101"
-date:   2016-02-11 01:00:00
+date:   2015-09-11 01:00:00
 categories: "analytics"
 static: /assets/posts/Spark101/
 tags: ['hadoop', 'hive']
