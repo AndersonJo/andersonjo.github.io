@@ -1,9 +1,0 @@
----
-layout: post
-title:  "Test HAHAHA"
-date:   2016-02-02 01:00:00
-categories: "linux"
-static: /assets/posts/Test/
----
-
-test
