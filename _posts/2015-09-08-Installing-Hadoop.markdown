@@ -147,11 +147,11 @@ export JAVA_HOME=/usr/lib/jvm/java-7-oracle
     </property>
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>/home/hduser/hdfs/name</value>
+        <value>/home/hduser/hdfs/namenode</value>
     </property>
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>/home/hduser/hdfs/data</value>
+        <value>/home/hduser/hdfs/datanode</value>
     </property>
     <property>
         <name>dfs.permissions</name>
@@ -239,11 +239,12 @@ protoc --version
 **hduser로 로그인해서 해야합니다. 반드시!**
 
 {% highlight bash %}
+su hduser
 tar xvf hadoop-2.7.2-src.tar.gz
 cd hadoop-2.7.2-src
 mvn package -Pdist,native -DskipTests -Dtar
 sudo cp -R hadoop-dist/target/hadoop-2.7.2 /usr/local/
-
+sudo chown -R hduser:hadoop /usr/local/hadoop-2.7.2
 {% endhighlight %}
 
 빌드가 끝난후 hadoop-dist/target/hadoop-2.7.2 디렉토리를 /usr/local 에다가 복사합니다.<br>

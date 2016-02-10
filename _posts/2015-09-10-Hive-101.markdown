@@ -4,6 +4,7 @@ title:  "Hive 101"
 date:   2015-9-10 01:00:00
 categories: "hadoop"
 asset_path: /assets/posts/Hive-101/
+tags: ['Pycharm', 'JDBC', 'beeline']
 ---
 <div>
     <img src="{{ page.asset_path }}hive.jpg" class="img-responsive img-rounded">
@@ -32,11 +33,12 @@ Map Reduce를 할 수 있는 방법
 
 {% highlight bash %}
 tar -zxvf apache-hive-1.2.1-bin.tar.gz
-sudo mkdir /usr/lib/hive
-sudo mv apache-hive-1.2.1-bin/* /usr/lib/hive/
+sudo mkdir /usr/local/hive
+sudo mv apache-hive-1.2.1-bin/* /usr/local/hive/
+sudo chown -R hduser:hadoop  /usr/local/hive/
 {% endhighlight %}
 
-### Setting Hive Environment
+# Configuring Hadoop
 
 .bashrc에 다음을 넣습니다.
 
@@ -63,6 +65,8 @@ export PATH=$PATH:$HIVE_HOME/bin
 ### yarn-site.xml
 
 {% highlight xml %}
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
    <property>
       <name>yarn.nodemanager.aux-services</name>
@@ -86,6 +90,8 @@ cp mapred-site.xml.template mapred-site.xml
 {% endhighlight %}
 
 {% highlight xml %}
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
    <property>
       <name>mapreduce.framework.name</name>
@@ -109,7 +115,7 @@ Hadoop Configuration 화면이 나와야 합니다.
 <strong style="color:red;">[http://localhost:50070][dfs]</strong>
 
 
-### Configuring Hive
+# Configuring Hive
 
 HIVE_HOME안의 conf디렉토리에 있는 hive-env.sh를 설정해주면 됩니다.<br>
 conf 디렉토리 안에는 이미 템플렛 파일이 있기 때문에 그냥 카피해주면 됩니다.
@@ -119,56 +125,139 @@ cp hive-env.sh.template hive-env.sh
 {% endhighlight %}
 
 
-# Apache Derby
+### Configuring MetaStore via MySQL
 
-### Installing Derby
-
-Apache Derby는 Java로 만들어진 Relational Database입니다.<br>
-[Derby Download Page][derby-download-page] 에 접속해서 wget으로 받습니다.
-
-다운받은 파일을 풀고 /usr/local/derby 위치고 카피시켜줍니다.
+기본적으로 Hive는 Derby를 사용하지만, 다른 데이터베이스로 바꿀수도 있습니다.<br>
+먼저 Java Connector를 설치 합니다.
 
 {% highlight bash %}
-sudo mv db-derby-10.12.1.1-bin /usr/local/derby
-cd /usr/local
-sudo chown -R hduser:hadoop derby
+sudo apt-get install libmysql-java
+ln -s /usr/share/java/mysql-connector-java.jar $HIVE_HOME/lib/mysql-connector-java.jar
 {% endhighlight %}
 
-
-### Configuring Derby
-
-.bashrc에 다음을 추가합니다.
+MySQL에 metastore라는 DB를 만들어 줍고 hiveuser도 생성해줍니다.
 
 {% highlight bash %}
-export DERBY_HOME=/usr/local/derby
-export PATH=$PATH:$DERBY_HOME/bin
-
-export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar
-export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derbytools.jar
+mysql -u root -p
+create database metastore;
+create user `hiveuser`@`%` identified by 'password';
+grant all privileges on *.* to `hiveuser`@`%` with grant option;
+create user `hiveuser`@`localhost` identified by 'password';
+grant all privileges on *.* to `hiveuser`@`localhost` with grant option;
 {% endhighlight %}
 
-메타데이터가 저장될 공간을 만들면 끝입니다.
-{% highlight bash %}
-mkdir $DERBY_HOME/data
-{% endhighlight %}
-
-# Metastore of Hive
+그 이후에 MySQL을 나와서 Migrate를 해줍니다.
 
 {% highlight bash %}
-cd $HIVE_HOME/conf
-cp hive-default.xml.template hive-site.xml
+mysql -u root -p metastore < /usr/local/hive/scripts/metastore/upgrade/mysql/hive-schema-0.9.0.mysql.sql
 {% endhighlight %}
 
+### hive-site.xml
 
-# Verifying Hive Installation
+{% highlight bash %}
+vi $HIVE_HOME/conf/hive-site.xml
+{% endhighlight %}
+
+{% highlight xml %}
+<configuration>
+   <property>
+      <name>javax.jdo.option.ConnectionURL</name>
+      <value>jdbc:mysql://localhost/metastore?createDatabaseIfNotExist=true</value>
+      <description>metadata is stored in a MySQL server</description>
+   </property>
+   <property>
+      <name>javax.jdo.option.ConnectionDriverName</name>
+      <value>com.mysql.jdbc.Driver</value>
+      <description>MySQL JDBC driver class</description>
+   </property>
+   <property>
+      <name>javax.jdo.option.ConnectionUserName</name>
+      <value>hiveuser</value>
+      <description>user name for connecting to mysql server</description>
+   </property>
+   <property>
+      <name>javax.jdo.option.ConnectionPassword</name>
+      <value>password</value>
+      <description>password for connecting to mysql server</description>
+   </property>
+</configuration>
+{% endhighlight %}
+
+### Management Overview
+
+* **/conf/hive-default.xml**가 default configuration
+* **HIVE_CONF_DIR** environtment variable에 의해서 conf디렉토리 위치 변경이 가능
+* **/conf/hive-site.xml**에서 hive-default.xml의 값을 재정의
+* **/conf/hive-log4j.properties**에서 Log4js 설정가능
+* 기본적으로 Hadoop Configuration을 Inherit함
+
+### Running HiveCli
 
 {% highlight bash %}
 hdfs dfs -mkdir /hive/warehouse
 hdfs dfs -mkdir -p /hive/warehouse
 hdfs dfs -chmod g+w /tmp
 hdfs dfs -chmod g+w /hive/warehouse
-hive
+$HIVE_HOME/bin/hive
 {% endhighlight %}
+
+# Running HiverServer2 and Beeline
+
+hive 명령어 (HiveCli)는 beeline의 등장과 함께 deprecated된 상태입니다.<br>
+HiveServer2 그리고 Beeline은 다음과 같이 실행시킵니다.<br>
+주의사항으로 hiveserver2를 실행시키고 약 20초~30초 후에 접속이 가능합니다.
+
+{% highlight bash %}
+$HIVE_HOME/bin/hiveserver2
+$HIVE_HOME/bin/beeline -u jdbc:hive2://localhost:10000
+
+Connecting to jdbc:hive2://localhost:10000
+Connected to: Apache Hive (version 1.2.1)
+Driver: Hive JDBC (version 1.2.1)
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+Beeline version 1.2.1 by Apache Hive
+{% endhighlight %}
+
+### Local-Mode
+
+기본적으로 Hive Compiler는 Query에 대해서 Map-Reduce job을 생성하고, Map-Reduce Cluster에 던지게 됩니다.<br>
+(다음의 변수가 가르키는 것이 Map-Reduce Cluster)
+
+{% highlight bash %}
+mapred.job.tracker
+{% endhighlight %}
+
+Cluster에 던지게 되면 역시 빅데이터 처리에는 효율성이 높지만, 작은 데이터를 처리하는데는 시간이 오래 걸리게 됩니다.<br>
+따라서 Local Mode로 변환시켜서 Cluster에 던지지 않고, Local에서만 작업을 하려면 다음의 명령어를 사용합니다.
+
+{% highlight bash %}
+hive> SET mapred.job.tracker=local;
+{% endhighlight %}
+
+### Create and Alter Tables
+
+{% highlight sql %}
+CREATE TABLE pokes (foo INT, bar STRING);
+CREATE TABLE invites (foo INT, bar STRING) PARTITIONED BY (ds STRING);
+SHOW TABLES;
+DESCRIBE invites;
+ALTER TABLE invites ADD COLUMNS (new_col2 INT COMMENT 'a comment');
+{% endhighlight %}
+
+invites라는 테이블을 만들고, 그안에 데이터는 2개가 있습니다. (foo 그리고 bar) <br>
+ds 는 partition에 사용되는데, 테이블안의 데이터로 포함되지는 않고, 가상의 데이터입니다.
+
+
+# Pycharm Settings
+
+다음과 같이 드라이버를 잡아줍니다.
+
+<img src="{{ page.asset_path }}awesome.png" class="img-responsive img-rounded">
+
+접속 이후에는 Auto-commit 을 off 시켜줍니다.
+
+<img src="{{ page.asset_path }}autocommit.png" class="img-responsive img-rounded">
+
 
 
 [download-page]:http://apache.claz.org/hive/stable/
