@@ -3,32 +3,7 @@ layout: post
 title:  "Test"
 date:   2016-02-12 01:00:00
 categories: "analytics"
-static: /assets/posts/Spark101/
+static: /assets/posts/Test/
 tags: ['hadoop', 'hive']
 ---
-
-<img src="{{ page.static }}math.jpg" class="img-responsive img-rounded">
-
-# Installation
-
-[다운로드 페이지][download]에서 Spark를 다운 받습니다.
-
-
-적절한곳에 압축을 풀어주고, 설치를 합니다.<br>
-(아래의 SPARK_HOME은 스파크가 설치할 곳으로 수정해주셔야 합니다.)
-
-{% highlight bash %}
-export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6
-export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python
-export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip
-{% endhighlight %}
-
-설치가 잘 되었다면, import pyspark가 에러없이 import가 됩니다.
-
-{% highlight python %}
-import pyspark
-{% endhighlight %}
-
-
-
-[download]: http://spark.apache.org/downloads.html
+test
