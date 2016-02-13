@@ -116,6 +116,48 @@ RDD에는 2가지 type의 operations이 있습니다. transformation과 action.<
 **transformation**은 새로운 RDD를 리턴시킵니다. (즉 map, reduce 같은것..)<br>
 **action**은 우리가 만들어 놓은 RDD를 실제로 kick off시켜서 결과를 내놓습니다. (count, first 같은 함수들..)
 
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Union & Lineage Graph
+
+만약 Transformation으로 새로운 RDD를 얻게 되면, Spark는 해당 RDD의 계보(Lineage)를 keep track of하게 됩니다.<br>
+만약 transformation으로 손실된 데이터가 있다면, Lineage에 따라서 Union을 통해 서로 다시 합칠수도 있습니다.
+
+{% highlight python %}
+data = sc.parallelize(['a', 'b', 'c', 'd', 'e', 1,2,3,4,5])
+data.cache()
+
+alpha = data.filter(lambda word: type(word) == str or type(word) == unicode)
+alpha.cache()
+
+numeric = data.filter(lambda word: type(word) == int)
+numeric.cache()
+
+print alpha.collect() #  ['a', 'b', 'c', 'd', 'e']
+print numeric.collect() # [1, 2, 3, 4, 5]
+
+print alpha.union(numeric).collect() # ['a', 'b', 'c', 'd', 'e', 1, 2, 3, 4, 5]
+{% endhighlight %}
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Take VS Collect
+
+Take는 전체 데이터셋에서 일부를 가져오고, Collect는 전체 데이터를 driver (현재 돌리고 있는 컴퓨터)로 가져옵니다.<br>
+collect함수는 전체 데이터를 가져오기 때문에 Map-Reduce로 작은 싸이즈로 줄어들었거나, 또는 driver의 메모리안으로 가져올 만큼의 양으로
+줄어들었을때 가능합니다.
+
+이렇게 큰 경우 saveAsTextFile() 또는 saveAsSequenceFile()을 사용해서 저장하거나, S3, HDFS에 저장할 수 있습니다.
+
+{% highlight python %}
+rdd = sc.parallelize([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
+for line in rdd.take(5):
+    print line # 1 2 3 4 5
+{% endhighlight %}
+
+
+
+
+
+
+
+
 
 
 [download]: http://spark.apache.org/downloads.html
