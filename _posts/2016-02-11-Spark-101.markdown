@@ -40,7 +40,7 @@ Project Structure에서 PySpark가 있는 위치를 Add Content Root를 눌러�
 
 <img src="{{ page.static }}pycharm.png" class="img-responsive img-rounded">
 
-# Standalone Application
+# Common Transformation and Action
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Initializing a SparkContext
 
@@ -151,13 +151,90 @@ for line in rdd.take(5):
     print line # 1 2 3 4 5
 {% endhighlight %}
 
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Top
+
+순서상이 아니라, 값이 가장 큰것 순서대로 리턴을 시킵니다.
+
+{% highlight python %}
+rdd = sc.parallelize(['a', 'b', 'c', 'd', 'e', 'z', 'y', 'x', 'f', 'g'])
+rdd.top(3) # ['z', 'y', 'x']
+{% endhighlight %}
 
 
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Set
+
+union, intersection, subtract등의 집합 연산도 가능합니다.
+
+{% highlight python %}
+rdd1 = sc.parallelize([1,2,3,4,5, 'a'])
+rdd2 = sc.parallelize(['a', 'b', 'c', 1, 2])
+
+rdd1.union(rdd2).collect() # [1, 2, 3, 4, 5, 'a', 'a', 'b', 'c', 1, 2]
+rdd1.intersection(rdd2).collect() # ['a', 2, 1]
+rdd1.subtract(rdd2).collect() # [4, 3, 5]
+{% endhighlight %}
+
+Cartesian Product는 A, B RDD에 있는 모든 elements들을 pair로 묶습니다.<br>
+유사성을 검사할때 좋지만, 매우 expensive 하니 크기가 큰 RDD에는 적합하지 않습니다.
+
+{% highlight python %}
+rdd1 = sc.parallelize([1,2])
+rdd2 = sc.parallelize(['a', 'b', 'c'])
+
+rdd1.cartesian(rdd2).collect()
+# [(1, 'a'), (1, 'b'), (1, 'c'), (2, 'a'), (2, 'b'), (2, 'c')]
+{% endhighlight %}
 
 
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Distinct & Sample
+
+Distinct는 중복되는 elements를 제거합니다.
+
+{% highlight python %}
+rdd = sc.parallelize([1,1,2,2,2,3,4])
+rdd.distinct().collect() # [1, 2, 3, 4]
+{% endhighlight %}
+
+**rdd.sample(self, withReplacement, fraction, seed=None)**<br>
+**withReplacement**가 True이면 중복해서 여러번 같은 element를 선택할 수 있게 됩니다.<br>
+**fraction** sample의 싸이즈를 정합니다. 0~1사이의 소수값이 들어가고,<br>
+값이 크면 클수록 sample의 싸이즈또한 커지게 됩니다.
+
+{% highlight python %}
+rdd = sc.parallelize([10,20,30,40,50,60,70,80,90,100])
+rdd.sample(False, 0.5).collect()
+# [40, 50, 60]
+# [30, 40, 50, 90, 100]
+# [50, 80, 90, 100]
+
+rdd.sample(True, 0.5).collect()
+# [10, 10, 20, 30, 60, 60, 80, 90, 100, 100]
+# [10, 100, 100]
+
+rdd.sample(True, 0).collect()
+# []
+{% endhighlight %}
 
 
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Aggregate
 
+aggregate는 reduce와 유사하지만, Return Value가 다른 타입입니다.
+
+**rdd.aggregate(self, zeroValue, seqOp, combOp)**
+**zeroValue** 는 초기값
+
+아래는 평균값을 구하는 코드입니다.<br>
+첫번째 **lambda acc, v**에서 리턴시 전혀 다른 type으로 리턴가능하며, acc는 변경가능하지만, v값은 변경하면 안됩니다.<br>
+두번째 **lambda acc1, acc2**에서는 첫번째 lambda에서 돌은 값을 merge시켜주는 역활을 합니다.
+
+{% highlight python %}
+rdd = sc.parallelize([1,2,3,4,5,6,7,8,9,10])
+sum, avg = rdd.aggregate((0, 0),
+              lambda acc, v: (acc[0] + v, acc[1] + 1),
+              lambda acc1, acc2: (acc1[0] + acc2[0], acc1[1] + acc2[1]))
+# sum: 55, avg: 10
+print sum/float(avg) # 5.5
+{% endhighlight %}
 
 
 [download]: http://spark.apache.org/downloads.html
