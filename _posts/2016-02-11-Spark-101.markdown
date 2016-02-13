@@ -1,0 +1,121 @@
+---
+layout: post
+title:  "Spark 101"
+date:   2016-02-11 01:00:00
+categories: "analytics"
+static: /assets/posts/Spark101/
+tags: ['hadoop', 'hive']
+---
+
+<img src="{{ page.static }}math.jpg" class="img-responsive img-rounded">
+
+# Installation
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Download Apache Spark
+
+[다운로드 페이지][download]에서 Spark를 다운 받습니다.
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Python Path Configuration
+
+적절한곳에 압축을 풀어주고, 설치를 합니다.<br>
+(아래의 SPARK_HOME은 스파크가 설치할 곳으로 수정해주셔야 합니다.)
+
+{% highlight bash %}
+export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6
+export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python
+export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip
+{% endhighlight %}
+
+
+설치가 잘 되었다면, import pyspark가 에러없이 import가 됩니다.
+
+{% highlight python %}
+import pyspark
+{% endhighlight %}
+
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Pycharm Configuration
+
+Project Structure에서 PySpark가 있는 위치를 Add Content Root를 눌러서 추가시켜줍니다.
+
+<img src="{{ page.static }}pycharm.png" class="img-responsive img-rounded">
+
+# Standalone Application
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Initializing a SparkContext
+
+{% highlight python %}
+from pyspark import SparkContext, SparkConf
+
+spconf = SparkConf().setMaster('local').setAppName('Tutorial')
+sc = SparkContext(conf=spconf)
+{% endhighlight %}
+
+실행시키는 방법은 Spark home안의 bin 디렉토리안에있는 spark-submit을 이용합니다.
+
+{% highlight bash %}
+spark-submit tutorial.py
+{% endhighlight %}
+
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Word Count
+
+Hadoop Map-Reduce에서도 Word Count부터 했는데, 마찬가지로 Spark에서도 Word Count부터 시작을 해보겠습니다.
+
+{% highlight python %}
+textFile = sc.textFile('README.md')
+print textFile.count()  # 36 ;the number of lines
+print textFile.first()  # Examples for Learning Spark
+
+pythonLines = textFile.filter(lambda line: 'python' in line.lower())
+print pythonLines.first()
+{% endhighlight %}
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Map Reduce
+
+가장 많은 단어가 들어있는 line의 단어 갯수를 알아냅니다.
+
+{% highlight python %}
+textFile = sc.textFile('README.md')
+def max(a, b):
+    return a if a > b else b
+
+textFile.map(lambda line: len(line.split(' '))).reduce(max) # 36
+{% endhighlight %}
+
+단어별 나온 횟수를 알아냅니다.<br>
+**flatMap**은 받은 element를 리스트같은 형태로 lambda에서 리턴시키면 flatten시켜버립니다.<br>
+즉 flatMap 다음에 다시 map함수가 나오는데.. 여기서 flatted 된 각각 elements를 map을 돌 수 있습니다.
+
+**reduceByKey**는 Merge의 개념이라고 보면 됩니다.
+
+{% highlight python %}
+wordCounts = textFile.flatMap(lambda line: line.split()).\
+    map(lambda word: (word, 1)).reduceByKey(combine)
+print sorted(wordCounts.collect(), key=lambda d: d[1], reverse=True)
+# [(u'the', 10), (u'*', 6), (u'Spark', 5), (u'for', 4), (u'of', 4), ...]
+{% endhighlight %}
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Cache or Persist
+
+기본적으로 Spark는 action을 실행시키면 (즉 lazy하게 실행이 저장했다가 실제로 분석을 시작하는 때) 실행시킬때 마다 **recompute**하게 됩니다.
+만약에 나온 결과물을 재사용하고 싶다면,  cache() 또는 persist()함수를 사용할 수 있습니다.
+
+cache() 또는 persist()를 사용하게 되면 여러대의 분산된 컴퓨터에 동일한 데이터가 메모리상에 존재하게 되고,<br>
+재사용시 메모리에 저장된 결과물을 재사용하게 됩니다.
+
+* cache는 메모리에, persist는 어디 위치에 저장할지 정할 수 있습니다.
+
+{% highlight python %}
+pythonLines.cache()
+{% endhighlight %}
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> RDD Operations
+
+RDD에는 2가지 type의 operations이 있습니다. transformation과 action.<br>
+**transformation**은 새로운 RDD를 리턴시킵니다. (즉 map, reduce 같은것..)<br>
+**action**은 우리가 만들어 놓은 RDD를 실제로 kick off시켜서 결과를 내놓습니다. (count, first 같은 함수들..)
+
+
+
+[download]: http://spark.apache.org/downloads.html
