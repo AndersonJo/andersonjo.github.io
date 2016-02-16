@@ -18,5 +18,6 @@ environment.rb 파일에 다음을 추가시키면 로그가 다 떨어져서 �
 {% highlight ruby %}
 if Rails.env.development?
   Rails.logger = Logger.new(STDOUT)
+  ActiveRecord::Base.logger = nil # Turn off SQL Query Logging
 end
 {% endhighlight %}
