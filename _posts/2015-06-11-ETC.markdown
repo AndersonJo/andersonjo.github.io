@@ -28,3 +28,9 @@ systemd-timedated.service 의 enable시키는 것은..
 {% highlight bash %}
 sudo timedatectl set-ntp 1
 {% endhighlight %}
+
+#### Crontab Log 보기
+
+{% highlight bash %}
+grep cron /var/log/syslog
+{% endhighlight %}
