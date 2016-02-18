@@ -4,7 +4,7 @@ title:  "ETC - 알면 좋은 거"
 date:   2015-06-11 01:00:00
 categories: "queue"
 asset_path: /assets/posts/ETC/
-tags: []
+tags: ['linux', 'time', 'cacti']
 ---
 <div>
     <img src="{{ page.asset_path }}power.jpg" class="img-responsive img-rounded">
@@ -33,4 +33,18 @@ sudo timedatectl set-ntp 1
 
 {% highlight bash %}
 grep cron /var/log/syslog
+{% endhighlight %}
+
+# Cacti
+
+### Timezone 변경하기
+
+{% highlight bash %}
+sudo vi /usr/share/cacti/site/graph_image.php
+{% endhighlight %}
+
+들어가고 난후에 2번째줄에
+
+{% highlight bash %}
+putenv('TZ=Asia/Seoul')
 {% endhighlight %}
