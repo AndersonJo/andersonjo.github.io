@@ -40,11 +40,5 @@ grep cron /var/log/syslog
 ### Timezone 변경하기
 
 {% highlight bash %}
-sudo vi /usr/share/cacti/site/graph_image.php
-{% endhighlight %}
-
-들어가고 난후에 2번째줄에
-
-{% highlight bash %}
-putenv('TZ=Asia/Seoul')
+ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 {% endhighlight %}
