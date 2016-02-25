@@ -4,7 +4,7 @@ title:  "ETC - 알면 좋은 거"
 date:   2015-06-11 01:00:00
 categories: "queue"
 asset_path: /assets/posts/ETC/
-tags: []
+tags: ['linux', 'time', 'cacti']
 ---
 <div>
     <img src="{{ page.asset_path }}power.jpg" class="img-responsive img-rounded">
@@ -49,4 +49,13 @@ PostgreSQL 에서는 LIKE의 경우 Index가 안걸리는데.. 이경우 extensi
 {% highlight sql %}
 CREATE EXTENSION pg_trgm;
 CREATE INDEX idx_users_on_email_gin ON users USING GIN (email gin_trgm_ops);
+{% endhighlight %}
+
+
+# Cacti
+
+### Timezone 변경하기
+
+{% highlight bash %}
+ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 {% endhighlight %}
