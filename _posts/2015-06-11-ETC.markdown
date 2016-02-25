@@ -34,3 +34,19 @@ sudo timedatectl set-ntp 1
 {% highlight bash %}
 grep cron /var/log/syslog
 {% endhighlight %}
+
+
+# PostgreSQL
+
+### LIKE, ILIKE Index
+
+재미있는 현상인데, Postgre는 like "%?%" 인덱스를 제공하지 않습니다. <br>
+explain 떠서 보면은 % 가 들어가면 index가 걸리지 않습니다.<br>
+반면 MariaDB같은 경우는 매우 잘! 걸립니다.
+
+PostgreSQL 에서는 LIKE의 경우 Index가 안걸리는데.. 이경우 extension을 설치해서 해결이 가능합니다.
+
+{% highlight sql %}
+CREATE EXTENSION pg_trgm;
+CREATE INDEX idx_users_on_email_gin ON users USING GIN (email gin_trgm_ops);
+{% endhighlight %}

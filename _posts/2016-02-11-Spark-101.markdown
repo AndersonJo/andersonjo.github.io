@@ -255,6 +255,107 @@ print sum/float(avg) # 5.5
 {% endhighlight %}
 
 
+# SQL & Dataframe
+
+#### Initialization
+
+
+{% highlight python %}
+from pyspark import SparkContext, SparkConf
+from pyspark.sql import SQLContext
+
+spconf = SparkConf().setMaster('local').setAppName('Tutorial')
+sc = SparkContext(conf=spconf)
+sqlContext = SQLContext(sc)
+{% endhighlight %}
+
+SQLContext 이외에도 HiveContext 를 이용할수도 있습니다.
+
+#### Creating Dataframe
+
+{% highlight python %}
+df = sqlContext.read.json("examples/src/main/resources/people.json")
+df.show()
+# +----+-------+
+# | age|   name|
+# +----+-------+
+# |null|Michael|
+# |  30|   Andy|
+# |  19| Justin|
+# +----+-------+
+{% endhighlight %}
+
+{% highlight python %}
+df.printSchema()
+# root
+#  |-- age: long (nullable = true)
+#  |-- name: string (nullable = true)
+{% endhighlight %}
+
+
+{% highlight python %}
+df.select("name").show()
+# +-------+
+# |   name|
+# +-------+
+# |Michael|
+# |   Andy|
+# | Justin|
+# +-------+
+{% endhighlight %}
+
+
+{% highlight python %}
+df.select(df['name'], df['age'] + 1).show()
+# +-------+---------+
+# |   name|(age + 1)|
+# +-------+---------+
+# |Michael|     null|
+# |   Andy|       31|
+# | Justin|       20|
+# +-------+---------+
+{% endhighlight %}
+
+
+{% highlight python %}
+df.filter(df['age'] > 21).show()
+# +---+----+
+# |age|name|
+# +---+----+
+# | 30|Andy|
+# +---+----+
+{% endhighlight %}
+
+{% highlight python %}
+df.groupBy("age").count().show()
+# +----+-----+
+# | age|count|
+# +----+-----+
+# |null|    1|
+# |  19|    1|
+# |  30|    1|
+# +----+-----+
+{% endhighlight %}
+
+
+# SQL Connection
+
+{% highlight python %}
+import os
+os.environ['SPARK_CLASSPATH'] = "/home/anderson/Downloads/postgresql-9.3-1103.jdbc3.jar"
+
+df = sqlContext.read.format("jdbc").options(
+    url="jdbc:postgresql://host:port/database",
+    port=5432,
+    driver = "org.postgresql.Driver",
+    dbtable = "users",
+    user="user_name",
+    password="password").load()
+{% endhighlight %}
+
+
+
+
 
 
 
