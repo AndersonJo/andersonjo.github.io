@@ -342,7 +342,7 @@ df.groupBy("age").count().show()
 
 {% highlight python %}
 import os
-os.environ['SPARK_CLASSPATH'] = "/home/anderson/Downloads/postgresql-9.3-1103.jdbc3.jar"
+os.environ['SPARK_CLASSPATH'] = "/path/to/postgresql-9.3-1103.jdbc3.jar"
 
 df = sqlContext.read.format("jdbc").options(
     url="jdbc:postgresql://host:port/database",
