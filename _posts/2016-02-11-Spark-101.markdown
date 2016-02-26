@@ -24,6 +24,9 @@ tags: ['hadoop', 'hive']
 export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip
+
+export CLASSPATH=$CLASSPATH:/path/postgresql-9.3-1103.jdbc3.jar
+export SPARK_CLASSPATH=/path/postgresql-9.3-1103.jdbc3.jar
 {% endhighlight %}
 
 
@@ -260,6 +263,13 @@ print sum/float(avg) # 5.5
 #### Initialization
 
 
+.bashrc에 SPARK_CLASSPATH에다가 JDBC jar파일을 추가해줍니다.
+{% highlight bash %}
+export CLASSPATH=$CLASSPATH:/path/postgresql-9.3-1103.jdbc3.jar
+export SPARK_CLASSPATH=/path/postgresql-9.3-1103.jdbc3.jar
+{% endhighlight %}
+
+
 {% highlight python %}
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext
@@ -338,7 +348,9 @@ df.groupBy("age").count().show()
 {% endhighlight %}
 
 
-# SQL Connection
+# SQL using JDBC
+
+#### PostgreSQL Connection
 
 {% highlight python %}
 import os
@@ -353,7 +365,14 @@ df = sqlContext.read.format("jdbc").options(
     password="password").load()
 {% endhighlight %}
 
+#### Example
 
+{% highlight python %}
+sqlContext.registerDataFrameAsTable(df, 'users')
+df2 = sqlContext.sql('select id, nickname from users where id=155 limit 1')
+print df2.collect()
+# [Row(id=155, nickname=u'\uc575\uadf8\ub9ac\uc564\ub354\uc2a8')]
+{% endhighlight %}
 
 
 
