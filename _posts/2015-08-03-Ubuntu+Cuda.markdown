@@ -108,6 +108,20 @@ unset JAVA_TOOL_OPTIONS
 {% endhighlight %}
 
 
+### Increase Watch Limit
+
+/etc/sysctl.conf 파일에다가 다음을 추가합니다.<br>
+https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit
+
+{% highlight bash %}
+fs.inotify.max_user_watches = 524288
+{% endhighlight %}
+
+
+{% highlight bash %}
+sudo sysctl -p
+{% endhighlight %}
+
 ### Sublime (Optional)
 
 **GCC Configuration**

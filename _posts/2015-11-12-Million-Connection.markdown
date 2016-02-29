@@ -4,7 +4,7 @@ title:  "1 million concurrent connections"
 date:   2015-11-12 01:00:00
 categories: "network"
 asset_path: /assets/posts/Million-Connections/
-tags: ['']
+tags: ['ulimit']
 ---
 <div>
     <img src="{{ page.asset_path }}city.jpg" class="img-responsive img-rounded">
@@ -28,8 +28,8 @@ ulimit -Hn
 ulimit -Sn
 {% endhighlight %}
 
-Process당 socket descriptors의 최고치를 늘리는 것은 ulimit 명령어로 간단합니다. 
-
+Process당 socket descriptors의 최고치를 늘리는 것은 ulimit 명령어로 간단합니다.<br>
+하지만 ulimit -n 100000 이렇게 하면.. 리부트시 다시 1024로 돌아옵니다.
 
 {% highlight bash %}
 sudo bash -c 'ulimit -n 1048576'
@@ -43,6 +43,17 @@ hard 부분을 변경시키기 위해서는  /etc/security/limits.conf 를 변�
 {% highlight bash %}
 *               soft    nofile          10000000
 *               hard    nofile          10000000
+{% endhighlight %}
+
+그다음으로 /etc/pam.d/common-session 열고, 다음을 추가시켜줍니다. <br>
+session required pam_limits.so
+
+{% highlight bash %}
+sudo gedit /etc/pam.d/common-session
+{% endhighlight %}
+
+{% highlight bash %}
+session required pam_limits.so
 {% endhighlight %}
 
 1048576은 ubuntu에서 기본적으로 제한해놓은 socket descriptors의 갯수입니다. (즉 2^20 == 1048576) 
