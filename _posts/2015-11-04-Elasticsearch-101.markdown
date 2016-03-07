@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Elasticsearch 101"
+title:  "Elasticsearch & Logstash"
 date:   2015-11-04 01:00:00
 categories: "elastic"
 asset_path: /assets/posts/Elasticsearch-101/
@@ -42,11 +42,48 @@ sudo /bin/systemctl start elasticsearch.service
 sudo service elasticsearch start
 {% endhighlight %}
 
+### Running on Docker
+
+{% highlight bash %}
+docker pull elasticsearch
+docker run --name elasticsearch -p 9200:9200 -p 9300:9300 -d elasticsearch
+{% endhighlight %}
+
 # Configuration
 
 sudo vi /etc/elasticsearch/elasticsearch.yml 에서 host를 변경가능
 {% highlight bash %}
 network.host: 0.0.0.0
 {% endhighlight %}
+
+
+
+# Logstash
+
+### Installation
+
+{% highlight bash %}
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb http://packages.elastic.co/logstash/2.2/debian stable main" | sudo tee -a /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get install logstash
+{% endhighlight %}
+
+
+### Configuration
+
+/etc/logstash/conf.d/ 여기에다가 input_to_output.conf 같은 파일이름 형식으로 설정파일을 만듭니다.
+
+# Elasticsearch with Python
+
+{% highlight python %}
+from elasticsearch import Elasticsearch
+es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+{% endhighlight %}
+
+
+
+
+
 
 
