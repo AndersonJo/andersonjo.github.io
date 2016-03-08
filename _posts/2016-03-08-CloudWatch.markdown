@@ -42,14 +42,14 @@ ec2:DescribeTags
 
 테스트는 다음과 같이 할수 있습니다.
 {% highlight bash %}
-./mon-put-instance-data.pl --mem-used --mem-used --mem-avail -- disk-path=/ --disk-space-util --disk-space-used --disk-space-avail --verify
+./mon-put-instance-data.pl --mem-used --mem-used --mem-avail --memory-units=megabytes --disk-path=/ --disk-space-util --disk-space-used --disk-space-avail --disk-space-units=megabytes --verify
 {% endhighlight %}
 
 작동을 잘 하면, Crontab에다가 등록시켜주면 됩니다.<br>
 crontab에다 등록시 --from-cron 옵션을 주어야 합니다.
 
 {% highlight bash %}
-*/5 * * * * ./mon-put-instance-data.pl --mem-used --mem-used --mem-avail -- disk-path=/ --disk-space-util --disk-space-used --disk-space-avail --verify --from-cron
+*/5 * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-used --mem-used --mem-avail --memory-units=megabytes --disk-path=/ --disk-space-util --disk-space-used --disk-space-avail --disk-space-units=megabytes --verify --from-cron
 {% endhighlight %}
 
 
