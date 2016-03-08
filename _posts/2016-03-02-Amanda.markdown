@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "아무나 만나지 않는다 <아만다>"
+date:   2016-03-02 01:00:00
+categories: "portfolio"
+static: /assets/posts/Amanda/
+tags: ['amanda', '아만다']
+---
+
+<img src="{{ page.static }}amanda01.jpg" class="img-responsive img-rounded">
+
+# What is this?
+
+아만다는 "아무나 만나지 않는다"의 약자로 말 그대로 아무나 가입 못하는 프라이벳 데이팅 어플리케이션입니다.<br>
+
+현재 매출 부분 41위이고 "이음" 그리고 "쿠키런" 보다 더 많은 매출을 IOS에서 올리고 있습니다.
+
+<img src="{{ page.static }}ios.jpg" class="img-responsive img-rounded">
+
