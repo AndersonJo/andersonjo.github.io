@@ -50,7 +50,7 @@ crontab에다 등록시 --from-cron 옵션을 주어야 합니다.<br>
 이때! **--verify는 반드시 삭제**해주어야 합니다.
 
 {% highlight bash %}
-*/5 * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-used --mem-used --mem-avail --memory-units=megabytes --disk-path=/ --disk-space-util --disk-space-used --disk-space-avail --disk-space-units=megabytes --verify --from-cron
+*/5 * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-used --mem-used --mem-avail --memory-units=megabytes --disk-path=/ --disk-space-util --disk-space-used --disk-space-avail --disk-space-units=megabytes --from-cron
 {% endhighlight %}
 
 
