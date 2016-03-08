@@ -27,6 +27,7 @@ curl http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScript
 unzip CloudWatchMonitoringScripts-1.2.1.zip
 rm CloudWatchMonitoringScripts-1.2.1.zip
 cd aws-scripts-mon
+mv awscreds.template awscreds.conf
 {% endhighlight %}
 
 aws configure 해서 IAM 유저 설정해주고, 해당 유저는 다음의 권한을 갖고 있어야 합니다.<br>
