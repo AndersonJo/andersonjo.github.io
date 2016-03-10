@@ -1,0 +1,222 @@
+---
+layout: post
+title:  "Apache Flume 101"
+date:   2016-03-09 01:00:00
+categories: "hadoop"
+static: /assets/posts/Flume/
+tags: ['hadoop', '하둡', 'kafka', '카프카']
+---
+
+<img src="{{ page.static }}tree.jpg" class="img-responsive img-rounded">
+
+# What is Flume?
+
+### Intro
+
+Flume은 Logstash에서 Elasticsearch로 보내는 것 처럼, 웹서버나 각종 데이터가 나오는 소스로부터 HDFS로 대용량으로 옮겨주는  작업을 해주는 툴입니다.
+Flume에서 바로 HDFS로 갈수도 있지만, 아래의 그림은 Kafka와 연계했을때의 아키텍트입니다.
+
+<img src="{{ page.static }}flafka-f21.png" class="img-responsive img-rounded">
+
+<img src="{{ page.static }}flafka-f31.png" class="img-responsive img-rounded">
+
+### Why Flume
+
+- 서버에서 나온 로그데이터를 실시간으로 HBase, HDFS로 빠르게 보내줍니다.
+- Flume은 서버와 HDFS사이의 중간자 역활로서, 서로간의 rate (실시간 로그양 vs HDFS쓰는양) 에 격차가 생기면 알아서 mediator역활을 해줍니다.
+- contextual routing 이라는 개념을 제공합니다.
+- Sender와 Receiver사이에 transaction이 존재하기때문에 reliable message delivery를 할 수 있습니다.
+- 로그뿐만아니라 Facebook, Amazon, Twitter같은 소셜및 커머스에서 나오는 이벤트 데이터를 처리 하는데에도 최적화 되어 있습니다.
+- 스케일 가능
+
+### Agent
+
+Agent는 각각의 Flume노드를 뜻합니다.<br>
+각각의 Agent에는 source, channel, sink가 있는데, source는 데이터를 가져오는 곳, channel은 버퍼라고 생각하면 되고, sink 는 channel에서 받은
+데이터를 HDFS같은 곳으로 올려줍니다.
+
+<img src="{{ page.static }}flume_agent1.jpg" class="img-responsive img-rounded">
+
+
+# Installing Flume
+
+### Installing Flume
+
+[https://flume.apache.org/download.html][download]에 들어가서 Flume을 다운받습니다.<br>
+apache-flume-1.6.0-bin.tar.gz 파일을 누르면 됩니다.<br>
+**이때 wget으로 받고 user는 hduser로 로그인하고서 합니다.**
+
+{% highlight bash %}
+tar -zxvf apache-flume-1.6.0-bin.tar.gz
+sudo mv apache-flume-1.6.0-bin /usr/local/flume
+sudo chown -R hduser:hadoop /usr/local/flume/
+{% endhighlight %}
+
+### Environment
+
+.bashrc에다가 다음을 넣습니다.
+
+{% highlight bash %}
+# Flume
+export FLUME_HOME=/usr/local/flume
+export PATH=$PATH:$FLUME_HOME/bin
+export CLASSPATH=$CLASSPATH:$FLUME_HOME/lib/*
+{% endhighlight %}
+
+다음의 파일들이 conf에 있어야 합니다. (template파일이 있으므로 이걸 이용하면 됩니다.)
+
+- flume-conf.properties
+- flume-env.sh
+- flume-env.ps1
+- log4j.properties
+
+{% highlight bash %}
+cd /usr/local/flume/conf
+cp flume-conf.properties.template flume-conf.properties
+cp flume-env.sh.template flume-env.sh
+cp flume-env.ps1.template flume-env.ps1
+{% endhighlight %}
+
+### flume-env.sh
+
+파일 안에다가 JAVA_HOME을 넣어줍니다.
+
+{% highlight bash %}
+export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+{% endhighlight %}
+
+
+### Verifying the installation
+
+flume-ng를 실행시켰을때 help prompt가 뜨면 성공한것입니다.
+
+{% highlight bash %}
+flume-ng
+{% endhighlight %}
+
+# Configuration
+
+### Naming Components
+
+
+일단 Flume은 다음과 같이 다양한 sources, channels 그리고 sinks를 제공합니다.
+
+| sources | channels | sinks |
+|:--------|:---------|:------|
+|Avro Source|Memory Channel|HDFS Sink|
+|Thrift Source|JDBC Channel|Hive Sink|
+|Exec Source|Kafka Channel|Logger Sink|
+|JMS Source|File Channel|Avro Sink|
+|Spooling Directory Source|Spillable Memory Channel|Thrift Sink|
+|Twitter 1% firehose Source|Pseudo Transaction Channel|IRC Sink|
+|Kafka Source||File Roll Sink|
+|NetCat Source||Null Sink|
+|Sequence Generator Source||HBaseSink|
+|Syslog Sources||AsyncHBaseSink|
+|Syslog TCP Source||MorphlineSolrSink|
+|Multiport Syslog TCP Source||ElasticSearchSink|
+|Syslog UDP Source||Kite Dataset Sink|
+|HTTP Source||Kafka Sink|
+|Stress Source|||
+|Legacy Sources|||
+|Thrift Legacy Source|||
+|Custom Source|||
+|Scribe Source|||
+
+예를 들어서 Twitter 데이터를 메모리채널을 통해 HDFS로 옮기고자 한다면 agent name을 **TwitterAgent**로 해주면 됩니다.<br>
+**flume-conf.properties** 파일에서 설정하면 됩니다.
+
+{% highlight bash %}
+TwitterAgent.sources = Twitter
+TwitterAgent.channels = MemChannel
+TwitterAgent.sinks = HDFS
+{% endhighlight %}
+
+
+### Describing the source
+
+각각의 source는 각각의 properties를 갖고 있습니다.<br>
+type 프로퍼티의 경우 모든 sources가 공통적으로 갖고 있는 프로퍼티중의 하나이고, 쓰는 방법은..
+
+
+{% highlight bash %}
+에이젼이트이름.sources.소스이름.type = value
+에이젼이트이름.sources.소스이름.프로퍼티 = value
+{% endhighlight %}
+
+예를 들어서 Twitter Source의 경우 다음과 같이 합니다.
+
+{% highlight bash %}
+TwitterAgent.sources.Twitter.type = Twitter (type name)
+TwitterAgent.sources.Twitter.consumerKey =
+TwitterAgent.sources.Twitter.consumerSecret =
+TwitterAgent.sources.Twitter.accessToken =
+TwitterAgent.sources.Twitter.accessTokenSecret =
+{% endhighlight %}
+
+
+### Describing the Sink
+
+source와 마찬가지로 프로퍼티를 설정해줍니다.
+
+{% highlight bash %}
+에이젼트이름.sinks.소스이름.type = value
+에이젼트이름.sinks.소스이름.프로퍼티 = value
+{% endhighlight %}
+
+예를 들어서 HDFS의 경우 다음과 같이 합니다.
+
+{% highlight bash %}
+TwitterAgent.sinks.HDFS.type = hdfs (type name)
+TwitterAgent.sinks.HDFS.hdfs.path = HDFS directory’s Path to store the data
+{% endhighlight %}
+
+### Describing the Channel
+
+마찬가지 형태..
+
+{% highlight bash %}
+에이젼트이름.channels.소스이름.type = value
+에이젼트이름.channels.소스이름.프로퍼티 = value
+{% endhighlight %}
+
+예를 들어서 메모리 채널의 경우 다음과 같이 설정합니다.
+
+{% highlight bash %}
+TwitterAgent.channels.MemChannel.type = memory (type name)
+{% endhighlight %}
+
+
+### Binding the Source and the Sink to the Channel
+
+{% highlight bash %}
+에이젼트이름.sources.소스이름.channels = 채널이름
+에이젼트이름.sinks.싱크이름.channels = 채널이름
+{% endhighlight %}
+
+예를 들면 다음과 같이..
+
+{% highlight bash %}
+TwitterAgent.sources.Twitter.channels = MemChannel
+TwitterAgent.sinks.HDFS.channels = MemChannel
+{% endhighlight %}
+
+
+### Starting a Flume Agent
+
+예를 들어서 다음과 같이 실행시킵니다.
+
+{% highlight bash %}
+flume-ng agent --conf ./conf/ -f conf/twitter.conf
+Dflume.root.logger=DEBUG,console -n TwitterAgent
+{% endhighlight %}
+
+| agent | Command to start the Flume agent |
+| --conf ,-c<conf> | Use configuration file in the conf directory |
+|-f<file> | Specifies a config file path, if missing|
+|--name, -n <name> | Name of the twitter agent|
+|-D property =value | Sets a Java system property value.|
+
+[download]: https://flume.apache.org/download.html
+
+
