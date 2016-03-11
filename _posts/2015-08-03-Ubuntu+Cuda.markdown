@@ -86,7 +86,7 @@ export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 unset JAVA_TOOL_OPTIONS
 
 # Hadoop
-export HADOOP_HOME=/usr/local/hadoop-2.7.1
+export HADOOP_HOME=/usr/local/hadoop-2.7.2
 export HADOOP_MAPRED_HOME=$HADOOP_HOME
 export HADOOP_COMMON_HOME=$HADOOP_HOME
 export HADOOP_HDFS_HOME=$HADOOP_HOME
