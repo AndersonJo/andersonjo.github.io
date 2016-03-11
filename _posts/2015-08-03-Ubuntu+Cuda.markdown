@@ -77,34 +77,56 @@ parse_git_branch() {
 }
 export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
+# Android
 export ANDROID_HOME=/home/anderson/apps/android-sdk
+export PATH=$PATH:$ANDROID_HOME:$ANDROID_HOME/platform-tools
+
+# Java
 export JAVA_HOME=/usr/lib/jvm/java-7-oracle
-export HADOOP_HOME=/usr/local/hadoop-2.7.2
+unset JAVA_TOOL_OPTIONS
+
+# Hadoop
+export HADOOP_HOME=/usr/local/hadoop-2.7.1
 export HADOOP_MAPRED_HOME=$HADOOP_HOME
 export HADOOP_COMMON_HOME=$HADOOP_HOME
 export HADOOP_HDFS_HOME=$HADOOP_HOME
 export YARN_HOME=$HADOOP_HOME
 export HADOOP_CONF_DIR=$HADOOP_HOME/conf
-export HADOOP_CLASSPATH=$HADOOP_HOME/conf
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
-export HIVE_HOME="/usr/local/hive"
-export DERBY_HOME=/usr/local/derby
-export CUDAHOME=/usr/local/cuda-7.5
-
-export CLASSPATH=$CLASSPATH:$HIVE_HOME/lib/*:.
+export HADOOP_CLASSPATH=$HADOOP_HOME/conf
 export CLASSPATH=$CLASSPATH:$HADOOP_HOME/lib/*:.
-export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar
-export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derbytools.jar
-
 export PATH=$PATH:$HADOOP_HOME/bin
 export PATH=$PATH:$HADOOP_HOME/sbin
-export PATH=$PATH:$CUDAHOME/bin
-export PATH=$PATH:$ANDROID_HOME:$ANDROID_HOME/platform-tools
+
+# Hive
+export HIVE_HOME="/usr/lib/hive"
+export DERBY_HOME=/usr/local/derby
+export CLASSPATH=$CLASSPATH:$HIVE_HOME/lib/*:.
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derbytools.jar
 export PATH=$PATH:$HIVE_HOME/bin
 export PATH=$PATH:$DERBY_HOME/bin
-unset JAVA_TOOL_OPTIONS
 
+# CUDA
+export CUDAHOME=/usr/local/cuda-7.5
+export PATH=$PATH:$CUDAHOME/bin
+
+# Flume
+export FLUME_HOME=/usr/local/flume
+export PATH=$PATH:$FLUME_HOME/bin
+export CLASSPATH=$CLASSPATH:$FLUME_HOME/lib/*
+
+# Spark
+export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6
+export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python
+export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip
+export CLASSPATH=$CLASSPATH:/home/anderson/apps/spark-1.6.0-bin-hadoop2.6/lib/postgresql-9.3-1103.jdbc3.jar
+export SPARK_CLASSPATH=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6/lib/postgresql-9.3-1103.jdbc3.jar
+
+# RVM
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PATH="$HOME/.rvm/gems/ruby-2.1.0/bin":$PATH
 {% endhighlight %}
 
 
