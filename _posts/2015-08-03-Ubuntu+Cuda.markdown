@@ -117,6 +117,10 @@ export FLUME_HOME=/usr/local/flume
 export PATH=$PATH:$FLUME_HOME/bin
 export CLASSPATH=$CLASSPATH:$FLUME_HOME/lib/*
 
+#Sqoop
+export SQOOP_HOME=/usr/local/sqoop
+export PATH=$PATH:$SQOOP_HOME/bin
+
 # Spark
 export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python
