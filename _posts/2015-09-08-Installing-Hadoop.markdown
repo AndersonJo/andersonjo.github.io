@@ -107,6 +107,8 @@ unset JAVA_TOOL_OPTIONS
 * [core-site.xml][conf-core-site.xml]
 * [hdfs-site.xml][conf-hdfs-site.xml]
 * [conf-hadoop-env.sh][conf-hadoop-env.sh]
+* [mapred-site.xml][mapred-site.xml]
+
 
 최소한 $HADOOP_HOME/conf/core-site.xml 그리고 conf/hadoop-env.sh 가 존재해야 합니다.
 
@@ -160,7 +162,6 @@ export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 </configuration>
 {% endhighlight %}
 
-
 | Name | Value |
 |:-----|:------|
 | fs.default.name | 클러스터의 URI주소입니다. |
@@ -168,6 +169,20 @@ export JAVA_HOME=/usr/lib/jvm/java-7-oracle
 | dfs.name.dir | NameNode metadata가 저장되는 위치 입니다. |
 | dfs.replication | replication의 숫자이고 기본값으로 3으로 지정되어 있습니다. <br>이보다 더 작은 숫자는 reliability에 문제가 될 수 있습니다. |
 | dfs.permissions | 기본값이 true이고, false이면 hduser 뿐만 아니라 모든 유저가 hdfs사용 가능합니다. |
+
+
+#### conf/mapred-site.xml
+
+{% highlight xml %}
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+   <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+   </property>
+</configuration>
+{% endhighlight %}
+
 
 
 #### Starting HDFS
@@ -275,3 +290,5 @@ hduser:hadoop>file ./lib/native/libhadoop.so.1.0.0
 [conf-core-site.xml]: {{ page.asset_path }}core-site.xml
 [conf-hdfs-site.xml]: {{ page.asset_path }}hdfs-site.xml
 [conf-hadoop-env.sh]: {{ page.asset_path }}hadoop-env.sh
+[conf-yarn-site.sh]: {{ page.asset_path }}yarn-site.xml
+[mapred-site.xml]: {{ page.asset_path }}mapred-site.xml
