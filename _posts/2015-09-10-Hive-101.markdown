@@ -45,7 +45,7 @@ sudo chown -R hduser:hadoop  /usr/local/hive/
 {% highlight bash %}
 
 # Java
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 # Hadoop
 export HADOOP_HOME=/usr/local/hadoop-2.7.2

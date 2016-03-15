@@ -82,7 +82,7 @@ cp flume-env.ps1.template flume-env.ps1
 파일 안에다가 JAVA_HOME을 넣어줍니다.
 
 {% highlight bash %}
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 {% endhighlight %}
 
 

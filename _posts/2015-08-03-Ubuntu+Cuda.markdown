@@ -33,7 +33,7 @@ sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 lib32z1
 {% highlight bash%}
 sudo add-apt-repository ppa:webupd8team/java
 sudo apt-get update
-sudo apt-get install oracle-java7-installer
+sudo apt-get install oracle-java8-installer
 {% endhighlight %}
 
 
@@ -82,7 +82,7 @@ export ANDROID_HOME=/home/anderson/apps/android-sdk
 export PATH=$PATH:$ANDROID_HOME:$ANDROID_HOME/platform-tools
 
 # Java
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 unset JAVA_TOOL_OPTIONS
 
 # Hadoop

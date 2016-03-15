@@ -84,7 +84,7 @@ sudo chown -R hduser:hadoop hadoop-2.7.2/
 
 {% highlight bash %}
 
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 export HADOOP_HOME=/usr/local/hadoop-2.7.2
 export HADOOP_CONF_DIR=$HADOOP_HOME/conf
 export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.2/conf
@@ -117,7 +117,7 @@ unset JAVA_TOOL_OPTIONS
 JAVA_HOME에 대한 경로를 변경시켜주세요. 
 
 {% highlight bash %}
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 {% endhighlight %}
 
 
