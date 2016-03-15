@@ -49,6 +49,7 @@ sudo chown -R hduser:hadoop /usr/local/sqoop
 #Sqoop
 export SQOOP_HOME=/usr/local/sqoop
 export PATH=$PATH:$SQOOP_HOME/bin
+export CLASSPATH=$CLASSPATH:$SQOOP_HOME/lib/*
 {% endhighlight %}
 
 ### Connectors
@@ -83,6 +84,9 @@ mv postgresql-9.4.1208.jar $SQOOP_HOME/lib
 {% highlight bash %}
 sqoop-version
 {% endhighlight %}
+
+
+# Import
 
 
 

@@ -14,7 +14,7 @@ tags: ['amazon', '아마존', 'cloudwatch']
 
 ### More Detailed Mornitoring
 
-* http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/mon-scripts.html
+* [mon-script][mon-script]
 
 memory, swap, and disk space 등등 추가적인 CloudWatch Metrics를 생성하기 위해서는 다음과 같이 설정합니다.
 
@@ -53,5 +53,8 @@ crontab에다 등록시 --from-cron 옵션을 주어야 합니다.<br>
 {% highlight bash %}
 * * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-used --mem-used --mem-avail --memory-units=megabytes --disk-path=/ --disk-space-util --disk-space-used --disk-space-avail --disk-space-units=megabytes --from-cron
 {% endhighlight %}
+
+
+[mon-script]: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/mon-scripts.html
 
 

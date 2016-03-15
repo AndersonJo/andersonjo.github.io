@@ -100,7 +100,7 @@ export PATH=$PATH:$HADOOP_HOME/bin
 export PATH=$PATH:$HADOOP_HOME/sbin
 
 # Hive
-export HIVE_HOME="/usr/lib/hive"
+export HIVE_HOME="/usr/local/hive"
 export DERBY_HOME=/usr/local/derby
 export CLASSPATH=$CLASSPATH:$HIVE_HOME/lib/*:.
 export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar
@@ -120,6 +120,7 @@ export CLASSPATH=$CLASSPATH:$FLUME_HOME/lib/*
 #Sqoop
 export SQOOP_HOME=/usr/local/sqoop
 export PATH=$PATH:$SQOOP_HOME/bin
+export CLASSPATH=$CLASSPATH:$SQOOP_HOME/lib/*
 
 # Spark
 export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6

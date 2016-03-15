@@ -363,12 +363,12 @@ single host안에 상대적으로 작은 network를 구성시 bridge network가 
 하지만 매우 큰 networks를 구성해야 한다면 overlay를 사용하는것이 좋습니다.
  
 overlay, plugin 등등의 내용은 아래의 링크를 참조<br>
-[http://docs.docker.com/engine/userguide/networking/dockernetworks/][http://docs.docker.com/engine/userguide/networking/dockernetworks/]
+[docker networks guide][http://docs.docker.com/engine/userguide/networking/dockernetworks/]
 
 
 # SSH Service
 
-[https://docs.docker.com/engine/examples/running_ssh_service/][https://docs.docker.com/engine/examples/running_ssh_service/]
+[running ssh service][https://docs.docker.com/engine/examples/running_ssh_service/]
 
 {% highlight bash %}
 docker run -d -P --user ubuntu --name dev -h docker -t andersonjo/ubuntu bash

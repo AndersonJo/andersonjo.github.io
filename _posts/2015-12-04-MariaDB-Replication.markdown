@@ -14,7 +14,7 @@ tags: ["port forwarding"]
  
 #### Installing MariaDB 10.0.22
 
-[https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile][https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile]
+[Dockerfile 10.0][https://github.com/docker-library/mariadb/blob/034c283be05caa5e465047ce19f1770647eadd74/10.0/Dockerfile]
 
 해당 git을 clone하고 10.0 폴더 안에서 docker build시키면 됩니다. <br>
 참고로 docker pull mariadb 해서 이미지 받으면 5.5 입니다. 
