@@ -29,11 +29,12 @@ sqoop은 java 8이상이 필요합니다. 만약 java 7실행시 다음과 같�
 Exception in thread "main" java.lang.NoClassDefFoundError: java/time/temporal/TemporalField
 {% endhighlight %}
 
-하둡실행은 다음과 같이 합니다.<br>
+하둡 그리고 하이브실행은 다음과 같이 합니다.<br>
 이후 http://localhost:50070/ 접속해서 되는지 확인..
 
 {% highlight bash %}
-./start-dfs.sh
+start-dfs.sh
+hiveserver2.sh
 {% endhighlight %}
 
 ### Download
@@ -101,6 +102,12 @@ list-tables 는 가져오려는 테이블의 리스트를 출력합니다.
 
 {% highlight bash %}
 sqoop list-tables --connect jdbc:postgresql://호스트/데이터베이스 --username root --password 1234
+{% endhighlight %}
+
+### import
+
+{% highlight bash %}
+sqoop import --connect jdbc:postgresql://호스트/데이터베이스 --username root --table users -P
 {% endhighlight %}
 
 
