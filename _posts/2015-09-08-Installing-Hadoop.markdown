@@ -14,13 +14,13 @@ asset_path: /assets/posts/Installing-Hadoop-On-Ubuntu/
 #### Installing Oracle Java 
 
 OpenJDK는 퍼포먼스가 Oracle Java에 비해서 늦습니다. 
-Oracle Java 7을 설치하도록 하겠습니다. <br>
+Oracle Java 8을 설치하도록 하겠습니다. <br>
 [Hadoop Supported Java version][supported-java]
 
 {% highlight bash %}
 sudo add-apt-repository ppa:webupd8team/java
 sudo apt-get update
-sudo apt-get install oracle-java7-installer
+sudo apt-get install oracle-java8-installer
 
 {% endhighlight %}
 
