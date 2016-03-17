@@ -83,16 +83,23 @@ sudo chown -R hduser:hadoop hadoop-2.7.2/
 다음의 명령어들을 .bashrc에 넣어주시면 됩니다. (설정값들은 변경해주셔야 합니다.)
 
 {% highlight bash %}
-
+# Java
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+unset JAVA_TOOL_OPTIONS
+
+# Hadoop
 export HADOOP_HOME=/usr/local/hadoop-2.7.2
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
 export HADOOP_CONF_DIR=$HADOOP_HOME/conf
-export HADOOP_CLASSPATH=/usr/local/hadoop-2.7.2/conf
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
+export HADOOP_CLASSPATH=$HADOOP_HOME/conf
+export CLASSPATH=$CLASSPATH:$HADOOP_HOME/lib/*:.
 export PATH=$PATH:$HADOOP_HOME/bin
 export PATH=$PATH:$HADOOP_HOME/sbin
-unset JAVA_TOOL_OPTIONS
 {% endhighlight %}
 
 
