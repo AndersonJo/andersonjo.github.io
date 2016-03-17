@@ -28,3 +28,4 @@ tags: ['amanda', '아만다']
 
 <img src="{{ page.static }}hadoop.png" class="img-responsive img-rounded">
 
+<img src="{{ page.static }}amanda.png" class="img-responsive img-rounded">
