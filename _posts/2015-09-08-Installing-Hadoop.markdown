@@ -221,10 +221,10 @@ WARN  [main] util.NativeCodeLoader (NativeCodeLoader.java:<clinit>(62)) - Unable
 다음을 설치해줍니다.
 
 {% highlight bash %}
-sudo apt-get install libprotobuf-dev protobuf-compiler maven libssl-dev build-essential pkgconf cmake
+sudo apt-get install maven libssl-dev build-essential pkgconf cmake
 {% endhighlight %}
 
-이때 protobuf 는 반드시 2.5 여야 합니다. <br>
+protobuf 는 반드시 2.5 여야 합니다. <br>
 protoc --version  버젼이 2.5 초과라면 다음과 같이 2.5를 설치합니다.
 
 {% highlight bash %}
