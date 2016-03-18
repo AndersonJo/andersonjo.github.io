@@ -15,7 +15,10 @@ tags: ['amanda', '아만다']
 
 현재 (2016년 3월 17일) 매출 부분 15위이고 "이음" 그리고 "쿠키런" 보다 더 많은 매출을 IOS에서 올리고 있습니다.
 
-<img src="{{ page.static }}top15.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}popular11.jpg" class="img-responsive img-rounded">
+
+<img src="{{ page.static }}profit21.jpg" class="img-responsive img-rounded">
+
 
 # Architecture
 
