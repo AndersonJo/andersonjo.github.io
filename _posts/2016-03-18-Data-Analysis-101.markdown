@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Data Analytics 101"
+title:  "Data Analysis 101"
 date:   2016-03-18 01:00:00
-categories: "analytics"
+categories: "analysis"
 static: /assets/posts/DataAnalytics101/
 tags: ['python', 'data analytics', 'r']
 ---
