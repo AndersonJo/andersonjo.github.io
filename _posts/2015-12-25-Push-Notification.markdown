@@ -4,7 +4,7 @@ title:  "Push Notification via AWS"
 date:   2015-12-25 01:00:00
 categories: "AWS"
 asset_path: /assets/posts/Push-Notification/
-tags: ['Celery', 'RabbitMQ', 'GCM']
+tags: ['Celery', 'RabbitMQ', 'GCM', 'APNS', 'IOS']
 ---
 # Google GCM API
 
@@ -13,14 +13,6 @@ Google API Console -> GCM -> Create Credentials
 <img src="{{ page.asset_path }}google01.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
 
 <img src="{{ page.asset_path }}google02.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
-
-
-
-
-
-
-
-
 
 
 
@@ -51,6 +43,20 @@ data = {'message': u'아만다 아만다'}
 topic = 'global'
 gcm.send_topic_message(topic=topic, data=data)
 {% endhighlight %}
+
+
+# IOS APNS
+
+### Configuring SNS
+
+따로 OpenSSL 작업할 필요 없이.. SNS에서 다 해줍니다. <br>
+필요한 것은 p12 파일을 Apple에서 받은 다음에 올려주면은 자동으로 Certificate 하고 Private Key를 웹상에서 생성해줍니다.
+
+<img src="{{ page.asset_path }}apns.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+
+
+
+
 
 
 ### Send a message via Token using Python
