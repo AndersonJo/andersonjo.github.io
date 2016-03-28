@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Data Analysis 101"
+title:  "Perceptron"
 date:   2016-03-18 01:00:00
 categories: "analysis"
-static: /assets/posts/DataAnalytics101/
-tags: ['python', 'data analytics', 'r']
+static: /assets/posts/Perceptron/
+tags: ['python', 'data analytics', 'matchin']
 ---
 
 
@@ -46,33 +46,27 @@ print [f.name for f in matplotlib.font_manager.fontManager.ttflist]
 {% endhighlight %}
 
 
+# Perceptron
 
-# Chart Tutorial
+### Training Machine Learning Algorithms
 
-### Bar Charts
+<img src="{{ page.static }}perceptron.png" class="img-responsive img-rounded">
 
-{% highlight python %}
-#-*- coding:utf-8 -*-
-%pylab inline
-matplotlib.rc('font', family='NanumGothic')
+Perceptron을 이용해서 Binary Classification을 할 수 있습니다.
+(0 과 1처럼 2개의 분류로 나뉘는 것)
 
-names = [u'창민', u'정아', u'윤서', u'미정', u'세준']
-cookies = [5, 11, 7, 1, 13]
-xs = range(1, len(cookies)+1)
+### Net Input
 
-plt.bar(xs, cookies, color='#ff3366')
-plt.ylabel('Number of Cookies')
-plt.title("Cookie?")
-plt.xticks(xs, names)
-{% endhighlight %}
+* x는 input values로서 1차원 vector입니다.<br>
+* w는 그에 일치하는 weight vector입니다.
+* z는 net input 입니다. (위의 사진에서 inputs -> weights -> sigma 를 지난 부분)
+* *Matrix 의 transpose를 사용해서 sum(sigma)를 대체할수 있습니다.*
 
-<img src="{{ page.static }}barchart.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}net_input.png" >
 
-### Histogram
+### Activation Function
 
-{% highlight python %}
-grades = np.random.standard_gamma(100, size=1000)
-plt.hist(grades, bins=10, color='red')
-{% endhighlight %}
+Activation Function <img src="{{ page.static }}activation0.png">의 output이
+Threshold<img src="{{ page.static }}threshold.png" > 보다 더 크다면 1로 예측할수 있고, 아니라면 -1로 예측 할 수 있습니다.
 
-<img src="{{ page.static }}histogram.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}activation_function.png" >
