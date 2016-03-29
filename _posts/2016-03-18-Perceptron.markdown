@@ -97,4 +97,39 @@ weights에 대한 업데이트 공식은 다음과 같습니다.
 
 # Iris Data
 
+* [Iris Data][iris-data]
+
+1930sus 식물학자 Edgar Anderson은 붓꾳(Iris)에 대한 데이터를 수집했습니다.<br>
+그는 그 데이터가 현대 머신러닝뿐만 아니라 데이터 싸이언스의 기초 과정이 되리라고는 전혀 예상치 못했겠죠.<br>
+었쨌든 iris 데이터는 수많은 머신러닝의 테스트 케이스또는 기초 연구용으로 사용되는 아주 중요한 데이터입니다.<br>
+데이터는 다음과 같이 구성되어 있습니다.
+
+* Sepal.Length
+* Sepal.Width
+* Petal.Length
+* Petal.Width
+* Species
+
+{% highlight python %}
+df = pd.read_csv('iris.csv', header=None)
+setosa = df[df[4] == 'Iris-setosa']
+versicolor = df[df[4] == 'Iris-versicolor']
+virginica = df[df[4] == 'Iris-virginica']
+
+a, b = 0, 3
+plt.scatter(setosa[a], setosa[b], color='red', marker='o', label='setosa')
+plt.scatter(versicolor[a], versicolor[b], color='blue', marker='x', label='versicolor')
+
+plt.xlabel('Petal Length')
+plt.ylabel('Sepal Length')
+plt.legend(loc='upper left')
+plt.grid()
+plt.show()
+{% endhighlight %}
+
+
+<img src="{{ page.static }}setosa_versicolor.png" >
+
 [iris-data]: https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
+
+
