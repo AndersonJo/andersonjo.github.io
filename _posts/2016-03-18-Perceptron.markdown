@@ -130,6 +130,76 @@ plt.show()
 
 <img src="{{ page.static }}setosa_versicolor.png" >
 
+
+# to Python
+
+Perceptron
+
+{% highlight python %}
+import numpy as np
+
+class Perceptron(object):
+    def __init__(self, eta=0.01, n_iter=10):
+        """
+        :param eta: Learning Rate (between 0.0 and 1.0)
+        :param n_iter: Training Dataset.
+        """
+        self.eta = eta
+        self.n_iter = n_iter
+
+    def fit(self, X, y):
+        """
+        Fit Training Data
+        """
+
+        self._w = np.zeros(1 + X.shape[1])
+        self._errors = []
+
+        for i in range(self.n_iter):
+            errors = 0
+            for x, target in zip(X, y):
+                update = self.eta * (target - self.predict(x))
+                self._w[1:] += update * x
+                self._w[0] += update
+                errors += int(update != 0.0)
+
+            self._errors.append(errors)
+        return self
+
+    def net_input(self, X):
+        """
+        Calculate net input
+        """
+        return np.dot(X, self._w[1:]) + self._w[0]
+
+    def predict(self, X):
+        """
+        Return class label after unit step
+        """
+        return np.where(self.net_input(X) >= 0.0, 1, -1)
+
+{% endhighlight %}
+
+
+{% highlight python %}
+y = df.iloc[0:100, 4].values
+y = np.where(y == 'Iris-setosa', -1, 1)
+X = df.iloc[0:100, [0, 3]].values
+
+ppn = Perceptron(eta=0.1, n_iter=10)
+ppn.fit(X, y)
+plt.plot(range(1, len(ppn._errors) + 1), ppn._errors, marker='o')
+plt.xlabel('Epochs')
+plt.ylabel('Number of misclassifications')
+plt.show()
+{% endhighlight %}
+
+Perceptron Machine Learning 을 이용해서 기계에 학습을 시킨후 에러률을 출력해봤습니다.<br>
+처음에 에러가 2~3개정도씩 나오다가.. 대략 7번이후부터는 정확하게 Classification을 하는 것을 볼수 있습니다.
+
+<img src="{{ page.static }}errors.png" >
+
+
 [iris-data]: https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
 
 
