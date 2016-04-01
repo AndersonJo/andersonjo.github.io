@@ -1,0 +1,59 @@
+---
+layout: post
+title:  "Hubot with Slack"
+date:   2016-03-24 01:00:00
+categories: "slack"
+static: /assets/posts/Hubot/
+tags: ['slack']
+---
+
+
+<img src="{{ page.static }}hubot.png" class="img-responsive img-rounded">
+
+# Install Hubot
+
+### Installation
+
+{% highlight bash %}
+sudo npm -g install yo generator-karma
+sudo npm -g install generator-hubot
+
+mkdir hubot
+cd hubot
+yo hubot
+                     _____________________________
+                    /                             \
+   //\              |      Extracting input for    |
+  ////\    _____    |   self-replication process   |
+ //////\  /_____\   \                             /
+ ======= |[^_/\_]|   /----------------------------
+  |   | _|___@@__|__
+  +===+/  ///     \_\
+   | |_\ /// HUBOT/\\
+   |___/\//      /  \\
+         \      /   +---+
+          \____/    |   |
+           | //|    +===+
+            \//      |xx|
+
+? Owner Anderson Jo <a141890@gmail.com>
+? Bot name neo
+? Description Neo! we need your help!
+? Bot adapter (campfire)
+
+{% endhighlight %}
+
+### Running Hubot
+
+{% highlight python %}
+bin/hubot
+{% endhighlight %}
+
+### Search Hubot Scripts
+
+Hubot이 강한 이유는 이미 수백개의 scripts들이 이미 만들어져있고, 관리되고 있기 때문입니다.<br>
+NPM Registry를 hubot-scripts <your-search-term> 이렇게 검색해서 관련 스크립트를 찾아볼수 있습니다.
+
+{% highlight python %}
+npm search hubot-scripts github
+{% endhighlight %}
