@@ -128,7 +128,7 @@ plt.show()
 {% endhighlight %}
 
 
-<img src="{{ page.static }}setosa_versicolor.png" >
+<img src="{{ page.static }}setosa_versicolor.png" class="img-responsive img-rounded">
 
 
 # to Python
@@ -197,7 +197,7 @@ plt.show()
 Perceptron Machine Learning 을 이용해서 기계에 학습을 시킨후 에러률을 출력해봤습니다.<br>
 처음에 에러가 2~3개정도씩 나오다가.. 대략 7번이후부터는 정확하게 Classification을 하는 것을 볼수 있습니다.
 
-<img src="{{ page.static }}errors.png" >
+<img src="{{ page.static }}errors.png" class="img-responsive img-rounded">
 
 
 [iris-data]: https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
