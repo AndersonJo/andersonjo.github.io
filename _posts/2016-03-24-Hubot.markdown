@@ -49,7 +49,7 @@ yo hubot
 bin/hubot
 {% endhighlight %}
 
-### Search Hubot Scripts
+### Search & Install Scripts
 
 Hubot이 강한 이유는 이미 수백개의 scripts들이 이미 만들어져있고, 관리되고 있기 때문입니다.<br>
 NPM Registry를 hubot-scripts <your-search-term> 이렇게 검색해서 관련 스크립트를 찾아볼수 있습니다.
@@ -57,3 +57,78 @@ NPM Registry를 hubot-scripts <your-search-term> 이렇게 검색해서 관련 �
 {% highlight python %}
 npm search hubot-scripts github
 {% endhighlight %}
+
+다음과 같이 설치합니다.
+{% highlight python %}
+npm install --save <package-name>
+{% endhighlight %}
+
+설치이후  external-scripts.json 에 패키지를 추가시켜줍니다.
+
+* npm home <package-name> 하면 웹브로우져가 열리고, 해당 스크립트의 웹싸이트 또는 Github가 열립니다.
+* /scripts 폴더에 스크립트를 넣어놓으면 자동으로 불러와짐니다.
+
+
+# Scripting
+
+* scripts 폴더가 설치시 있는데, 이 안에 스크립트가 들어있어야 합니다.
+* 스크립트는 .js 또는 .coffee 여야 합니다.
+* export 를 해야합니다.
+
+### scripts/hello.js
+
+{% highlight javascript %}
+module.exports = function (robot) {
+  robot.hear(/badger/i, function (res) {
+    res.send("Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS");
+  });
+
+  robot.respond(/open the pod bay doors/i, function (res) {
+    res.reply("I'm afraid I can't let you do that.")
+  });
+
+  robot.hear(/I like pie/i, function (res) {
+    res.emote("makes a freshly baked pie");
+  })
+
+};
+{% endhighlight %}
+
+**hear**의 경우 badger라고 실행시키면 관련 함수가 실행이 됩니다.
+
+{% highlight bash %}
+neo> badger
+neo> Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS
+{% endhighlight %}
+
+**respond**의 경우 로봇의 이름이 온뒤 매칭이 되는 메세지가 올때 실행이 됩니다.<br>
+로봇의 이름은 **neo, @neo, neo:** 등등이면 됩니다.
+
+{% highlight bash %}
+neo> neo open the pod bay doors
+neo> Shell: I'm afraid I can't let you do that.
+{% endhighlight %}
+
+### Capturing Data
+
+regex의 match를 사용해서 넘어온 값을 잡아낼수 있습니다.
+
+{% highlight bash %}
+robot.respond(/deploy (.*)/i, function (res) {
+  var dest = res.match[1];
+  res.reply("Start deploying to " + dest);
+});
+{% endhighlight %}
+
+{% highlight bash %}
+neo> @neo deploy development
+neo> Shell: Start deploying to development
+{% endhighlight %}
+
+
+
+
+
+
+
+
