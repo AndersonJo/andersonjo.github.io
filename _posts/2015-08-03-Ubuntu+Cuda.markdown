@@ -64,6 +64,12 @@ sudo apt-get install nautilus-open-terminal
 sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 {% endhighlight %}
 
+### Ruby Image Libraries (Optional)
+
+{% highlight bash%}
+sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead jpegoptim
+{% endhighlight %}
+
 ### Command Prompt 설정 (Optional)
 
 .bashrc 파일에 추가
