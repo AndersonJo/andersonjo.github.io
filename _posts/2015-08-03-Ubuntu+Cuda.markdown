@@ -191,6 +191,11 @@ IRB.conf[:AUTO_INDENT]=true
 
 ### RVM (Optional)
 
+{% highlight bash %}
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash -s stable
+{% endhighlight %}
+
 특정 버젼을 자동 실행합니다.
 {% highlight bash %}
 bash -l -c 'rvm use ruby-dev-2.1.0'
