@@ -144,7 +144,7 @@ export PATH="$HOME/.rvm/gems/ruby-2.1.0/bin":$PATH
 ### Increase Watch Limit
 
 /etc/sysctl.conf 파일에다가 다음을 추가합니다.<br>
-https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit
+[watches-limlit][watches-limlit]
 
 {% highlight bash %}
 fs.inotify.max_user_watches = 524288
@@ -310,3 +310,4 @@ sudo apt-get install dkms fakeroot build-essential linux-headers-generic
 [gtx-driver]: http://www.geforce.com/drivers
 [cuda-toolkit]: https://developer.nvidia.com/cuda-downloads
 [nvidia-download]: http://www.nvidia.com/Download/index.aspx
+[watches-limlit]: https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit
