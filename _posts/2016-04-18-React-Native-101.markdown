@@ -28,6 +28,8 @@ Atom 설치이후에 apm을 통해서 react plugin 을 설치합니다.
 
 {% highlight bash %}
 apm install react
+apm install atom-react-native-css
+apm install goto
 {% endhighlight %}
 
 React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<br>
@@ -38,10 +40,20 @@ React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<b
 'atom-text-editor':
   'shift-space': 'autocomplete-plus:activate'
   'ctrl-shift-f': 'editor:auto-indent'
+  'unset!': 'find-and-replace:find-next'
+
+'.platform-linux atom-workspace atom-text-editor':
+  'f3': 'goto:declaration'
 
 'atom-workspace atom-text-editor:not([mini])':
   'alt-down': 'editor:move-line-down'
   'alt-up': 'editor:move-line-up'
+
+'.platform-win32, .platform-linux':
+  'ctrl-h': 'project-find:show'
+
+'.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
+  'unset!': 'find-and-replace:find-next'
 {% endhighlight %}
 
 
