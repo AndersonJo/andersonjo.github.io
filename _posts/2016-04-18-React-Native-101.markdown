@@ -37,9 +37,11 @@ React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<b
 {% highlight bash %}
 'atom-text-editor':
   'shift-space': 'autocomplete-plus:activate'
-
-'atom-text-editor':
   'ctrl-shift-f': 'editor:auto-indent'
+
+'atom-workspace atom-text-editor:not([mini])':
+  'alt-down': 'editor:move-line-down'
+  'alt-up': 'editor:move-line-up'
 {% endhighlight %}
 
 
@@ -55,6 +57,8 @@ sudo npm install -g react-native-cli
 
 {% highlight bash %}
 react-native init ReactTutorial
+cd ReactTutorial
+react-native start
 {% endhighlight %}
 
 | Platform | How to run |
