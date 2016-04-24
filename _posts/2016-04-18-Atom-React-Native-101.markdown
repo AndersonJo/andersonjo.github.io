@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "React Native 101 & Atom"
+title:  "Atom & React Native 101"
 date:   2016-04-18 01:00:00
 categories: "react"
 static: /assets/posts/React-Native-101/
@@ -55,8 +55,6 @@ React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<b
 '.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
   'unset!': 'find-and-replace:find-next'
 {% endhighlight %}
-
-
 
 
 ### Install
