@@ -77,3 +77,92 @@ react-native start
 | Android | react-native run-android | 핸드폰 흔들고 -> Dev Settings ->  Host, Port를 변경 <br>(이때 http://는 붙이지 않습니다.)|
 
 <img src="{{ page.static }}first_capture.png" class="img-responsive img-rounded">
+
+
+### Tutorial 
+
+다음의 Rotten Tomato의 JSON데이터를 받아서 ListView에 올려놓는 튜토리얼을 볼 수 있습니다.
+
+[react-tutorial-git-repository][react-tutorial-git-repository]
+
+<img src="{{ page.static }}capture2.png" class="img-responsive img-rounded">
+
+[react-tutorial-git-repository]: https://github.com/AndersonJo/react-tutorial
+
+
+# JSX 101
+
+### Installation
+
+{% highlight bash %}
+sudo npm install -g jsx
+{% endhighlight %}
+
+
+### Hello World
+
+{% highlight javascript %}
+class _Main {
+    static function main(args : string[]) : void {
+        log "Hello, world!";
+        log args;
+    }
+}
+{% endhighlight %}
+
+{% highlight bash %}
+$ jsx --run hello.jsx  asdf qwer 1234
+Hello, world!
+[ 'asdf', 'qwer', '1234' ]
+{% endhighlight %}
+
+* _Main클래스는 static function인 main을 갖고 있으며, 즉 class method입니다.
+* main method는 args라는 array of strings를 받으며, 리턴값은 void입니다.
+* log는 Javascript의 console.log와 매핑되어 있습니다.
+
+
+{% highlight javascript %}
+class _Main{
+  static function main(args : string[]) : void {
+    var dog = new Animal();
+    log dog; // { name: '', age: 0 }
+  }
+}
+
+class Animal {
+  var name = '';
+  var age = 0;
+
+  function constructor(){}
+  
+  function constructor(name : string, age : number){
+    this.set(name, age);
+  }
+
+  // function constructor(other : Animal){
+  //   this.set(other);
+  // }
+
+  function set(name: string, age : number) : void{
+    this.name = name;
+    this.age = age;
+  }
+
+  function set(other : Animal) : void {
+    this.set(other.name, other.age);
+  }
+}
+{% endhighlight %}
+
+* var name, var age의 경우 type을 안써놨는데, 이경우 초기 assignment되는 값의 타입에 의해 타입이 정해집니다.
+* type parameters에 의한 overload가 존재합니다. (리턴값에 주의하자)
+
+### Primitive Types
+
+JSX에는 3개의 primitive types이 존재합니다.
+
+| Name | Example | 
+|:-----|:--------| 
+| string | var a : string; |
+| number | var b : number; |
+| boolean | var c : boolean; |
