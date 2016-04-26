@@ -10,19 +10,9 @@ tags: ['node.js', 'jsx']
 
 <img src="{{ page.static }}react-native-logo.jpg" class="img-responsive img-rounded">
 
-# Get Started
+# Atom or Nuclide
 
-### Requirements
-
-* NPM 4.0 or newer
-* IOS: Xcode 7.0 or higher
-* Android: SDK
-
-### JSX
-
-React는 Javascript 대신에 Statically-typed language인 JSX를 사용합니다.
-
-### Atom or Nuclide
+### Plugins
 
 Atom 설치이후에 apm을 통해서 react plugin 을 설치합니다.
 
@@ -34,6 +24,8 @@ apm install autocomplete-plus
 {% endhighlight %}
 
 React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<br>
+
+### Key Maps
 
 **keymap.cson** 에서 키맵을 재 설정합니다.
 
@@ -57,6 +49,17 @@ React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<b
   'unset!': 'find-and-replace:find-next'
 {% endhighlight %}
 
+
+
+# Get Started
+
+### Requirements
+
+* NPM 4.0 or newer
+* IOS: Xcode 7.0 or higher
+* Android: SDK
+
+*React는 Javascript 대신에 Statically-typed language인 JSX를 사용합니다.*
 
 ### Install
 
