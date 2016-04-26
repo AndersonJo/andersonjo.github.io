@@ -30,6 +30,7 @@ Atom 설치이후에 apm을 통해서 react plugin 을 설치합니다.
 apm install react
 apm install atom-react-native-css
 apm install goto
+apm install autocomplete-plus
 {% endhighlight %}
 
 React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<br>

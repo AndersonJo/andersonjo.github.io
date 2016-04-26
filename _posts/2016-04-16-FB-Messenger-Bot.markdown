@@ -71,9 +71,39 @@ Messenger -> Setup Webhooks 를 눌러서 설정을 해줍니다.
 
 이때 Callback URL은 HTTPS만 사용가능합니다.
 
-
 <img src="{{ page.static }}messenger-webhook.png" class="img-responsive img-rounded">
 
+예제에서는 https://dev-fb.amanda.co.kr/webhook/ 을 사용했고 Token은 "anderson_jo_validation_token" 을 사용했습니다. <br>
+Nginx 설정은 다음과 같이 했습니다.
+
+{% highlight nginx %}
+upstream fb-msg{
+    server localhost:3000;
+}
+
+server{
+    listen 443;
+    server_name dev-fb.amanda.co.kr;
+    charset utf-8;
+    client_max_body_size 25M;
+
+    ssl on;
+    ssl_certificate     /etc/nginx/ssl/ssl.pem;
+    ssl_certificate_key /etc/nginx/ssl/star_ssl.key;
+
+    location / {
+        proxy_redirect off;
+        proxy_set_header   X-Real-IP            $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_set_header   Host                   $http_host;
+        proxy_set_header   X-NginX-Proxy    true;
+        proxy_set_header   Connection "";
+        proxy_http_version 1.1;
+        proxy_pass         http://fb-msg;
+    }
+}
+{% endhighlight %}
 
 
 
