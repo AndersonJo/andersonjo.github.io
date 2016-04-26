@@ -107,5 +107,8 @@ server{
 {% endhighlight %}
 
 
+정확하게 webhook을 걸고, Verification까지 완성되면 다음과 같이 됩니다.
+
+<img src="{{ page.static }}webhook_complete.png" class="img-responsive img-rounded">
 
 [Messenger Introduction]: https://developers.facebook.com/apps/879182215524653/messenger/

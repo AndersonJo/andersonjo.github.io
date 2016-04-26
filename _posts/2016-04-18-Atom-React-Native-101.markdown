@@ -91,6 +91,7 @@ react-native start
 
 <img src="{{ page.static }}capture2.png" class="img-responsive img-rounded">
 
+
 [react-tutorial-git-repository]: https://github.com/AndersonJo/react-tutorial
 
 
