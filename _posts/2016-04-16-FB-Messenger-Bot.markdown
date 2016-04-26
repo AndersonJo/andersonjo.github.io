@@ -73,7 +73,8 @@ Messenger -> Setup Webhooks 를 눌러서 설정을 해줍니다.
 
 <img src="{{ page.static }}messenger-webhook.png" class="img-responsive img-rounded">
 
-예제에서는 https://dev-fb.amanda.co.kr/webhook/ 을 사용했고 Token은 "anderson_jo_validation_token" 을 사용했습니다. <br>
+https://domain.co.kr/webhook/ 같은 주소를 사용하고<br>
+Token은 "anderson_jo_validation_token" 처럼 맘대로 넣으면 됩니다.<br>
 Nginx 설정은 다음과 같이 했습니다.
 
 {% highlight nginx %}
@@ -83,7 +84,7 @@ upstream fb-msg{
 
 server{
     listen 443;
-    server_name dev-fb.amanda.co.kr;
+    server_name domain.co.kr;
     charset utf-8;
     client_max_body_size 25M;
 
