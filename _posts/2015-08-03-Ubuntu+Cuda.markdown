@@ -208,6 +208,16 @@ bash -l -c 'rvm use ruby-dev-2.1.0'
 {% endhighlight %}
 
 
+### Gradle 
+
+~/.gradle/gradle.properties 에 다음을 추가시켜줍니다.
+ 
+ 
+{% highlight bash %}
+org.gradle.daemon=true
+{% endhighlight %}
+
+
 
 ### Postgres
 
