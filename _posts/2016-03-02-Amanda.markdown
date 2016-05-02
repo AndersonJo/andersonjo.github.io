@@ -22,8 +22,15 @@ tags: ['amanda', '아만다']
 <img src="{{ page.static }}profit21.jpg" class="img-responsive img-rounded">
 
 
-# Architecture
+# Legendary Works
 
+### Database Tuning
+
+<img src="{{ page.static }}newrelic01.png" class="img-responsive img-rounded">
+
+<img src="{{ page.static }}db_cpu.png" class="img-responsive img-rounded">
+
+# Architecture
 
 ### DBs & Redis Architecture
 
@@ -34,3 +41,4 @@ tags: ['amanda', '아만다']
 <img src="{{ page.static }}hadoop.png" class="img-responsive img-rounded">
 
 <img src="{{ page.static }}amanda.png" class="img-responsive img-rounded">
+
