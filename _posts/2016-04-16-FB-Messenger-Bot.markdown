@@ -261,6 +261,10 @@ function sendGenericMessage(sender) {
 
 <img src="{{ page.static }}capture2.png" class="img-responsive img-rounded">
 
+<img src="{{ page.static }}capture3.png" class="img-responsive img-rounded">
+
+<img src="{{ page.static }}capture4.png" class="img-responsive img-rounded">
+
 
 
 [FB Messenger Console]: https://developers.facebook.com/apps/879182215524653/messenger/
