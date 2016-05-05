@@ -188,7 +188,7 @@ def anagram(s1, s2):
 Java 
 
 {% highlight java %}
-static boolean doEasyAnagram(String str1, String str2) {
+boolean doEasyAnagram(String str1, String str2) {
     char[] chars1 = str1.toCharArray();
     char[] chars2 = str2.toCharArray();
 
@@ -200,7 +200,7 @@ static boolean doEasyAnagram(String str1, String str2) {
     return str1.equals(str2);
 }
 
-static boolean doHardAnagram(String str1, String str2) {
+boolean doHardAnagram(String str1, String str2) {
     // Both of strings should be the same size
     if (str1.length() != str2.length()) return false;
 
@@ -230,7 +230,7 @@ static boolean doHardAnagram(String str1, String str2) {
 
 ### Binary Search
 
-Python
+Python (Java또한 유사하게 문제를 풀수 있습니다.)
 
 {% highlight python %}
 def binary_search(data, target):
@@ -256,33 +256,3 @@ def binary_search(data, target):
     return pos
 {% endhighlight %}
 
-
-Java
-
-{% highlight java %}
-int binarySearch(int[] data, int target) {
-    if (data.length <= 0) {
-        return -1;
-    }
-
-    int first = 0;
-    int last = data.length - 1;
-    int pos = -1;
-
-    while (first <= last) {
-        int midPoint = (first + last) / 2;
-        int midValue = data[midPoint];
-
-        if (midValue == target) {
-            pos = midPoint;
-            break;
-        } else if (midValue >= target) {
-            last = midPoint - 1;
-        }
-        else{
-            first = midPoint + 1;
-        }
-    }
-    return pos;
-}
-{% endhighlight %}
