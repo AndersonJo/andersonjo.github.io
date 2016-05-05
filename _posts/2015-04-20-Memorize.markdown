@@ -256,3 +256,145 @@ def binary_search(data, target):
     return pos
 {% endhighlight %}
 
+
+# Sort
+
+### Merge Sort
+
+{% highlight python %}
+def merge_sort(data):
+    if len(data) > 1:
+        mid = len(data) / 2
+        left, right = data[:mid], data[mid:]
+        merge_sort(left)
+        merge_sort(right)
+
+        i = j = k = 0
+
+        while i < len(left) and j < len(right):
+            if left[i] < right[j]:
+                data[k] = left[i]
+                i += 1
+            else:
+                data[k] = right[j]
+                j += 1
+            k += 1
+
+        while i < len(left):
+            data[k] = left[i]
+            i += 1
+            k += 1
+
+        while j < len(right):
+            data[k] = right[j]
+            j += 1
+            k += 1
+
+    return data
+{% endhighlight %}
+
+### Quick Sort
+
+{% highlight python %}
+def quick_sort(data):
+    less = []
+    equal = []
+    more = []
+
+    if len(data) > 1:
+        pivot = data[0]
+
+        for v in data:
+            if v < pivot:
+                less.append(v)
+            elif v == pivot:
+                equal.append(v)
+            elif v > pivot:
+                more.append(v)
+
+        return quick_sort(less) + equal + quick_sort(more)
+    return data
+
+{% endhighlight %}
+
+
+### Shell Sort
+
+
+{% highlight python %}
+def shell_sort(data):
+    N = len(data)
+    sub_count = N / 2
+    while sub_count > 0:
+        gap_insertion_sort(data, sub_count)
+        sub_count /= 2
+    return data
+
+
+def gap_insertion_sort(data, gap):
+    N = len(data)
+    for end_point in range(gap, N, gap):
+        current_value = data[end_point]
+        position = end_point
+
+        while position - gap >= 0 and data[position - gap] > current_value:
+            data[position] = data[position - gap]
+            position -= gap
+
+        data[position] = current_value
+        # print data, 'position:%d current_value:%d, end_point:%d' % (position, current_value, end_point)
+{% endhighlight %}
+
+### Insertion Sort
+
+{% highlight python %}
+def insertion_sort(data):
+    for end in range(1, len(data)):
+        end_value = data[end]
+        count = end
+        while count > 0 and data[count - 1] >= end_value:
+            data[count] = data[count-1]
+            count -= 1
+        data[count] = end_value
+    return data
+
+{% endhighlight %}
+
+### Selection Sort
+
+{% highlight python %}
+def selection_sort(data):
+    N = len(data)
+    for end_point in range(N - 1, 0, -1):
+        max_pos = 0
+        for i in range(0, end_point + 1):
+            if data[max_pos] < data[i]:
+                max_pos = i
+        data[end_point], data[max_pos] = data[max_pos], data[end_point]
+    return data
+{% endhighlight %}
+
+### binary Insertion Sort
+
+{% highlight python %}
+def binary_insertion_sort(data):
+    for i in xrange(1, len(data)):
+        if data[i - 1] < data[i]:
+            continue
+
+        left = 0
+        right = i
+        while left < right:
+            mid = (left + right) / 2
+
+            if data[i] > data[mid]:
+                left = mid + 1
+            else:
+                right = mid
+
+        j = i
+        while j > left:
+            data[j - 1], data[j] = data[j], data[j - 1]
+            j -= 1
+    return data
+{% endhighlight %}
