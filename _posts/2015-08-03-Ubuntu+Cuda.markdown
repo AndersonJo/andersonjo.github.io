@@ -115,8 +115,9 @@ export PATH=$PATH:$HIVE_HOME/bin
 export PATH=$PATH:$DERBY_HOME/bin
 
 # CUDA
-export CUDAHOME=/usr/local/cuda-7.5
+export CUDAHOME=/usr/local/cuda
 export PATH=$PATH:$CUDAHOME/bin
+export LD_LIBRARY_PATH=$CUDAHOME/lib64:/lib
 
 # Flume
 export FLUME_HOME=/usr/local/flume
@@ -270,13 +271,19 @@ lspci -vnn | grep -i VGA -A 12
 
 ### CUDA Toolkit
 
+다음의 Dependencies를 설치해줍니다.
+
+{% highlight bash %}
+sudo apt-get install libglu1-mesa libxi-dev libxmu-dev
+{% endhighlight %}
+
 CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
 아래의 주소에서 RUN파일을 다운로드 받습니다.<br>
 [https://developer.nvidia.com/cuda-downloads][cuda-toolkit]
 
 1. 다운받은 폴더로 들어갑니다.
 2. chmod로 실행파일로 바꿔줍니다.
-3. CTRL + ALT + F3 
+3. CTRL + ALT + F3 또는 CTRL + ALT + F1 또는 Ubuntu Recovery Mode -> Command Shell
 4. 로그인
 5. init 3
 6. sudo service lightdm stop
@@ -284,19 +291,28 @@ CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
 8. ./NVIDIA*.run 파일 실행
 9. reboot
 
+만약 Unsupported Compiler 에러가 나면은, --override compiler 옵션을 붙여줍니다. 
 
-### CUDA Testing
-
-Cuda샘플이 설치된 환경으로 이동한다면...
-
-{% highlight bash%}
-cd ./1_Utilities/deviceQuery
-make
-./deviceQuery
+{% highlight bash %}
+$ cuda_7.5.18_linux.run --override compiler
 {% endhighlight %}
 
+그 다음으로 .bashrc에 다음을 추가해줍니다.
 
-파일이 잘 실행이 되는지 확인을 합니다.
+{% highlight bash %}
+export PATH=$PATH:/usr/local/cuda/bin
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/lib
+{% endhighlight %}
+
+설치가 잘되었는지 확인은 다음과 같이 합니다.
+
+{% highlight bash %}
+$ nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2015 NVIDIA Corporation
+Built on Tue_Aug_11_14:27:32_CDT_2015
+Cuda compilation tools, release 7.5, V7.5.17
+{% endhighlight %}
 
 
 ### Saving a new X Configuration
@@ -307,14 +323,6 @@ Nvidia 드라이버 설치시 자동으로 해주긴 하지만.. 혹시 새롭�
 sudo nvidia-xconfig
 {% endhighlight %}
 
-
-### 검은화면, Low 그래픽 화면.. 에러
-
-에러가 일어났을 경우에만.. 다음의 라이브러리들을 설치합니다.
-
-{% highlight bash%}
-sudo apt-get install dkms fakeroot build-essential linux-headers-generic
-{% endhighlight %}
 
 [c.sublime]: {{ page.asset_path }}c.sublime-build
 [gtx-driver]: http://www.geforce.com/drivers
