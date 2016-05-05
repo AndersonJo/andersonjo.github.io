@@ -259,6 +259,9 @@ def binary_search(data, target):
 
 # Sort
 
+[http://bigocheatsheet.com][http://bigocheatsheet.com]
+
+
 ### Merge Sort
 
 {% highlight python %}
@@ -398,3 +401,6 @@ def binary_insertion_sort(data):
             j -= 1
     return data
 {% endhighlight %}
+
+
+[http://bigocheatsheet.com]: http://bigocheatsheet.com/
