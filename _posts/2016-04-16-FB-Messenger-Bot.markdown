@@ -59,9 +59,9 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx
 
 # Facebook Messenger API
 
-### Introduction
+### Configure Webhooks
 
-[Messenger Introduction][Messenger Introduction]
+[FB Messenger Console][FB Messenger Console]
 
 현재 Facebook Messenger는 마케팅, 프로모션으로 사용을하면 안됩니다.<br>
 따라서 FB에서는 이를 방지하기 위해서 IOS App처럼  Approved를 받아야 합니다.
@@ -69,7 +69,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx
 Faceook Developer에서 Website App을 만든후 콘솔로 들어옵니다.<br>
 Messenger -> Setup Webhooks 를 눌러서 설정을 해줍니다.
 
-이때 Callback URL은 HTTPS만 사용가능합니다.
+이때 Callback URL은 **HTTPS**만 사용가능합니다.
 
 <img src="{{ page.static }}messenger-webhook.png" class="img-responsive img-rounded">
 
@@ -106,9 +106,166 @@ server{
 }
 {% endhighlight %}
 
+서버단에서는 다음과 같이 합니다.
+
+{% highlight javascript %}
+router.get('/webhook/', function(req, res){
+  if (req.query['hub.verify_token'] == config.FB_VALICATION_TOKEN){
+    return res.send(req.query['hub.challenge']);
+  };
+  return res.send('Error, wrong validation token');
+});
+{% endhighlight %}
+
 
 정확하게 webhook을 걸고, Verification까지 완성되면 다음과 같이 됩니다.
 
 <img src="{{ page.static }}webhook_complete.png" class="img-responsive img-rounded">
 
-[Messenger Introduction]: https://developers.facebook.com/apps/879182215524653/messenger/
+### Subscribe the app to the page
+
+다음으로 페이스북 페이지를 만들어줍니다. (네.. 못생긴거 압니다.. 죄송합니다.) <br>
+[FB Create Page][FB Create Page]
+
+<img src="{{ page.static }}anderson_page.png" class="img-responsive img-rounded">
+
+FB 콘솔안의 Token Generation에서 만들어준 Page를 설정해줍니다.
+
+<img src="{{ page.static }}page_conf.png" class="img-responsive img-rounded">
+
+curl을 통해서 해당 Page를 App이 subscribe하도록 설정해줍니다.
+
+{% highlight bash %}
+curl -ik -X POST "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=<token>"
+{% endhighlight %}
+
+
+### Receive Messages
+
+{% highlight javascript %}
+router.post('/webhook/', function (req, res) {
+  messaging_events = req.body.entry[0].messaging;
+  for (i = 0; i < messaging_events.length; i++) {
+    event = req.body.entry[0].messaging[i];
+    sender = event.sender.id;
+    if (event.message && event.message.text) {
+      text = event.message.text;
+      // Handle a text message from this sender
+    }
+  }
+  res.sendStatus(200);
+});
+{% endhighlight %}
+
+페이스북 페이지에 들어가서 메세지를 열고 메세지를 보냅니다. 
+
+<img src="{{ page.static }}send_msg.png" class="img-responsive img-rounded">
+
+req.body는 다음과 같이 생겼습니다.
+
+{% highlight javascript %}
+{ object: 'page',
+  entry: 
+    [ { id: 1696327967283521,
+        time: 1461911522431,
+        messaging: [ 
+          { sender: { id: 1118282011555900 },
+            recipient: { id: 1696327967283521 },
+            timestamp: 1461911522401,
+            message:  { mid: 'mid.1461911522394:5daed2bac5cfd3cf54',
+                        seq: 16,
+                        text: '하이! 앤더슨 조!' } }] }] }
+{% endhighlight %}
+
+
+### Send Messages
+
+{% highlight javascript %}
+function sendTextMessage(sender, text) {
+
+  var messageData = {
+    text:text
+  }
+
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending message: ', error);
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error);
+    }
+  });
+}
+
+function sendGenericMessage(sender) {
+  messageData = {
+    "attachment": {
+      "type": "template",
+      "payload": {
+        "template_type": "generic",
+        "elements": [{
+          "title": "First card",
+          "subtitle": "Element #1 of an hscroll",
+          "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+          "buttons": [{
+            "type": "web_url",
+            "url": "https://www.messenger.com/",
+            "title": "Web url"
+          }, {
+            "type": "postback",
+            "title": "Postback",
+            "payload": "Payload for first element in a generic bubble",
+          }],
+        },{
+          "title": "Second card",
+          "subtitle": "Element #2 of an hscroll",
+          "image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
+          "buttons": [{
+            "type": "postback",
+            "title": "Postback",
+            "payload": "Payload for second element in a generic bubble",
+          }],
+        }]
+      }
+    }
+  };
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending message: ', error);
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error);
+    }
+  });
+}
+{% endhighlight %}
+
+
+### Final Results
+
+<img src="{{ page.static }}capture1.png" class="img-responsive img-rounded">
+
+<img src="{{ page.static }}capture2.png" class="img-responsive img-rounded">
+
+<img src="{{ page.static }}capture3.png" class="img-responsive img-rounded">
+
+<img src="{{ page.static }}capture4.png" class="img-responsive img-rounded">
+
+
+
+[FB Messenger Console]: https://developers.facebook.com/apps/879182215524653/messenger/
+[FB Create Page]: https://www.facebook.com/pages/create/
