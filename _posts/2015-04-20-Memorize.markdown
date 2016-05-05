@@ -1,0 +1,288 @@
+---
+layout: post
+title:  "Things to Memorize"
+date:   2015-04-20 01:00:00
+categories: "java"
+static: /assets/posts/Memorize/
+tags: []
+
+---
+
+<img src="{{ page.static }}notebook.jpeg" class="img-responsive img-rounded">
+
+# Matrix
+
+### Transpose
+
+다음의 Matrix 를 transpose하면 다음과 같이 변형이 됩니다.
+
+{% highlight python %}
+# Original Matrix
+[[1, 5],
+ [2, 6],
+ [3, 7],
+ [4, 8]]
+ 
+# Transposed Matrix
+[[1, 2, 3, 4], 
+ [5, 6, 7, 8]]
+{% endhighlight %}
+
+
+Python
+
+{% highlight python %}
+def transpose(matrix):
+    return [arr for arr in zip(*matrix)]
+{% endhighlight %}
+
+Java - 자바에서는 N * N만 된다 (즉 2 * 4 matrix같은것은 안된다.)
+
+{% highlight java %}
+int[][] transpose(int[][] matrix) {
+    for (int i = 0; i < matrix.length; i++) {
+        for (int j = i; j < matrix[0].length; j++) {
+            int temp = matrix[j][i];
+            matrix[j][i] = matrix[i][j];
+            matrix[i][j] = temp;
+        }
+    }
+    return matrix;
+}
+{% endhighlight %}
+
+### Rotate
+
+python
+
+{% highlight python %}
+def rotate(matrix, direction=-1):
+    if direction == -1:
+        return zip(*matrix[::-1])
+    return zip(*matrix)[::-1]
+{% endhighlight %}
+
+Java
+
+{% highlight java %}
+int[][] rotateMatrix(int[][] matrix) {
+    transpose(matrix);
+
+    for (int i = 0, j = matrix.length - 1; i < j; i++, j--) {
+        for (int k = 0; k < matrix.length; k++) {
+            int temp = matrix[k][i];
+            matrix[k][i] = matrix[k][j];
+            matrix[k][j] = temp;
+
+        }
+    }
+    return matrix;
+}
+{% endhighlight %}
+
+
+### Multiplication
+
+python
+
+{% highlight python %}
+def matrix_multiply(m1, m2):
+    r = []
+    for i in range(len(m1)):
+        r.append([0 for l in range(len(m1))])
+        for j in range(len(m1)):
+            for k in range(len(m1[j])):
+                r[i][j] += m1[i][k] * m2[k][j]
+    return r
+{% endhighlight %}
+
+# Stack
+
+### Min Max Stack
+
+Java 
+
+{% highlight java %}
+public static class MinMaxStack {
+
+    private StackNode _node; // Top Node
+
+    public void push(int value) {
+        StackNode node = new StackNode(value, this._node);
+        this._node = node;
+    }
+
+    public int pop() {
+        int value = this._node.value;
+        this._node = this._node.prevNode;
+        return value;
+    }
+
+    public int peek(){
+        return this._node.value;
+    }
+
+    public int min() {
+        return this._node.min;
+    }
+
+    public int max() {
+        return this._node.max;
+    }
+}
+
+public static class StackNode {
+
+    public int value;
+    public int max = 0;
+    public int min = 0;
+
+    public StackNode prevNode;
+
+    public StackNode(int value, StackNode previousNode) {
+        this.value = value;
+        this.prevNode = previousNode;
+
+        // Set Min Max
+        if (prevNode == null) {
+            this.min = value;
+            this.max = value;
+        } else {
+            this.min = prevNode.min < value ? prevNode.min : value;
+            this.max = prevNode.max > value ? prevNode.max : value;
+        }
+
+
+    }
+}
+
+{% endhighlight %}
+
+# Algorithms
+
+### Anagram
+
+Python
+
+{% highlight python %}
+def anagram(s1, s2):
+    s1 = s1.lower()
+    s2 = s2.lower()
+
+    check = list(s2)
+    correct = True
+    for c in s1:
+        pos = 0
+        found = False
+        for i in range(len(s2)):
+            if c == check[i]:
+                found = True
+                pos = i
+        if found:
+            check[pos] = None
+        else:
+            correct = False
+    return correct
+{% endhighlight %}
+
+Java 
+
+{% highlight java %}
+static boolean doEasyAnagram(String str1, String str2) {
+    char[] chars1 = str1.toCharArray();
+    char[] chars2 = str2.toCharArray();
+
+    Arrays.sort(chars1);
+    Arrays.sort(chars2);
+
+    str1 = new String(chars1);
+    str2 = new String(chars2);
+    return str1.equals(str2);
+}
+
+static boolean doHardAnagram(String str1, String str2) {
+    // Both of strings should be the same size
+    if (str1.length() != str2.length()) return false;
+
+    short[] letters = new short[256];
+    for (int i = 0; i < str1.length(); i++) {
+        char c = str1.charAt(i);
+        letters[c] += 1;
+    }
+
+    for (int i = 0; i < str2.length(); i++) {
+        char c = str2.charAt(i);
+        if (letters[c] == 0) return false;
+        letters[c] -= 1;
+    }
+
+    for (int i = 0; i < letters.length; i++) {
+        if (letters[i] != 0) return false;
+    }
+
+    return true;
+}
+{% endhighlight %}
+
+
+# Search
+
+
+### Binary Search
+
+Python
+
+{% highlight python %}
+def binary_search(data, target):
+    first = 0
+    last = len(data)
+    pos = -1
+
+    while first <= last:
+        midpoint = (first + last) / 2
+        try:
+            answer = data[midpoint]
+        except IndexError:
+            return -1
+
+        if answer == target:
+            pos = midpoint
+            break
+
+        if data[midpoint] >= target:
+            last = midpoint - 1
+        else:
+            first = midpoint + 1
+    return pos
+{% endhighlight %}
+
+
+Java
+
+{% highlight java %}
+int binarySearch(int[] data, int target) {
+    if (data.length <= 0) {
+        return -1;
+    }
+
+    int first = 0;
+    int last = data.length - 1;
+    int pos = -1;
+
+    while (first <= last) {
+        int midPoint = (first + last) / 2;
+        int midValue = data[midPoint];
+
+        if (midValue == target) {
+            pos = midPoint;
+            break;
+        } else if (midValue >= target) {
+            last = midPoint - 1;
+        }
+        else{
+            first = midPoint + 1;
+        }
+    }
+    return pos;
+}
+{% endhighlight %}
