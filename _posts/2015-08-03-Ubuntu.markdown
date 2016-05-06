@@ -1,9 +1,11 @@
 ---
 layout: post
-title:  "Ubuntu 15.04 + GTX960"
+title:  "Ubuntu 15.04"
 date:   2015-08-03 02:00:00
 categories: "ubuntu"
-asset_path: /assets/posts/GTX960+Ubuntu15.04+Hello-World/
+asset_path: /assets/posts/Ubuntu15.04/
+tags: ['RVM', 'JAVA', '.bash.rc']
+
 ---
 
 이번에 GTX960 그래픽카드를 질렀습니다.<br> 
@@ -50,12 +52,13 @@ uim-pref-gtk
 sudo apt-get install xclip
 {% endhighlight %}
 
-### Open Nautilus (Ubuntu 14.04)
+### Install PIP
 
-우분투 14.x 버젼에서만...
+apt-get install python-pip 하지 말것!
 
-{% highlight bash%}
-sudo apt-get install nautilus-open-terminal
+{% highlight bash %}
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python get-pip.py
 {% endhighlight %}
 
 ### Pillow Ubuntu Libraries (Optional)
@@ -260,72 +263,6 @@ character-set-server = utf8
 
 
 
-### Current Nvidia Card
-
-현재 그래픽 카드 모델을 알고 싶을때는...
-{% highlight bash%}
-lspci -vnn | grep -i VGA -A 12
-{% endhighlight %}
-
-
-
-### CUDA Toolkit
-
-다음의 Dependencies를 설치해줍니다.
-
-{% highlight bash %}
-sudo apt-get install libglu1-mesa libxi-dev libxmu-dev
-{% endhighlight %}
-
-CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
-아래의 주소에서 RUN파일을 다운로드 받습니다.<br>
-[https://developer.nvidia.com/cuda-downloads][cuda-toolkit]
-
-1. 다운받은 폴더로 들어갑니다.
-2. chmod로 실행파일로 바꿔줍니다.
-3. CTRL + ALT + F3 또는 CTRL + ALT + F1 또는 Ubuntu Recovery Mode -> Command Shell
-4. 로그인
-5. init 3
-6. sudo service lightdm stop
-7. sudo su
-8. ./NVIDIA*.run 파일 실행
-9. reboot
-
-만약 Unsupported Compiler 에러가 나면은, --override compiler 옵션을 붙여줍니다. 
-
-{% highlight bash %}
-$ cuda_7.5.18_linux.run --override compiler
-{% endhighlight %}
-
-그 다음으로 .bashrc에 다음을 추가해줍니다.
-
-{% highlight bash %}
-export PATH=$PATH:/usr/local/cuda/bin
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/lib
-{% endhighlight %}
-
-설치가 잘되었는지 확인은 다음과 같이 합니다.
-
-{% highlight bash %}
-$ nvcc --version
-nvcc: NVIDIA (R) Cuda compiler driver
-Copyright (c) 2005-2015 NVIDIA Corporation
-Built on Tue_Aug_11_14:27:32_CDT_2015
-Cuda compilation tools, release 7.5, V7.5.17
-{% endhighlight %}
-
-
-### Saving a new X Configuration
-
-Nvidia 드라이버 설치시 자동으로 해주긴 하지만.. 혹시 새롭게 다시 재정의 필요시 다음의 명령어를 실행시켜줍니다.
-
-{% highlight bash%}
-sudo nvidia-xconfig
-{% endhighlight %}
-
 
 [c.sublime]: {{ page.asset_path }}c.sublime-build
-[gtx-driver]: http://www.geforce.com/drivers
-[cuda-toolkit]: https://developer.nvidia.com/cuda-downloads
-[nvidia-download]: http://www.nvidia.com/Download/index.aspx
 [watches-limlit]: https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit

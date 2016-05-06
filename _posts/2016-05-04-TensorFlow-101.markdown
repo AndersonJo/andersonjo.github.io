@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "TensorFlow 101"
+title:  "CUDA Toolkit, cuDNN, TensorFlow 101"
 date:   2016-05-04 01:00:00
 categories: "machine-learning"
 static: /assets/posts/TensorFlow-101/
-tags: ['node.js', 'jsx']
+tags: ['CUDA']
 
 ---
 
@@ -29,14 +29,137 @@ enabling the pursuit of ambitious goals at much larger scale and an even faster 
 * Python 2.7 or 3.3+
 * GPU - CUDA Toolkit 7.5 and cuDNN v4
 
-### CUDA + cuDNN
+### Current Nvidia Card
+
+현재 그래픽 카드 모델을 알고 싶을때는...
+{% highlight bash%}
+lspci -vnn | grep -i VGA -A 12
+{% endhighlight %}
+
+### CUDA Toolkit
 
 Cuda Toolkit은 **/usr/local/cuda**안에 설치가 되어 있어야 합니다.<br>
 [Download CUDA Toolkit][Download CUDA Toolkit]
 
+다음의 Dependencies를 설치해줍니다.
+
+{% highlight bash %}
+sudo apt-get install libglu1-mesa libxi-dev libxmu-dev
+{% endhighlight %}
+
+CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
+아래의 주소에서 RUN파일을 다운로드 받습니다.<br>
+[https://developer.nvidia.com/cuda-downloads][cuda-toolkit]
+
+1. 다운받은 폴더로 들어갑니다.
+2. chmod로 실행파일로 바꿔줍니다.
+3. CTRL + ALT + F3 또는 CTRL + ALT + F1 또는 Ubuntu Recovery Mode -> Command Shell
+4. 로그인
+5. init 3
+6. sudo service lightdm stop
+7. sudo su
+8. ./NVIDIA*.run 파일 실행
+9. reboot
+
+만약 Unsupported Compiler 에러가 나면은, --override compiler 옵션을 붙여줍니다. 
+
+{% highlight bash %}
+$ cuda_7.5.18_linux.run --override compiler
+{% endhighlight %}
+
+그 다음으로 .bashrc에 다음을 추가해줍니다.
+
+{% highlight bash %}
+export PATH=$PATH:/usr/local/cuda/bin
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/lib
+{% endhighlight %}
+
+설치가 잘되었는지 확인은 다음과 같이 합니다.
+
+{% highlight bash %}
+$ nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2015 NVIDIA Corporation
+Built on Tue_Aug_11_14:27:32_CDT_2015
+Cuda compilation tools, release 7.5, V7.5.17
+{% endhighlight %}
+
+
+### CUDA + cuDNN
+
 또한 cuDNN v4가 설치되어 있어야 합니다. v5설치시 TensorFlow는 source로 빌드되어야 합니다.<br>
 [Download cuDNN][Download cuDNN]
 
+*현재 TensorFlow가 cuDNN 4.0을 지원하고 있기 때문에 5.0대신에 4.0을 받습니다.<br>
+다운을 받고 압축을 풀면 다음과 같은 구조로 되어 있습니다.
 
+{% highlight bash %}
+├── include
+│   └── cudnn.h
+└── lib64
+    ├── libcudnn.so -> libcudnn.so.4
+    ├── libcudnn.so.4 -> libcudnn.so.4.0.7
+    ├── libcudnn.so.4.0.7
+    └── libcudnn_static.a
+{% endhighlight %}
+
+안에 들어 있는 파일들을 CUDA Toolkit이 설치된 /usr/local/cuda 에 카피해주면됩니다.
+
+{% highlight bash %}
+tar xvzf cudnn-7.5-linux-x64-v4.tgz
+chmod 644 cuda/include/*
+cp -r ./cuda /usr/local/cuda
+{% endhighlight %}
+
+### Install TensorFlow
+
+자세한 내용은 [Download and Setup TensorFlow][Download and Setup TensorFlow]에서 확인 가능합니다.
+
+for Python 2.7
+
+{% highlight bash %}
+# Ubuntu/Linux 64-bit, CPU only:
+$ sudo pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.8.0-cp27-none-linux_x86_64.whl
+
+# Ubuntu/Linux 64-bit, GPU enabled. Requires CUDA toolkit 7.5 and CuDNN v4.  For
+# other versions, see "Install from sources" below.
+$ sudo pip install --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-0.8.0-cp27-none-linux_x86_64.whl
+
+# Mac OS X, CPU only:
+$ sudo easy_install --upgrade six
+$ sudo pip install --upgrade https://storage.googleapis.com/tensorflow/mac/tensorflow-0.8.0-py2-none-any.whl
+{% endhighlight %}
+
+For Python 3.x
+
+{% highlight bash %}
+# Ubuntu/Linux 64-bit, CPU only:
+$ sudo pip3 install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.8.0-cp34-cp34m-linux_x86_64.whl
+
+# Ubuntu/Linux 64-bit, GPU enabled. Requires CUDA toolkit 7.5 and CuDNN v4.  For
+# other versions, see "Install from sources" below.
+$ sudo pip3 install --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-0.8.0-cp34-cp34m-linux_x86_64.whl
+
+# Mac OS X, CPU only:
+$ sudo easy_install --upgrade six
+$ sudo pip3 install --upgrade https://storage.googleapis.com/tensorflow/mac/tensorflow-0.8.0-py3-none-any.whl
+{% endhighlight %}
+
+
+설치 확인 방법은 다음과 같이 합니다.
+
+{% highlight python %}
+import tensorflow as tf
+hello = tf.constant('Hello, TensorFlow!')
+sess =tf.Session() # 이때 GPU Device를 찾고 결과를 보여줍니다.
+print(sess.run(hello)) # Hello, TensorFlow!
+
+a = tf.constant(10)
+b = tf.constant(32)
+print(sess.run(a + b)) # 42
+{% endhighlight %}
+
+
+[Download and Setup TensorFlow]: https://www.tensorflow.org/versions/r0.8/get_started/os_setup.html#download-and-setup
 [Download CUDA Toolkit]: https://developer.nvidia.com/cuda-downloads
 [Download cuDNN]: https://developer.nvidia.com/cudnn
