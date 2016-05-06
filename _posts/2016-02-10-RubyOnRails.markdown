@@ -4,7 +4,8 @@ title:  "Ruby On Rails 101"
 date:   2016-02-10 01:00:00
 categories: "ruby"
 static: /assets/posts/RubyOnRails101/
-tags: ['/etc/init.d', 'ubuntu', 'service']
+tags: ['unicorn']
+
 ---
 
 <img src="{{ page.static }}rubyrails.png" class="img-responsive img-rounded">
