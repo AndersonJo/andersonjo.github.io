@@ -4,7 +4,7 @@ title:  "CUDA Toolkit, cuDNN, TensorFlow 101"
 date:   2016-05-04 01:00:00
 categories: "machine-learning"
 static: /assets/posts/TensorFlow-101/
-tags: ['CUDA']
+tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu']
 
 ---
 
@@ -157,6 +157,112 @@ print(sess.run(hello)) # Hello, TensorFlow!
 a = tf.constant(10)
 b = tf.constant(32)
 print(sess.run(a + b)) # 42
+{% endhighlight %}
+
+# TensorFlow 101
+
+<img src="{{ page.static }}tensorflow-logo.jpg" class="img-responsive img-rounded">
+
+### Building Graph and Operations + Choosing GPU Device
+
+그래프란 하나의 큰 흐름을 말하는 것이며 (Data Flow), 기본적으로 default graph가 자동으로 등록이 되며, 
+그래프에는 여러개의 set of operations들을 nodes로 갖고 있을수 있습니다. 
+
+Operations 들은 op 또는 ops로 쓸수 있으며, 하나의 수학적 공식이라고 생각하면 됩니다. 
+즉 여러개의 수학적 공식들 (Operations)들이 모여서 하나의 그래프를 이루게 됩니다.
+ 
+아래의 예제에서는 default graph가 3개의 nodes을 갖고 있습니다.
+ 
+* 2개의 constants ops (matrix1, matrix2)
+* 1개의 matmul() op 
+
+
+
+{% highlight python %}
+%pylab inline
+import tensorflow as tf
+import numpy as np
+
+matrix1 = tf.constant([[1,2,3], [4,5,6]])
+matrix2 = tf.constant([[0, 1], [2, 2], [7, 9]])
+product_matrix = tf.matmul(matrix1, matrix2)
+
+session = tf.Session()
+result = session.run(product_matrix)
+session.close()
+print result # [[25 32] [52 68]]
+{% endhighlight %}
+
+이때 GPU가 여러대일경우 선택해서 처리를 할 수 있습니다.
+
+{% highlight python %}
+with tf.device("/gpu:1"):
+    result = session.run(product_matrix)
+{% endhighlight %}
+
+
+* **/cpu:0**: The CPU of your machine.
+* **/gpu:0**: The GPU of your machine, if you have one.
+* **/gpu:1**: The second GPU of your machine, etc.
+
+### Launching the graph in a distributed session
+  
+먼저 TensorFlow Server를 각각의 Cluster machines들에서 띄워놓습니다.
+
+{% highlight python %}
+with tf.Session("grpc://example.org:2222") as sess:
+  # Calls to sess.run(...) will be executed on the cluster.
+  ...
+{% endhighlight %}
+
+
+### Variables
+
+{% highlight python %}
+# update -> state += one
+state = tf.Variable(0, name='counter')
+one = tf.constant(1)
+update = tf.assign(state, tf.add(state, one))
+
+# Launch the graph and run the ops.
+with tf.Session() as sess:
+    # Variables must be initialized by running an `init` Op after having
+    # launched the graph.  We first have to add the `init` Op to the graph.
+    # 세션(그래프)을 실행시킨이후에 반드시 init operation을 실행시켜야 합니다.
+    # Variables 들은 모두 초기화가 되있어야 합니다.
+    sess.run(tf.initialize_all_variables())
+    
+    # 현재 state의 값을 출력합니다. 즉 0 이 출력됩니다.
+    print(sess.run(state)) 
+    
+    for i in range(3):
+        sess.run(update)
+        print(sess.run(state))
+        
+# output
+0
+1
+2
+3
+{% endhighlight %}
+
+데이터를 가져오기 위해서는 (Fetch), sess.run() 을 실행하면 됩니다.
+
+
+### Feeds
+
+tf.placeholder() 를 사용해서 sess.run()시에 어떤 arguments값으로 데이터를 전달 할 수 있습니다.
+
+{% highlight python %}
+input1 = tf.placeholder(tf.float32)
+input2 = tf.placeholder(tf.float32)
+output = tf.mul(input1, input2)
+
+with tf.Session() as sess:
+  print(sess.run([output], feed_dict={input1:[7., 2], input2:[2., 5.]}))
+
+# output:
+# [array([ 14.], dtype=float32)]
 {% endhighlight %}
 
 
