@@ -16,8 +16,8 @@ app.filter('andersonDate', function () {
     }
 });
 
-app.filter('tagFilter', function(){
-    return function(input){
+app.filter('tagFilter', function () {
+    return function (input) {
         return input.join(', ')
     }
 });
@@ -48,9 +48,22 @@ app.factory('tools', ['$http', function ($http) {
         })
     };
 
+    var get_fast_categories = function (callback) {
+        var url = '/assets/anderson/fast_categories.csv';
+        return $http.get(url).then(function (response) {
+            var data = response.data.split('\n');
+            data = data.filter(function (value) {
+                return value.trim().length > 0;
+            });
+            callback(data);
+        })
+    };
+
+
     return {
         randint: randint,
-        get_bible_statement: get_bible_statement
+        get_bible_statement: get_bible_statement,
+        get_fast_categories: get_fast_categories
     }
 }]);
 
@@ -58,9 +71,19 @@ app.controller('AndersonPostContoller', ['$scope', 'tools', function ($scope, to
     // Set Posts
     $scope.posts = global_post_data;
 
+    // Changing Search Text
+    $scope.change_search = function (text) {
+        $scope.searchText = text;
+    };
+
     // Set Good Bible Statement
     tools.get_bible_statement(function (statement) {
         $scope.bible_statement = statement;
+    });
+
+    // Set Fast Categories
+    tools.get_fast_categories(function (data) {
+        $scope.fast_categories = data;
     });
 
 }]);

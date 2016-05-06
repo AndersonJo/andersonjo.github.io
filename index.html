@@ -7,13 +7,18 @@ layout: default
         <script>
             var global_post_data = [{% for post in site.posts %}
             {"date":"{{post.date}}", "categories": ["{{post.categories}}"], "url": "{{post.url}}", "title": "{{post.title}}", "tags":{{post.tags | jsonify}} }, {% endfor %}];
+
         </script>
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Search" ng-model="searchText">
 
-            <div style="font-family:'Jeju Gothic', serif;color:#D50F36; margin-top:5px;">
+            <div style="font-family:'Jeju Gothic', serif;color:#D50F36; margin-top:5px; margin-bottom:10px;">
                 {(bible_statement)}
             </div>
+
+            <button type="button" class="fast_category" ng-repeat="fast_category in fast_categories" ng-click="change_search(fast_category)">
+                {(fast_category)}
+            </button>
         </div>
 
         <h1>Posts</h1>
@@ -58,6 +63,21 @@ layout: default
             -ms-animation: fadein 0.3s; /* Internet Explorer */
             -o-animation: fadein 0.3s; /* Opera < 12.1 */
             animation: fadein 0.3s;
+        }
+
+        .fast_category {
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            margin-right: 10px;
+            border: transparent;
+            border-radius: 5px;
+            background-color: #d43f3a;
+            color: #fff;
+        }
+        .fast_category:hover{
+            background-color: #c12e2a;
         }
     </style>
 </div>

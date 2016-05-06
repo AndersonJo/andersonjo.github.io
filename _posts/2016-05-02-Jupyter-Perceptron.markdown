@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Jupyter & Perceptron"
-date:   2016-03-18 01:00:00
+date:   2016-05-02 01:00:00
 categories: "machine-learning"
 static: /assets/posts/Perceptron/
 tags: ['python', 'data analytics', 'jupyter', 'ipython', 'notebook']
@@ -43,6 +43,23 @@ matplotlib.rc('font', family='NanumGothic')
 {% highlight python %}
 import matplotlib.font_manager
 print [f.name for f in matplotlib.font_manager.fontManager.ttflist]
+{% endhighlight %}
+
+### Increase Jupyter Width Window Size
+
+**~/.jupyter/custom/custom.css** 에다가 다음을 내용을 넣습니다.
+
+{% highlight css %}
+/* Make the notebook cells take almost all available width */
+.container {
+    width: 99% !important;
+}   
+
+/* Prevent the edit cell highlight box from getting clipped;
+ * important so that it also works when cell is in edit mode*/
+div.cell.selected {
+    border-left-width: 1px !important;
+}
 {% endhighlight %}
 
 
