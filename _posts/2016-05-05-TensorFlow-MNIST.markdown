@@ -62,4 +62,12 @@ for _subs in subplots:
  
 <img src="{{ page.asset_path }}sample.png" class="img-responsive img-rounded">
 
+
+# Softmax Regression
+
+Softmax Regression (or multinomial logistic regression)은 mutually exclusive classes (서로 연관이 안되는 분류) 들의 값들에서 
+multi-class classification 문제에서 사용이 될 수 있습니다. 
+(즉 multi-class란 1~9 처럼 binary 분류가 아닌 여러개의 클래스들을 갖고 있는 형태를 말합니다.)
+
+
 [MNIST Website]: http://yann.lecun.com/exdb/mnist/
