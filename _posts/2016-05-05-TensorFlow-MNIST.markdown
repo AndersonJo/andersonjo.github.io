@@ -65,9 +65,32 @@ for _subs in subplots:
 
 # Softmax Regression
 
-Softmax Regression (or multinomial logistic regression)은 mutually exclusive classes (서로 연관이 안되는 분류) 들의 값들에서 
-multi-class classification 문제에서 사용이 될 수 있습니다. 
-(즉 multi-class란 1~9 처럼 binary 분류가 아닌 여러개의 클래스들을 갖고 있는 형태를 말합니다.)
+
+Logistic Regression 에서는 labels이 binary: $$y^{(i)} \in \{0,1\}$$ 입니다.
+하지만 Softmax Regression (or multinomial logistic regression) 에서는 2개 이상의 
+mutually exclusive classes를 분류할때 $$y^{(i)} \in \{1,\ldots,K\}$$ 사용합니다.
+즉 0~9까지의 클래스들이 있으며 서로의 숫자는 mutually exclusive이기 때문에 Softmax Regression이 좋은 알고리즘이 될 수 있습니다.
+
+Softmax Regression은 각각의 숫자들(0~9)에 대한 확률을 계산할 것입니다.
+
+$$\begin{align}
+h_\theta(x) =
+\begin{bmatrix}
+P(y = 1 | x; \theta) \\
+P(y = 2 | x; \theta) \\
+\vdots \\
+P(y = K | x; \theta)
+\end{bmatrix}
+=
+\frac{1}{ \sum_{j=1}^{K}{\exp(\theta^{(j)\top} x) }}
+\begin{bmatrix}
+\exp(\theta^{(1)\top} x ) \\
+\exp(\theta^{(2)\top} x ) \\
+\vdots \\
+\exp(\theta^{(K)\top} x ) \\
+\end{bmatrix}
+\end{align}$$
+
 
 
 [MNIST Website]: http://yann.lecun.com/exdb/mnist/
