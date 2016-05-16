@@ -12,9 +12,12 @@ layout: default
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Search" ng-model="searchText">
 
+            <!-- 성경 구절 -->
             <div style="font-family:'Jeju Gothic', serif;color:#D50F36; margin-top:5px; margin-bottom:10px;">
                 {(bible_statement)}
             </div>
+
+            <!-- 빠른 카테고리 -->
             <a href="#/category/{(fast_category)}" ng-repeat="fast_category in fast_categories"
                ng-click="change_search(fast_category)">
                 <button type="button" class="fast_category">
@@ -72,7 +75,8 @@ layout: default
             padding-right: 5px;
             padding-top: 2px;
             padding-bottom: 2px;
-            margin-right: 10px;
+            margin-right: 3px;
+            margin-left:0px;
             border: transparent;
             border-radius: 5px;
             background-color: #d43f3a;
