@@ -15,10 +15,12 @@ layout: default
             <div style="font-family:'Jeju Gothic', serif;color:#D50F36; margin-top:5px; margin-bottom:10px;">
                 {(bible_statement)}
             </div>
-
-            <button type="button" class="fast_category" ng-repeat="fast_category in fast_categories" ng-click="change_search(fast_category)">
-                {(fast_category)}
-            </button>
+            <a href="#/category/{(fast_category)}" ng-repeat="fast_category in fast_categories"
+               ng-click="change_search(fast_category)">
+                <button type="button" class="fast_category">
+                    {(fast_category)}
+                </button>
+            </a>
         </div>
 
         <h1>Posts</h1>

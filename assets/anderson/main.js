@@ -1,10 +1,16 @@
-var app = angular.module('andersonApp', ['ui.bootstrap']);
+var app = angular.module('andersonApp', ['ui.bootstrap', 'ngRoute']);
 
+// Angular 의 TAG {{ }} 기본값을 변경시킵니다. -> {( )}
 app.config([
     '$interpolateProvider', function ($interpolateProvider) {
         return $interpolateProvider.startSymbol('{(').endSymbol(')}');
     }
 ]);
+
+app.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.when('/category/:category', {})
+}]);
+
 
 app.filter('andersonDate', function () {
     var month_abbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -67,7 +73,7 @@ app.factory('tools', ['$http', function ($http) {
     }
 }]);
 
-app.controller('AndersonPostContoller', ['$scope', 'tools', function ($scope, tools) {
+app.controller('AndersonPostContoller', ['$scope', '$location', '$route', 'tools', function ($scope, $location, $route, tools) {
     // Set Posts
     $scope.posts = global_post_data;
 
@@ -75,6 +81,20 @@ app.controller('AndersonPostContoller', ['$scope', 'tools', function ($scope, to
     $scope.change_search = function (text) {
         $scope.searchText = text;
     };
+
+    // $route.current를 하면은 undefined가 나온다.
+    // 이를 해결하기 위해서 $watch를 걸어주고, 값이 변경이 되면은 검색어를 바꿔준다.
+    $scope.$watch(function () {
+        return $route.current
+    }, function (newValue, oldValue) {
+        if (newValue !== undefined && newValue != oldValue) {
+            var category = newValue.params.category;
+            $scope.change_search(category);
+        }
+        else{
+            $scope.change_search('');
+        }
+    });
 
     // Set Good Bible Statement
     tools.get_bible_statement(function (statement) {

@@ -4,7 +4,8 @@ title:  "Spark 101"
 date:   2016-02-11 01:00:00
 categories: "analytics"
 static: /assets/posts/Spark101/
-tags: ['hadoop', 'hive']
+tags: []
+
 ---
 
 <img src="{{ page.static }}math.jpg" class="img-responsive img-rounded">
