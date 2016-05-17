@@ -266,6 +266,7 @@ public class Techcrunch {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf);
+        job.setNumReduceTasks(1);
         job.setJarByClass(Techcrunch.class);
 
         // Output
@@ -294,12 +295,30 @@ public class Techcrunch {
 {% endhighlight %}
 
 
+
+**TextInputFormat**<br>
+InputFormat의 subclass이며, 각각의 Input의 Line별로 읽어들입니다.
+
+**TextOutputFormat**<br> 
+MR이 오래 걸리기 때문에, 만약 output이 이미 HDFS상에 존재한다면 에러가 납니다. 
+
+**FileOutputFormat.setOutputPath**
+output 디렉토리 위치를 정합니다. (중요한건 파일이 아니라 디렉토리 입니다.)
+
+**job.setOutputKeyClass & job.setOutputValueClass**
+Reducer의 output key-value pair의 타입과 일치해야 합니다.
+
+**job.setNumReduceTasks(1)**
+Reducer의 갯수 기본값은 1입니다. 퍼포먼스를 늘리기 위해서 변경가능합니다.
+
+
+
 ### Run!
 
 {% highlight bash %}
 gradle clean
 gradle build
-hadoop jar techcrunch-1.0.jar io.andersonjo.techcrunch.Techcrunch /techcrunch.csv /out
+hadoop jar techcrunch.jar io.andersonjo.techcrunch.Techcrunch /techcrunch.csv /out
 {% endhighlight %}
 
 결과는 다음과 같이 나옵니다. 
@@ -316,6 +335,16 @@ accountnow	12750000
 acinion	21000000
 acquia	7000000
 {% endhighlight %}
+
+HDFS 상의 out구조
+
+{% highlight bash %}
+out
+├── part-r-00000
+└── _SUCCESS
+{% endhighlight %}
+
+
 
 
 [hdfs-commands]: http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html
