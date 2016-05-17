@@ -1,10 +1,12 @@
 ---
 layout: post
-title:  "Hadoop Tutorial"
+title:  "Hadoop Tutorial + IntelliJ Configuration"
 date:   2015-09-09 01:00:00
 categories: "hadoop"
-tags: ['hdfs', 'upload file', 'dfsadmin', 'mapreduce']
+tags: ['hdfs', 'upload file', 'dfsadmin', 'mapreduce', 'intellij']
 asset_path: /assets/posts/Hadoop-Tutorial/
+
+
 ---
 <div>
     <img src="{{ page.asset_path }}server.jpg" class="img-responsive img-rounded">
@@ -345,6 +347,31 @@ out
 {% endhighlight %}
 
 
+# IntelliJ 
+
+IntelliJ에서 하둡 MapReduce를 바로 해볼수 있습니다.<br>
+재미있는건 이때 Hadoop과 전혀 연결또는 하둡을 개발모드로 안켜놔도<br>
+Sample Data를 같은 프로젝트에 넣고서 바로 MR을 실행시킬수 있다는 점입니다. (대박!)
+
+File -> Project Structure -> Modules -> Dependencies -> 추가 버튼 -> Jars or Directories
+
+아래의 2위치를 추가 시켜 줍니다.
+
+* /usr/local/hadoop-2.7.2/share/hadoop/common
+* /usr/local/hadoop-2.7.2/share/hadoop/common/lib
+
+<img src="{{ page.asset_path }}project-structure.png" class="img-responsive img-rounded">
+
+Run하기 전에 Edit Configuratinons를 선택합니다.<br>
+Applications안에서 Program arguments부분에서 input output 을 설정합니다.
+
+<img src="{{ page.asset_path }}edit-conf.png" class="img-responsive img-rounded">
+
+<img src="{{ page.asset_path }}edit-conf2.png" class="img-responsive img-rounded">
+
+실행하면 다음과 같이 output 디렉토리가 만들어집니다.
+
+<img src="{{ page.asset_path }}intellij-output.png" class="img-responsive img-rounded">
 
 
 [hdfs-commands]: http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html
