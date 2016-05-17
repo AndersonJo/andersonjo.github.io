@@ -19,15 +19,15 @@
 <configuration>
     <property>
         <name>dfs.replication</name>
-        <value>3</value>
+        <value>1</value>
     </property>
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>/home/hduser/hdfs/name</value>
+        <value>/home/hduser/dfs/name</value>
     </property>
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>/home/hduser/hdfs/data</value>
+        <value>/home/hduser/dfs/data</value>
     </property>
     <property>
         <name>dfs.permissions</name>

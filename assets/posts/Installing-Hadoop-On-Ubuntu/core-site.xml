@@ -20,12 +20,4 @@
         <name>fs.default.name</name>
         <value>hdfs://localhost:9000</value>
     </property>
-    <property>
-        <name>dfs.data.dir</name>
-        <value>/home/hduser/hdfs/data/</value>
-    </property>
-    <property>
-        <name>dfs.name.dir</name>
-        <value>/home/hduser/hdfs/name/</value>
-    </property>
 </configuration>

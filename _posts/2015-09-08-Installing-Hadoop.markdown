@@ -9,9 +9,9 @@ asset_path: /assets/posts/Installing-Hadoop-On-Ubuntu/
     <img src="{{ page.asset_path }}server.jpg" class="img-responsive img-rounded">
 </div>
 
-## Preprequisites
+# Preprequisites
 
-#### Installing Oracle Java 
+### Installing Oracle Java 
 
 OpenJDK는 퍼포먼스가 Oracle Java에 비해서 늦습니다. 
 Oracle Java 8을 설치하도록 하겠습니다. <br>
@@ -21,10 +21,16 @@ Oracle Java 8을 설치하도록 하겠습니다. <br>
 sudo add-apt-repository ppa:webupd8team/java
 sudo apt-get update
 sudo apt-get install oracle-java8-installer
-
 {% endhighlight %}
 
-#### Adding Hadoop User (Optional)
+
+### Installing requisite softwares
+
+{% highlight bash %}
+sudo apt-get install ssh rsync
+{% endhighlight %}
+
+### Adding Hadoop User (Optional)
 
 보안, 백업, 관리 등등의 이유로 Hadoop 유저를 새로 생성하는 것이 좋습니다. 
 물론 requirement 는 아닙니다.
@@ -35,9 +41,7 @@ sudo adduser --ingroup hadoop hduser
 sudo adduser hduser sudo
 {% endhighlight %}
 
-
-
-#### Configuring ssh and sshd
+### Configuring ssh and sshd
 
 하둡은 ssh를 통해서 각각의 노드들을 관리합니다.
 2번째 문장이 key pair를 만들게 되는데 패스워드는 없는 것으로 설정을 합니다. 
@@ -62,168 +66,9 @@ sudo apt-get install openssh-server
 {% endhighlight %}
 
 
-## Hadoop Installation
+# Hadoop Installation
 
-#### Installation
-
-> 경고: 하둡은 32비트로 distribute되고 있습니다. 그냥 사용해도 무관하지만 약간의 warning을 볼수 있습니다.<br>
->      완벽하게 설치하고 싶다면 아래의 "util.NativeCodeLoader Error" 를 참고해주세요 <br>
-> 소스 파일로 설치하는 법이 나와 있습니다.
- 
-[Hadoop Download Page][hadoop-download] 에 들어가서 하둡을 다운받으면 됩니다.<br>
-다운을 받고 압축해제후 원하는 폴더로 이동시켜줍니다. (저는 /usr/local/hadoop 에 설치했습니다.)<br>
-그 이후에 hduser가 사용할수 있도록 권한을 변경시켜줍니다.
-
-{% highlight bash %}
-sudo chown -R hduser:hadoop hadoop-2.7.2/
-{% endhighlight %}
-
-#### .bashrc
-
-다음의 명령어들을 .bashrc에 넣어주시면 됩니다. (설정값들은 변경해주셔야 합니다.)
-
-{% highlight bash %}
-# Java
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-unset JAVA_TOOL_OPTIONS
-
-# Hadoop
-export HADOOP_HOME=/usr/local/hadoop-2.7.2
-export HADOOP_MAPRED_HOME=$HADOOP_HOME
-export HADOOP_COMMON_HOME=$HADOOP_HOME
-export HADOOP_HDFS_HOME=$HADOOP_HOME
-export YARN_HOME=$HADOOP_HOME
-export HADOOP_CONF_DIR=$HADOOP_HOME/conf
-export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
-export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
-export HADOOP_CLASSPATH=$HADOOP_HOME/conf
-export CLASSPATH=$CLASSPATH:$HADOOP_HOME/lib/*:.
-export PATH=$PATH:$HADOOP_HOME/bin
-export PATH=$PATH:$HADOOP_HOME/sbin
-{% endhighlight %}
-
-
-
-## Hadoop Configuration
-
-실제 풀어보면 conf디렉토리가 missing인 상태입니다. 하둡 다운로드 페이지에서 hadoop-2.7.2.tar.gz 파일을 다운로드 받으셨을텐데..
-이것 이외에도 src가 더 붙은 hadoop-2.7.2-src.tar.gz  이런 파일이 있는데 여기안에 설정파일들이 들어있습니다.
-
-압축을 풀고 **hadoop-2.7.2-src/hadoop-common-project/hadoop-common/src/main/conf** 에 가보면 필요한 설정파일들이 존재합니다.
-
-* [core-site.xml][conf-core-site.xml]
-* [hdfs-site.xml][conf-hdfs-site.xml]
-* [conf-hadoop-env.sh][conf-hadoop-env.sh]
-* [mapred-site.xml][mapred-site.xml]
-
-
-최소한 $HADOOP_HOME/conf/core-site.xml 그리고 conf/hadoop-env.sh 가 존재해야 합니다.
-
-#### conf/hadoop.env.sh
-
-JAVA_HOME에 대한 경로를 변경시켜주세요. 
-
-{% highlight bash %}
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-{% endhighlight %}
-
-
-#### conf/core-site.xml
-
-여기에서 포트 설정, 데이터 파일 저장 위치 등등의 주요 설정들을 할수 있습니다.<br>
-설정은 key-value pair로 이루어집니다.  또한 final 의 의미는 user application에 의해서 설정값이  overriden 되지 않도록 설정하는 것입니다.
-
-
-{% highlight xml %}
-<configuration>
-    <property>
-        <name>fs.default.name</name>
-        <value>hdfs://localhost:9000</value>
-    </property>
-</configuration>
-{% endhighlight %}
-
-
-#### conf/hdfs.site.xml
-
-자세한 내용은 [hdfs-default.xml][hdfs-wiki] 문서를 봐주세요 :)
-
-{% highlight xml %}
-<configuration>
-    <property>
-        <name>dfs.replication</name>
-        <value>3</value>
-    </property>
-    <property>
-        <name>dfs.namenode.name.dir</name>
-        <value>/home/hduser/hdfs/namenode</value>
-    </property>
-    <property>
-        <name>dfs.datanode.data.dir</name>
-        <value>/home/hduser/hdfs/datanode</value>
-    </property>
-    <property>
-        <name>dfs.permissions</name>
-        <value>false</value>
-    </property>
-</configuration>
-{% endhighlight %}
-
-| Name | Value |
-|:-----|:------|
-| fs.default.name | 클러스터의 URI주소입니다. |
-| dfs.data.dir | DataNode가 어디에 Data를 저장시킬지에 대한 경로입니다. |
-| dfs.name.dir | NameNode metadata가 저장되는 위치 입니다. |
-| dfs.replication | replication의 숫자이고 기본값으로 3으로 지정되어 있습니다. <br>이보다 더 작은 숫자는 reliability에 문제가 될 수 있습니다. |
-| dfs.permissions | 기본값이 true이고, false이면 hduser 뿐만 아니라 모든 유저가 hdfs사용 가능합니다. |
-
-
-#### conf/mapred-site.xml
-
-{% highlight xml %}
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-   <property>
-      <name>mapreduce.framework.name</name>
-      <value>yarn</value>
-   </property>
-</configuration>
-{% endhighlight %}
-
-
-
-#### Starting HDFS
-
-먼저 filesystem 을 format시켜줍니다. (최소한 최초 한번은 format이 필요합니다. 안하면 에러납니다.)
-
-{% highlight bash %}
-hdfs namenode -format
-{% endhighlight %}
-
-start-dfs.sh 를 실행시킵니다. 
-
-{% highlight bash %}
-sbin/start-dfs.sh
-{% endhighlight %}
-
-실행하고 난뒤 localhost:50070 으로 들어가면 Hadoop Web Interface에 접근할수 있습니다. 
-실행하고 난뒤 로그는 /logs 디렉토리안에서 확인가능합니다.
-
-**http://localhost:50070/**
-
-
-#### util.NativeCodeLoader Error
-
-64bit centos 또는 ubuntu에서 hadoop을 돌리면 나오는 에러 메세지입니다.
-하둡은 32bit로 컴파일되어 있는데 64bit 머신에서 돌려서 나오는 에러 메세지입니다. 
-해결 방법은 하둡을 64bit 컴파일 시켜주는 것입니다.
-
-정확하게는 Error는 아니고 Warning이기 때문에 이 메세지가 출력되도 상관은 없지만, 저처럼 메세지가 계속 나와서 짜증난다면 
-다음의 지침대로 해결해줄수 있습니다.
-
-{% highlight bash %}
-WARN  [main] util.NativeCodeLoader (NativeCodeLoader.java:<clinit>(62)) - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-{% endhighlight %}
+### Installation from Source
 
 다음을 설치해줍니다.
 
@@ -286,7 +131,201 @@ hduser:hadoop>file ./lib/native/libhadoop.so.1.0.0
 
 
 
+### .bashrc
 
+다음의 명령어들을 .bashrc에 넣어주시면 됩니다. (설정값들은 변경해주셔야 합니다.)
+
+> 참고로 HADOOP_HOME 은 deprecated 되었습니다.<br>
+> 대신에 HADOOP_PREFIX를 사용합니다.
+
+{% highlight bash %}
+# Java
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+unset JAVA_TOOL_OPTIONS
+
+# Hadoop
+export HADOOP_PREFIX=/usr/local/hadoop-2.7.2
+export HADOOP_MAPRED_HOME=$HADOOP_PREFIX
+export HADOOP_COMMON_HOME=$HADOOP_PREFIX
+export HADOOP_HDFS_HOME=$HADOOP_PREFIX
+export YARN_HOME=$HADOOP_PREFIX
+export HADOOP_CONF_DIR=$HADOOP_PREFIX/conf
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_PREFIX/lib/native
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_PREFIX/lib/native"
+export HADOOP_CLASSPATH=$HADOOP_PREFIX/conf
+export CLASSPATH=$CLASSPATH:$HADOOP_PREFIX/lib/*:.
+export PATH=$PATH:$HADOOP_PREFIX/bin
+export PATH=$PATH:$HADOOP_PREFIX/sbin
+{% endhighlight %}
+
+
+
+# Hadoop Configuration
+
+
+### Standalone Mode 
+기본적으로 하둡은 non-distributed mode 즉 single Java process로 돌아가도록 설정이 이미 되어 있습니다.<br>
+Standalone Mode는 개발, 디버깅, 테스팅을 위해서 유용합니다.<br>
+먼저 기본적으로 제공되는 conf파일들을 모두 설치된 하둡으로 카피해줍니다.<br>
+(이때 바로 conf디렉토리가 없으면 만들어줍니다.)
+
+{% highlight bash %}
+# hduser인 상태에서..
+cp hadoop-dist/target/hadoop-2.7.2/etc/hadoop/*.xml /usr/local/hadoop-2.7.2/conf
+{% endhighlight %}
+
+그 다음 아래의 파일들과 동일하게 설정을 해줍니다.
+
+* [core-site.xml][conf-core-site.xml]
+* [hdfs-site.xml][conf-hdfs-site.xml]
+* [conf-hadoop-env.sh][conf-hadoop-env.sh]
+* [mapred-site.xml][mapred-site.xml]
+
+
+최소한 $HADOOP_PREFIX/conf/core-site.xml 그리고 conf/hadoop-env.sh 가 존재해야 합니다.
+
+### conf/hadoop.env.sh
+
+JAVA_HOME에 대한 경로를 변경시켜주세요. 
+
+{% highlight bash %}
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+{% endhighlight %}
+
+
+### conf/core-site.xml
+
+여기에서 포트 설정, 데이터 파일 저장 위치 등등의 주요 설정들을 할수 있습니다.<br>
+설정은 key-value pair로 이루어집니다.  또한 final 의 의미는 user application에 의해서 설정값이  overriden 되지 않도록 설정하는 것입니다.
+
+{% highlight xml %}
+<configuration>
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://localhost:9000</value>
+    </property>
+</configuration>
+{% endhighlight %}
+
+
+### conf/hdfs.site.xml
+
+자세한 내용은 [hdfs-default.xml][hdfs-wiki] 문서를 봐주세요 :)
+
+{% highlight xml %}
+<configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>/home/hduser/dfs/namenode</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/home/hduser/dfs/datanode</value>
+    </property>
+    <property>
+        <name>dfs.permissions</name>
+        <value>false</value>
+    </property>
+</configuration>
+{% endhighlight %}
+
+| Name | Value |
+|:-----|:------|
+| fs.default.name | 클러스터의 URI주소입니다. |
+| dfs.data.dir | DataNode가 어디에 Data를 저장시킬지에 대한 경로입니다. |
+| dfs.name.dir | NameNode metadata가 저장되는 위치 입니다. |
+| dfs.replication | replication의 숫자이고 기본값으로 3으로 지정되어 있습니다. <br>이보다 더 작은 숫자는 reliability에 문제가 될 수 있습니다. |
+| dfs.permissions | 기본값이 true이고, false이면 hduser 뿐만 아니라 모든 유저가 hdfs사용 가능합니다. |
+
+
+# Standalone Mode
+
+먼저 filesystem 을 format시켜줍니다. (최소한 최초 한번은 format이 필요합니다. 안하면 에러납니다.)
+
+{% highlight bash %}
+rm -Rf /tmp/hadoop-hduser
+hdfs namenode -format
+{% endhighlight %}
+
+start-dfs.sh를 실행시켜서 NameNode, Secondary NameNode를 실행시킵니다.<br>
+start-yarn.sh 는 ResourceManager를 실행시킵니다.
+
+{% highlight bash %}
+$ start-dfs.sh && start-yarn.sh
+$ jps
+19011 SecondaryNameNode
+20691 Jps
+18773 NameNode
+19230 ResourceManager
+{% endhighlight %}
+
+DataNode, Tasktracker는 daemone으로 다음과 같이 실행시키거나 멈출수 있습니다.
+
+{% highlight bash %}
+# 시작하기
+hadoop-daemon.sh start datanode
+hadoop-daemon.sh start tasktracker
+
+# 멈추기
+hadoop-daemon.sh stop datanode
+hadoop-daemon.sh stop tasktracker
+{% endhighlight %}
+
+
+여기서 문제는 DataNode가 보이지가 않는데 이 경우 집접 DataNode를 실행시켜서 문제를 확인해볼수 있습니다.
+
+{% highlight bash %}
+$ hdfs datanode
+{% endhighlight %}
+
+
+| Server | URL |
+|:-------|:----|
+| NameNode | <a href="http://localhost:50070" target="_blank">http://localhost:50070</a> |
+| Secondary NameNode | <a href="http://localhost:50090/" target="_blank">http://localhost:50090/</a> |
+
+
+
+
+
+# Pseudo-Distributed Mode 
+
+Mapreduce job은 YARN에서 pseudo-distributed mode로 실행시킬수도 있습니다.
+
+### yarn-site.xml
+
+{% highlight xml %}
+<?xml version="1.0"?>
+<configuration>
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+</configuration>
+{% endhighlight %}
+
+
+### conf/mapred-site.xml
+
+{% highlight xml %}
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+   <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+   </property>
+</configuration>
+{% endhighlight %}
+
+### Start 
+
+{% highlight bash %}
+start-yarn.sh
+{% endhighlight %}
 
 
           
