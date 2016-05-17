@@ -185,15 +185,137 @@ hdfs dfs -cat /output/part-0000023andMe	9000000
 
 
 
-#### Tips for MapReduce
+# MapReduce in Java
 
-Java로 MR을 짜게 되면 처리의 속도가 높고, Python같은 언어로 하게 되면 개발시간이 줄어들게 됩니다. 
-제가 주로 하는 방식은 Python으로 먼저 짜고, Performance이슈가 있다면 Java로 코딩을 합니다.
+### gradle.build
+
+{% highlight bash %}
+group 'io.andersonjo.techcrunch'
+version '1.0'
+description = '앤더슨의 하둡 맵레듀스 테스트'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.hadoop:hadoop-client:2.2.0'
+    testCompile 'junit:junit:4.11'
+}
+{% endhighlight %}
+
+### io.andersonjo.techcrunch
+
+Techcrunch.java
+
+{% highlight java %}
+package io.andersonjo.techcrunch;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
+import java.io.IOException;
+
+public class Techcrunch {
+    public static class TechcrunchMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+        public void map(LongWritable key, Text value, Context context) 
+                throws IOException, InterruptedException {
+            String line = value.toString();
+            String[] data = line.split(",");
+            String companyName = data[0];
+            int invest = 0;
+            try {
+
+                invest = Integer.parseInt(data[7]);
+            } catch (NumberFormatException e) {
+                invest = 0;
+            }
+
+            System.out.println(companyName + " " + invest);
+            context.write(new Text(companyName), new IntWritable(invest));
+        }
+    }
+
+    public static class TechcrunchReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+        public void reduce(Text key, Iterable<IntWritable> values, Context context) 
+               throws IOException, InterruptedException {
+            int sum = 0;
+            for (IntWritable investment : values) {
+                sum += investment.get();
+            }
+
+            context.write(key, new IntWritable(sum));
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf);
+        job.setJarByClass(Techcrunch.class);
+
+        // Output
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        // Map & Reduce Class
+        job.setMapperClass(TechcrunchMapper.class);
+        job.setReducerClass(TechcrunchReducer.class);
+
+        // I/O Format
+        job.setInputFormatClass(TextInputFormat.class);
+        job.setOutputFormatClass(TextOutputFormat.class);
+        FileInputFormat.setInputPaths(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        boolean status = job.waitForCompletion(true);
+        if (status) {
+            System.exit(0);
+        } else {
+            System.exit(1);
+        }
+    }
+}
+
+{% endhighlight %}
 
 
+### Run!
 
+{% highlight bash %}
+gradle clean
+gradle build
+hadoop jar techcrunch-1.0.jar io.andersonjo.techcrunch.Techcrunch /techcrunch.csv /out
+{% endhighlight %}
 
+결과는 다음과 같이 나옵니다. 
 
+{% highlight text %}
+23andme	9000000
+3jam	4000000
+4homemedia	2850000
+5min	5300000
+750-industries	1000000
+a123systems	100000000
+accertify	4000000
+accountnow	12750000
+acinion	21000000
+acquia	7000000
+{% endhighlight %}
 
 
 [hdfs-commands]: http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html
