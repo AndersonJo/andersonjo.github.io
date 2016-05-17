@@ -2,7 +2,7 @@
 layout: post
 title:  "Things to Memorize"
 date:   2015-04-20 01:00:00
-categories: "java"
+categories: "etc"
 static: /assets/posts/Memorize/
 tags: []
 

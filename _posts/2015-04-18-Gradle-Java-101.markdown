@@ -105,6 +105,18 @@ Gradle버젼 추후 변경시, gralde wrapper를 다시 실행할 필요 없이 
 
 <img src="{{ page.static }}coffee.jpg" class="img-responsive img-rounded">
 
+
+### Maven Naming
+
+Maven Repository로 디플로이할때 Gradle은 자동으로 POM 을 생성합니다.<br>
+이때 groupId, artifactId, version and packaging elements 들이 POM을 만들때 사용됩니다.
+
+| Name | Description | Example |
+|:-----|:------------|:--------|
+| GroupId | Maven의 모든 프로젝트 안에서 Uniquely Identify 하는 이름. <br>주로 도메인 명을 사용합니다. | org.apache.maven <br>org.apache.commons |
+| artifactId | 버젼이 안써진 Jar 파일 이름. <br>lowercase 알페벳으로 쓰는게 컨벤션 |  maven, commons-math | 
+| version | 버젼.. | 2.0, 2.0.1, 1.3.1 |
+
 ### Basic JAVA Project
 
 apply plugin 'java'를 해주면 Java Project의 기본적으로 사용하는 많은 tasks들이 자동으로 붙습니다.

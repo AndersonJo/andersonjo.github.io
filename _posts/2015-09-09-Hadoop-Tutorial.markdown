@@ -16,11 +16,7 @@ asset_path: /assets/posts/Hadoop-Tutorial/
 
 ## Starting HDFS
 
-물론.. start-dfs.sh 파일을 실행시킬수도 있지만.. 에러가 날수도 있습니다.
-이유는 namenode 와 datanode 서버가 실행될때.. 뭔가 준비가 안된 상태에서 2개를 동시에 열다 보니.. 생겨나는 에러인듯 합니다.
-start-dfs.sh 로 실행시켜줘도 되지만.. 만약 tutorial중에 에러가 난다면 다음처럼 각각 따로 따로 하둡을 실행시켜주는게 좋습니다.
-
-각각의 터미널창 열고 실행하시면 됩니다.
+start-dfs.sh 로 실행시켜주면 되지만, 만약 에러또는 디버깅이 필요할경우 Daemon으로 띄우지 말고, 집접 실행시키는 방법도 있습니다.
 
 {% highlight bash %}
 hdfs namenode
