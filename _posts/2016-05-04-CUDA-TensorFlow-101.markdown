@@ -266,6 +266,26 @@ with tf.Session() as sess:
 {% endhighlight %}
 
 
+tf.placeholder(tf.float32, [2, 4]) 이렇게 2 dimensional arrays 로 만들었습니다.<br>
+이경우 matrix는 다음과 같이 만들수 있습니다. [[1,2,3,4], [5,6,7,8]]
+
+{% highlight python %}
+d = tf.placeholder(tf.float32, [2, 4])
+output = tf.transpose(d)
+with tf.Session() as sess:
+    feed = {d: [[1,2,3,4], [5,6,7,8]]}
+    print sess.run([output], feed_dict=feed)
+    
+# [array([[ 1.,  5.],
+#         [ 2.,  6.],
+#         [ 3.,  7.],
+#         [ 4.,  8.]], dtype=float32)]
+{% endhighlight %}
+
+
+
+
+
 [Download and Setup TensorFlow]: https://www.tensorflow.org/versions/r0.8/get_started/os_setup.html#download-and-setup
 [Download CUDA Toolkit]: https://developer.nvidia.com/cuda-downloads
 [Download cuDNN]: https://developer.nvidia.com/cudnn

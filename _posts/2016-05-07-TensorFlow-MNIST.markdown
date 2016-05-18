@@ -1,10 +1,10 @@
 ---
 layout: post
 title:  "TensorFlow - Softmax Regression"
-date:   2016-05-05 01:00:00
+date:   2016-05-07 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/TensorFlow-Softmax-Regression/
-tags: ['MNIST', 'hand-written digits', '손글씨']
+tags: ['MNIST', 'Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio']
 
 ---
 
@@ -63,6 +63,28 @@ for _subs in subplots:
 <img src="{{ page.asset_path }}sample.png" class="img-responsive img-rounded">
 
 
+# Logistic Function
+
+Softmax Regression을 알기 위해서는 먼저, binary classification인 Logistic Classification을 알아야 합니다.
+Logistic Function은 생긴것이 S자 형태라서 Sigmoid Function으로도 불립니다.
+
+$$\sigma(z) = \frac{1}{1+e^{-z}}$$
+
+여기서 z는 net function으로서 다음과 같습니다. 
+
+$$ z = \sum_{i=0}^{n}{W_{i}X_{i}} = W^T  X $$
+
+Python 에서는 다음과 같이 표현 가능합니다.
+
+{% highlight python %}
+def logistic(z): 
+    return 1 / (1 + np.exp(-z))
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}sigmoid.png" class="img-responsive img-rounded">
+
+즉 y-intercept를 0.5 로 갖으며 x값이 무한대로 커지면 1에 가까워지며, 무한대로 작아지면 0에 가까워지는 형태입니다.
+
 # Softmax Regression
 
 
@@ -90,6 +112,17 @@ P(y = K | x; \theta)
 \exp(\theta^{(K)\top} x ) \\
 \end{bmatrix}
 \end{align}$$
+
+
+{% highlight python %}
+# W 값의 모습
+[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+ [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+ [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+ ...
+ [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+]
+{% endhighlight %}
 
 
 
