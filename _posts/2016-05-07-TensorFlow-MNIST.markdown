@@ -63,30 +63,7 @@ for _subs in subplots:
 <img src="{{ page.asset_path }}sample.png" class="img-responsive img-rounded">
 
 
-# Logistic Function
-
-Softmax Regression을 알기 위해서는 먼저, binary classification인 Logistic Classification을 알아야 합니다.
-Logistic Function은 생긴것이 S자 형태라서 Sigmoid Function으로도 불립니다.
-
-$$\sigma(z) = \frac{1}{1+e^{-z}}$$
-
-여기서 z는 net function으로서 다음과 같습니다. 
-
-$$ z = \sum_{i=0}^{n}{W_{i}X_{i}} = W^T  X $$
-
-Python 에서는 다음과 같이 표현 가능합니다.
-
-{% highlight python %}
-def logistic(z): 
-    return 1 / (1 + np.exp(-z))
-{% endhighlight %}
-
-<img src="{{ page.asset_path }}sigmoid.png" class="img-responsive img-rounded">
-
-즉 y-intercept를 0.5 로 갖으며 x값이 무한대로 커지면 1에 가까워지며, 무한대로 작아지면 0에 가까워지는 형태입니다.
-
 # Softmax Regression
-
 
 Logistic Regression 에서는 labels이 binary: $$y^{(i)} \in \{0,1\}$$ 입니다.
 하지만 Softmax Regression (or multinomial logistic regression) 에서는 2개 이상의 
