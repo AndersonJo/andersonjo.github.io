@@ -4,7 +4,7 @@ title:  "Logistic Regression"
 date:   2016-05-07 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Logistic-Regression/
-tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio']
+tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio', 'maximum likelihood estimation']
 
 ---
 
@@ -72,25 +72,51 @@ tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio']
 
 <img src="{{ page.asset_path }}logit.png" class="img-responsive img-rounded">
 
+Logit Function을 사용하는 이윤는 2개의 claases를 갖은 Binary Classification에서 Linear Regression을 만들기 위해서 입니다.
+즉 $$  \begin{align} \ln{\frac{p}{1-p}} = y \end{align} $$ 처럼 단순히 y값이 아니라
+$$  \begin{align} \ln{\frac{p}{1-p}} = \beta + \beta x \end{align} $$ 같은 Linear regression을 찾기 위함입니다.
+아래의 그림처럼 2개의 클래스의 상관관계가 Linear Regression 으로 표현이 되었습니다.
+
+<img src="{{ page.asset_path }}binary-graph.png" class="img-responsive img-rounded">
+
+
+#### <span style="color:red"> $$ logit(p(y=1|x)) = w_{0}x_{0} + w_{1}x_{1} + ... + w_{m}x_{m} = \sum_{i=0} w_{m}x_{m} = w^Tx $$ </span>
+
+x features가 주어졌을때 y=1일 확률을 Maximum Likelihood Estimation을 통해서 알아보면 위의 같은 공식이 나옵니다.
+
+### From Probability -> odds -> Logit
+최종적으로 Logistic Regression을 하기 위해서는 다음과 같이 변형해야 합니다.
+
+* 확률 P -> Odds -> Logit (log odds)
+
+{% highlight bash %}
+p = np.arange(0.01, 1, 0.05)
+odds_data = p/(1-p)
+logit_data = np.log(odds_data)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}odds_logit.png" class="img-responsive img-rounded">
+
+이렇게 변환하는 이유는 확률자체가 갖고 있는 restricted range (0~1)의 범위로는 어떠한 Model을 찾기가 매우 어렵기 때문입니다.
+확률은 0~1사이의 제한된 범위를 갖고, odds는 0~infinite 의 범위를 갖지만 음수의 범위가 없습니다. 
+logit을 하면 그래프에 보이듯이 -infinite ~ infinite 사이의 범위를 갖기 때문에 모델링 하기가 쉬워 집니다.
+
+<img src="{{ page.asset_path }}estimated_regression.png" class="img-responsive img-rounded">
+
 
 
 # Logistic Function
 
 Logistic Function은 S자 형태라서 **Sigmoid Function**으로도 불리며, logit function의 **inverse function** 입니다.
 
+
 <img src="{{ page.asset_path }}logistic.png" class="img-responsive img-rounded">
 
-문제는 binary classes를 갖고 있는 데이터를 어떻게 저 sigmoid model에다가 맞춰 넣는가 입니다.<br>
-odds ratio에 natural log를 적용하면, linear function과 동일하게 만들수 있습니다.
+Logistic Function의 정의는 다음과 같습니다.
 
-<img src="{{ page.asset_path }}estimated_regression.png" class="img-responsive img-rounded">
+#### $$\phi(z) = \frac{1}{1+e^{-z}}$$
 
-
-$$\sigma(z) = \frac{1}{1+e^{-z}}$$
-
-여기서 z는 net function으로서 다음과 같습니다. 
-
-$$ z = \sum_{i=0}^{n}{W_{i}X_{i}} = W^T  X $$
+여기서 z는 net input 으로서 위의 logit(p(y=1\|x)) 공식입니다.
 
 Python 에서는 다음과 같이 표현 가능합니다.
 
@@ -99,9 +125,6 @@ def logistic(z):
     return 1 / (1 + np.exp(-z))
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}sigmoid.png" class="img-responsive img-rounded">
-
-즉 y-intercept를 0.5 로 갖으며 x값이 무한대로 커지면 1에 가까워지며, 무한대로 작아지면 0에 가까워지는 형태입니다.
 
 
 
@@ -153,4 +176,12 @@ $$ \begin{align}
 \end{align} $$
 </span>
 
+
+# Maximum Likelihood Estimation
+
+[http://czep.net/stat/mlelr.pdf][http://czep.net/stat/mlelr.pdf]
+
+
+
 [MNIST Website]: http://yann.lecun.com/exdb/mnist/
+[http://czep.net/stat/mlelr.pdf]: http://czep.net/stat/mlelr.pdf
