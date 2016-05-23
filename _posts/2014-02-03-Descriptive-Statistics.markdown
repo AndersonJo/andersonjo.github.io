@@ -3,7 +3,7 @@ layout: post
 title:  "Humoungous - Descriptive Statistics"
 date:   2014-02-03 01:00:00
 categories: "statistics"
-static: /assets/posts/Descriptive-Statistics/
+asset_path: /assets/posts/Humoungous-Statistics/
 tags: ['linear regression']
 
 ---
@@ -104,12 +104,30 @@ s = np.std(data)
 np.sum(np.logical_and(data >= m - 2*s, data <= m + 2*s))
 {% endhighlight %}
 
+# Probability
 
 
+<img src="{{ page.asset_path }}probability.jpg" class="img-responsive img-rounded">
+
+| Term | Definition | Example |
+|:-----|:-----------|:--------|
+| Mutually Exclusive Events | 동시에 일어나지 못하는 이벤트<br>하나의 class에만 속함(중복X) | 동전앞면 나오기 (뒷면도 동시에 나올수 없다) |
+| Independent Events | 서로 영향을 주지 않는 이벤트<br>P(A\|B) = P(A)| |
+| Addition Rule | P(A or B) = P(A) + P(B) - P(A or B) | |
 
 
+### Conditional Probability
 
+$$ P(A|B) = \frac{P(A \ and \ B)}{P(B)} = \frac{ P(A \cap B)}{P(B)} $$
 
+Short Time Warm-up을 갖었을때 Deb이 이길 확률은?
 
+| Warm-up Time | Deb Wins | Bob Wins | Total |
+|:-------------|:---------|:---------|:------|
+| Short | 4 | 6 | 10 |
+| Long  | 16 | 24 | 40 |
+| Total | 20 | 30 | 50 |
 
+$$ P(Deb | Short) = \frac{P(Deb \cap Short)}{P(Short)} = \frac{\frac{4}{50}}{ \frac{10}{50}} = \frac{4}{10} = 0.4 $$
 
+이때 P(Deb \| Long) = P(Deb)이므로 Deb 와 Long은 Independent이다. 
