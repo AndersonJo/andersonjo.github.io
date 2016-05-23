@@ -4,7 +4,7 @@ title:  "Humoungous - Descriptive Statistics"
 date:   2014-02-03 01:00:00
 categories: "statistics"
 asset_path: /assets/posts/Humoungous-Statistics/
-tags: ['linear regression']
+tags: ['linear regression', 'STD', 'Variance', 'Standard Deviation', 'Conditional Probability']
 
 ---
 
