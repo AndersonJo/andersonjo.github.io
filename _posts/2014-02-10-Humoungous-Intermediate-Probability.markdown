@@ -3,7 +3,7 @@ layout: post
 title:  "Humoungous - Intermediate Probability"
 date:   2014-02-10 01:00:00
 categories: "statistics"
-asset_path: /assets/posts/Humoungous-Advanced-Probability/
+asset_path: /assets/posts/Humoungous-Statistics/
 tags: []
 
 ---
@@ -49,7 +49,10 @@ Q. 동전을 6번 던져을때의 평균, Variance, Standard Deviation 을 구�
 
 # Poisson Probability Distribution (푸아슨 분포)
 
-* 특정 시간,범위,거리 동안에 (interval) 어떤 이벤트가 몇 번 일어날지 예측한다. 
+* 특정 시간,범위,거리 동안에 (interval) 어떤 이벤트가 몇 번 일어날지 예측한다.
+ 
+ 
+<img src="{{ page.asset_path }}poisson.gif" class="img-responsive img-rounded">
 
 $$ P(x) = \frac{\lambda^{x}e^{-\lambda} }{x!} = \frac{평균횟수^{횟수} e^{-평균횟수}}{횟수!}$$
 
@@ -75,3 +78,20 @@ Q. 시간당 7명의 손님이 오는 가게의, 평균, Variance, STD를 구하
 <span class="warning" style="color:red;">
 이때 Mean 과 Variance가 거의 동일하지 않다면, 데이터가 Poisson Distribution이 아닐수 있습니다.
 </span>
+
+# Normal Distribution & Z-Score
+
+* mean을 중심으로 Symmetric 이다. 
+* mean, median, 그리고 mode가 모두 같은 값이다. 
+* 전체 면적은 1이다.
+* Bell Curve라고도 불린다. 
+
+ 
+<img src="{{ page.asset_path }}normal-distrubution-large.gif" class="img-responsive img-rounded">
+ 
+| Mean | 값이 높으면 그래프를 우측으로, 낮으면 좌측으로 움직이다. | |
+| STD | 값이 눂을수록 더 넓게 분산된다. 작으면 좁은 bell-shaped 커브를 그린다. | |
+| **Z-Score** | **특정 x와 mean사이에 STD가 몇개가 들어가는지 계산을 한다.** | $$ \begin{align} z_{x} = \frac{x - \mu}{\sigma} \end{align} $$ |
+
+
+
