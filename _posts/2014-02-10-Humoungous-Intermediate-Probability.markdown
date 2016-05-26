@@ -23,8 +23,12 @@ r \\
 | p | 성공 확률 | 상수 - 즉 고정값 |
 | q | 실패 확률 | 상수 - 즉 고정값 |
 
-> Q. 동전을 6번 던져을때 정확하게 두번 heads가 나오는 확률은? <br>
-> (23.4%의 확률로 정확하게 2번 heads가 나올수 있다.)
+
+<div class="bg-primary" style="padding:15px; border-radius:5px;">
+Q. 동전을 6번 던져을때 정확하게 두번 heads가 나오는 확률은? 
+   (23.4%의 확률로 정확하게 2번 heads가 나올수 있다.)
+</div>
+
 
 $$ P(r) = \begin{pmatrix}
 6 \\
@@ -34,9 +38,15 @@ $$ P(r) = \begin{pmatrix}
 = 15 * 0.25 * 0.0625 = 0.234375
 $$
 
+<div class="bg-primary" style="padding:15px; border-radius:5px;">
+Q. 동전을 6번 던져을때의 평균, Variance, Standard Deviation 을 구하세요.  
+</div>
 
+| Mean | $$ \begin{align} \mu =  np \end{align}$$ | $$ \mu = 6 * 0.5 = 3 $$ |
+| Variance | $$ \begin{align} \sigma^{2} = npq \end{align}$$ | $$ \sigma^{2} = 6 * 0.5 * 0.5 = 1.5 $$ |
+| Standard Deviation | $$ \sqrt{\sigma^{2}} $$ | $$ \sqrt{1.5} = 1.225 $$ |
 
-
+* q는 실패확률
 
 
 
