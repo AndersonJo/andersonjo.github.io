@@ -46,12 +46,32 @@ Q. 동전을 6번 던져을때의 평균, Variance, Standard Deviation 을 구�
 | Variance | $$ \begin{align} \sigma^{2} = npq \end{align}$$ | $$ \sigma^{2} = 6 * 0.5 * 0.5 = 1.5 $$ |
 | Standard Deviation | $$ \sqrt{\sigma^{2}} $$ | $$ \sqrt{1.5} = 1.225 $$ |
 
-* q는 실패확률
+
+# Poisson Probability Distribution (푸아슨 분포)
+
+* 특정 시간,범위,거리 동안에 (interval) 어떤 이벤트가 몇 번 일어날지 예측한다. 
+
+$$ P(x) = \frac{\lambda^{x}e^{-\lambda} }{x!} = \frac{평균횟수^{횟수} e^{-평균횟수}}{횟수!}$$
+
+| x | interval 마다 몇번일 발생했는지 (Occurrences) |
+| $$ \lambda $$ | interval 마다 평균 몇번이 발생했는지 (Average Occurrences); lambda라고 읽는다|
+| e | Euler's number 2.71828... |
 
 
+<div class="bg-primary" style="padding:15px; border-radius:5px;">
+Q. 시간당 7명의 손님이 오는 가게에, 다음 1시간 동안 정확하게 4명의 손님이 올 확률을 계산하여라.   
+</div>
 
+$$ P(x) = \frac{7^{4} e^{-7}}{4!} = 0.0912$$
 
+<div class="bg-primary" style="padding:15px; border-radius:5px;">
+Q. 시간당 7명의 손님이 오는 가게의, 평균, Variance, STD를 구하세요.    
+</div>
 
+| Mean | $$ \mu = \lambda $$ | $$ \mu = 7 $$ |
+| Variance | $$ \sigma^{2} = \lambda $$ | $$ \sigma^{2} = 7 $$ |
+| STD | $$ \sigma = \sqrt{\sigma^{2}} $$ | $$ \sigma = \sqrt{7} = 2.65 $$ | 
 
-
-
+<span class="warning" style="color:red;">
+이때 Mean 과 Variance가 거의 동일하지 않다면, 데이터가 Poisson Distribution이 아닐수 있습니다.
+</span>
