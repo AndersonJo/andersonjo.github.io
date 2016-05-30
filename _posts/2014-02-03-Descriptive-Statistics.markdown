@@ -43,7 +43,36 @@ slope = x.cov(data) / x.var()
 y-intercept = data.mean() - slope * x.mean()
 {% endhighlight %}
 
-# Measures of Variation
+### Pearson Correlation
+
+* 일반적으로 correlation이라함은 Pearson Correlation을 말한다.
+* -1 그리고 1사이의 범위를 갖는다.
+* 극으로 갈수록 서로간의 Linear Relationship이 강하며, 0이라면 상관관계가 전혀 없다.
+* 공식의 $$ \rho $$ 는 소문자 p와는 다른, rho 기호로서 Person's Correlation을 가르킨다. 
+* 공식의 $$ \sigma $$ sigma 기호는 Standard Deviation을 가르킨다.
+* 음수가 나오면 X값이 커질수록 Y값의 감소를 의미한다.
+* 0.1 ~ 0.3 정도면 상관관계가 약한편이다. (음수도 동일)
+* 0.3 ~ 0.5 사이면 적당히 상관관계가 있다. (음수도 동일)
+* 0.5 이상이라면 상관관계가 강한 편이다. (음수도 동일)
+
+$$ \rho_{x, y} = Corr(x, y) = \frac{Cov(x, y)}{\sigma_{x} \sigma_{y}} $$
+
+**R**
+
+{% highlight r %}
+cov(data$temperature, data$distress_ct)/(sd(data$temperature) * sd(data$distress_ct))
+{% endhighlight %}
+
+**Python**
+
+{% highlight python %}
+x_mean = np.mean(xs)
+y_mean = np.mean(ys)
+cov = np.sum((xs - x_mean) * (ys - y_mean))/len(xs)
+return  cov /(np.std(xs) * np.std(ys))
+{% endhighlight %}
+
+# Measures of Variation 
 
 ### Variance 
 
