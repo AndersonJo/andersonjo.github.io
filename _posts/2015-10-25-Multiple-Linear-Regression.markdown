@@ -34,11 +34,49 @@ $$ y = \beta_{0}x_{0} + \beta_{1}x_{1} + \beta_{2}x_{2} + \ ... \ + + \beta_{i}x
 
 <img src="{{ page.asset_path }}regression.png" class="img-responsive img-rounded">
 
-궁극적인 목표는 Sum of the squared errors를 구했을때 error가 가장적은 $$ \beta $$ (The vectore of regression coefficients)값을 찾는 것입니다.
+궁극적인 목표는 Sum of the squared errors를 구했을때 error가 가장적은 $$ \beta $$ (The vector of regression coefficients)값을 찾는 것입니다.
 
 $$ \hat{\beta} = (X^{T}X)^{-1}X^{T}Y $$
 
 * T 는 Transpose를 뜻하고, negative exponent는 matrix inverse를 뜻합니다.
+
+**R**
+
+{% highlight r %}
+reg <- function(y, x){
+  x <- as.matrix(x)
+  x <- cbind(Intercept=1, x) # Intercept 라는 column을 추가시킵니다. 안의 데이터는 모두 1값
+  b <- solve(t(x) %*% x) %*% t(x) %*% y # solve 는 inverse of a matrix를 취합니다.
+  colnames(b) <- 'estimate'
+  print(b)
+}
+
+reg(y=challenger$distress_ct, x=challenger[2:4])
+                         estimate
+Intercept             3.527093383
+temperature          -0.051385940
+field_check_pressure  0.001757009
+flight_num            0.014292843
+{% endhighlight %}
+
+**Python**
+
+{% highlight python %}
+import numpy as np
+from numpy.linalg import inv
+
+challenger = np.genfromtxt('challenger.csv', delimiter=',', skip_header=True)
+
+def reg(x, y):
+    x = np.c_[np.ones(len(x)), x]
+    b = inv(np.dot(x.T, x))    
+    b = np.dot(np.dot(b, x.T), y)
+    return b[0], b[1:]
+    
+y_intercept, coefficients = reg(y=challenger[:, 0], x=challenger[:, 1:4])
+# y_intercept:  3.52709338331
+# coefficients: [-0.05138594  0.00175701  0.01429284]
+{% endhighlight %}
 
 
 # Matrix Inverse
