@@ -4,7 +4,7 @@ title:  "Multiple Linear Regression"
 date:   2015-10-25 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Multiple-Linear-Regression/
-tags: ['matrix inverse']
+tags: ['Medical Expenses', 'Matrix Inverse']
 
 
 ---
@@ -78,6 +78,48 @@ y_intercept, coefficients = reg(y=challenger[:, 0], x=challenger[:, 1:4])
 # coefficients: [-0.05138594  0.00175701  0.01429284]
 {% endhighlight %}
 
+# Predicting Medical Expenses
+
+### Correlation Matrix
+
+**R**
+
+{% highlight r %}
+cor(insurance[c('age', 'bmi', 'children', 'expenses')])
+               age        bmi   children   expenses
+age      1.0000000 0.10934101 0.04246900 0.29900819
+bmi      0.1093410 1.00000000 0.01264471 0.19857626
+children 0.0424690 0.01264471 1.00000000 0.06799823
+expenses 0.2990082 0.19857626 0.06799823 1.00000000
+{% endhighlight %}
+
+
+**Python Pandas**
+
+{% highlight python %}
+data = pd.read_csv('../data/multiple-linear-regression/insurance.csv')
+data['smoker'] = data['smoker'].apply({'yes': 1, 'no': 0}.get)
+data['male'] = data['sex'] == 'male'
+data['female'] = data['sex'] == 'female'
+data.columns = ['age', 'sex', 'bmi', 'children', 'smoker', 'region', 'male', 'female', 'expenses']
+
+data.corr()
+               age       bmi  children    smoker      male    female  expenses
+age       1.000000  0.109341  0.042469 -0.025019  0.299008 -0.020856  0.020856
+bmi       0.109341  1.000000  0.012645  0.003968  0.198576  0.046380 -0.046380
+children  0.042469  0.012645  1.000000  0.007673  0.067998  0.017163 -0.017163
+smoker   -0.025019  0.003968  0.007673  1.000000  0.787251  0.076185 -0.076185
+male      0.299008  0.198576  0.067998  0.787251  1.000000  0.057292 -0.057292
+female   -0.020856  0.046380  0.017163  0.076185  0.057292  1.000000 -1.000000
+expenses  0.020856 -0.046380 -0.017163 -0.076185 -0.057292 -1.000000  1.000000
+
+scatter_matrix(data, figsize=(10, 10))
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}cor_matrix_pandas.png" class="img-responsive img-rounded">
+
+* age ~ bmi: 0.109341 => Weak Positive Correlation을 갖고 있다.<br>즉 age가 들수록 body mess 또한 **조금씩 조금씩** 증가한다.
+* age ~ expenses: 0.299008 그리고 bmi ~ expenses: 0.198576<br>즉 age, bmi등이 높아질수록, 의료 비용이 많이 들어감을 알 수 있다.
 
 # Matrix Inverse
  
@@ -102,3 +144,5 @@ np.dot(a, inv(a))
 #        [ 0.,  1.]])
 
 {% endhighlight %}
+
+
