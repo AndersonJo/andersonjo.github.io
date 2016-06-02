@@ -48,7 +48,7 @@ sudo chown -R hduser:hadoop  /usr/local/hive/
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 # Hadoop
-export HADOOP_HOME=/usr/local/hadoop-2.7.2
+export HADOOP_HOME=/usr/local/hadoop
 export HADOOP_MAPRED_HOME=$HADOOP_HOME
 export HADOOP_COMMON_HOME=$HADOOP_HOME
 export HADOOP_HDFS_HOME=$HADOOP_HOME
@@ -203,7 +203,6 @@ vi $HIVE_HOME/conf/hive-site.xml
 ### Running HiveCli
 
 {% highlight bash %}
-hdfs dfs -mkdir /hive/warehouse
 hdfs dfs -mkdir -p /hive/warehouse
 hdfs dfs -chmod g+w /tmp
 hdfs dfs -chmod g+w /hive/warehouse

@@ -36,6 +36,9 @@ sudo apt-get install ssh rsync
 물론 requirement 는 아닙니다.
 
 {% highlight bash %}
+# 만약 perl locale 에러가 나면..
+# sudo locale-gen ko_KR.UTF-8
+
 sudo addgroup hadoop
 sudo adduser --ingroup hadoop hduser
 sudo adduser hduser sudo
@@ -112,6 +115,7 @@ cd hadoop-2.7.2-src
 mvn package -Pdist,native -DskipTests -Dtar
 sudo cp -R hadoop-dist/target/hadoop-2.7.2 /usr/local/
 sudo chown -R hduser:hadoop /usr/local/hadoop-2.7.2
+sudo ln -s /usr/local/hadoop-2.7.2/ /usr/local/hadoop
 {% endhighlight %}
 
 빌드가 끝난후 hadoop-dist/target/hadoop-2.7.2 디렉토리를 /usr/local 에다가 복사합니다.<br>
@@ -144,7 +148,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 unset JAVA_TOOL_OPTIONS
 
 # Hadoop
-export HADOOP_PREFIX=/usr/local/hadoop-2.7.2
+export HADOOP_PREFIX=/usr/local/hadoop
 export HADOOP_MAPRED_HOME=$HADOOP_PREFIX
 export HADOOP_COMMON_HOME=$HADOOP_PREFIX
 export HADOOP_HDFS_HOME=$HADOOP_PREFIX
@@ -171,7 +175,7 @@ Standalone Mode는 개발, 디버깅, 테스팅을 위해서 유용합니다.<br
 
 {% highlight bash %}
 # hduser인 상태에서..
-cp hadoop-dist/target/hadoop-2.7.2/etc/hadoop/*.xml /usr/local/hadoop-2.7.2/conf
+cp hadoop-dist/target/hadoop-2.7.2/etc/hadoop/*.xml /usr/local/hadoop/conf
 {% endhighlight %}
 
 그 다음 아래의 파일들과 동일하게 설정을 해줍니다.

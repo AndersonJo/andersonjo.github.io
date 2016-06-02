@@ -17,7 +17,7 @@ $$ y \ intercept = \bar{y} - slope * \bar{x}  $$
 **R**
 
 {% highlight r %}
-> lm(y~x)
+lm(y~x)
 
 Coefficients:
 (Intercept)            x  

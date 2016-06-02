@@ -142,6 +142,9 @@ export SPARK_CLASSPATH=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6/lib/postgre
 # RVM
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export PATH="$HOME/.rvm/gems/ruby-2.1.0/bin":$PATH
+
+# Oracle
+export ORACLE_HOME=/usr/lib/oracle/12.1/client64/
 {% endhighlight %}
 
 
@@ -261,8 +264,22 @@ init-connect='SET NAMES utf8'
 character-set-server = utf8
 {% endhighlight %}
 
+### Oracle Client
 
+먼저 [oracle-client]를 다운받습니다. 
+
+* oracle-instantclinet-basic-.rpm
+* oracle-instantclinet-devel-.rpm
+* oracle-instantclinet-sqlplus-.rpm
+
+{% highlight bash %}
+sudo apt-get install alien
+sudo apt-get install libaio1
+sudo alien -i oracle-*
+
+{% endhighlight %}
 
 
 [c.sublime]: {{ page.asset_path }}c.sublime-build
 [watches-limlit]: https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit
+[oracle-client]: http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html
