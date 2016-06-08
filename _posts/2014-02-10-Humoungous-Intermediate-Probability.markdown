@@ -91,7 +91,26 @@ Q. 시간당 7명의 손님이 오는 가게의, 평균, Variance, STD를 구하
  
 | Mean | 값이 높으면 그래프를 우측으로, 낮으면 좌측으로 움직이다. | |
 | STD | 값이 눂을수록 더 넓게 분산된다. 작으면 좁은 bell-shaped 커브를 그린다. | |
-| **Z-Score** | **특정 x와 mean사이에 STD가 몇개가 들어가는지 계산을 한다.** | $$ \begin{align} z_{x} = \frac{x - \mu}{\sigma} \end{align} $$ |
+| **Z-Score** | 특정 x와 mean사이에 STD가 몇개가 들어가는지 계산을 한다. | $$ \begin{align} z_{x} = \frac{x - \mu}{\sigma} \end{align} $$ |
 
+### Normal Distribution in Python
 
+{% highlight python %}
+import numpy as np
+from scipy import stats
 
+data = np.random.normal(size=10000)
+data.sort()
+pdf = stats.norm.pdf(data, data.mean(), data.std())
+plt.plot(data, pdf)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}normal_distribution.png" class="img-responsive img-rounded">
+
+<div class="bg-primary" style="padding:15px; border-radius:5px;">
+Q. 자동차가 체크포인트를 지나가는 시점이 normally distributed라고 가정하고, 평균 시간당 61 miles, 그리고 std는 시간당 4일때, 그 다음 자동차가 시간당 65마일 이하로 지나갈 확률은?
+</div>
+
+$$ z = \frac{65-61}{4} = 1 $$
+
+z-score가 1값으로 나왔는데, stadard normal table에서 확인해 보면, z-score of 1.00과 mean사이의 area값은 0.3413이 나옵니다.
