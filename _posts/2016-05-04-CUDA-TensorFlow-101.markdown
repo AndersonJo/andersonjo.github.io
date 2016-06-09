@@ -84,6 +84,17 @@ Built on Tue_Aug_11_14:27:32_CDT_2015
 Cuda compilation tools, release 7.5, V7.5.17
 {% endhighlight %}
 
+### When Not Working
+
+CUDA Toolkit설치시에 자동으로 Nvidia Driver가 자동으로 설치가 되지만, 안될시에는 드라이버를 집접 받아서 설치합니다.
+
+[Download Nvidia Driver][Download Nvidia Driver]
+
+{% highlight bash %}
+sudo apt-get install linux-headers-`uname -r`
+./NVIDIA-Linux-x86_64-367.18.run
+{% endhighlight %}
+
 
 ### CUDA + cuDNN
 
@@ -289,3 +300,4 @@ with tf.Session() as sess:
 [Download and Setup TensorFlow]: https://www.tensorflow.org/versions/r0.8/get_started/os_setup.html#download-and-setup
 [Download CUDA Toolkit]: https://developer.nvidia.com/cuda-downloads
 [Download cuDNN]: https://developer.nvidia.com/cudnn
+[Download Nvidia Driver]: http://www.nvidia.com/Download/index.aspx?lang=en-kr
