@@ -114,9 +114,9 @@ Logistic Function은 S자 형태라서 **Sigmoid Function**으로도 불리며, 
 
 Logistic Function의 정의는 다음과 같습니다.
 
-#### $$\phi(z) = \frac{1}{1+e^{-z}}$$
+#### $$\phi(z) = \frac{1}{1+e^{-z}} = \frac{ e^{z} }{ 1 + e^{z} } $$ 
 
-여기서 z는 net input 으로서 위의 logit(p(y=1\|x)) 공식입니다.
+여기서 z는 **net input** 으로서 위의 logit(p(y=1\|x)) 공식입니다.
 
 Python 에서는 다음과 같이 표현 가능합니다.
 
@@ -126,6 +126,26 @@ def logistic(z):
 {% endhighlight %}
 
 
+
+# Learning the weights
+
+### Sum Squared Error Cost Function
+
+Cost Function은 다음과 같습니다.
+
+$$ J(w) = \sum{ \frac{1}{2}( \phi(z^{i}) - y^{i})^{2}  } $$
+
+* z 는 net input으로서 $$ z = \sum{x_{j} w_{j} } = W^{T}X $$
+* $$ \phi{(z^{i})} $$ 는 activation function 으로서 logistic function(or sigmoid function)의 값이다. 
+* Learning시에 Cost function의 값은 줄이고, Likelihood는 증가시킨다. 
+
+### Likelihood
+
+Cost function을 미분 (derivative) 하는 방법을 설명하려면 먼저 Likelihood $$ L $$ 을 먼저 정의해야 합니다.
+
+$$ L(w) = P(y | x;w) = \prod^{n}{ P(y^{i} | x^{i}; w) } = \prod^{n} (\phi(z^{i}))^{y^{i}} (1 - \phi(z^{i}))^{1 - y^{i}} $$
+
+<img src="{{ page.asset_path }}maximum_likelihood.png" class="img-responsive img-rounded">
 
 
 # Partial Derivative
@@ -177,11 +197,8 @@ $$ \begin{align}
 </span>
 
 
-# Maximum Likelihood Estimation
 
-[http://czep.net/stat/mlelr.pdf][http://czep.net/stat/mlelr.pdf]
 
 
 
 [MNIST Website]: http://yann.lecun.com/exdb/mnist/
-[http://czep.net/stat/mlelr.pdf]: http://czep.net/stat/mlelr.pdf
