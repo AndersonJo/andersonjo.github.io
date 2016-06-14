@@ -206,5 +206,91 @@ Input mapping Templates 그리고 Output mapping templates을 각각 따로 만�
 {% endhighlight %}
 
 
+# Authentication Example with DynamoDB
+
+
+### Login
+
+API Gateway에서는 Post로 하고, Authorization을 NONE으로 해줍니다.
+즉 Login에서는 DynamoDB에 auth_token에 해당하는 principal_id만 새로 업데이트 해주고, 클라이언트에 새롭게 생성된
+principal_id를 넘겨주면 됩니다. 
+
+
+
+{% highlight python %}
+from __future__ import print_function
+
+import boto3
+import json
+import random
+from hashlib import sha512
+from string import digits, ascii_letters
+
+# Constants
+USER_TABLE_NAME = 'ss_user'
+
+def lambda_handler(event, context):
+    user_id = event.get('user_id')
+    password = event.get('password')
+    
+    if not user_id or not password:
+        raise Exception('unauthorized')
+    
+    # Clean Password
+    _sha = sha512()
+    _sha.update(password)
+    password_digested = _sha.hexdigest()
+    
+    #print("Received event: " + json.dumps(event, indent=2))
+    
+    # Init DynamoDB
+    dynamo = boto3.resource('dynamodb').Table(USER_TABLE_NAME)
+    
+    # Retrieve the user from DynamoDB
+    user_obj = dynamo.get_item(Key={'user_id': user_id})
+    
+    # Authenticate the user
+    if not user_obj:
+        raise Exception('unauthorized')
+        
+    if not user_obj['Item']:
+        raise Exception('unauthorized')
+    
+    if user_obj['Item']['password'] != password_digested:
+        raise Exception('unauthorized')
+    
+    
+    # Login the user
+    principal_id = random_principal_id(10)
+    
+    # Update Principal ID on DynamoDB
+    dynamo.update_item(Key={'user_id': user_id}, 
+        UpdateExpression="set principal_id = :p",
+        ExpressionAttributeValues={':p': principal_id})
+    
+    return {'auth_token': u'%s:%s' % (user_id, principal_id)}
+    
+    # operations = {
+    #     'create': lambda x: dynamo.put_item(**x),
+    #     'read': lambda x: dynamo.get_item(**x),
+    #     'update': lambda x: dynamo.update_item(**x),
+    #     'delete': lambda x: dynamo.delete_item(**x),
+    #     'list': lambda x: dynamo.scan(**x),
+    #     'echo': lambda x: x,
+    #     'ping': lambda x: 'pong'
+    # }
+        
+def random_principal_id(n):
+    chars =  digits + ascii_letters
+    return ''.join(random.choice(chars) for _ in range(n))
+{% endhighlight %}
+
+
+
+### Custom Authorizer 
+
+
+
+
 [Velocity]: http://velocity.apache.org/engine/devel/vtl-reference.html
 [JSON Path]: http://goessner.net/articles/JsonPath/
