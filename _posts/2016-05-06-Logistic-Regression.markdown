@@ -13,6 +13,177 @@ tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio', 'max
 </div>
 
 
+# Logistic Regression in R
+
+### Data Cleaning Process
+
+* <a href="{{ page.asset_path }}train.csv">train.csv</a>
+
+데이터를 불러온후 missing values를 체크 그리고 unique values가 있는지 sapply() 사용해서 알아 봅니다.
+
+{% highlight r %}
+> train.data.raw <- read.csv('train.csv', header = T, na.strings = c(""))
+> sapply(train.data.raw, function(x) sum(is.na(x)))
+survived  pclass  name  sex   age  sibsp  parch  ticket  fare  cabin embarked 
+       0       0     0    0   177      0      0       0     0    687        2 
+
+> sapply(train.data.raw, function(x) length(unique(x)))
+survived  pclass  name  sex   age  sibsp  parch  ticket  fare  cabin embarked 
+       2       3   891    2    89      7      7     681   248    148        4 
+{% endhighlight %}
+
+Amelia Library를 사용하면 missing values를 plot으로 볼 수 있는 missmap() 함수를 제공합니다.
+
+{% highlight r %}
+install.packages('Amelia')
+library(Amelia)
+missmap(train.data.raw, main='Missing Values vs observed')
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}missing_values.png" class="img-responsive img-rounded">
+
+
+{% highlight r %}
+> data = subset(train.data.raw, select = c(1, 2, 4, 5, 6, 7, 9, 11))
+> head(data)
+  survived pclass    sex age sibsp parch    fare embarked
+1        0      3   male  22     1     0  7.2500        S
+2        1      1 female  38     1     0 71.2833        C
+3        1      3 female  26     0     0  7.9250        S
+4        1      1 female  35     1     0 53.1000        S
+5        0      3   male  35     0     0  8.0500        S
+6        0      3   male  NA     0     0  8.4583        Q
+{% endhighlight %}
+
+데이터를 보니 cabin에 687개의 missing values가 존재하고 이는 너무 많으니 cabin은 데이터 분석에서 제외하며,< 
+Name
+
+### Tackling Missing Values 
+
+일반적으로 Missing values를 처리하는 방법으로는 mean, mode, 또는 median값으로 대체해주면 됩니다.
+
+{% highlight r %}
+data$age[is.na(data$age)] <- mean(data$age, na.rm=T)
+{% endhighlight %}
+
+또한 일반적으로 category data (string이라고 생각)는 csv.read할때 기본값이 factor 타입입니다.<br>
+어떻게 구성되어 있는지 알기 위해서는 contrasts 함수를 사용합니다.
+
+{% highlight r %}
+> is.factor(data$sex)
+[1] TRUE
+> is.factor(data$embarked)
+[1] TRUE
+
+> contrasts(data$sex)
+       male
+female    0
+male      1
+> contrasts(data$embarked)
+  Q S
+C 0 0
+Q 1 0
+S 0 1
+{% endhighlight %}
+
+마지막으로 embarked에 있는 missing values 2건을 삭제 시켜줍니다.
+
+{% highlight r %}
+> nrow(data)
+[1] 891
+> data <- data[!is.na(data$embarked),]
+> nrow(data)
+[1] 889
+{% endhighlight %}
+
+### Model Fitting
+
+일단 데이터는 train용과 test용 2개로 나눕니다.
+Logistic Regression을 하기 위해서는 glm()함수를 사용합니다.
+
+{% highlight r %}
+> train <- data[1:800,]
+> test <- data[801:889,]
+
+> model <- glm(formula=survived~., family=binomial(link='logit'), data=train)
+Coefficients:
+(Intercept)   pclass  sexmale      age   sibsp    parch     fare embarkedQ embarkedS
+   5.137627 -1.08715 -2.75681 -0.03726 -0.2929 -0.11657  0.00152 -0.002656 -0.318786 
+
+> summary(model)
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.6064  -0.5954  -0.4254   0.6220   2.4165  
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  5.137627   0.594998   8.635  < 2e-16 ***
+pclass      -1.087156   0.151168  -7.192 6.40e-13 ***
+sexmale     -2.756819   0.212026 -13.002  < 2e-16 ***
+age         -0.037267   0.008195  -4.547 5.43e-06 ***
+sibsp       -0.292920   0.114642  -2.555   0.0106 *  
+parch       -0.116576   0.128127  -0.910   0.3629    
+fare         0.001528   0.002353   0.649   0.5160    
+embarkedQ   -0.002656   0.400882  -0.007   0.9947    
+embarkedS   -0.318786   0.252960  -1.260   0.2076    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1065.39  on 799  degrees of freedom
+Residual deviance:  709.39  on 791  degrees of freedom
+AIC: 727.39
+
+Number of Fisher Scoring iterations: 5
+{% endhighlight %}
+
+
+### Interpreting the result
+
+summary를 보면은 parch, fare, embarked 데이터는 별로 중요하지 않다고 나옵니다.<br>
+또한 sex를 봤을때 p-value값이 가장 낮고, 그 의미는 성별에 따라서 생존과 아주 밀접한 관련을 갖고 있다는 것을 보여줍니다.<br>
+negative coefficient는 남자일수록 생존확률이 낮다는 것을 보여줍니다.<br>
+
+* p-value는 낮을수록 신뢰도가 좋다. 
+* null hypothesis 귀무가설이란 그냥 말이 안된는 가설을 의미한다.
+* p-value <= 0.05 일 경우 밀접한 관련성을 갖음. 
+* p-value > 0.05 일 경우 null hypothesis임. 
+
+{% highlight r %}
+> anova(model, test='Chisq')
+Analysis of Deviance Table
+Model: binomial, link: logit
+Response: survived
+Terms added sequentially (first to last)
+
+         Df Deviance Resid. Df Resid. Dev  Pr(>Chi)    
+NULL                       799    1065.39              
+pclass    1   83.607       798     981.79 < 2.2e-16 ***
+sex       1  240.014       797     741.77 < 2.2e-16 ***
+age       1   17.495       796     724.28 2.881e-05 ***
+sibsp     1   10.842       795     713.43  0.000992 ***
+parch     1    0.863       794     712.57  0.352873    
+fare      1    0.994       793     711.58  0.318717    
+embarked  2    2.187       791     709.39  0.334990    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+{% endhighlight %}
+
+The difference between the null deviance and the residual deviance shows how our model is doing against the null model (a model with only the intercept). The wider this gap, the better. Analyzing the table we can see the drop in deviance when adding each variable one at a time. Again, adding Pclass, Sex and Age significantly reduces the residual deviance. The other variables seem to improve the model less even though SibSp has a low p-value. A large p-value here indicates that the model without the variable explains more or less the same amount of variation. Ultimately what you would like to see is a significant drop in deviance and the AIC.
+
+### Predicting y
+
+{% highlight r %}
+> fitted.results <- predict(model, newdata=test, type='response')
+> fitted.results <- ifelse(fitted.results > 0.5, 1, 0)
+> mean(fitted.results == test$survived)
+[1] 0.8426966
+{% endhighlight %}
+
+정확도는 0.84정도가 나오면 나쁘지 않은 수치입니다.
+
+
 # Odds & Odds Ratio
 
 <img src="{{ page.asset_path }}odds.jpg" class="img-responsive img-rounded">
@@ -40,7 +211,7 @@ tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio', 'max
 | 다이아몬드 카드 나오기 | $$ \begin{align}  P(diamond) = \frac{\frac{13}{52}}{\frac{39}{52}} = \frac{1}{3}  = 0.333 \ or \ 1:3 \end{align} $$ |
 
 1:1 이면 성공/실패가 반반이고, 1:2 이면 실패할 확률이 2배 더 많다라고 말할수 있으며, 
-1:3 이면 실패할 확률이 3배 더 많다고 말할수 있습니다. 만약 3:1 이라면 성공할 확률이 3배 더 많다라고 말할수 있겠죠. 
+1:3 이면 실패할 확률이 3배 더 많다고 말할수 있습니다. 만약 3:1 이라면 성공할 확률이 3배 더 많다라고 말할수 있겠죠.
 
 
 ### Odds Ratio 오즈비
