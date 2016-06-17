@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Convolutional Neural Networks"
+title:  "TensorFlow - Convolutional Neural Networks"
 date:   2016-06-14 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Convolutional-Neural-Networks/
@@ -32,7 +32,14 @@ tags: []
 
 <img src="{{ page.asset_path }}cnn.jpeg" class="img-responsive img-rounded">
 
+
+# MNIST Example with TensorFlow
+
+
   
+
+
+
 
 
 [MNIST Website]: http://yann.lecun.com/exdb/mnist/
