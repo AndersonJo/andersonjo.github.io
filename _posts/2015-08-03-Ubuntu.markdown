@@ -4,7 +4,7 @@ title:  "Ubuntu 15.04"
 date:   2015-08-03 02:00:00
 categories: "ubuntu"
 asset_path: /assets/posts/Ubuntu15.04/
-tags: ['RVM', 'JAVA', '.bash.rc', 'format']
+tags: ['RVM', 'JAVA', '.bash.rc', 'format', 'my.cnf']
 
 ---
 
