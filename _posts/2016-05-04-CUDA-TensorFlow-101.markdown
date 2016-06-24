@@ -119,7 +119,7 @@ sudo apt-get install linux-headers-`uname -r`
 {% highlight bash %}
 tar xvzf cudnn-7.5-linux-x64-v4.tgz
 chmod 644 cuda/include/*
-cp -r ./cuda /usr/local/cuda
+sudo cp -r ./cuda/* /usr/local/cuda/
 {% endhighlight %}
 
 ### Install TensorFlow
