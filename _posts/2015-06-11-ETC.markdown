@@ -71,3 +71,23 @@ access_log logs/access.log timed_combined;
 {% highlight bash %}
 ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 {% endhighlight %}
+
+# OpenXenManager
+
+### Xen Client
+
+{% highlight bash %}
+sudo apt-get install git python-gtk2 glade python-gtk-vnc python-glade2 python-configobj
+git clone https://github.com/OpenXenManager/openxenmanager.git
+cd openxenmanager
+sudo python setup.py install
+openxenmanager
+{% endhighlight %}
+
+Xen서버에서 설치시.. 
+
+| OS | URL |
+|:---|:----|
+| CentOS 6.4 - 64bit | http://mirrors.sonic.net/centos/6/os/x86_64/ |
+
+
