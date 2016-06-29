@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "Gradle & Java & JUnit"
+title:  "Gradle, JUnit, Maven"
 date:   2015-04-18 01:00:00
 categories: "java"
-static: /assets/posts/Gradle-Java-Junit/
+static: /assets/posts/Gradle-Junit-Maven/
 tags: []
 
 ---
@@ -146,6 +146,47 @@ dependencies {
 {% endhighlight %}
 
 
+# Maven
+
+<img src="{{ page.static }}maven.png" class="img-responsive img-rounded">
+
+Maven은 Project Object Model (POM)에 기초한 프로젝트 관리툴입니다. 
+
+### Installation
+
+apt-get maven으로 설치가 가능합니다. (현재 버젼 3.3.3)<br>
+이때 maven2를 설치하면 안됩니다. (낮은 버젼이 설치됨)
+
+{% highlight bash %}
+sudo apt-get install maven
+{% endhighlight %}
+
+### Project Ojbect Model (POM)
+
+groupId, artifactId, version 이렇게 3개가 repository안에서 다른 프로젝트들과 구별되게 만듭니다.
+
+**pom.xml example**
+
+{% highlight xml %}
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.andersonjo</groupId>
+    <artifactId>maven-tutorial</artifactId>
+    <version>0.0.1</version>
+
+</project>
+{% endhighlight %}
+ 
+### Build Life Cycle
+
+Build Lifecycle 은 다음과 같은 절차(sequence)를 밟게 됩니다.
+
+<img src="{{ page.static }}maven-phase.png" class="img-responsive img-rounded">
+
 
 
 
@@ -191,3 +232,7 @@ public class BasicTest {
 {% highlight bash %}
 ./gradle test
 {% endhighlight %}
+
+
+
+[maven download]: https://maven.apache.org/download.cgi
