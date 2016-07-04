@@ -98,6 +98,7 @@ Customize user account for ambari-server daemon [y/n] (n)? n
 
 {% highlight bash %}
 sudo vi /etc/ambari-server/conf/ambari.properties
+sudo vi /etc/ambari-agent/conf/ambari-agent.ini
 {% endhighlight %}
 
 ### Start Ambari
