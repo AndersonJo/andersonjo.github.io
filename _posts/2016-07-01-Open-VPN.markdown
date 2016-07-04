@@ -1,0 +1,129 @@
+---
+layout: post
+title:  "OpenVPN Server on Ubuntu"
+date:   2016-07-04 01:00:00
+categories: "ubuntu"
+asset_path: /assets/posts/OpenVPN/
+tags: []
+
+---
+
+<div>
+    <img src="{{ page.asset_path }}vpn.jpg" class="img-responsive img-rounded">
+</div>
+
+# Installation
+
+{% highlight bash %}
+sudo apt install openvpn easy-rsa
+{% endhighlight %}
+
+# Public Key Infrastructure Setup
+
+먼저 PKI (Public Key Infrastructure)를 만들어야 합니다. <br>
+PKI는 다음과 같이 구성이 되어 있습니다.
+
+* public key 그리고 private key
+* master Certificate Authority (CA) certificate 그리고 각각의 서버와 클라이언트를 서명(sign)할 key 
+
+OpenVPN은 bidirectional authentication을 제공합니다. 즉 mutial trust가 만들어지기 위해서, 클라이언트는 서버를 authenticate해야하며, 서버또한 클라이언트를 authenticate해야 합니다. 
+서버 그리고 클라이언트 둘다 서로를 presented certificate이 master certificate authority(CA)에 의해서  signed이 되었는지 확인함으로서 authenticate를 합니다. 
+
+
+### Certificate Authority (CA) Setup
+
+나만의 Certificate Authority (CA)를 만들고 설정하는 방법은 다음과 같습니다.
+
+{% highlight bash %}
+sudo mkdir /etc/openvpn/easy-rsa/
+sudo cp -r /usr/share/easy-rsa/* /etc/openvpn/easy-rsa/
+sudo chown -R anderson:anderson /etc/openvpn/easy-rsa
+mkdir /etc/openvpn/easy-rsa/keys
+{% endhighlight %}
+
+
+/etc/openvpn/easy-rsa/vars파일을 열고 다음을 수정하여 줍니다.<br>
+KEY_NAME 을 변경하면 server.key 그리고 server.crt 등의 이름으로 설정 파일들을 만들수 있습니다.
+
+{% highlight bash %}
+sudo vi /etc/openvpn/easy-rsa/vars
+
+export KEY_COUNTRY="KR"
+export KEY_PROVINCE="SEOUL"
+export KEY_CITY="SEOUL"
+export KEY_ORG="Anderson Co."
+export KEY_EMAIL="a141890@gmail.com"
+export KEY_OU="Anderson Dept"
+
+# X509 Subject Field
+export KEY_NAME="server"
+{% endhighlight %}
+
+Diffie-Hellman parameters 을 만들어야 합니다. (꽤 시간이 걸림)
+
+{% highlight bash %}
+cd /etc/openvpn/easy-rsa/
+source vars
+./clean-all
+./build-ca
+{% endhighlight %}
+
+### Server Certificates
+
+{% highlight bash %}
+./build-key-server servername
+./build-dh
+{% endhighlight %}
+
+일반적으로 (common practice) /etc/openvpn/ 디렉토리 안에다가 certificates과 keys들을 위치시킵니다.
+
+{% highlight bash %}
+cd /etc/openvpn/easy-rsa/keys/
+sudo cp servername.crt servername.key ca.crt dh2048.pem /etc/openvpn/
+{% endhighlight %}
+
+
+### Client Certificates
+
+{% highlight bash %}
+cd /etc/openvpn/easy-rsa/
+source vars
+./build-key client1
+{% endhighlight %}
+
+만들고 난뒤 다음의 파일들은 클라이언트로 복사합니다. <br>
+이후 클라이언트에서 필요한 파일들은, 클라이언에서만 필요하
+
+* /etc/openvpn/ca.crt
+* /etc/openvpn/easy-rsa/keys/client1.crt
+* /etc/openvpn/easy-rsa/keys/client1.key
+
+
+# Simple Server Configuration
+
+{% highlight bash %}
+sudo cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
+sudo gzip -d /etc/openvpn/server.conf.gz
+sudo vi /etc/openvpn/server.conf
+{% endhighlight %}
+
+/etc/openvpn/server.conf안의 내용들이 certificates 그리고 keys값들을 잘 참조하도록 설정합니다.
+
+{% highlight bash %}
+ca ca.crt
+cert servername.crt
+key servername.key
+dh dh2048.pem
+{% endhighlight %}
+
+/etc/sysctl.conf 파일을 열고, 다음의 내용을 uncomment처리 해줍니다.
+
+{% highlight bash %}
+net.ipv4.ip_forward=1
+{% endhighlight %}
+
+그리고 다음을 실행시켜 줍니다.
+
+{% highlight bash %}
+sudo sysctl -p /etc/sysctl.conf
+{% endhighlight %}
