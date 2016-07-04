@@ -23,9 +23,31 @@ Ubuntu 14.10 (trusty version) 에 Hortonworks Hadoop with Ambari를 설치하는
 (참고로 Hive default metastore는 derby이지만, production에서는 Derby가 사용되지 않습니다. - not suppported)<br>
 그냥 mysql-server설치 하면 됩니다.
 
-| App | User |
-| Hive | hive_dbname, hive_dbuser, hive_dbpasswd |
-| Oozie | oozie_dbname, oozie_dbuser, oozie_dbpasswd |
+{% highlight bash %}
+sudo apt-get install libmysql-java ntp
+{% endhighlight %}
+
+
+### Installing Ambari
+
+[hortonworks hadoop with ambari][hortonworks hadoop with ambari] 링크를 참조
+
+{% highlight bash %}
+$ sudo wget -nv http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.2.2.0/ambari.list -O /etc/apt/sources.list.d/ambari.list
+
+$ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD
+$ sudo apt-get update
+$ sudo apt-get install ambari-server
+{% endhighlight %}
+
+만약 ambari-server start를 했을때 ImportError: No module named ambari_commons.exceptions이 발생한다면 다음과 같이 합니다.
+
+{% highlight bash %}
+sudo cp -r /usr/lib/python2.6/site-packages/* /usr/local/lib/python2.7/dist-packages/
+{% endhighlight %}
+
+
+### Mysql Setting
 
 {% highlight sql %}
 CREATE USER `ambari`@`localhost` IDENTIFIED BY '1234';
@@ -49,29 +71,8 @@ CREATE DATABASE oozie;
 CREATE DATABASE hive;
 {% endhighlight %}
 
-
 {% highlight bash %}
 mysql -u ambari -p ambari < /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CREATE.sql
-sudo apt-get install libmysql-java ntp
-{% endhighlight %}
-
-
-### Installing Ambari
-
-[hortonworks hadoop with ambari][hortonworks hadoop with ambari] 링크를 참조
-
-{% highlight bash %}
-$ sudo wget -nv http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.2.2.0/ambari.list -O /etc/apt/sources.list.d/ambari.list
-
-$ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD
-$ sudo apt-get update
-$ sudo apt-get install ambari-server
-{% endhighlight %}
-
-만약 ambari-server start를 했을때 ImportError: No module named ambari_commons.exceptions이 발생한다면 다음과 같이 합니다.
-
-{% highlight bash %}
-sudo cp -r /usr/lib/python2.6/site-packages/* /usr/local/lib/python2.7/dist-packages/
 {% endhighlight %}
 
 ### Setting up Ambari
@@ -84,6 +85,12 @@ root계정으로 ambari를 돌릴려면 n 을 누르고, 새로운 유저를 만
 
 {% highlight bash %}
 Customize user account for ambari-server daemon [y/n] (n)? n
+{% endhighlight %}
+
+계속 알수 없는 에러가 날 경우(MySQL접속 등등) 다음의 파일을 확인해 봅니다. 
+
+{% highlight bash %}
+sudo vi /etc/ambari-server/conf/ambari.properties
 {% endhighlight %}
 
 ### Start Ambari

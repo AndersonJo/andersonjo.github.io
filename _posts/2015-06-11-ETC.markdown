@@ -4,7 +4,7 @@ title:  "ETC - 알면 좋은 거"
 date:   2015-06-11 01:00:00
 categories: "queue"
 asset_path: /assets/posts/ETC/
-tags: ['linux', 'time', 'cacti']
+tags: ['Linux', 'time', 'Cacti', 'Xenserver', 'Oracle']
 ---
 <div>
     <img src="{{ page.asset_path }}power.jpg" class="img-responsive img-rounded">
@@ -90,4 +90,39 @@ Xen서버에서 설치시..
 |:---|:----|
 | CentOS 6.4 - 64bit | http://mirrors.sonic.net/centos/6/os/x86_64/ |
 
+
+# Oracle
+
+### Install Client
+
+[Oracle Instant Client]에서 먼저 다음을 다운로드 받습니다.
+
+* oracle-instantclinet-basic-.rpm
+* oracle-instantclinet-devel-.rpm
+* oracle-instantclinet-sqlplus-.rpm
+
+{% highlight bash%}
+sudo apt-get install alien
+sudo alien -i oracle-instantclient*-basic-*.rpm
+sudo alien -i oracle-instantclient*-devel-*.rpm
+sudo alien -i oracle-instantclient*-sqlplus-*.x86_64.rpm
+sudo apt-get install libaio1
+{% endhighlight %}
+
+**sudo vi /etc/ld.so.conf.d/oracle.conf**로 새로운 파일을 만들고 다음의 내용을 집어넣습니다.
+{% highlight bash %}
+/usr/lib/oracle/12.1/client64/lib/
+{% endhighlight %}
+
+{% highlight bash %}
+sudo ldconfig
+{% endhighlight %}
+
+설치된 이후에는 다음과 같이 접속을 할 수 있습니다.
+
+{% highlight bash %}
+sqlplus username/password@//dbhost:1521/SID
+{% endhighlight %}
+
+[Oracle Instant Client]: http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html
 

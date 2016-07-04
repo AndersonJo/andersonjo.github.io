@@ -1,0 +1,33 @@
+---
+layout: post
+title:  "Kafka 101"
+date:   2016-07-04 01:00:00
+categories: "hadoop"
+asset_path: /assets/posts/Kafka/
+tags: []
+
+---
+
+<div>
+    <img src="{{ page.asset_path }}kafka.png" class="img-responsive img-rounded">
+</div>
+
+
+# Fundamentals
+
+<img src="{{ page.asset_path }}fundamentals.jpg" class="img-responsive img-rounded">
+
+| Name | Description |
+|:-----|:------------|
+| Topics | 특정 카테고리라고 생각하면 됩니다. <br>토픽은 partitions로 나뉘며, 최소 1개의 partition을 갖습니다. |
+| Partition | 파티션은 immuitable ordered sequence의 형태로 메세지들을 포함하고 있습니다. <br>또한 동일한 싸이즈의 파일들로 파티션들이 구성됩니다.  |
+| Partition Offset | 각각의 partitioned message들은 offset이라 불리는 unique sequence ID값을 갖고 있습니다. |
+| Replicas of partition | Replicas는 단지 한 partition의 백업이라 보면 됩니다. replicas에는 read, write가 안됩니다. 오직 데이터 손실을 위해서 존재합니다. |
+| Brokers | 각각의 broker는 토픽마다 0개 또는 여러개의 partitions들을 갖을수 있습니다. 예를 들어 N개의 partitions가 있고, N개의 brokers가 있다면, 각각의 broker는 1개의 partition을 갖을 것입니다.<br> |
+| Producers | 프로듀서는 메세지를 Topics에다가 메세지를 보냅니다. 그 뒤 브로커는 메세지를 받아서 마지막 segment file에 추가 시킵니다.|
+| Leader | 특정 파티션의 모든 read, write를 책임지는 node입니다. 모든 파티션에는 리더로 역활하는 한대의 서버가 존재합니다. |
+| Follower | 리더의 instructions에 따라 움직이며, 만약 leader가 실패할경우 followers중 한 놈이 리더역활을 자동으로 맡게 됩니다. |
+
+# Installation
+
+* JAVA JDK required
