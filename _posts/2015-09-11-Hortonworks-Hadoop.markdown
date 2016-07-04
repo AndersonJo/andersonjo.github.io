@@ -120,17 +120,17 @@ $ sudo ambari-server start
 
 ### Installing HDP on Localhost
 
-SSH 를 먼저 설정해줍니다. 
+SSH 를 먼저 설정해줍니다.<br>
+포인트는 root계정으로 해야하며,  ssh root@localhost를 했을때 에러가 없어야 합니다. 
 
 {% highlight bash %}
-$ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-# 또는 다음과 같이 해줍니다.
-$ ssh-copy-id localhost
+$ sudo su
+$ cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
 {% endhighlight %}
 
 {% highlight bash %}
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/authorized_keys
+chmod 700 /root/.ssh
+chmod 600 /root/.ssh/authorized_keys
 {% endhighlight %}
 
 ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.<br>
