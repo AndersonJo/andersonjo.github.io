@@ -27,6 +27,13 @@ Ubuntu 14.10 (trusty version) 에 Hortonworks Hadoop with Ambari를 설치하는
 sudo apt-get install libmysql-java ntp
 {% endhighlight %}
 
+Ambari는 다음의 ports를 기본적으로 사용합니다. (오픈 필요)
+
+| Name | Port | Protocol |
+|:-----|:-----|:---------|
+| Ambari Web Interface | 8080 | HTTP |
+| Handshake Port for Ambari Agents to Ambari Server | 8440 | HTTPS |
+| Registration & Heartbeat Port for Ambari Agents to Ambari Server | 8441 | HTTPS |
 
 ### Installing Ambari
 
