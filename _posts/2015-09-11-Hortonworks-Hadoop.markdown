@@ -101,6 +101,7 @@ sudo vi /etc/ambari-server/conf/ambari.properties
 sudo vi /etc/ambari-agent/conf/ambari-agent.ini
 {% endhighlight %}
 
+
 ### Start Ambari
 
 {% highlight bash %}
@@ -145,5 +146,20 @@ ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 
 **SSH Public Key (id_rsa.pub)은 target hosts의 root account 밑에 카피합니다.** 
 
 
+
+# Errors
+
+### mysql-connector-java Error
+
+{% highlight bash %}
+resource_management.core.exceptions.Fail: Execution of '/usr/bin/apt-get -q -o Dpkg::Options::=--force-confdef --allow-unauthenticated --assume-yes install mysql-connector-java' returned 100.
+{% endhighlight %}
+
+이렇게 에러가 나오면 다음과 같이 해줍니다.<br> 
+우분투에서 mysql-connector-java 를 설치할때 이미 설치된 라이브러리버젼과 달라 충돌해서 생기는 에러입니다.
+
+{% highlight bash %}
+sudo apt-get remove libmysql-java
+{% endhighlight %}
 
 [hortonworks hadoop with ambari]: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.2.0/bk_Installing_HDP_AMB/content/_download_the_ambari_repo_ubuntu14.html
