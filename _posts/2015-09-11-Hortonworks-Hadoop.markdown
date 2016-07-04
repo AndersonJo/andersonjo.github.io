@@ -123,21 +123,19 @@ $ sudo ambari-server start
 SSH 를 먼저 설정해줍니다. 
 
 {% highlight bash %}
-cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+$ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+# 또는 다음과 같이 해줍니다.
+$ ssh-copy-id localhost
 {% endhighlight %}
-
-또는 다음과 같은 방식으로 추가해줍니다.
 
 {% highlight bash %}
-ssh-copy-id anderson@localhost
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
 {% endhighlight %}
 
-ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.
+ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.<br>
+**SSH Public Key (id_rsa.pub)은 target hosts의 root account 밑에 카피합니다.** 
 
-
-{% highlight bash %}
-cat ~/.ssh/id_rsa
-{% endhighlight %}
 
 
 [hortonworks hadoop with ambari]: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.2.0/bk_Installing_HDP_AMB/content/_download_the_ambari_repo_ubuntu14.html
