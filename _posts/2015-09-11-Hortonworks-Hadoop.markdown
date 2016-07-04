@@ -104,16 +104,8 @@ $ sudo ambari-server start
 기본 ID/Password는 admin/admin 입니다.
 </span>
 
-### Configure SSH 
 
-{% highlight bash %}
-cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-{% endhighlight %}
-
-ssh anderson@localhost 같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.
-
-
-### Installing HDP
+### Installing HDP on AWS
 
 이곳부터는 너무 쉬워서 tutorial도 필요없지만, 몇가지 알아야할 사항만 적는다면.. 
 
@@ -124,6 +116,18 @@ ssh anderson@localhost 같이 접속을 할때 암호를 물어보지 않아도 
 <img src="{{ page.asset_path }}install-options.png" class="img-responsive img-rounded">
 
 만약 SSH private Key가 필요하다면 다음과 같이 Private Key를 꺼낼수 있습니다.
+
+
+### Installing HDP on Localhost
+
+SSH 를 먼저 설정해줍니다. 
+
+{% highlight bash %}
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+{% endhighlight %}
+
+ssh anderson@localhost 같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.
+
 
 {% highlight bash %}
 cat ~/.ssh/id_rsa
