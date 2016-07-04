@@ -126,7 +126,13 @@ SSH 를 먼저 설정해줍니다.
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 {% endhighlight %}
 
-ssh anderson@localhost 같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.
+또는 다음과 같은 방식으로 추가해줍니다.
+
+{% highlight bash %}
+ssh-copy-id anderson@localhost
+{% endhighlight %}
+
+ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.
 
 
 {% highlight bash %}
