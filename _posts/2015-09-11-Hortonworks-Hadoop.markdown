@@ -99,8 +99,19 @@ sudo vi /etc/ambari-server/conf/ambari.properties
 $ sudo ambari-server start
 {% endhighlight %}
 
+<span style="color:red">
 실행시킨후 8080포트로 들어가면 Ambari Webpage를 볼 수 있습니다.<br>
 기본 ID/Password는 admin/admin 입니다.
+</span>
+
+### Configure SSH 
+
+{% highlight bash %}
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+{% endhighlight %}
+
+ssh anderson@localhost 같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.
+
 
 ### Installing HDP
 
@@ -111,5 +122,12 @@ $ sudo ambari-server start
   또한 SSH Private Key에다가는 .pem파일을 업로드 하고, SSH User는 ubuntu로 변경해줍니다.
  
 <img src="{{ page.asset_path }}install-options.png" class="img-responsive img-rounded">
+
+만약 SSH private Key가 필요하다면 다음과 같이 Private Key를 꺼낼수 있습니다.
+
+{% highlight bash %}
+cat ~/.ssh/id_rsa
+{% endhighlight %}
+
 
 [hortonworks hadoop with ambari]: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.2.0/bk_Installing_HDP_AMB/content/_download_the_ambari_repo_ubuntu14.html
