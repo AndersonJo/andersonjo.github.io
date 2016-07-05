@@ -1,0 +1,129 @@
+---
+layout: post
+title:  "JNI with Java & Scalar"
+date:   2015-04-01 01:00:00
+categories: "java"
+asset_path: /assets/posts/JNI/
+tags: ['java', 'scalar']
+
+---
+
+<div>
+    <img src="{{ page.asset_path }}deeper.png" class="img-responsive img-rounded">
+</div>
+
+메모리 관리 또는 퍼포먼스 이슈를 뛰어넘기 위해서는 native codes (C/C++)를 써야할 때가 있습니다.<br> 
+자바에서는 native codes를 Java Native Interface (JNI)를 통해서 실행시킬수 있습니다.
+
+
+# Configuring IntelliJ
+
+IntelliJ 사용자는 먼저 JNIHelper plubin을 설치해야 합니다.<br>
+settings > Tools > External Tools > 추가
+
+<img src="{{ page.asset_path }}intellij_settings.png" class="img-responsive img-rounded">
+
+| Name | Value | 
+|:-----|:------|
+| Program | /usr/bin/javah |
+| Parameters | -v -d $OutputPath$/$FileDirRelativeToSourcepath$  -jni $FileClass$ |
+| Working Directory | $SourcepathEntry$ |
+
+
+# Tutorial 
+
+### HelloJNI.java
+
+System.loadLibrary("hello");는 sayHello() native method를 포함하고 있는 native library "hello.so" 또는 "hello.dll"을 불러옵니다.
+
+{% highlight java %}
+public class HelloJNI {
+   static {
+      System.loadLibrary("hello"); // Load native library at runtime
+                                   // hello.dll (Windows) or libhello.so (Unixes)
+   }
+ 
+   // Declare a native method sayHello() that receives nothing and returns void
+   private native void sayHello();
+ 
+   // Test Driver
+   public static void main(String[] args) {
+      new HelloJNI().sayHello();  // invoke the native method
+   }
+}
+{% endhighlight %}
+
+javac 를 하면 class파일이 생겨나고, javah 를 하면 .h파일이 생성됩니다. 
+
+{% highlight bash %}
+javac HelloJNI.java
+{% endhighlight %}
+
+javah를 사용할때는 뒤의 .class를 빼야하며, package 사용시 slash (/) 사용이 아닌 dot (.)을 사용합니다.<br>
+또한 package 사용시 해당 class가 위치해있는 폴더에서 작업하면 안되며, package root에서 실행을 해야 합니다.<br>
+javah실행후 HelloJNI.h 파일이 생성이 됩니다.
+
+{% highlight bash %}
+javah anderson.jni.tutorial.HelloJNI
+{% endhighlight %}
+
+**Error: Could not find class file for 'HelloJNI'**<br>
+javah 사용하다가 위와같은 에러 발생시, 일단 package안에서 돌렸는데.. package root에서 돌린게 아니라, 
+class파일이 위치한 곳에서 바로 돌렸기 때문에 나는 에러일 가능성이 높습니다.
+
+
+
+### HelloJNI.c 
+
+{% highlight c %}
+#include <jni.h>
+#include <stdio.h>
+#include "HelloJNI.h"
+ 
+// Implementation of native method sayHello() of HelloJNI class
+JNIEXPORT void JNICALL Java_HelloJNI_sayHello(JNIEnv *env, jobject thisObj) {
+   printf("Hello World!\n");
+   return;
+}
+{% endhighlight %}
+
+Compile을 하기 위해서는 jni.h 그리고 jni_md.h 가 필요합니다.
+
+* /usr/lib/jvm/java-8-oracle/include/jni.h
+* /usr/lib/jvm/java-8-oracle/include/linux/jni_md.h
+
+{% highlight bash %}
+gcc -I /usr/lib/jvm/java-8-oracle/include/ -I /usr/lib/jvm/java-8-oracle/include/linux/ -shared -fpic -o hello.so HelloJNI.c
+{% endhighlight %}
+
+hello.so가 만들어진 이후 nm을 통해서 shared library안의 모든 symbols들을 확인해 볼 수 있습니다.
+
+{% highlight bash %}
+$ nm hello.so 
+0000000000201038 B __bss_start
+0000000000201038 b completed.7568
+                 w __cxa_finalize@@GLIBC_2.2.5
+00000000000005f0 t deregister_tm_clones
+0000000000000680 t __do_global_dtors_aux
+0000000000200e08 t __do_global_dtors_aux_fini_array_entry
+0000000000201030 d __dso_handle
+0000000000200e18 d _DYNAMIC
+0000000000201038 D _edata
+0000000000201040 B _end
+0000000000000710 T _fini
+00000000000006c0 t frame_dummy
+0000000000200e00 t __frame_dummy_init_array_entry
+00000000000007a8 r __FRAME_END__
+0000000000201000 d _GLOBAL_OFFSET_TABLE_
+                 w __gmon_start__
+0000000000000588 T _init
+                 w _ITM_deregisterTMCloneTable
+                 w _ITM_registerTMCloneTable
+00000000000006f0 T Java_HelloJNI_sayHello
+0000000000200e10 d __JCR_END__
+0000000000200e10 d __JCR_LIST__
+                 w _Jv_RegisterClasses
+                 U puts@@GLIBC_2.2.5
+0000000000000630 t register_tm_clones
+0000000000201038 d __TMC_END__
+{% endhighlight %}
