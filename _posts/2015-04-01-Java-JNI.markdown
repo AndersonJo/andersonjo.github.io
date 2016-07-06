@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "JNI with Java & Scalar"
+title:  "JNI with Java, Scala, and Spark"
 date:   2015-04-01 01:00:00
 categories: "java"
 asset_path: /assets/posts/JNI/
-tags: ['java', 'scalar']
+tags: ['java', 'gcc', 'Linux']
 
 ---
 
@@ -189,9 +189,36 @@ share라는 디렉토리를 만들고 libhello.so파일을 옮김니다.
 {% highlight bash %}
 /usr/lib/jvm/java-8-oracle/bin/java -Djava.library.path=share ...
 Hello World!
-
-Process finished with exit code 0
 {% endhighlight %}
+
+
+# Scala
+
+<img src="{{ page.asset_path }}scala.png" class="img-responsive img-rounded">
+
+{% highlight scala %}
+package anderson.jni.tutorial
+
+class JNITutorial {
+  @native def sayHello(): Int;
+}
+
+object JNITutorial extends App {
+
+  System.loadLibrary("hello")
+  var jni = new JNITutorial
+  println(jni.sayHello())
+}
+{% endhighlight %}
+
+실행시키면 다음과 같은 결과가 나옵니다. 
+
+{% highlight bash %}
+/usr/lib/jvm/java-8-oracle/bin/java -Djava.library.path=share ...
+13
+Hello World!
+{% endhighlight %}
+
 
 
 [JNI Tutorial Git Repository]: https://github.com/AndersonJo/JNI-Tutorial
