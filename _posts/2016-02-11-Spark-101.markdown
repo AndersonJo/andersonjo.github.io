@@ -2,7 +2,7 @@
 layout: post
 title:  "Spark 101"
 date:   2016-02-11 01:00:00
-categories: "analytics"
+categories: "spark"
 static: /assets/posts/Spark101/
 tags: []
 

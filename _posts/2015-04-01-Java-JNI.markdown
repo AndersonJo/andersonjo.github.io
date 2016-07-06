@@ -26,7 +26,7 @@ settings > Tools > External Tools > 추가
 | Name | Value | 
 |:-----|:------|
 | Program | /usr/bin/javah |
-| Parameters | -v -d $OutputPath$/$FileDirRelativeToSourcepath$  -jni $FileClass$ |
+| Parameters | -v -jni $FileClass$ |
 | Working Directory | $SourcepathEntry$ |
 
 
@@ -196,6 +196,10 @@ Hello World!
 
 <img src="{{ page.asset_path }}scala.png" class="img-responsive img-rounded">
 
+### Hello World via JNI
+
+이때 중요한 점은 package명이 Java에서 만든 package명과 동일해야 합니다.
+
 {% highlight scala %}
 package anderson.jni.tutorial
 
@@ -218,6 +222,12 @@ object JNITutorial extends App {
 13
 Hello World!
 {% endhighlight %}
+
+# Spark
+
+<img src="{{ page.asset_path }}spark_logo.png" class="img-responsive img-rounded">
+
+
 
 
 
