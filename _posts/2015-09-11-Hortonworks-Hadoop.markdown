@@ -26,7 +26,6 @@ Ubuntu 14.10 (trusty version) 에 Hortonworks Hadoop with Ambari를 설치하는
 
 {% highlight bash %}
 sudo apt-get install libmysql-java ntp
-sudo apt-get install libssl1.0.0 libssl-dev
 {% endhighlight %}
 
 
