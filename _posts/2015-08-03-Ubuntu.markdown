@@ -144,8 +144,6 @@ export CLASSPATH=$CLASSPATH:$SQOOP_HOME/lib/*
 export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip
-export CLASSPATH=$CLASSPATH:/home/anderson/apps/spark-1.6.0-bin-hadoop2.6/lib/postgresql-9.3-1103.jdbc3.jar
-export SPARK_CLASSPATH=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6/lib/postgresql-9.3-1103.jdbc3.jar
 
 # RVM
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

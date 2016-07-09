@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "Hbase 101"
+date:   2016-07-09 01:00:00
+categories: "hadoop"
+asset_path: /assets/posts/Hbase101/
+tags: []
+
+---
+
+<div>
+    <img src="{{ page.asset_path }}kafka.png" class="img-responsive img-rounded">
+</div>
+
