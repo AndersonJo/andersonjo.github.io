@@ -219,11 +219,16 @@ chmod 600 /root/.ssh/authorized_keys
 ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.<br>
 **SSH Public Key (id_rsa.pub)은 target hosts의 root account 밑에 카피합니다.** 
 
+### Success
 
+
+<img src="{{ page.asset_path }}ambari.png" class="img-responsive img-rounded">
 
 # Errors
 
 ### mysql-connector-java Error
+
+이 부분은 Oozie설치할때 나타나는 문제인데.. 다른 버젼이 서로 충돌해서 생기는 문제입니다. 
 
 {% highlight bash %}
 resource_management.core.exceptions.Fail: Execution of '/usr/bin/apt-get -q -o Dpkg::Options::=--force-confdef --allow-unauthenticated --assume-yes install mysql-connector-java' returned 100.
@@ -236,6 +241,11 @@ resource_management.core.exceptions.Fail: Execution of '/usr/bin/apt-get -q -o D
 sudo apt-get remove libmysql-java
 {% endhighlight %}
 
+그냥 지우기만 하면 안되고.. Oozie설치후 mysql-connector-java가 설치되었는지 확인해 봅니다. (즉 Oozie설치되면서 대체됨)
+
+{% highlight bash %}
+ls /usr/share/java | grep mysql-connector-java
+{% endhighlight %}
 
 ### Agent Hostname Not Matching 
 
@@ -301,6 +311,8 @@ WARNING: A HTTP GET method, public javax.ws.rs.core.Response org.apache.ambari.s
 {% highlight bash %}
 sudo apt-get install ambari-agent
 {% endhighlight %}
+
+
 
 
 
