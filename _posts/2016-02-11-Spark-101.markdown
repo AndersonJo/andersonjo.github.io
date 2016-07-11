@@ -47,10 +47,22 @@ Project Structure에서 PySpark가 있는 위치를 Add Content Root를 눌러�
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> IntelliJ Configuration
 
-Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 추가
+Project생성시에는 Scalar -> SBT 를 선택합니다. <br>
+Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 추가<br>
 
 <img src="{{ page.static }}intellij_project_structure.png" class="img-responsive img-rounded">
 
+**build.sbt**
+
+{% highlight bash %}
+name := "SBTTest"
+version := "1.0"
+scalaVersion := "2.11.8"
+libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.2"
+{% endhighlight %}
+
+
+* 참고: [Apache Spark Maven Repository][Apache Spark Maven Repository]
 
 # Common Transformation and Action
 
@@ -388,3 +400,4 @@ print df2.collect()
 
 
 [download]: http://spark.apache.org/downloads.html
+[Apache Spark Maven Repository]: https://mvnrepository.com/artifact/org.apache.spark/spark-core_2.10
