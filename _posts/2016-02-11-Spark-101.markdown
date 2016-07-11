@@ -60,19 +60,26 @@ Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 
 {% highlight bash %}
 cd $SPARK_HOME/sbin
 ./start-master.sh
+./start-slaves.sh
 {% endhighlight %}
 
+http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습니다.
+
+<img src="{{ page.static }}spark_web.png" class="img-responsive img-rounded">
+
+# Scala Spark
 
 
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> build.sbt
 
-
-**build.sbt**
+중요한 점은, scalaVersion이 정확하게 2.10.5이어야 합니다.
 
 {% highlight bash %}
-name := "SBTTest"
+name := "ScalaTutorial"
 version := "1.0"
-scalaVersion := "2.11.8"
+scalaVersion := "2.10.5"
 libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.2"
+
 {% endhighlight %}
 
 
