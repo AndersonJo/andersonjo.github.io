@@ -21,6 +21,12 @@ GTX960 디바이스를 읽지 못해서 생기는 에러입니다. <br>
  
 > 우분투 설치시에는 F6 (other options)를 눌러서 옵션을 지정할수 있습니다.
 
+### Locale Setup
+
+{% highlight bash %}
+sudo locale-gen ko_KR.UTF-8
+{% endhighlight %}
+
 ### 32bit Libraries (Optional)
 GTX960 Driver를 설치하기전, 32bit 라이브러리를 설치해줍니다. <br>
 해당 라이브러리는 또한 Android Studio사용시 설치 가능하게 해줍니다. 
@@ -85,6 +91,8 @@ parse_git_branch() {
 
 }
 export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
+# Hostname Version
+# export PS1='\[\033[00;36m\]$(hostname) \u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
 # Android
 export ANDROID_HOME=/home/anderson/apps/android-sdk
@@ -136,8 +144,6 @@ export CLASSPATH=$CLASSPATH:$SQOOP_HOME/lib/*
 export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip
-export CLASSPATH=$CLASSPATH:/home/anderson/apps/spark-1.6.0-bin-hadoop2.6/lib/postgresql-9.3-1103.jdbc3.jar
-export SPARK_CLASSPATH=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6/lib/postgresql-9.3-1103.jdbc3.jar
 
 # RVM
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

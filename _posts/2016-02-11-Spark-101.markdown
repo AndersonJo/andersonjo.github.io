@@ -44,6 +44,14 @@ Project Structure에서 PySpark가 있는 위치를 Add Content Root를 눌러�
 
 <img src="{{ page.static }}pycharm.png" class="img-responsive img-rounded">
 
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> IntelliJ Configuration
+
+Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 추가
+
+<img src="{{ page.static }}intellij_project_structure.png" class="img-responsive img-rounded">
+
+
 # Common Transformation and Action
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Initializing a SparkContext

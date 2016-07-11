@@ -1,9 +1,10 @@
 ---
 layout: post
-title:  "Hortonworks Hadoop & Flamingo"
+title:  "Hortonworks Hadoop"
 date:   2015-09-08 01:00:00
 categories: "hadoop"
 asset_path: /assets/posts/Hortonworks-Hadoop/
+tags: ['HDP']
 
 ---
 <div>
@@ -27,13 +28,50 @@ Ubuntu 14.10 (trusty version) 에 Hortonworks Hadoop with Ambari를 설치하는
 sudo apt-get install libmysql-java ntp
 {% endhighlight %}
 
-Ambari는 다음의 ports를 기본적으로 사용합니다. (오픈 필요)
 
-| Name | Port | Protocol |
-|:-----|:-----|:---------|
-| Ambari Web Interface | 8080 | HTTP |
-| Handshake Port for Ambari Agents to Ambari Server | 8440 | HTTPS |
-| Registration & Heartbeat Port for Ambari Agents to Ambari Server | 8441 | HTTPS |
+### Default Ports
+
+| Service | Name | Port | Protocol |
+|:--------|:-----|:-----|:---------|
+| Ambari | Ambari Web Interface | 8080 | HTTP |
+| Ambari | Handshake Port for Ambari Agents to Ambari Server | 8440 | HTTPS |
+| Ambari | Registration & Heartbeat Port <br>for Ambari Agents to Ambari Server | 8441 | HTTPS |
+| HDFS | mapreduce.jobhistory.address | 10020 | IPC |
+| HDFS | mapreduce.jobhistory.admin.address | 10033 | IPC |
+| HDFS | mapreduce.jobhistory.webapp.address | 19888 | WEB |
+| NameNode | NameNode | 50070 | |
+| NameNode | NameNode RPC | 8020 | | 
+| Secondary NameNode | HDFS Secondary NameNode | 50090 | | 
+| ZooKeeper | ZooKeeper Client | 2181 | |
+
+
+### Disable Transparent Huge Pages (Optional)
+
+Hadoop의 Performance의 영향을 줄 수 있는 부분입니다.<br>
+일단 확인하는 방법은 다음과 같습니다.
+
+{% highlight bash %}
+cat /sys/kernel/mm/transparent_hugepage/enabled
+{% endhighlight %}
+
+| [always] | truned on |
+| [never] | turned off |
+
+disable해주기 위해서는 다음의 파일을 엽니다. 
+
+{% highlight bash %}
+sudo vi /etc/default/grub
+{% endhighlight %}
+
+다음의 예제처럼 **transparent_hugepage=never**를 추가시켜줍니다.
+
+{% highlight bash %}
+GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 transparent_hugepage=never"
+{% endhighlight %}
+
+{% highlight bash %}
+sudo update-grub
+{% endhighlight %}
 
 ### Installing Ambari
 
@@ -47,11 +85,25 @@ $ sudo apt-get update
 $ sudo apt-get install ambari-server
 {% endhighlight %}
 
+설치후 제대로 모두 설치됐는지 다음과 같이 확인합니다.
+
+{% highlight bash %}
+apt-cache showpkg ambari-server
+apt-cache showpkg ambari-agent
+apt-cache showpkg ambari-metrics-assembly
+{% endhighlight %}
+
+
+
 만약 ambari-server start를 했을때 ImportError: No module named ambari_commons.exceptions이 발생한다면 다음과 같이 합니다.
 
 {% highlight bash %}
 sudo cp -r /usr/lib/python2.6/site-packages/* /usr/local/lib/python2.7/dist-packages/
 {% endhighlight %}
+
+
+
+
 
 
 ### Mysql Setting
@@ -102,6 +154,29 @@ sudo vi /etc/ambari-agent/conf/ambari-agent.ini
 {% endhighlight %}
 
 
+
+### Hostname Settings
+
+/etc/hosts로 들어가서 public domain또는 private domain을 넣습니다.
+
+{% highlight bash %}
+52.192.233.209	ec2-52-192-233-209.ap-northeast-1.compute.amazonaws.com
+{% endhighlight %}
+
+이후 저장하고 나와서 다음의 명령어로 hostname을 변경해줍니다.<br>
+ambari-agent conf를 들어가서 
+
+{% highlight bash %}
+sudo hostname ec2-52-192-233-209.ap-northeast-1.compute.amazonaws.com
+
+sudo vi /etc/ambari-agent/conf/ambari-agent.ini
+{% endhighlight %}
+
+ambari-agent 안의 hostname을 변경합니다.
+
+hostname=ec2-52-192-233-209.ap-northeast-1.compute.amazonaws.com
+
+
 ### Start Ambari
 
 {% highlight bash %}
@@ -124,8 +199,6 @@ $ sudo ambari-server start
  
 <img src="{{ page.asset_path }}install-options.png" class="img-responsive img-rounded">
 
-만약 SSH private Key가 필요하다면 다음과 같이 Private Key를 꺼낼수 있습니다.
-
 
 ### Installing HDP on Localhost
 
@@ -145,11 +218,16 @@ chmod 600 /root/.ssh/authorized_keys
 ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.<br>
 **SSH Public Key (id_rsa.pub)은 target hosts의 root account 밑에 카피합니다.** 
 
+### Success
 
+
+<img src="{{ page.asset_path }}ambari.png" class="img-responsive img-rounded">
 
 # Errors
 
 ### mysql-connector-java Error
+
+이 부분은 Oozie설치할때 나타나는 문제인데.. 다른 버젼이 서로 충돌해서 생기는 문제입니다. 
 
 {% highlight bash %}
 resource_management.core.exceptions.Fail: Execution of '/usr/bin/apt-get -q -o Dpkg::Options::=--force-confdef --allow-unauthenticated --assume-yes install mysql-connector-java' returned 100.
@@ -161,5 +239,82 @@ resource_management.core.exceptions.Fail: Execution of '/usr/bin/apt-get -q -o D
 {% highlight bash %}
 sudo apt-get remove libmysql-java
 {% endhighlight %}
+
+그냥 지우기만 하면 안되고.. Oozie설치후 mysql-connector-java가 설치되었는지 확인해 봅니다. (즉 Oozie설치되면서 대체됨)
+
+{% highlight bash %}
+ls /usr/share/java | grep mysql-connector-java
+{% endhighlight %}
+
+### Agent Hostname Not Matching 
+
+{% highlight bash %}
+ERROR 2016-07-08 23:31:39,635 main.py:146 - Ambari agent machine hostname (localhost) does not match expected ambari server hostname (ip-172-31-27-227.ap-northeast-1.compute.internal). Aborting registration. Please check hostname, hostname -f and /etc/hosts file to confirm your hostname is setup correctly
+{% endhighlight %}
+
+이경우 Agent Configuration이 잘못된 경우입니다.
+
+{% highlight bash %}
+sudo vi /etc/ambari-agent/conf/ambari-agent.ini
+{% endhighlight %}
+
+아래의 hostname을 ambari 웹 컨트롤 페이지의 target hosts에서 적었던 hostname과 동일하게 맞춰줍니다.
+
+{% highlight bash %}
+[server]
+hostname=ip-172-31-27-227.ap-northeast-1.compute.internal
+url_port=8440
+secured_url_port=8441
+{% endhighlight %}
+
+Agent를 Restart해줍니다.
+
+{% highlight bash %}
+ambari-agent restart
+{% endhighlight %}
+
+그 다음 hostname 명령어를 통해서 일치시켜줍니다.
+
+{% highlight bash %}
+sudo hostname ip-172-31-27-227.ap-northeast-1.compute.internal
+{% endhighlight %}
+
+### Internal Bug
+ 
+{% highlight bash %}
+  File "/var/lib/ambari-agent/cache/stacks/HDP/2.0.6/hooks/before-START/scripts/params.py", line 158, in <module>
+    ambari_db_rca_password = config['hostLevelParams']['ambari_db_rca_password'][0]
+TypeError: 'int' object has no attribute '__getitem__'
+{% endhighlight %}
+
+위와 같은 에러 발생시 /var/lib/ambari-agent/cache/stacks/HDP/2.0.6/hooks/before-START/scripts/params.py편집해서 [0] 이 붙어있는 부분을 제거해줍니다.
+
+
+{% highlight bash %}
+ambari_db_rca_url = config['hostLevelParams']['ambari_db_rca_url']
+ambari_db_rca_driver = config['hostLevelParams']['ambari_db_rca_driver']
+ambari_db_rca_username = config['hostLevelParams']['ambari_db_rca_username']
+ambari_db_rca_password = config['hostLevelParams']['ambari_db_rca_password']
+{% endhighlight %}
+
+
+### Ambari Agent Error
+
+분명 apt-cache showpkg ambari-agent 하면 설치가 되어 있음에도 불구하고 sudo ambari-agent를 치면 없는 명령어라고 나오는 경우가 있을수 있습니다.
+이 경우 manually ambari-agent를 설치해야 합니다.
+
+{% highlight bash %}
+WARNING: A HTTP GET method, public javax.ws.rs.core.Response org.apache.ambari.server.api.services.FeedService.getFeed(java.lang.String,javax.ws.rs.core.HttpHeaders,javax.ws.rs.core.UriInfo,java.lang.String), should not consume any entity.
+{% endhighlight %}
+
+{% highlight bash %}
+sudo apt-get install ambari-agent
+{% endhighlight %}
+
+
+
+
+
+
 
 [hortonworks hadoop with ambari]: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.2.0/bk_Installing_HDP_AMB/content/_download_the_ambari_repo_ubuntu14.html
