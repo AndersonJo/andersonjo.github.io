@@ -22,7 +22,7 @@ tags: []
 (아래의 SPARK_HOME은 스파크가 설치할 곳으로 수정해주셔야 합니다.)
 
 {% highlight bash %}
-export SPARK_HOME=/home/anderson/apps/spark-1.6.0-bin-hadoop2.6
+export SPARK_HOME=/home/anderson/apps/spark-1.6.2-bin-hadoop2.6
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/lib/py4j-0.9-src.zip
 
@@ -52,6 +52,20 @@ Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 
 
 <img src="{{ page.static }}intellij_project_structure.png" class="img-responsive img-rounded">
 
+
+
+
+# Run Spark Server
+
+{% highlight bash %}
+cd $SPARK_HOME/sbin
+./start-master.sh
+{% endhighlight %}
+
+
+
+
+
 **build.sbt**
 
 {% highlight bash %}
@@ -64,7 +78,7 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.2"
 
 * 참고: [Apache Spark Maven Repository][Apache Spark Maven Repository]
 
-# Common Transformation and Action
+# PySpark Basic 101
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Initializing a SparkContext
 
