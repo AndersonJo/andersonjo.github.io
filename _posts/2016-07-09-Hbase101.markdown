@@ -12,6 +12,33 @@ tags: []
     <img src="{{ page.asset_path }}bigdata.jpg" class="img-responsive img-rounded">
 </div>
 
+
+
+# Hbase Shell & Commands
+
+### General Shell
+
+Shell의 시작은 다음과 같이 합니다.
+
+{% highlight bash %}
+/usr/bin/hbase shell
+{% endhighlight %}
+
+{% highlight bash %}
+$ status
+1 servers, 0 dead, 3.0000 average load
+
+$ version
+1.1.2.2.4.2.0-258, rUnknown, Mon Apr 25 06:07:29 UTC 2016
+
+$ whoami
+ubuntu (auth:SIMPLE)
+    groups: ubuntu, adm, dialout, sudo, audio, dip, video, plugdev, netdev
+{% endhighlight %}
+
+
+
+
 # Overview
 
 ### What is Hbase
