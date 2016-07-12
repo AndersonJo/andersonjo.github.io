@@ -62,4 +62,3 @@ mvn clean package -DsipTests -Pspark-1.6 -Phadoop-2.6 -Pyarn
 
 [Zeppelin Installation]: https://github.com/apache/zeppelin
 [Hortonworks Zeppelin]: http://hortonworks.com/apache/zeppelin/#section_3
-

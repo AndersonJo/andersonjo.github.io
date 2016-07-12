@@ -9,6 +9,234 @@ tags: []
 ---
 
 <div>
-    <img src="{{ page.asset_path }}kafka.png" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}bigdata.jpg" class="img-responsive img-rounded">
 </div>
 
+# Overview
+
+### What is Hbase
+
+* 하둡의 단점은 배치 프로세스를 돌며, 작은 Job에도 전체 데이터를 Sequentially process가 필요합니다.
+* HBase는 Google's Big Table, Dynamo, MongoDB처럼 Random Access를 지원하며 Horizontally Scalable합니다.
+* Real-Time read/write access를 지원합니다.
+* Data저장을 HDFS를 통해서 저장할수도 있고, Hbase를 통해서 저장을 할 수도 있습니다.
+
+
+### Storage Mechanism in HBase
+
+Hbase는 column-oriented database입니다. 
+
+<img src="{{ page.asset_path }}BigTableModel.png" class="img-responsive img-rounded">
+
+* EMPLOYEE, DEPARTMENT, DEPT_LOCATIONS은 column family입니다. 
+
+| HBase | RDBS |
+|:------|:-----|
+| Schema-less. 즉 fixed columns schema가 존재하지 않습니다.<br>(오직 Column Familes만 정의) | Schema의 정의에 따라서 데이터 저장방식이 결정됩니다. |
+| Horizontally Scalable | Small Table에 적합하며, Scale하지 않습니다. | 
+| Transaction이 존재 하지 않습니다. | RDBMS는 Transactional 입니다. |
+
+
+### Hbase Components
+
+자세한 내용은 [HBase Architectural Components][HBase Architectural Components]을 참고 합니다.
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig1.png" class="img-responsive img-rounded">
+
+물리적으로 Master-slave구조안에 3타입의 서버로 구성되어 있습니다.
+Region Servers는 데이터에 대한 read, write를 제공하며, Clients는 Hbase RegionServers와 directly communicate합니다.
+Region Assignment, DDL(Create, Delete tables)은 Hbase Master에 의해서 관리 됩니다.
+Zookeeper는 cluster state를 관리 합니다.
+
+Hadoop DataNode 는 Region Server가 관리하고 있는 데이터를 저장하고 있습니다. (Hbase의 모든 데이터는 HDFS 파일안에 저장됩니다.)
+또한 각 Region server별로 최대한 가까운 데이터끼로 모아놓습니다.
+
+
+### Regions 
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig2.png" class="img-responsive img-rounded">
+
+Region Server와 Region을 분리해서 볼 필요가 있으며, 하나의 Region Server는 약 1000개의 regions를 제공할수 있습니다.
+
+### Hbase Master
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig3.png" class="img-responsive img-rounded">
+
+Region assignment, DDL(create, delete tables) operations은 Hbase Master에 의해서 관리됩니다.
+
+### ZooKeeper: The Coordinator
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig4.png" class="img-responsive img-rounded">
+
+Zookeeper는 어떤 서버가 alive이고 available인지 관리하며, failure notification을 Hbase Master에 제공합니다.
+
+
+### How the Components Work Together
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig5.png" class="img-responsive img-rounded">
+
+Region Servers 그리고 active HMaster는 ZooKeeper의 a session 에 접속합니다. 
+그리고 각각의 Region Server는 ephemeral node를 생성합니다. HMaster는 ephemeral nodes를 모니터링하여 available region servers 발견하기도 하며, 
+server failures에 대비해 nodes을 모니터합니다.
+
+HMasters또한 하나의 Ephemeral node를 만들기 위해서 서로 다투며, Zookeeper는 가장 첫번째 node를 선택합니다. 
+(오직 하나의 master만 active하도록 Zookeeper가 관리합니다.)
+
+만약 a region server 또는 active HMaster가 heartbeat에 보내는데 실패한다면, 해당 Zookeeper session은 expired되고, 
+해당하는 ephemeral node는 삭제가 됩니다. Active Hmaster는 삭제된것에 대해서 ZooKeeper로 부터 notify받고, 실패한 region servers를 recover시킵니다.
+만약 Active Master가 Fail이 뜨면, 다른 inactive HMaster 가 active가 됩니다.
+
+### HBase First Read or Write
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig6.png" class="img-responsive img-rounded">
+
+HBase에는 Meta table이라는 특별한 Catelog table이 존재합니다. 
+Meta table은 클러스터안에서 regions들의 위치를 저장하며, Zookeeper는 Meta table의 위치를 저장합니다.
+
+클라이언트가 Read 또는 Write를 HBase에 하면 다음과 같은 일이 발생합니다.
+
+1. 해당 client는 Meta table을 갖고 있는 Region Server의 위치를 ZooKeeper로 부터 받습니다.
+2. client는 access하려는 row key를 갖고 있는 Region Server를 얻기 위해 Meta server를 query합니다.
+   client는 해당 정보를 Meta table 위치와 함게 캐쉬시킵니다. 
+3. 얻고자하는 row데이터를 일치하는 Region Server로 부터 얻습니다.
+ 
+그 다음부터 reads를 할때, 클라이언트는 캐쉬된 데이터를 사용하여 META location 그리고 이전에 읽었던 row keys값들의 정보를 얻습니다.
+Region이 moved되지 않는한 META Table을 query할 필요가 없습니다. (캐쉬 사용)
+
+### Hbase Meta Table
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig7.png" class="img-responsive img-rounded">
+
+* 모든 regions들의 리스트를 갖고 있는 HBase Table 
+* b tree 구조
+* Key: Region start key,  region ID
+* Value: Region Server
+
+### Region Server Components
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig8.png" class="img-responsive img-rounded">
+
+Region Server는 HDFS Data Node위에서 돌아가며, 다음의 Components를 갖고 있습니다.
+
+| Component | Description |
+|:----------|:------------|
+| WAL | Write Ahead Log는 하나의 파일이며, 아직 permanent storage에 저장되지 않은 새로운 데이터를 저장합니다. Failure에 대비하여 Recovery용도로 사용됩니다. |
+| BlockCache | Read Cache이며, 빈번하게 사용되는 데이터를 메모리에 올려놓습니다. Least Recently Used 알고리즘 사용 |
+| MemStore | Write Cache이며, 아직 디스크에 저장되지 않은 데이터를 저장시킵니다. There is one MemStore per column family per region |
+| Hfiles | sorted KeyValues 형태로 rows들을 디스크에 저장합니다. |
+
+
+### HBase Write Steps
+
+**Step 1**
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig9.png" class="img-responsive img-rounded">
+
+Client가 Put request를 보내면, 일단 write-ahead log (WAL)에 저장합니다. 
+
+- Edits은 WAL file의 끝에 append됩니다.
+- Server fault가 생겼을때 WAL이 사용되어 recover됩니다.
+
+**Step 2**
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig10.png" class="img-responsive img-rounded">
+
+WAL에 저장이 된후, MemStore에 저장이 됩니다. 이후, put request acknowledgement가 클라이언트에 리턴됩니다.
+
+### MemStore
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig11.png" class="img-responsive img-rounded">
+
+MemStore는 데이터를 sorted KeyValues로 업데이트를 저장하며, 같은 방식으로 HFile에도 저장이 됩니다.
+MemStore는 Column Family(CF)당 하나가 존재합니다.
+
+
+### Region Flush
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig12.png" class="img-responsive img-rounded">
+
+MemStore가 충분히 많은 데이터를 모으면, 전체 sorted set은 HDFS안의 새로운 HFile로 쓰기가 됩니다.
+HBase는 Column Family당 여러개의 HFiles을 사용하며, HFiles 은 실제 cells, KEyValue Instances들을 저장하고 있습니다.
+
+CF(Column Family)당 하나의 MemStore를 갖고 있습니다. 그리고 저장시 여태까지 뭐가 persisted되었는지 알기위해, 마지막으로 저장된 Sequence Number또한 저장합니다.  
+가장높은 Sequence Number는 각각의 HFile의 Meta Field로 저장이 됩니다. (Persisting이 어디가 마지막인지 어디서부터 시작할지 알기 위해서)
+Region Startup시에, 해당 Sequence Number가 읽혀지고, 가장높은 Sequence Number는 새로운 edits을 위해서 사용되어 집니다.
+
+
+### HFile
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig13.png" class="img-responsive img-rounded">
+
+HFile은 sorted Key/Values를 저장합니다. MemStore가 충분한 데이터를 모았을때, 해당하는 전체 sorted KeyValue데이터는 HDFS안의 HFile로 저장됩니다. 
+이 과정은 Sequential Write이기 때문에 매우 빠릅니다. (Disk drive head를 옮기는 작업을 피함으로서..)
+
+
+### HFile Structure
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig14.png" class="img-responsive img-rounded">
+
+HFile은 multi-layered index를 사용함으로서, 전체 데이터를 다 읽을 필요없이 빠르게 특정 데이터를 찾도록(seek) 도와줍니다. 
+Multi-level Index는 B Tree입니다.
+
+* Key value pars는 increasing order로 저장이 됩니다.
+* HFile의 Index는 Block Cache (Memory)안에 저장되어 빠르게 탐색이 됩니다. 
+
+### HBase Read Merge & Amplification
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig16.png" class="img-responsive img-rounded">
+
+특정 KeyValue cell은 여러 장소에 있을수 있습니다. 예를 들어서 HFiles안에 디스크에 저장된 row cells들이 있을수 있고, 
+가장 최신에 updates cells들은 MemStore에 있을수 있습니다. 또한 가장 최신에 읽혀진 cells들은 Block Cache(Memory)안에 존재할수도 있죠. 
+Read Merge는 Block Cache, MemStore, HFiles 등 여러군대에 있는 데이터를 하나로 Merge시킵니다.
+
+1. 첫번째로 Block Cache(Read Cache)안에서 Row cells들을 찾습니다.
+2. 두번째로, MemStore (Write Cache)안에서 가장 최근에 Write된 데이터를 찾습니다.
+3. Block Cache, MemStore 두군데에서 모두 찾지 못하면, HBase는 Block Cache Indexes 그리고 Bloom Filters를 사용하여 HFiles의 내용을 메모리에 올립니다.
+
+이때 많은 양의 파일들을 examined 되어야 하기 때문에 Performance에 영향을 줄 수 있습니다.
+이 과정을 amplification이라고 합니다.
+
+### Minor Compaction
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig18.png" class="img-responsive img-rounded">
+
+용량이 작은 HFiles들을 더 큰 용량의 파일로(파일을 갯수는 줄이고) 자동으로 rewrite합니다. (Merge Sort사용)
+
+
+### Major Compaction (Write Amplification)
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig19.png" class="img-responsive img-rounded">
+
+특정 Region에 있는 모든 HFiles들을 하나의 HFile (per Column Family)로 merge 그리고 rewrite를 합니다.
+이렇게 하면 Read Performance가 증가를 하게 되지만, 모든 Hfiles들을 Rewrite해야하기 때문에 대규모의 Disk I/O 그리고 
+Network Traffic이 발생할수 있습니다. 이러한 과정을 Write Amplification이라고 합니다.
+
+Major Compactions은 자동으로 돌아가도록 스케쥴을 걸수 있습니다. 주로 새벽시간동안에 돌아가도록 스케쥴을 설정합니다.
+
+
+### Region == Contiguous Keys
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig20.png" class="img-responsive img-rounded">
+
+* 하나의 테이블은 하나또는 여러개의 Regions으로 Horizontally divided될 수 있습니다.
+* 하나의 Region은 a contiguous sorted range of rows를 start key부터 end key까지 범위의 데이터를 갖고 있습니다.
+* 각각의 Region은 1GB입니다. (Default)
+* Region은 Region Server통해 Client에게 제공됩니다.
+* 하나의 Region Server는 약 1000개의 Regions을 갖고 있을수 있습니다.
+
+### Region Split
+ 
+ <img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig21.png" class="img-responsive img-rounded">
+
+초기에는 Table당 하나의 Region이 있습니다. a region이 지나치게 커지게 되면, 두개의 child regions으로 split시킵니다.
+두개의 Child regions은 동일한 Region Server안에서 열리게 되고,  그 후 HMaster에 보고가 가게 됩니다. 
+Lod Balancing의 이유로, HMaster는 추후 새롭게 생성된 regions을 다른 서버로 이동시키도록 스케쥴 될 수 있습니다.
+
+### Read Load Balancing
+
+<img src="{{ page.asset_path }}HBaseArchitecture-Blog-Fig22.png" class="img-responsive img-rounded">
+
+Splitting은 초기에 same region server에서 일어나지만, load balancing의 이유로, HMaster는 다른 서버로 이동하도록 스케쥴될수 있습니다.
+추후 Major Compaction이 일어나기 전까지 이런식으로 데이터가 제공이 됩니다.
+
+[HBase Architectural Components]: https://www.mapr.com/blog/in-depth-look-hbase-architecture
