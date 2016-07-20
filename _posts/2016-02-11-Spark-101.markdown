@@ -78,7 +78,7 @@ http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습�
 name := "ScalaTutorial"
 version := "1.0"
 scalaVersion := "2.10.5"
-libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.2"
+libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "1.6.2"
 
 {% endhighlight %}
 

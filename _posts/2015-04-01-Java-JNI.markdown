@@ -4,7 +4,7 @@ title:  "JNI with Java, Scala, and Spark"
 date:   2015-04-01 01:00:00
 categories: "java"
 asset_path: /assets/posts/JNI/
-tags: ['java', 'gcc', 'Linux']
+tags: ['java', 'gcc', 'Linux', 'MinGW64']
 
 ---
 
@@ -136,6 +136,13 @@ windows의 경우에는 **hello.dll** 로 만들면 되고, Linux의 경우는 *
 gcc -I /usr/lib/jvm/java-8-oracle/include/ -I /usr/lib/jvm/java-8-oracle/include/linux/ -shared -fpic -o libhello.so JNITutorial.c
 {% endhighlight %}
 
+참고로  **Windows(MinGW 64)**는 다음과 같이 합니다. 
+
+{% highlight bash %}
+gcc -I "C:\Program Files\Java\jdk1.8.0_91\include" -I "C:\Program Files\Java\jdk1.
+8.0_91\include\win32" -shared -o hello.dll JNITutorial.c
+{% endhighlight %}
+
 hello.so가 만들어진 이후 nm을 통해서 shared library안의 모든 symbols들을 확인해 볼 수 있습니다.
 
 {% highlight bash %}
@@ -228,7 +235,27 @@ Hello World!
 <img src="{{ page.asset_path }}spark_logo.png" class="img-responsive img-rounded">
 
 
+# MinGW 64bit
 
+[Download MinGW 64][Download MinGW 64]
 
+# Visutal Studio
+
+### Command Line Prompt 64bit 
+
+Windows10의 경우는 시작버튼을 누르고 -> vs 치면은 **VS2015 x64 Native Tool Command**가 뜹니다. 이걸로 실행을 하던가.. 아니면 다음과 같이 합니다. 
+
+{% highlight bash %}
+cd "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC"
+vcvarsall.bat amd64
+{% endhighlight %}
+
+{% highlight bash %}
+cl -I "C:\Program Files\Java\jdk1.8.0_91\include" -I "C:\Program Files\Java\jdk1.8.0_91\include\win32" -LD sample.cpp -Fefinger.dll
+{% endhighlight %}
+
+-LD 다음에 sample.cpp를 넣어야 합니다. <br>
+-Fe 다음에는 새로 만들을 dll 파일 이름을 넣어야 합니다. 
 
 [JNI Tutorial Git Repository]: https://github.com/AndersonJo/JNI-Tutorial
+[Download MinGW 64]: https://sourceforge.net/projects/mingw-w64/files/latest/download
