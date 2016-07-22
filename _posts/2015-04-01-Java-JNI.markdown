@@ -23,11 +23,11 @@ settings > Tools > External Tools > 추가
 
 <img src="{{ page.asset_path }}intellij_settings.png" class="img-responsive img-rounded">
 
-| Name | Value | 
-|:-----|:------|
-| Program | /usr/bin/javah |
-| Parameters | -v -jni $FileClass$ |
-| Working Directory | $SourcepathEntry$ |
+| Name | Linux  | Windows | 
+|:-----|:-----|:-------|
+| Program | /usr/bin/javah | C:\Program Files\Java\jdk1.8.0_91\bin\javah.exe |
+| Parameters | -v -jni $FileClass$ | |
+| Working Directory | $SourcepathEntry$ | |
 
 
 # Tutorial 
