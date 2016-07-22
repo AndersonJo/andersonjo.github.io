@@ -28,7 +28,6 @@ Ubuntu 14.10 (trusty version) 에 Hortonworks Hadoop with Ambari를 설치하는
 sudo apt-get install libmysql-java ntp
 {% endhighlight %}
 
-
 ### Default Ports
 
 | Service | Name | Port | Protocol |
@@ -44,6 +43,10 @@ sudo apt-get install libmysql-java ntp
 | Secondary NameNode | HDFS Secondary NameNode | 50090 | | 
 | ZooKeeper | ZooKeeper Client | 2181 | |
 
+
+### Important Things!
+
+ubuntu로 설치하지 말고, 반드시 root로 설치할것
 
 ### Disable Transparent Huge Pages (Optional)
 
@@ -83,6 +86,7 @@ $ sudo wget -nv http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates
 $ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD
 $ sudo apt-get update
 $ sudo apt-get install ambari-server
+$ sudo apt-get install ambari-agent
 {% endhighlight %}
 
 설치후 제대로 모두 설치됐는지 다음과 같이 확인합니다.
@@ -168,14 +172,15 @@ ambari-agent conf를 들어가서
 
 {% highlight bash %}
 sudo hostname ec2-52-192-233-209.ap-northeast-1.compute.amazonaws.com
-
-sudo vi /etc/ambari-agent/conf/ambari-agent.ini
 {% endhighlight %}
 
-ambari-agent 안의 hostname을 변경합니다.
+**ambari-agent** 안의 hostname을 변경합니다.
 
-hostname=ec2-52-192-233-209.ap-northeast-1.compute.amazonaws.com
+{% highlight bash %}
+sudo vi /etc/ambari-agent/conf/ambari-agent.ini
 
+hostname=PRIVATE_DOMAIN_NAME
+{% endhighlight %}
 
 ### Start Ambari
 
@@ -208,6 +213,12 @@ SSH 를 먼저 설정해줍니다.<br>
 {% highlight bash %}
 $ sudo su
 $ cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+{% endhighlight %}
+
+만약 EC2라면 ubuntu계정의 authorized_keys값을 root의 authorized_keys값에 넣습니다.
+{% highlight bash %}
+$ sudo su
+$ cat /home/ubuntu/.ssh/authorized_keys > /root/.ssh/authorized_keys
 {% endhighlight %}
 
 {% highlight bash %}
@@ -311,10 +322,36 @@ WARNING: A HTTP GET method, public javax.ws.rs.core.Response org.apache.ambari.s
 sudo apt-get install ambari-agent
 {% endhighlight %}
 
+### Oozie: Unauthorized connection for super-user
 
+에러는 다음과 같습니다.
 
+{% highlight bash %}
+org.apache.hadoop.ipc.RemoteException(org.apache.hadoop.security.authorize.AuthorizationException): Unauthorized connection for super-user: oozie from IP 172.31.31.188
+{% endhighlight %}
 
+{% highlight bash %}
+sudo su hdfs
+vi /etc/hadoop/conf/core-site.xml
+{% endhighlight %}
 
+core-size.xml을 열은 이후 다음과 같이 변경합니다.
+
+{% highlight bash %}
+<property>
+  <name>hadoop.proxyuser.oozie.groups</name>
+  <value>*</value>
+</property>
+
+<property>
+  <name>hadoop.proxyuser.oozie.hosts</name>
+  <value>*</value>
+</property>
+{% endhighlight %}
+
+Oozie를 restart시키기 이전에 먼저,  HDFS먼저 restart시킵니다.
+
+<img src="{{ page.asset_path }}oozie_proxy.png" class="img-responsive img-rounded">
 
 
 [hortonworks hadoop with ambari]: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.2.0/bk_Installing_HDP_AMB/content/_download_the_ambari_repo_ubuntu14.html
