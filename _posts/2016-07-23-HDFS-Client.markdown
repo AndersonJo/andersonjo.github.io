@@ -68,12 +68,18 @@ drwxr-xr-x  hdfs  hdfs	 0B   2014. 2. 23. 오후 8:21:57   0            0B      
 #### **파일 업로드**
 
 {% highlight java %}
-FileSystem hdfs = FileSystem.get(conf);
+ugi.doAs(new PrivilegedExceptionAction<Void>() {
+    @Override
+    public Void run() throws Exception {
+        FileSystem hdfs = FileSystem.get(conf);
 
-ClassLoader cl = this.getClass().getClassLoader();
-File nyFile = new File(cl.getResource("ny/4300.txt").getFile());
-BufferedInputStream in = new BufferedInputStream(new FileInputStream(nyFile));
+        ClassLoader cl = this.getClass().getClassLoader();
+        File nyFile = new File(cl.getResource("ny/4300.txt").getFile());
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(nyFile));
 
-OutputStream os = hdfs.create(new Path("/sample/ny.txt"));
-IOUtils.copyBytes(in, os, conf); // Upload local file to HDFS
+        FSDataOutputStream os = hdfs.create(new Path("/sample/ny.txt"), true);
+        IOUtils.copyBytes(in, os, conf); // Upload local file to HDFS
+        return null;
+    }
+});
 {% endhighlight %}
