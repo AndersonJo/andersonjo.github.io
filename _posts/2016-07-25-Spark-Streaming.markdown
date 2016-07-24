@@ -14,7 +14,7 @@ tags: ['hadoop', 'kafka']
 
 # Introduction
 
-Spark Streaming은 Core Spark의 extension으로서, 여러 sources로 부터 데이터를 받아서 처리할 수 있도록 도와줍니다.<br>
+Spark Streaming은 Core Spark의 extension으로서, 여러 sources로 부터 데이터를 받아서 처리할 수 있도록 도와줍니다.
 Kafka, Flume, Twitter, ZeroMQ, Kinesis, 또는 TCP Sockets 등등으로 부터 받을 수 있습니다.
 
 <img src="{{ page.asset_path }}streaming-arch.png" class="img-responsive img-rounded">
@@ -68,6 +68,13 @@ start-slave -h hostname
 
 hostname을 0.0.0.0으로 쓰면 에러가 날수 있습니다. (String으로 쓸것)
 
+| Name | Port | Description |
+|:-----|:-----|:------------|
+| Spark Master | 8081 | Spark Master 주소를 볼수 있습니다. |
+| Spark Web Interface | 4040 | |
+| History Server | 18080 | |
+
+
 
 ### build.sbt
 
@@ -92,14 +99,14 @@ object StreamingTutorial {
     // Spark Configuration
     val conf = new SparkConf()
     conf.setAppName("anderson-streaming-tutorial")
-    conf.setMaster("spark://sf-dev:7077")
+    conf.setMaster("spark://hostname:7077")
     conf.set("spark.ui.conf", "4045")
 
     // Streaming Context
     val ssc = new StreamingContext(conf, Seconds(1))
 
     // Create a DStream
-    val lines = ssc.socketTextStream("0.0.0.0", 9099)
+    val lines = ssc.socketTextStream("hostname", 9099)
     val words = lines.flatMap(_.split(" "))
     val pairs = words.map(word => (word, 1))
     val wordCounts = pairs.reduceByKey(_ + _)
