@@ -4,13 +4,22 @@ title:  "Spark 101"
 date:   2016-02-11 01:00:00
 categories: "spark"
 static: /assets/posts/Spark101/
-tags: []
+tags: ['SBT', 'Scala', 'PySpark']
 
 ---
 
 <img src="{{ page.static }}math.jpg" class="img-responsive img-rounded">
 
 # Installation
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Installing SBT on Ubuntu
+
+{% highlight bash %}
+echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
+sudo apt-get update
+sudo apt-get install sbt
+{% endhighlight %}
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Download Apache Spark
 
@@ -59,12 +68,13 @@ Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 
 
 {% highlight bash %}
 cd $SPARK_HOME/sbin
-./start-master.sh -i 0.0.0.0
+./start-master.sh -h hostname
 ./start-slaves.sh
 {% endhighlight %}
 
 http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습니다.<br>
-기본 Listening port는 **7077** 입니다.
+기본 Listening port는 **7077** 입니다.<br>
+이때 hostname에다가 0.0.0.0을 쓰면 안됩니다. (Slave 추가할때 에러남)
 
 
 | Argument | Meaning |
