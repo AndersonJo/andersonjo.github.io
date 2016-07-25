@@ -68,8 +68,12 @@ Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 
 
 {% highlight bash %}
 cd $SPARK_HOME/sbin
-./start-master.sh -h hostname
-./start-slaves.sh
+# ./start-master.sh -h hostname -p 7077
+sudo ./start-master.sh -h localhost -p 7077
+ 
+# ./start-slaves.sh
+sudo ./start-slave.sh spark://localhost:7077
+
 {% endhighlight %}
 
 http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습니다.<br>
