@@ -220,6 +220,17 @@ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB8
 bash -l -c 'rvm use ruby-dev-2.1.0'
 {% endhighlight %}
 
+### SBT
+
+[Installing SBT on Linux][Installing SBT on Linux]를 참고.
+
+{% highlight bash %}
+echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
+sudo apt-get update
+sudo apt-get install sbt
+{% endhighlight %}
+
 
 ### Gradle 
 
@@ -289,3 +300,4 @@ sudo alien -i oracle-*
 [c.sublime]: {{ page.asset_path }}c.sublime-build
 [watches-limlit]: https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit
 [oracle-client]: http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html
+[Installing SBT on Linux]: http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html

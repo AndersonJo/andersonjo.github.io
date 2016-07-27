@@ -9,7 +9,7 @@ tags: ['hadoop', 'kafka']
 ---
 
 <div>
-    <img src="{{ page.asset_path }}nfs.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}speed.jpg" class="img-responsive img-rounded">
 </div>
 
 # Introduction
