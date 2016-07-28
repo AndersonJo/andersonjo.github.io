@@ -1,0 +1,33 @@
+---
+layout: post
+title:  "Recurrent Neural Network with Python"
+date:   2016-06-25 01:00:00
+categories: "machine-learning"
+asset_path: /assets/posts/RNN-With-Python/
+tags: ['LSTM']
+
+---
+
+<div>
+    <img src="{{ page.asset_path }}brain.png" class="img-responsive img-rounded">
+</div>
+
+http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implementing-a-language-model-rnn-with-python-numpy-and-theano/
+
+# Language Modeling
+
+### Word Probability
+
+이전 문장에 기반하여, 다음 어떤 글자가 올 확률이 높을까? 이런 문제는 다음의 공식을 보면 됩니다. 
+
+$$ P(w1, ..., w_m) = \prod_{i=1} P(w_i | w_1, ..., w_{i-1}) $$
+
+예를 들어서 "In Japan everything is CUTE" 라는 문장의 확률은, "In Japan everything is"라는 단어들이 주어졌을때, CUTE가 올 확률입니다. 
+즉 $$ P( \text{"In Japan everything is CUTE"} ) $$ 의 확률은 $$ P( \text{CUTE} \ | \ \text{In Japan everything is}) $$ * 
+$$ P( \text{is} \ | \ \text{In Japan everything}) $$ * $$ P( \text{everything} \ | \ \text{In Japan}) $$ 이렇게 계속 반복..
+
+위 모델링의 문제점은 (Bayes 확률이 그러하듯) 이전의 모든 단어들에 조건이 들어가기 때문에, 너무나 많은 컴퓨팅 파워와 메모리를 요구하며, 
+이는 현실적으로 거의 불가능한 수준의 모델링입니다. (위의 모델링은 제가 이전에 쓴 Bayes를 이용한 스팸필터링에서도 
+너무나 많은 컴퓨팅 파워를 요구하기 때문에, Naive Bayes라는 것으로 대체를 하기도 했습니다.)
+따라서 현실적으로 위의 공식보다는 RNN을 사용하며, 이론적으로는 RNN은 위의 공식처럼 long-term dependencies를 캡쳐할수 있습니다. 
+(하지만 실제는 RNN또한 앞의 몇 단어정도를 캡쳐하는데 그치며, 제대로 하려면 LSTM이 필요합니다.)

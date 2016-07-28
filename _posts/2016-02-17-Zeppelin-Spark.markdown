@@ -35,6 +35,7 @@ sudo git clone https://github.com/hortonworks-gallery/ambari-zeppelin-service.gi
 설치 이후 ambari-server를 restart해줍니다.
 
 {% highlight bash %}
+sudo apt-get update
 sudo ambari-server restart
 {% endhighlight %}
 
