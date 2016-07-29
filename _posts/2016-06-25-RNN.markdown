@@ -31,3 +31,10 @@ $$ P( \text{is} \ | \ \text{In Japan everything}) $$ * $$ P( \text{everything} \
 너무나 많은 컴퓨팅 파워를 요구하기 때문에, Naive Bayes라는 것으로 대체를 하기도 했습니다.)
 따라서 현실적으로 위의 공식보다는 RNN을 사용하며, 이론적으로는 RNN은 위의 공식처럼 long-term dependencies를 캡쳐할수 있습니다. 
 (하지만 실제는 RNN또한 앞의 몇 단어정도를 캡쳐하는데 그치며, 제대로 하려면 LSTM이 필요합니다.)
+
+### Reddit Comments Data & Tokenize Text
+
+[Reddit Comment on Google BigQuery] 에서 Reddit Comments를 다운 받을수 있습니다.
+
+
+[Reddit Comment on Google BigQuery]: https://bigquery.cloud.google.com/table/fh-bigquery:reddit_comments.2015_08
