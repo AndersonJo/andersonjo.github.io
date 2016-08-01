@@ -16,6 +16,18 @@ http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implemen
 
 # Language Modeling
 
+### Installing NLTK
+
+{% highlight bash %}
+sudo pip install numpy
+sudo pip install nltk
+{% endhighlight %}
+
+{% highlight python %}
+import nltk
+nltk.download('punkt')
+{% endhighlight %}
+
 ### Word Probability
 
 이전 문장에 기반하여, 다음 어떤 글자가 올 확률이 높을까? 이런 문제는 다음의 공식을 보면 됩니다. 
@@ -23,18 +35,40 @@ http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implemen
 $$ P(w1, ..., w_m) = \prod_{i=1} P(w_i | w_1, ..., w_{i-1}) $$
 
 예를 들어서 "In Japan everything is CUTE" 라는 문장의 확률은, "In Japan everything is"라는 단어들이 주어졌을때, CUTE가 올 확률입니다. 
-즉 $$ P( \text{"In Japan everything is CUTE"} ) $$ 의 확률은 $$ P( \text{CUTE} \ | \ \text{In Japan everything is}) $$ * 
-$$ P( \text{is} \ | \ \text{In Japan everything}) $$ * $$ P( \text{everything} \ | \ \text{In Japan}) $$ 이렇게 계속 반복..
+즉 $$ P( \text{"In Japan everything is CUTE"} ) $$ 의 확률은<br> 
+$$ P( \text{CUTE} \ | \ \text{In Japan everything is}) $$ * <br>
+$$ P( \text{is} \ | \ \text{In Japan everything}) $$ * <br> 
+$$ P( \text{everything} \ | \ \text{In Japan}) $$ 이렇게 계속 반복..
 
-위 모델링의 문제점은 (Bayes 확률이 그러하듯) 이전의 모든 단어들에 조건이 들어가기 때문에, 너무나 많은 컴퓨팅 파워와 메모리를 요구하며, 
+위 모델링의 문제점은 (Bayes 확률이 그러하듯) 이전의 모든 단어들에 조건이 들어가기 때문에, 너무나 많은 컴퓨팅 파워와 메모리를 요구하며,
 이는 현실적으로 거의 불가능한 수준의 모델링입니다. (위의 모델링은 제가 이전에 쓴 Bayes를 이용한 스팸필터링에서도 
 너무나 많은 컴퓨팅 파워를 요구하기 때문에, Naive Bayes라는 것으로 대체를 하기도 했습니다.)
 따라서 현실적으로 위의 공식보다는 RNN을 사용하며, 이론적으로는 RNN은 위의 공식처럼 long-term dependencies를 캡쳐할수 있습니다. 
 (하지만 실제는 RNN또한 앞의 몇 단어정도를 캡쳐하는데 그치며, 제대로 하려면 LSTM이 필요합니다.)
 
-### Reddit Comments Data & Tokenize Text
-
-[Reddit Comment on Google BigQuery] 에서 Reddit Comments를 다운 받을수 있습니다.
 
 
-[Reddit Comment on Google BigQuery]: https://bigquery.cloud.google.com/table/fh-bigquery:reddit_comments.2015_08
+# Training Data And PreProcessing
+
+[Reddit Comment on Google BigQuery][Reddit Comment on Google BigQuery] 에서 Reddit Comments를 다운 받을수 있습니다.
+
+### Tokenize Text
+
+>"He left!" ---> "He", "left", "!" 
+
+일단 Reddit Comments를 다운받으면, Raw text는 있지만, 분석을 위해서는 word단위로 잘라줘야 합니다.
+즉 comments를 sentences별로, sentences는 단어 단위로 tokenize가 필요합니다. 
+이때 punctuation (!)의 경우는 따로 빼줘야 합니다. 예를 들어서 "He left!" 의 경우는 "He", "left", "!" 이렇게 빠져야 합니다.
+Tokenization은 [Python NLTK Library][NLTK Library]의 word_tokenize 그리고 sent_tokenize함수를 통해서 쉽게 해결될수 있습니다. 
+
+문장의 처음 시작과, 끝을 알기 위해서 SENTENCE_START, SENTENCE_END를 사용합니다.
+또한 RNN에서는 String이 아닌 vectors를 사용하기 때문에 숫자값으로 바꿔줘야 합니다.
+
+> [0, 179, 341, 416] --> [179, 341, 416, 255]
+
+0은 SENTENCE_START를 가르키며, 그 다음에 나올 단어를 예측해 나온값이 255이며, 한칸씩 shift해서 결과값에서는 0이 빠져있습니다.
+
+
+
+[Reddit Comment on Google BigQuery]: https://bigquery.cloud.google.com/dataset/fh-bigquery:reddit_comments
+[NLTK Library]: http://www.nltk.org/
