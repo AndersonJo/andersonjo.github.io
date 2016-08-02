@@ -44,9 +44,6 @@ sudo apt-get install libmysql-java ntp
 | ZooKeeper | ZooKeeper Client | 2181 | |
 
 
-### Important Things!
-
-ubuntu로 설치하지 말고, 반드시 root로 설치할것
 
 ### Disable Transparent Huge Pages (Optional)
 
@@ -87,6 +84,7 @@ $ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD
 $ sudo apt-get update
 $ sudo apt-get install ambari-server
 $ sudo apt-get install ambari-agent
+$ sudo apt-get install ambari-metrics-assembly
 {% endhighlight %}
 
 설치후 제대로 모두 설치됐는지 다음과 같이 확인합니다.
@@ -138,6 +136,38 @@ CREATE DATABASE hive;
 mysql -u ambari -p ambari < /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CREATE.sql
 {% endhighlight %}
 
+
+### Configuring root account
+
+여러모로 root로 계정으로 HDP를 설정하는것이 여러모로 이롭습니다.
+
+**On Localhost**
+
+SSH 를 먼저 설정해줍니다.<br>
+포인트는 root계정으로 해야하며,  ssh root@localhost를 했을때 에러가 없어야 합니다.
+
+{% highlight bash %}
+$ sudo su
+$ cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+{% endhighlight %}
+
+**On AWS EC2**
+
+만약 EC2라면 ubuntu계정의 authorized_keys값을 root의 authorized_keys값에 넣습니다.
+{% highlight bash %}
+$ sudo su
+$ cat /home/ubuntu/.ssh/authorized_keys > /root/.ssh/authorized_keys
+{% endhighlight %}
+
+{% highlight bash %}
+chmod 700 /root/.ssh
+chmod 600 /root/.ssh/authorized_keys
+{% endhighlight %}
+
+ssh -i private-key.pem root@localhost 을 했을때 접속이 잘되면 EC2에서도 암호를 물어보지 않고 접속이 되면 됩니다.
+
+
+
 ### Setting up Ambari
 
 {% highlight bash %}
@@ -161,7 +191,7 @@ sudo vi /etc/ambari-agent/conf/ambari-agent.ini
 
 ### Hostname Settings
 
-/etc/hosts로 들어가서 public domain또는 private domain을 넣습니다.
+/etc/hosts로 들어가서 public domain을 넣습니다.
 
 {% highlight bash %}
 52.192.233.209	ec2-52-192-233-209.ap-northeast-1.compute.amazonaws.com
@@ -205,29 +235,6 @@ $ sudo ambari-server start
 <img src="{{ page.asset_path }}install-options.png" class="img-responsive img-rounded">
 
 
-### Installing HDP on Localhost
-
-SSH 를 먼저 설정해줍니다.<br>
-포인트는 root계정으로 해야하며,  ssh root@localhost를 했을때 에러가 없어야 합니다. 
-
-{% highlight bash %}
-$ sudo su
-$ cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
-{% endhighlight %}
-
-만약 EC2라면 ubuntu계정의 authorized_keys값을 root의 authorized_keys값에 넣습니다.
-{% highlight bash %}
-$ sudo su
-$ cat /home/ubuntu/.ssh/authorized_keys > /root/.ssh/authorized_keys
-{% endhighlight %}
-
-{% highlight bash %}
-chmod 700 /root/.ssh
-chmod 600 /root/.ssh/authorized_keys
-{% endhighlight %}
-
-ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 되면 설정이 된 것입니다.<br>
-**SSH Public Key (id_rsa.pub)은 target hosts의 root account 밑에 카피합니다.** 
 
 ### Success
 
@@ -236,7 +243,7 @@ ssh localhost같이 접속을 할때 암호를 물어보지 않아도 접속이 
 
 # Errors
 
-### mysql-connector-java Error
+### mysql-connector-java Error (when installing Oozie)
 
 이 부분은 Oozie설치할때 나타나는 문제인데.. 다른 버젼이 서로 충돌해서 생기는 문제입니다. 
 
@@ -292,14 +299,19 @@ sudo hostname ip-172-31-27-227.ap-northeast-1.compute.internal
 
 ### Internal Bug
  
-{% highlight bash %}
-  File "/var/lib/ambari-agent/cache/stacks/HDP/2.0.6/hooks/before-START/scripts/params.py", line 158, in <module>
+{% highlight text %}
+  File "/var/lib/ambari-agent/cache/stacks/HDP/2.0.6/hooks/before-START/scripts/params.py", line 158
     ambari_db_rca_password = config['hostLevelParams']['ambari_db_rca_password'][0]
 TypeError: 'int' object has no attribute '__getitem__'
 {% endhighlight %}
 
-위와 같은 에러 발생시 /var/lib/ambari-agent/cache/stacks/HDP/2.0.6/hooks/before-START/scripts/params.py편집해서 [0] 이 붙어있는 부분을 제거해줍니다.
+위와 같은 에러 발생시 /var/lib/ambari-agent/cache/stacks/HDP/2.0.6/hooks/before-START/scripts/params.py편집해서 158 line근처에 [0] 이 붙어있는 부분을 제거해줍니다.
 
+{% highlight bash %}
+sudo vi /var/lib/ambari-agent/cache/stacks/HDP/2.0.6/hooks/before-START/scripts/params.py
+{% endhighlight %}
+
+다음과 같이 만들어 줍니다.
 
 {% highlight bash %}
 ambari_db_rca_url = config['hostLevelParams']['ambari_db_rca_url']
@@ -321,6 +333,15 @@ WARNING: A HTTP GET method, public javax.ws.rs.core.Response org.apache.ambari.s
 {% highlight bash %}
 sudo apt-get install ambari-agent
 {% endhighlight %}
+
+
+## Unable to locate package [package-name]
+
+{% highlight bash %}
+sudo vi /etc/apt/sources.list.d/ambari.list
+{% endhighlight %}
+
+열고 deb http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.2.2.0 Ambari main 이런 내용이 comment out 되진 않았는지 살펴봅니다.
 
 ### Oozie: Unauthorized connection for super-user
 
@@ -353,5 +374,26 @@ Oozie를 restart시키기 이전에 먼저,  HDFS먼저 restart시킵니다.
 
 <img src="{{ page.asset_path }}oozie_proxy.png" class="img-responsive img-rounded">
 
+### Namenode: BindException
+
+{% highlight text %}
+ERROR namenode.NameNode: Failed to start namenode.
+java.net.BindException: Port in use: ec2-52-192-233-209.ap-northeast-1.compute.amazonaws.com:50070
+{% endhighlight %}
+
+현상은 port를 사용중에 있지 않는데, 해당 Port가 사용중이라고 나오는 케이스입니다.
+이 경우 NameNode Bind 시키려는 IP를 0.0.0.0으로 바꿔줘야 합니다.
+
+| Name | default value |
+|:-----|:------|
+| fs.defaultFS | 건들지 말것 (hostname으로 둘것) |
+| dfs.namenode.http-address | 0.0.0.0:50070 |
+| dfs.namenode.https-address | 0.0.0.0:50470 |
+| dfs.namenode.rpc-address | 0.0.0.0:8020 |
+| dfs.namenode.secondary.http-address | 0.0.0.0:50090 |
+
+[HDFS default configurations][HDFS default configurations] 를 참조.
+
 
 [hortonworks hadoop with ambari]: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.2.0/bk_Installing_HDP_AMB/content/_download_the_ambari_repo_ubuntu14.html
+[HDFS default configurations]: https://hadoop.apache.org/docs/r2.4.1/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
