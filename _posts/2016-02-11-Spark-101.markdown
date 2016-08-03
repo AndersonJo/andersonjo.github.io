@@ -10,7 +10,7 @@ tags: ['SBT', 'Scala', 'PySpark']
 
 <img src="{{ page.static }}math.jpg" class="img-responsive img-rounded">
 
-# Installation
+# Scala Spark
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Installing SBT on Ubuntu
 
@@ -20,6 +20,35 @@ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
 sudo apt-get update
 sudo apt-get install sbt
 {% endhighlight %}
+
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> IntelliJ Configuration
+
+Project생성시에는 Scalar -> SBT 를 선택합니다. <br>
+Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 추가<br>
+
+<img src="{{ page.static }}intellij_project_structure.png" class="img-responsive img-rounded">
+
+
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> build.sbt
+
+중요한 점은, scalaVersion이 정확하게 2.10.5이어야 합니다.
+
+{% highlight bash %}
+name := "ScalaTutorial"
+version := "1.0"
+scalaVersion := "2.10.5"
+libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "1.6.2"
+
+{% endhighlight %}
+
+
+* 참고: [Apache Spark Maven Repository][Apache Spark Maven Repository]
+
+
+
+
+# PySpark Installation
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Download Apache Spark
 
@@ -54,12 +83,6 @@ Project Structure에서 PySpark가 있는 위치를 Add Content Root를 눌러�
 <img src="{{ page.static }}pycharm.png" class="img-responsive img-rounded">
 
 
-#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> IntelliJ Configuration
-
-Project생성시에는 Scalar -> SBT 를 선택합니다. <br>
-Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 추가<br>
-
-<img src="{{ page.static }}intellij_project_structure.png" class="img-responsive img-rounded">
 
 
 
@@ -94,23 +117,6 @@ http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습�
 
 <img src="{{ page.static }}spark_web.png" class="img-responsive img-rounded">
 
-# Scala Spark
-
-
-#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> build.sbt
-
-중요한 점은, scalaVersion이 정확하게 2.10.5이어야 합니다.
-
-{% highlight bash %}
-name := "ScalaTutorial"
-version := "1.0"
-scalaVersion := "2.10.5"
-libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "1.6.2"
-
-{% endhighlight %}
-
-
-* 참고: [Apache Spark Maven Repository][Apache Spark Maven Repository]
 
 # PySpark Basic 101
 

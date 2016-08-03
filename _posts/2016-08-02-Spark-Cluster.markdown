@@ -121,9 +121,9 @@ JobTracker는 cluster resource management (aka **Global ResourceManager**) 그�
 - 즉.. ResourceManager는 ApplicationMasters를 관리하고, ApplicationMasters는 tasks들을 관리한다고 보면 됩니다.
 
 
-# Cluster Architecture Overview
+# Spark YARN Cluster
 
-### Yarn Cluster Mode
+### Overview
 
 YARN에서는 각각의 application instance는 ApplicationMaster를 갖고 있습니다.
 AM은 ResourceManager로부터  resource를 요청하며, 자원이 할당되면, NodeManager에게 containers를 할당된 자원으로 실행시킬것을 요청합니다.
@@ -141,7 +141,36 @@ Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**
 | Persistent services       | YARN ResourceManager and NodeManagers | YARN ResourceManager and NodeManagers |
 | Supports Spark Shell      | Yes                | No               |
 
+
+
+### SparkPi Test 
+
+{% highlight bash %}
+sudo -u spark spark-submit --class org.apache.spark.examples.SparkPi --master yarn-client --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 lib/spark-examples*.jar 10
+{% endhighlight %}
+
 # Spark Standalone Cluster on AWS
+
+
+
+# Spark Network Configuration
+
+**Standalone mode only**
+
+| From | To | Default Port | Purpose | Configuration Setting | Notes |
+|:-----|:---|:-------------|:--------|:----------------------|:------|
+| Browser | Standalone Master | 8080 | Web UI | spark.master.ui.port SPARK_MASTER_WEBUI_PORT  | Jetty-based. Standalone mode only. |
+| Browser | Standalone Worker | 8081 | Web UI | spark.worker.ui.port SPARK_WORKER_WEBUI_PORT  | Jetty-based. Standalone mode only. |
+| Driver / Standalone Worker | Standalone Master | 7077 | Submit job to cluster Join cluster | SPARK_MASTER_PORT | Set to "0" to choose a port randomly. Standalone mode only. |
+| Standalone Master | Standalone Worker | (random) | Schedule executors | SPARK_WORKER_PORT | Set to "0" to choose a port randomly. Standalone mode only. |
+
+**All cluster managers**
+
+| From | To | Default Port | Purpose | Configuration Setting | Notes |
+| Browser | Application | 4040 | Web UI | spark.ui.port | Jetty-based |
+| Browser | History Server | 18080 | Web UI | spark.history.ui.port | Jetty-based |
+| Executor / Standalone Master | Driver | (random) | Connect to application Notify executor state changes | spark.driver.port | Set to "0" to choose a port randomly. |
+| Executor / Driver | Executor / Driver | (random) | Block Manager port | spark.blockManager.port | Raw socket via ServerSocketChannel |
 
 
 
