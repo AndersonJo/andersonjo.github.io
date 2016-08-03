@@ -121,20 +121,25 @@ JobTracker는 cluster resource management (aka **Global ResourceManager**) 그�
 - 즉.. ResourceManager는 ApplicationMasters를 관리하고, ApplicationMasters는 tasks들을 관리한다고 보면 됩니다.
 
 
-
 # Cluster Architecture Overview
-
-
-### Spark Standalone cluster (aka Standalone Cluster)
-
-스파크의 built-in cluster 모드 입니다.
-
 
 ### Yarn Cluster Mode
 
+YARN에서는 각각의 application instance는 ApplicationMaster를 갖고 있습니다.
+AM은 ResourceManager로부터  resource를 요청하며, 자원이 할당되면, NodeManager에게 containers를 할당된 자원으로 실행시킬것을 요청합니다.
+
 <img src="{{ page.asset_path }}cluster_deployment_mode.png" class="img-responsive img-rounded">
 
+Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**이 됩니다.
+해당 AM은 application실행과, 자원요청을 담당하게 됩니다.
 
+| Mode | YARN Client Mode | YARN Cluster Mode |
+|:-----|:-----------------|:------------------|
+| Driver                    | Client            | ApplicationMaster | 
+| Requests resources        | ApplicationMaster | ApplicationMaster |
+| Starts executor processes | YARN NodeManager   | YARN NodeManager |
+| Persistent services       | YARN ResourceManager and NodeManagers | YARN ResourceManager and NodeManagers |
+| Supports Spark Shell      | Yes                | No               |
 
 # Spark Standalone Cluster on AWS
 
