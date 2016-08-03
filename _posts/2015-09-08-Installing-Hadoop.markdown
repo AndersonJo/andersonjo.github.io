@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Installing Hadoop 2.7 on Ubuntu 15.04"
-date:   2015-09-08 01:00:00
+date:   2015-09-08 02:00:00
 categories: "hadoop"
 asset_path: /assets/posts/Installing-Hadoop-On-Ubuntu/
 ---

@@ -23,7 +23,7 @@ sudo apt-get install libfontconfig
 {% endhighlight %}
 
 
-### Installing Zeppelin on HDP
+### Installing Zeppelin on HDP (easy way)
 
 * [Hortonworks Zeppelin][Hortonworks Zeppelin]
 
@@ -42,6 +42,22 @@ sudo ambari-server restart
 Ambari에서 Add Service -> Zeppelin Notebook 을 통해서 설치가 가능합니다.
 
 
+### Installing Zeppelin on HDP (hard way)
+
+{% highlight bash %}
+sudo apt-get remove zeppelin*
+
+cd ~/Downloads
+git clone https://github.com/apache/zeppelin.git
+
+sudo mkdir /var/lib/zeppelin
+sudo mkdir -p /etc/zeppelin/conf.dist/
+sudo cp zeppelin/conf/* /etc/zeppelin/conf.dist/
+{% endhighlight %}
+
+
+
+
 ### Installing Zeppelin manually on HDP
 
 * [Zeppelin Installation][Zeppelin Installation]
@@ -58,6 +74,29 @@ Examples
 mvn clean package -DsipTests -Pspark-1.6 -Phadoop-2.6 -Pyarn
 {% endhighlight %}
 
+
+
+# Errors
+
+### zeppelin-2-4-2-0-258 dependency conflict
+
+{% highlight text %}
+Setting up zeppelin-2-4-2-0-258 (0.6.0.2.4.2.0-258) ...
+update-alternatives: error: alternative path /etc/zeppelin/conf.dist doesn't exist
+No apport report written because the error message indicates its a followup error from a previous failure.
+                                                                                                          dpkg: error processing package zeppelin-2-4-2-0-258 (--configure):
+ subprocess installed post-installation script returned error exit status 2
+dpkg: dependency problems prevent configuration of zeppelin:
+ zeppelin depends on zeppelin-2-4-2-0-258; however:
+  Package zeppelin-2-4-2-0-258 is not configured yet.
+
+dpkg: error processing package zeppelin (--configure):
+ dependency problems - leaving unconfigured
+Errors were encountered while processing:
+ zeppelin-2-4-2-0-258
+ zeppelin
+E: Sub-process /usr/bin/dpkg returned an error code (1)
+{% endhighlight %}
 
 
 

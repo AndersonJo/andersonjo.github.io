@@ -182,10 +182,11 @@ Customize user account for ambari-server daemon [y/n] (n)? n
 
 계속 알수 없는 에러가 날 경우(MySQL접속 등등) 다음의 파일을 확인해 봅니다. 
 
-{% highlight bash %}
-sudo vi /etc/ambari-server/conf/ambari.properties
-sudo vi /etc/ambari-agent/conf/ambari-agent.ini
-{% endhighlight %}
+| Name | Command | 
+|:-----|:--------|
+| Ambari Server | sudo vi /etc/ambari-server/conf/ambari.properties | 
+| Ambari Agent |  sudo vi /etc/ambari-agent/conf/ambari-agent.ini |
+
 
 
 
@@ -240,6 +241,23 @@ $ sudo ambari-server start
 
 
 <img src="{{ page.asset_path }}ambari.png" class="img-responsive img-rounded">
+
+
+# Removing Service 
+
+Ambari를 사용중에 있다가 도중에 Service를 삭제해야할때도 있습니다. 이경우 다음과 같이 합니다.
+
+{% highlight bash %}
+curl -u admin:admin -H "X-Requested-By: ambari" -X DELETE http://AMBARI-SERVER-ADDRESS:8080/api/v1/clusters/CLUSTER-NAME/services/SERVICE-NAME
+{% endhighlight %}
+
+
+ZEPPELIN 삭제하는 방법
+
+{% highlight bash %}
+curl -u admin:admin -H "X-Requested-By: ambari" -X DELETE http://localhost:8080/api/v1/clusters/test/services/ZEPPELIN
+{% endhighlight %}
+
 
 # Errors
 
@@ -393,6 +411,26 @@ java.net.BindException: Port in use: ec2-52-192-233-209.ap-northeast-1.compute.a
 | dfs.namenode.secondary.http-address | 0.0.0.0:50090 |
 
 [HDFS default configurations][HDFS default configurations] 를 참조.
+
+### Ambari Metrics Errors
+
+{% highlight text %}
+INFO org.apache.zookeeper.ClientCnxn: Opening socket connection to server localhost/127.0.0.1:61181. Will not attempt to authenticate using SASL (unknown error)
+2016-08-03 04:30:41,131 WARN org.apache.zookeeper.ClientCnxn: Session 0x0 for server null, unexpected error, closing socket connection and attempting reconnect
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doTransport(ClientCnxnSocketNIO.java:361)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1125)
+{% endhighlight %}
+
+위의 경우는 Hbase가 안띄워져 있어서 그렇습니다.
+
+
+| Service | Name | default value |
+|:--------|:-----|:------|
+| Ambari Metrics | hbase.zookeeper.quorum | 0.0.0.0 |
+
 
 
 [hortonworks hadoop with ambari]: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.2.0/bk_Installing_HDP_AMB/content/_download_the_ambari_repo_ubuntu14.html
