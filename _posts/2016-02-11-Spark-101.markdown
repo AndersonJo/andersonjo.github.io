@@ -46,6 +46,48 @@ libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "1.6.2"
 * 참고: [Apache Spark Maven Repository][Apache Spark Maven Repository]
 
 
+#### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Spark Test
+
+**build.sbt**
+
+{% highlight text %}
+name := "scala-lab"
+version := "1.0"
+scalaVersion := "2.10.5"
+
+// https://mvnrepository.com/artifact/org.apache.spark/spark-core_2.10
+libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "2.0.0"
+{% endhighlight %}
+
+
+**SimpleApp.scala**
+
+{% highlight scala %}
+import org.apache.spark.{SparkConf, SparkContext}
+
+object SimpleApp {
+  def main(args: Array[String]): Unit = {
+
+    val conf = new SparkConf()
+    conf.setAppName("Anderson's Simple Application")
+    conf.setMaster("local[*]")
+
+    val sc = new SparkContext(conf)
+    val data = Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    val rdd = sc.parallelize(data)
+    println(rdd.reduce((a, b) => a + b))
+  }
+}
+{% endhighlight %}
+
+
+
+
+
+
+
+
+
 
 
 # PySpark Installation
