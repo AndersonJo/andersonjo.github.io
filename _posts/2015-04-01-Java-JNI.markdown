@@ -230,11 +230,6 @@ object JNITutorial extends App {
 Hello World!
 {% endhighlight %}
 
-# Spark
-
-<img src="{{ page.asset_path }}spark_logo.png" class="img-responsive img-rounded">
-
-
 # MinGW 64bit
 
 [Download MinGW 64][Download MinGW 64]
