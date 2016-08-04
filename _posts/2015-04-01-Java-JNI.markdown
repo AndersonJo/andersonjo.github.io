@@ -251,7 +251,7 @@ vcvarsall.bat amd64
 {% endhighlight %}
 
 {% highlight bash %}
-cl -I "C:\Program Files\Java\jdk1.8.0_91\include" -I "C:\Program Files\Java\jdk1.8.0_91\include\win32" -LD sample.cpp -Fefinger.dll
+cl -I "C:\Program Files\Java\jdk1.8.0_91\include" -I "C:\Program Files\Java\jdk1.8.0_91\include\win32" -LD sample.cpp -Fehello.dll
 {% endhighlight %}
 
 -LD 다음에 sample.cpp를 넣어야 합니다. <br>
