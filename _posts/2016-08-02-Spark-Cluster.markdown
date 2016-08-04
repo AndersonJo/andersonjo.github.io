@@ -143,11 +143,33 @@ Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**
 
 
 
-### SparkPi Test 
+### SparkPi Test on YARN host 
 
 {% highlight bash %}
-sudo -u spark spark-submit --class org.apache.spark.examples.SparkPi --master yarn-client --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 lib/spark-examples*.jar 10
+cd  /usr/hdp/current/spark-client
+export HADOOP_USER_NAME=spark
+sudo -u spark spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 lib/spark-examples*.jar 10
 {% endhighlight %}
+
+### SParkPi Test remotely
+
+먼저 client-side configurations 파일들을 가르키는 HADOOP_CONF_DIR 또는 YARN_CONF_DIR가 필요합니다.<br>
+모든 파일이 다 필요한 것은 아니고, **core-site.xml** 그리고 **yarn-site.xml**만 있으면 됩니다.
+이렇게 하는 이유는 spark-submit을 할때  --master 옵션에 Standalone Cluster 또는 Mesos와는 다르게 주소가 아닌 yarn이 들어가기 때문입니다.
+
+**Copying core-site.xml and yarn-site.xml to my computer**
+ 
+{% highlight bash %}
+mkdir -p ~/apps/hdp_conf
+scp -i ~/.ssh/dev.pem ubuntu@yarn-master:/etc/hadoop/2.4.2.0-258/0/yarn-site.xml ~/apps/hdp_conf/
+scp -i ~/.ssh/dev.pem ubuntu@yarn-master:/etc/hadoop/2.4.2.0-258/0/core-site.xml ~/apps/hdp_conf/
+export HADOOP_CONF_DIR=/home/anderson/apps/hdp_conf/
+{% endhighlight %}
+
+{% highlight bash %}
+spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 $SPARK_HOME/examples/jars/spark-examples*.jar 10
+{% endhighlight %}
+
 
 # Spark Standalone Cluster on AWS
 
