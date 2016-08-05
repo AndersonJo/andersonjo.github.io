@@ -243,7 +243,36 @@ $ sudo ambari-server start
 <img src="{{ page.asset_path }}ambari.png" class="img-responsive img-rounded">
 
 
-# Removing Service 
+
+### HDP Configuration when using Public IP
+
+**JAVA_HOME Configuration**
+
+JAVA_HOME을 설정해주어야 합니다. (ambari-metrics-collector에서 에러가 날 수 있습니다.)
+
+{% highlight bash %}
+sudo vi /etc/ambari-metrics-collector/conf/ams-env.sh
+{% endhighlight %}
+
+{% highlight bash %}
+# Java
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+unset JAVA_TOOL_OPTIONS
+{% endhighlight %}
+
+**dfs.namenode.*-address**
+
+설치후 Ambari설치시 설정한 hostname으로 박혀있을텐데 이것을 0.0.0.0으로 바꿔줘야 합니다.<br>
+자세한 사항은 Namenode: BindException을 참고..
+
+
+
+
+
+
+
+
+### Removing Service
 
 Ambari를 사용중에 있다가 도중에 Service를 삭제해야할때도 있습니다. 이경우 다음과 같이 합니다.
 
