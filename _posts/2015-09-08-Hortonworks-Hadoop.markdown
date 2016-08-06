@@ -244,33 +244,6 @@ $ sudo ambari-server start
 
 
 
-### HDP Configuration when using Public IP
-
-**JAVA_HOME Configuration**
-
-JAVA_HOME을 설정해주어야 합니다. (ambari-metrics-collector에서 에러가 날 수 있습니다.)
-
-{% highlight bash %}
-sudo vi /etc/ambari-metrics-collector/conf/ams-env.sh
-{% endhighlight %}
-
-{% highlight bash %}
-# Java
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-unset JAVA_TOOL_OPTIONS
-{% endhighlight %}
-
-**dfs.namenode.*-address**
-
-설치후 Ambari설치시 설정한 hostname으로 박혀있을텐데 이것을 0.0.0.0으로 바꿔줘야 합니다.<br>
-자세한 사항은 Namenode: BindException을 참고..
-
-
-
-
-
-
-
 
 ### Removing Service
 
@@ -286,6 +259,52 @@ ZEPPELIN 삭제하는 방법
 {% highlight bash %}
 curl -u admin:admin -H "X-Requested-By: ambari" -X DELETE http://localhost:8080/api/v1/clusters/test/services/ZEPPELIN
 {% endhighlight %}
+
+
+# HDP Configuration when using Public IP
+
+### JAVA_HOME Configuration
+
+JAVA_HOME을 설정해주어야 합니다. (ambari-metrics-collector에서 에러가 날 수 있습니다.)
+
+{% highlight bash %}
+sudo vi /etc/ambari-metrics-collector/conf/ams-env.sh
+{% endhighlight %}
+
+{% highlight bash %}
+# Java
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+unset JAVA_TOOL_OPTIONS
+{% endhighlight %}
+
+### dfs.namenode.*-address
+
+설치후 Ambari설치시 설정한 hostname으로 박혀있을텐데 이것을 0.0.0.0으로 바꿔줘야 합니다.<br>
+자세한 사항은 Namenode: BindException을 참고..
+
+### Hbase Master Bind Address
+
+hbase-site.xml -> hbase.master.hostname (0.0.0.0) 추가
+
+<img src="{{ page.asset_path }}hbase-master-address.png" class="img-responsive img-rounded">
+
+/etc/hbase/conf/regionservers 에서 regionserver의 hostname을 변경합니다.  
+
+{% highlight bash %}
+sudo vi /etc/hbase/conf/regionservers 
+{% endhighlight %}
+
+Hbase master 그리고 regionserver 를 테스트를 위해 키고 끄는건 다음과 같이 합니다.
+
+{% highlight bash %}
+sudo -u hbase hbase master (start|stop|restart)
+sudo -u hbase hbase regionserver
+{% endhighlight %}
+
+
+
+
+
 
 
 # Errors
