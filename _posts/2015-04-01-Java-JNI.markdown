@@ -252,5 +252,15 @@ cl -I "C:\Program Files\Java\jdk1.8.0_91\include" -I "C:\Program Files\Java\jdk1
 -LD 다음에 sample.cpp를 넣어야 합니다. <br>
 -Fe 다음에는 새로 만들을 dll 파일 이름을 넣어야 합니다. 
 
+### Error:  C++ exception handler used, but unwind semantics are not enabled
+
+\#include \<iostream\> 넣어줄때 발생했으며, 
+이경우 --EHsc 를 컬파일링 할때 붙여주면 됩니다.
+
+{% highlight bash %}
+cl -I "C:\Program Files\Java\jdk1.8.0_91\include" -I "C:\Program Files\Java\jdk1.8.0_91\include\win32" --EHsc -LD sample.cpp -Fehello.dll
+{% endhighlight %}
+
+
 [JNI Tutorial Git Repository]: https://github.com/AndersonJo/JNI-Tutorial
 [Download MinGW 64]: https://sourceforge.net/projects/mingw-w64/files/latest/download
