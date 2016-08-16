@@ -230,11 +230,26 @@ object JNITutorial extends App {
 Hello World!
 {% endhighlight %}
 
-# MinGW 64bit
+
+# Spark 
+
+binaryFiles 그리고 toArray를 이용해서 Binary Data 를 SPark로 불러 올수 있습니다. 
+이때 중요한점은 IOUtils이나 따로 집접 불러낼경우, Concurrency Error를 일으키거나, 데이터가 gabbled 될 수 있습니다.
+
+{% highlight scala %}
+val sPath = cl.getResource("wsq/r/").getPath
+val data = sc.binaryFiles(sPath)
+val data2 = data.toArray()
+{% endhighlight %}
+
+
+
+
+# Windows Visual Studio
+
+### MinGW 64bit
 
 [Download MinGW 64][Download MinGW 64]
-
-# Visutal Studio
 
 ### Command Line Prompt 64bit 
 
