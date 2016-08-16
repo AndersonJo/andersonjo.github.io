@@ -83,6 +83,13 @@ Tokenization은 [Python NLTK Library][NLTK Library]의 word_tokenize 그리고 s
 ### Initialization
 
 {% highlight python %}
+SENTENCE_START = 'SETENCE_START'
+SENTENCE_END = 'SENTENCE_END'
+UNKNOWN_TOKEN = 'UNKNOWN_TOKEN'
+VOCAB_SIZE = 10000
+{% endhighlight %}
+
+{% highlight python %}
 class RNNNumpy(object):
     def __init__(self, word_dim, hidden_dim=100, bptt_truncate=4):
         self.word_dim = word_dim
@@ -92,6 +99,17 @@ class RNNNumpy(object):
         self.V = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (word_dim, hidden_dim))
         self.W = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
 {% endhighlight %}
+
+U, V, W를 Initialization을 해줘야 합니다. 여러가지 방법이 있을 수 있지만, 우리는 다음의 공식을 사용해서 초기화를 해줍니다.
+
+$$ [ -\frac{1}{\sqrt{n}},\ \frac{1}{\sqrt{n}} ]$$
+
+여기서 n은 previous layer의 connection갯수를 뜻합니다.
+
+| Variable | Shape | Python | 
+| U | (100, 10000) | self.U.shape |
+| V | (10000, 100) | self.V.shape |
+| W | (100, 10000) | self.W.shape |
 
 ### Forward Propagation
 
