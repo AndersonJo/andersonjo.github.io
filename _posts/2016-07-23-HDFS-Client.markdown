@@ -9,7 +9,7 @@ tags: []
 ---
 
 <div>
-    <img src="{{ page.asset_path }}elephant.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}elephant.jpg" class="img-responsive img-rounded" style="width:100%">
 </div>
 
 # Java Client 101

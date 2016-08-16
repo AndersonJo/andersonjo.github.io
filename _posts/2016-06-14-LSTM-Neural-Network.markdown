@@ -9,7 +9,7 @@ tags: ['Recurrent Neural Network', 'RNN', 'Long Short Term Memory NN']
 ---
 
 <div>
-    <img src="{{ page.asset_path }}wallpaper-weird-self-esteem.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}wallpaper-weird-self-esteem.jpg" class="img-responsive img-rounded" style="width:100%">
 </div>
 
 

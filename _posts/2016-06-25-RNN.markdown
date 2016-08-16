@@ -4,12 +4,12 @@ title:  "Recurrent Neural Network with Python"
 date:   2016-06-25 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/RNN-With-Python/
-tags: ['LSTM']
+tags: ['LSTM', 'tanh', 'hyperbolic tangent', 'cross-entropy loss']
 
 ---
 
 <div>
-    <img src="{{ page.asset_path }}brain.png" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}brain.png" class="img-responsive img-rounded" style="width:100%">
 </div>
 
 http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implementing-a-language-model-rnn-with-python-numpy-and-theano/
@@ -46,6 +46,17 @@ $$ P( \text{everything} \ | \ \text{In Japan}) $$ 이렇게 계속 반복..
 따라서 현실적으로 위의 공식보다는 RNN을 사용하며, 이론적으로는 RNN은 위의 공식처럼 long-term dependencies를 캡쳐할수 있습니다. 
 (하지만 실제는 RNN또한 앞의 몇 단어정도를 캡쳐하는데 그치며, 제대로 하려면 LSTM이 필요합니다.)
 
+# RNN 101
+
+<img src="{{ page.asset_path }}rnn.jpg" class="img-responsive img-rounded">
+
+
+#### $$ x_t $$는 a vector이고, $$ x $$ 는 matrix가 됩니다.
+
+
+#### $$ s_t = tanh(U_{x_{t}} + W_{s_{t-1}}) $$
+
+
 
 
 # Training Data And PreProcessing
@@ -68,6 +79,121 @@ Tokenization은 [Python NLTK Library][NLTK Library]의 word_tokenize 그리고 s
 
 0은 SENTENCE_START를 가르키며, 그 다음에 나올 단어를 예측해 나온값이 255이며, 한칸씩 shift해서 결과값에서는 0이 빠져있습니다.
 
+
+### Initialization
+
+{% highlight python %}
+class RNNNumpy(object):
+    def __init__(self, word_dim, hidden_dim=100, bptt_truncate=4):
+        self.word_dim = word_dim
+        self.hidden_dim = hidden_dim
+        self.bptt_truncate = bptt_truncate
+        self.U = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
+        self.V = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (word_dim, hidden_dim))
+        self.W = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
+{% endhighlight %}
+
+### Forward Propagation
+
+{% highlight python %}
+def forward_propagation(self, x):
+    # The total number of time steps
+    T = len(x)
+
+    # During forward propagation we save all hidden states in s because need them later.
+    # We add one additional element for the initial hidden, which we set to 0
+    s = np.zeros((T + 1, self.hidden_dim))
+
+    # The outputs at each time step. Again, we save them for later.
+    o = np.zeros((T, self.word_dim))
+    for t in xrange(T):
+        s[t] = self.U[:, x[t]]
+        o[t] = self.softmax(self.V.dot(s[t]))
+    return [o, s]
+{% endhighlight %}
+
+{% highlight python %}
+VOCAB_SIZE = 10000
+
+model = rnn.RNNNumpy(VOCAB_SIZE)
+o, s = model.forward_propagation(x_train[9])
+print 'Output:', o.shape
+print ' State:', s.shape
+print '  X train:', x_train[9]
+
+Output: (13, 10000)
+ State: (14, 100)
+  X train: [0, 118, 14, 1603, 7, 92, 9999, 38, 6, 9999, 4787, 2680, 2]
+
+{% endhighlight %}
+
+# Mathmatics behind RNN
+
+### Hyperbolic Tangent
+
+$$ tanh(z) = \frac{sinh(z)}{cosh(z)} = \frac{e^{z} - e^{-z}}{e^{z} + e^{-z}} = \frac{e^{2z} - 1}{ e^{2z} + 1} $$
+
+{% highlight python %}
+data = np.arange(-3, 3, 0.1)
+plot(data, np.apply_along_axis(np.tanh, axis=0, arr=data))
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}tanh.png" class="img-responsive img-rounded">
+
+
+{% highlight python %}
+data2 = pd.Series([-1, -0.5, 0, 1, 1.5, 2])
+data2.apply(np.tanh)
+0   -0.761594
+1   -0.462117
+2    0.000000
+3    0.761594
+4    0.905148
+5    0.964028
+dtype: float64
+{% endhighlight %}
+
+{% highlight python %}
+def tanh(x):
+    return np.sinh(x)/np.cosh(x)
+data2.apply(tanh)
+0   -0.761594
+1   -0.462117
+2    0.000000
+3    0.761594
+4    0.905148
+5    0.964028
+dtype: float64
+{% endhighlight %}
+
+{% highlight python %}
+def tanh2(x):
+    return (np.e**(2*x) - 1)/(np.e**(2*x)+ 1)
+data2.apply(tanh2)
+0   -0.761594
+1   -0.462117
+2    0.000000
+3    0.761594
+4    0.905148
+5    0.964028
+dtype: float64
+{% endhighlight %}
+
+
+### Cross Entropy Loss
+
+$$ L(y, o) = -\frac{1}{N} \sum{y_n \ log \ o_n} $$
+
+### Cross-entropy loss in Logistic Regression 
+
+$$ \mathcal{L}(X, Y) = -\frac{1}{n} \sum_{i=1}^n y^{(i)} \ln a(x^{(i)}) + \left(1 - y^{(i)}\right) \ln \left(1 - a(x^{(i)})\right) $$
+
+* $$ X = \left\{x^{(1)},\dots,x^{(n)}\right\} $$ inputs값을 나타내며, 
+$$ Y=\left\{y^{(1)},\dots,y^{(n)} \right\} $$
+
+* $$ a(x) $$는 Neural Network에서 x값을 넣었을때 나오는 output입니다.
+
+* $$ y^{(i)} $$는 0 또는 1입니다.
 
 
 [Reddit Comment on Google BigQuery]: https://bigquery.cloud.google.com/dataset/fh-bigquery:reddit_comments

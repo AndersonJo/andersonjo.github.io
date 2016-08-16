@@ -9,7 +9,7 @@ tags: ['hadoop']
 ---
 
 <div>
-    <img src="{{ page.asset_path }}spark.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}spark.jpg" class="img-responsive img-rounded" style="width:100%">
 </div>
 
 

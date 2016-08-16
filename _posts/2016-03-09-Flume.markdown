@@ -7,7 +7,7 @@ static: /assets/posts/Flume/
 tags: ['hadoop', '하둡', 'kafka', '카프카']
 ---
 
-<img src="{{ page.static }}tree.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}tree.jpg" class="img-responsive img-rounded" style="width:100%">
 
 # What is Flume?
 

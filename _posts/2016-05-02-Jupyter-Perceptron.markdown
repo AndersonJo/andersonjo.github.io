@@ -8,7 +8,7 @@ tags: ['python', 'data analytics', 'jupyter', 'ipython', 'notebook']
 ---
 
 
-<img src="{{ page.static }}analytics.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}analytics.jpg" class="img-responsive img-rounded" style="width:100%">
 
 # Installation
 

@@ -9,7 +9,7 @@ tags: ['Time-Series']
 ---
 
 <div>
-    <img src="{{ page.asset_path }}fantasy-time-clock.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}fantasy-time-clock.jpg" class="img-responsive img-rounded" style="width:100%">
 </div>
 
 # Simple Explanation

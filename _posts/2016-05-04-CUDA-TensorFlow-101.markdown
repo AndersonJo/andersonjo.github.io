@@ -8,7 +8,7 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 
 ---
 
-<img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded" style="width:100%">
 
 
 # Google DeepMind uses it!

@@ -7,7 +7,7 @@ static: /assets/posts/FB-Messenger-Bot/
 tags: ['facebook', 'chatting', 'bot', 'hubot', 'node.js', 'express', 'ejs']
 ---
 
-<img src="{{ page.static }}facebook-messenger-800.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}facebook-messenger-800.jpg" class="img-responsive img-rounded" style="width:100%">
 
 
 # Setting Node.js & Express
