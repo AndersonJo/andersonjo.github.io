@@ -1,33 +1,45 @@
 ---
 layout: post
-title:  "Spark 101"
+title:  "Spark Cluster & Yarn & PySpark"
 date:   2016-02-11 01:00:00
 categories: "spark"
-static: /assets/posts/Spark101/
+static: /assets/posts/Spark-Cluster/
 tags: ['SBT', 'Scala', 'PySpark']
 
 ---
 
-<img src="{{ page.static }}math.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}spark.jpg" class="img-responsive img-rounded" style="width:100%">
 
 
 
 
-# Run Spark Server
+# Spark Standalone Cluster
+
+### HDP Spark
+
+**Starting Master**
 
 {% highlight bash %}
-cd $SPARK_HOME/sbin
-# ./start-master.sh -h hostname -p 7077
-sudo ./start-master.sh -h localhost -p 7077
- 
-# ./start-slaves.sh
-sudo ./start-slave.sh spark://localhost:7077
-
+sudo -u spark /usr/hdp/current/spark-client/sbin/start-master.sh -h 0.0.0.0 -p 7077
 {% endhighlight %}
 
+**Starting Slave**
+{% highlight bash %}
+sudo -u spark /usr/hdp/current/spark-client/sbin/start-slave.sh spark://localhost:7077
+{% endhighlight %}
+
+이때 *Service 'sparkWorker' could not bind on port 0. Attempting port 1* 에러가 발생한다면.. 
+spark-env.sh에 export SPARK_LOCAL_IP=127.0.0.1를 추가시켜 줍니다. 
+
+{% highlight bash %}
+sudo -u spark vi conf/spark-env.sh
+export SPARK_LOCAL_IP=127.0.0.1
+{% endhighlight %}
+
+**Spark WEB UI**
+
 http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습니다.<br>
-기본 Listening port는 **7077** 입니다.<br>
-이때 hostname에다가 0.0.0.0을 쓰면 안됩니다. (Slave 추가할때 에러남)
+기본 Master Listening port는 **7077** 입니다.<br>
 
 
 | Argument | Meaning |
@@ -42,6 +54,98 @@ http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습�
 |--properties-file FILE | Path to a custom Spark properties file to load (default: conf/spark-defaults.conf) |
 
 <img src="{{ page.static }}spark_web.png" class="img-responsive img-rounded">
+
+
+# Spark Yarn Mode
+
+### Overview
+
+Hadoop Namenode는 Spark Master로 사용되고, Hadoop Datanodes는 Spark workers로서 YARN에서 사용될 수 있습니다.
+
+### Configuration
+
+**conf/spark-env.sh**
+ 
+{% highlight bash %}
+export HADOOP_CONF_DIR=/etc/hadoop/2.4.2.0-258/0/
+export SPARK_LOCAL_IP=0.0.0.0
+export SPARK_PUBLIC_DNS="current_node_public_dns"
+export SPARK_WORKER_CORES=6
+export SPARK_MASTER_WEBUI_PORT=8081
+{% endhighlight %}
+
+| Name | Description |
+| SPARK_MASTER_PORT / SPARK_MASTER_WEBUI_PORT | to use non-default ports|
+| SPARK_WORKER_CORES | to set the number of cores to use on this machine|
+| SPARK_WORKER_MEMORY | to set how much memory to use (for example 1000MB, 2GB) |
+| SPARK_WORKER_PORT |  SPARK_WORKER_WEBUI_PORT |
+| SPARK_WORKER_INSTANCE |  to set the number of worker processes per node |
+| SPARK_WORKER_DIR |  to set the working directory of worker processes |
+
+SPARK_WORKER_CORES의 경우 Spark Worker Machine이 갖는 물리적인 cores의 갯수를 뜻하는 것이 아니라,<br>
+Spark Worker가 Spark Executors에게 할당 할 수 있는 Spark tasks의 갯수(즉 threads)를 뜻합니다.
+
+예를 들어서 m4.large 인스턴스의 경우 2CPU cores를 갖고 있습니다. 이경우 하나의 Spark Executor가 해당 Spark Worker(EC2)안에서 생성이 된다고 가정할때, 
+2개의 CPU안에서 6개의 Spark tasks 가 분산처리 됩니다.
+
+**conf/slaves**
+
+Spark Worker Nodes들의 Public DNS들을 적습니다.
+
+{% highlight bash %}
+spark_worker1_public_dns  
+spark_worker2_public_dns  
+spark_worker3_public_dns  
+{% endhighlight %}
+
+### Spark Pi on YARN host 
+
+{% highlight bash %}
+cd  /usr/hdp/current/spark-client
+sudo -u spark spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 lib/spark-examples*.jar 10
+{% endhighlight %}
+
+### SPark Pi remotely
+
+먼저 client-side configurations 파일들을 가르키는 HADOOP_CONF_DIR 또는 YARN_CONF_DIR가 필요합니다.<br>
+모든 파일이 다 필요한 것은 아니고, **core-site.xml** 그리고 **yarn-site.xml**만 있으면 됩니다.
+이렇게 하는 이유는 spark-submit을 할때  --master 옵션에 Standalone Cluster 또는 Mesos와는 다르게 주소가 아닌 yarn이 들어가기 때문입니다.
+
+**Copying core-site.xml and yarn-site.xml to my computer**
+ 
+{% highlight bash %}
+mkdir -p ~/apps/hdp_conf
+scp -i ~/.ssh/dev.pem ubuntu@yarn-master:/etc/hadoop/2.4.2.0-258/0/yarn-site.xml ~/apps/hdp_conf/
+scp -i ~/.ssh/dev.pem ubuntu@yarn-master:/etc/hadoop/2.4.2.0-258/0/core-site.xml ~/apps/hdp_conf/
+export HADOOP_CONF_DIR=/home/anderson/apps/hdp_conf/
+export HADOOP_USER_NAME=spark
+{% endhighlight %}
+
+{% highlight bash %}
+spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 $SPARK_HOME/examples/jars/spark-examples*.jar 10
+{% endhighlight %}
+
+
+
+# Spark Network Configuration
+
+**Standalone mode only**
+
+| From | To | Default Port | Purpose | Configuration Setting | Notes |
+|:-----|:---|:-------------|:--------|:----------------------|:------|
+| Browser | Standalone Master | 8080 | Web UI | spark.master.ui.port SPARK_MASTER_WEBUI_PORT  | Jetty-based. Standalone mode only. |
+| Browser | Standalone Worker | 8081 | Web UI | spark.worker.ui.port SPARK_WORKER_WEBUI_PORT  | Jetty-based. Standalone mode only. |
+| Driver / Standalone Worker | Standalone Master | 7077 | Submit job to cluster Join cluster | SPARK_MASTER_PORT | Set to "0" to choose a port randomly. Standalone mode only. |
+| Standalone Master | Standalone Worker | (random) | Schedule executors | SPARK_WORKER_PORT | Set to "0" to choose a port randomly. Standalone mode only. |
+
+**All cluster managers**
+
+| From | To | Default Port | Purpose | Configuration Setting | Notes |
+| Browser | Application | 4040 | Web UI | spark.ui.port | Jetty-based |
+| Browser | History Server | 18080 | Web UI | spark.history.ui.port | Jetty-based |
+| Executor / Standalone Master | Driver | (random) | Connect to application Notify executor state changes | spark.driver.port | Set to "0" to choose a port randomly. |
+| Executor / Driver | Executor / Driver | (random) | Block Manager port | spark.blockManager.port | Raw socket via ServerSocketChannel |
+
 
 
 
@@ -122,7 +226,57 @@ object SimpleApp {
 
 
 
+# Errors
 
+[Jersey 1.17][Jersey 1.17]를 다운받아서 $SPARK_HOME/jars 안에 넣으면 됩니다.
+
+{% highlight bash %}
+Exception in thread "main" java.lang.NoClassDefFoundError: com/sun/jersey/api/client/config/ClientConfig
+	at org.apache.hadoop.yarn.client.api.TimelineClient.createTimelineClient(TimelineClient.java:55)
+	at org.apache.hadoop.yarn.client.api.impl.YarnClientImpl.createTimelineClient(YarnClientImpl.java:181)
+	at org.apache.hadoop.yarn.client.api.impl.YarnClientImpl.serviceInit(YarnClientImpl.java:168)
+	at org.apache.hadoop.service.AbstractService.init(AbstractService.java:163)
+	at org.apache.spark.deploy.yarn.Client.submitApplication(Client.scala:150)
+	at org.apache.spark.scheduler.cluster.YarnClientSchedulerBackend.start(YarnClientSchedulerBackend.scala:56)
+	at org.apache.spark.scheduler.TaskSchedulerImpl.start(TaskSchedulerImpl.scala:149)
+	at org.apache.spark.SparkContext.<init>(SparkContext.scala:500)
+	at org.apache.spark.SparkContext$.getOrCreate(SparkContext.scala:2256)
+	at org.apache.spark.sql.SparkSession$Builder$$anonfun$8.apply(SparkSession.scala:831)
+	at org.apache.spark.sql.SparkSession$Builder$$anonfun$8.apply(SparkSession.scala:823)
+	at scala.Option.getOrElse(Option.scala:121)
+	at org.apache.spark.sql.SparkSession$Builder.getOrCreate(SparkSession.scala:823)
+	at org.apache.spark.examples.SparkPi$.main(SparkPi.scala:31)
+	at org.apache.spark.examples.SparkPi.main(SparkPi.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:729)
+	at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:185)
+	at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:210)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:124)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+Caused by: java.lang.ClassNotFoundException: com.sun.jersey.api.client.config.ClientConfig
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 24 more
+{% endhighlight %}
+
+### Service 'sparkDriver' could not bind on port 0 
+
+spark-submit을 할때 발생을 합니다.
+
+{% highlight bash %}
+sudo -u spark  vi conf/spark-env.sh
+{% endhighlight %} 
+
+다음을 추가 시킵니다.
+
+{% highlight bash %}
+SPARK_LOCAL_IP=127.0.0.1
+{% endhighlight %} 
 
 
 
@@ -497,6 +651,136 @@ print df2.collect()
 {% endhighlight %}
 
 
+
+
+# Spark YARN Cluster
+
+### Overview
+
+YARN에서는 각각의 application instance는 ApplicationMaster를 갖고 있습니다.
+AM은 ResourceManager로부터  resource를 요청하며, 자원이 할당되면, NodeManager에게 containers를 할당된 자원으로 실행시킬것을 요청합니다.
+
+<img src="{{ page.static }}cluster_deployment_mode.png" class="img-responsive img-rounded">
+
+Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**이 됩니다.
+해당 AM은 application실행과, 자원요청을 담당하게 됩니다.
+
+| Mode | YARN Client Mode | YARN Cluster Mode |
+|:-----|:-----------------|:------------------|
+| Driver                    | Client            | ApplicationMaster | 
+| Requests resources        | ApplicationMaster | ApplicationMaster |
+| Starts executor processes | YARN NodeManager   | YARN NodeManager |
+| Persistent services       | YARN ResourceManager and NodeManagers | YARN ResourceManager and NodeManagers |
+| Supports Spark Shell      | Yes                | No               |
+
+
+
+# YARN (Yet Another Resource Negotiator)
+
+### Limitations of classical MapReduce
+
+기존 MapReduce 방식은 scalability, resource utilization, 다른 형태의 데이터 프로세싱(MapReduce이외의) 같은 문제점들이 있었습니다.
+
+- JobTracker (a single master process) 가 모든 jobs들을 관리(coordinate)합니다.
+- TaskTrackers (a number of subordinate processes)는 주어진 task를 실행시키며, 주기적으로 JobTracker에 프로그래스를 보고합니다.
+
+<img src="{{ page.static }}mr1.png" class="img-responsive img-rounded">
+
+즉 대규모 cluster에서 나타날수 있는 문제점은 단 하나의 Job Tracker가 모든 jobs들을 관리하기 때문에 bottleneck이 생길수 있습니다.
+야후에 따르면 5000개의 nodes 그리고 40,000개의 tasks들을 동시(concurrently)처리가 한계점이라고 합니다.
+또한 작거나 너무 큰 하둡 클러스터는 computational resources를 효율적으로 사용하지 못했습니다. 또한 MapReduce jobs이외에는 다른
+데이터 프로세싱을 돌릴수가 없었습니다. 이에 2010년 야후 엔지니어들을 하둡의 새로운 아키텍쳐를 만들기 시작했습니다.
+
+
+### Addressing the scalability issue
+
+<img src="{{ page.static }}busy-jobtracker.png" class="img-responsive img-rounded">
+
+위와같이 JobTracker혼자서 computational resources과리및, 모든 태스크들의 coordination을 하기 때문에 제약이 생길수 밖에 없는 구조입니다. 
+
+해당 이슈를 해결하는 방법은 간단합니다. 
+혼자서 모든 일을 처리하는 JobTracker의 일을 TaskTrackers들에게 나누고, 
+JobTracker는 cluster resource management (aka **Global ResourceManager**) 그리고 task coordination(aka **ApplicationManster** - AM) 으로 2개로 역활을 나누는 것입니다. 
+
+
+### YARN (The next generation of Hadoop's compute platform)
+
+먼저 이전 개념과 YARN에서의 용어를 붙여놓자면.. 다음과 같습니다.
+
+| MR1 | YARN |
+|:----|:-----|
+| A cluster manager | ResourceManager |
+| dedicated and short-lived JobTracker | ApplicationMaster |
+| TaskTracker | NodeManager |
+| MapReduce Job | A distributed application |
+
+<img src="{{ page.static }}yarn.png" class="img-responsive img-rounded">
+
+
+**ResourceManager**
+
+- a global ResourceManager는 하나의 master deamon으로 돌아가게 되며, 보통 a dedicated machine위에 돌아가게 됩니다.
+- live nodes 그리고 resource가 얼마나 가용가능한지 추적합니다.
+- 유저가 보낸 application을 언제 얼마나 리소스를 사용할지 coordinate합니다.
+- a single processor입니다. 
+
+**ApplicationMaster**
+
+- 유저가 application을 submit하면, 굉장히 가벼운 프로세스인 "ApplicationMaster가 시작됩니다.
+- application을 실행시키는데 필요한 일들을 처리합니다. -> 모니터링, 실패한 task에 대해서 재시작 등등
+- 컨테이너 안에서 여러가지 태스크들을 돌릴수 있습니다. 
+  예를 들어서 MapReduce ApplicationMaster는 a container에게 a map 또는 a reduce task를 실행하라고 요청할수 있습니다. 
+  반면에 Giraph ApplicationMaster는 a container에게 Giraph task를 돌리라고 요청할수 있습니다.
+  또한 Custom ApplicationMaster를 만들수도 있습니다. (Apache Twil을 통해서 쉽게 만들수 있음)
+  
+
+**NodeManager**
+
+- TaskTracker의 더 효율적인 버젼이라고 생각하면 됩니다.
+- 고정된 map, reduce slots을 갖고 있는 대신에, dynamically created resource containers들을 갖고 있습니다.
+- 컨테이너 안에는 여러 자원을 갖고 있을수 있습니다. 예를 들어 CPU, disk, network IO등등. 하지만 현재는 memory 그리고 CPU (YARN-3)만 지원이 되고 있습니다. 
+ 
+ 
+ 
+### Application Submission in YARN
+
+<img src="{{ page.static }}yarn-app-submission.png" class="img-responsive img-rounded">
+ 
+사용자가 application을 ResourceManager로 hadoop jar 명령어 쳐서 (MRv1 처럼)보내면 다음과 같은 일이 발생하게 됩니다.
+
+**1. Run Application**
+
+- ResourceManger는 클러스터 안에서 실행되고 있는 applications의 리스트와, <br>각각의 NodeManager에서 사용가능한 resource 리스트를 갖고 있습니다.
+- ResourceManager는 그 다음 어떤 application이 얼마만큼의 resource를 할당 받아야 할지 결정해야 합니다.<br>
+   자원사용량은 Queue capacity, ACLs, fairness등등 많은 constraints에 의해서 결정이 됩니다.
+- ResourceManager는 pluggable Scheduler를 사용하며, 스케쥴러는 containers의 형태로 cluster resource를 누가, 언제 받을지를 결정합니다.
+- ResourceManager가 새로운 application을 받으면, 스케쥴러는 어느 컨테이너에 ApplicationMaster를 실행시킬지를 선택합니다.
+
+**2. Start AM**<br>
+**3. Negotiate Resources**
+
+- ApplicationMaster가 실행되고 난뒤, 해당 application의 전체 life cycle을 책임지게 됩니다.
+- 제일먼저 AM은 application의 tasks를 처리하기 위한 containers를 받기 위해서 resource request를 ResourceManager에게 보내게 됩니다.
+- a resource request는 applications'의 tasks를 처리하기 위해서 resource requirements를 만족시키는 "컨테이너의 갯수"를 요청하는 것입니다.
+- resource requirements는 필요한 메모리(megabytes), CPU, 위치 (hostname, rackname 또는 *등으로 표현), priority 등을 갖고 있습니다.
+- ResourceManager는 가능한시점에 resource request를 만족하는 container(container ID 그리고 hostname으로 표현)를 할당합니다.
+- 컨테이너는 application이 할당된 자원을 특정 host에서 사용하도록 허용합니다.
+
+**4. Launch tasks in the containers**
+
+- Container가 할당된뒤, ApplicationMaster는 NodeManager(해당 host를 관리하는 놈)에게 해당 리소스를 사용하여 tasks를 실행하도록 요청합니다. (MapReduce, Giraph task 등등)
+- NodeManager는 tasks들을 모니터링하지 않습니다. NodeManager는 오직 컨테이너 안에서 자원사용량만 모니터링합니다.
+  또한 할당된 자원보다 더 많이 사용하면 container자체를 kill해버립니다.
+  
+**Complete!**
+
+- ApplicationMaster 계속해서 application을 완료하기 위해 계속해서 tasks를 실행시킬 containers를 negotiate합니다.
+  AM은 또한 application 그리고 tasks들의 progress를 모니터링 하며, 실패한 tasks들은 새로 requested된 containers안에서 재시작시키며, 
+  클라이언트에게 application의 진행상황을 알려줍니다.
+- application이 완료된 이후, ApplicationMaster는 자기자신을 종료시키고, AM이 있었던 container또한 반환을 하게 됩니다.
+- ResourceManager는 application안의 어떠한 tasks에 대해서도 모니터링을 하지 않지만, ApplicationMasters들의 health는 체크합니다.
+  ApplicationManster가 실패하게되면, ResourceManager에 의해서 새로운 container에서 재시작 될 수 있습니다.
+- 즉.. ResourceManager는 ApplicationMasters를 관리하고, ApplicationMasters는 tasks들을 관리한다고 보면 됩니다.
 
 
 
