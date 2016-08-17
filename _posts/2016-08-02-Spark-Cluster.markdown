@@ -13,6 +13,82 @@ tags: ['hadoop']
 </div>
 
 
+
+
+# Spark YARN Cluster
+
+### Overview
+
+YARN에서는 각각의 application instance는 ApplicationMaster를 갖고 있습니다.
+AM은 ResourceManager로부터  resource를 요청하며, 자원이 할당되면, NodeManager에게 containers를 할당된 자원으로 실행시킬것을 요청합니다.
+
+<img src="{{ page.asset_path }}cluster_deployment_mode.png" class="img-responsive img-rounded">
+
+Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**이 됩니다.
+해당 AM은 application실행과, 자원요청을 담당하게 됩니다.
+
+| Mode | YARN Client Mode | YARN Cluster Mode |
+|:-----|:-----------------|:------------------|
+| Driver                    | Client            | ApplicationMaster | 
+| Requests resources        | ApplicationMaster | ApplicationMaster |
+| Starts executor processes | YARN NodeManager   | YARN NodeManager |
+| Persistent services       | YARN ResourceManager and NodeManagers | YARN ResourceManager and NodeManagers |
+| Supports Spark Shell      | Yes                | No               |
+
+
+
+### SparkPi on YARN host 
+
+{% highlight bash %}
+cd  /usr/hdp/current/spark-client
+sudo -u spark spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 lib/spark-examples*.jar 10
+{% endhighlight %}
+
+### SParkPi remotely
+
+먼저 client-side configurations 파일들을 가르키는 HADOOP_CONF_DIR 또는 YARN_CONF_DIR가 필요합니다.<br>
+모든 파일이 다 필요한 것은 아니고, **core-site.xml** 그리고 **yarn-site.xml**만 있으면 됩니다.
+이렇게 하는 이유는 spark-submit을 할때  --master 옵션에 Standalone Cluster 또는 Mesos와는 다르게 주소가 아닌 yarn이 들어가기 때문입니다.
+
+**Copying core-site.xml and yarn-site.xml to my computer**
+ 
+{% highlight bash %}
+mkdir -p ~/apps/hdp_conf
+scp -i ~/.ssh/dev.pem ubuntu@yarn-master:/etc/hadoop/2.4.2.0-258/0/yarn-site.xml ~/apps/hdp_conf/
+scp -i ~/.ssh/dev.pem ubuntu@yarn-master:/etc/hadoop/2.4.2.0-258/0/core-site.xml ~/apps/hdp_conf/
+export HADOOP_CONF_DIR=/home/anderson/apps/hdp_conf/
+export HADOOP_USER_NAME=spark
+{% endhighlight %}
+
+{% highlight bash %}
+spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 $SPARK_HOME/examples/jars/spark-examples*.jar 10
+{% endhighlight %}
+
+
+# Spark Standalone Cluster on AWS
+
+
+
+# Spark Network Configuration
+
+**Standalone mode only**
+
+| From | To | Default Port | Purpose | Configuration Setting | Notes |
+|:-----|:---|:-------------|:--------|:----------------------|:------|
+| Browser | Standalone Master | 8080 | Web UI | spark.master.ui.port SPARK_MASTER_WEBUI_PORT  | Jetty-based. Standalone mode only. |
+| Browser | Standalone Worker | 8081 | Web UI | spark.worker.ui.port SPARK_WORKER_WEBUI_PORT  | Jetty-based. Standalone mode only. |
+| Driver / Standalone Worker | Standalone Master | 7077 | Submit job to cluster Join cluster | SPARK_MASTER_PORT | Set to "0" to choose a port randomly. Standalone mode only. |
+| Standalone Master | Standalone Worker | (random) | Schedule executors | SPARK_WORKER_PORT | Set to "0" to choose a port randomly. Standalone mode only. |
+
+**All cluster managers**
+
+| From | To | Default Port | Purpose | Configuration Setting | Notes |
+| Browser | Application | 4040 | Web UI | spark.ui.port | Jetty-based |
+| Browser | History Server | 18080 | Web UI | spark.history.ui.port | Jetty-based |
+| Executor / Standalone Master | Driver | (random) | Connect to application Notify executor state changes | spark.driver.port | Set to "0" to choose a port randomly. |
+| Executor / Driver | Executor / Driver | (random) | Block Manager port | spark.blockManager.port | Raw socket via ServerSocketChannel |
+
+
 # YARN (Yet Another Resource Negotiator)
 
 ### Limitations of classical MapReduce
@@ -121,81 +197,6 @@ JobTracker는 cluster resource management (aka **Global ResourceManager**) 그�
 - 즉.. ResourceManager는 ApplicationMasters를 관리하고, ApplicationMasters는 tasks들을 관리한다고 보면 됩니다.
 
 
-# Spark YARN Cluster
-
-### Overview
-
-YARN에서는 각각의 application instance는 ApplicationMaster를 갖고 있습니다.
-AM은 ResourceManager로부터  resource를 요청하며, 자원이 할당되면, NodeManager에게 containers를 할당된 자원으로 실행시킬것을 요청합니다.
-
-<img src="{{ page.asset_path }}cluster_deployment_mode.png" class="img-responsive img-rounded">
-
-Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**이 됩니다.
-해당 AM은 application실행과, 자원요청을 담당하게 됩니다.
-
-| Mode | YARN Client Mode | YARN Cluster Mode |
-|:-----|:-----------------|:------------------|
-| Driver                    | Client            | ApplicationMaster | 
-| Requests resources        | ApplicationMaster | ApplicationMaster |
-| Starts executor processes | YARN NodeManager   | YARN NodeManager |
-| Persistent services       | YARN ResourceManager and NodeManagers | YARN ResourceManager and NodeManagers |
-| Supports Spark Shell      | Yes                | No               |
-
-
-
-### SparkPi on YARN host 
-
-{% highlight bash %}
-cd  /usr/hdp/current/spark-client
-sudo -u spark spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 lib/spark-examples*.jar 10
-{% endhighlight %}
-
-### SParkPi remotely
-
-먼저 client-side configurations 파일들을 가르키는 HADOOP_CONF_DIR 또는 YARN_CONF_DIR가 필요합니다.<br>
-모든 파일이 다 필요한 것은 아니고, **core-site.xml** 그리고 **yarn-site.xml**만 있으면 됩니다.
-이렇게 하는 이유는 spark-submit을 할때  --master 옵션에 Standalone Cluster 또는 Mesos와는 다르게 주소가 아닌 yarn이 들어가기 때문입니다.
-
-**Copying core-site.xml and yarn-site.xml to my computer**
- 
-{% highlight bash %}
-mkdir -p ~/apps/hdp_conf
-scp -i ~/.ssh/dev.pem ubuntu@yarn-master:/etc/hadoop/2.4.2.0-258/0/yarn-site.xml ~/apps/hdp_conf/
-scp -i ~/.ssh/dev.pem ubuntu@yarn-master:/etc/hadoop/2.4.2.0-258/0/core-site.xml ~/apps/hdp_conf/
-export HADOOP_CONF_DIR=/home/anderson/apps/hdp_conf/
-export HADOOP_USER_NAME=spark
-{% endhighlight %}
-
-{% highlight bash %}
-spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 $SPARK_HOME/examples/jars/spark-examples*.jar 10
-{% endhighlight %}
-
-
-# Spark Standalone Cluster on AWS
-
-
-
-# Spark Network Configuration
-
-**Standalone mode only**
-
-| From | To | Default Port | Purpose | Configuration Setting | Notes |
-|:-----|:---|:-------------|:--------|:----------------------|:------|
-| Browser | Standalone Master | 8080 | Web UI | spark.master.ui.port SPARK_MASTER_WEBUI_PORT  | Jetty-based. Standalone mode only. |
-| Browser | Standalone Worker | 8081 | Web UI | spark.worker.ui.port SPARK_WORKER_WEBUI_PORT  | Jetty-based. Standalone mode only. |
-| Driver / Standalone Worker | Standalone Master | 7077 | Submit job to cluster Join cluster | SPARK_MASTER_PORT | Set to "0" to choose a port randomly. Standalone mode only. |
-| Standalone Master | Standalone Worker | (random) | Schedule executors | SPARK_WORKER_PORT | Set to "0" to choose a port randomly. Standalone mode only. |
-
-**All cluster managers**
-
-| From | To | Default Port | Purpose | Configuration Setting | Notes |
-| Browser | Application | 4040 | Web UI | spark.ui.port | Jetty-based |
-| Browser | History Server | 18080 | Web UI | spark.history.ui.port | Jetty-based |
-| Executor / Standalone Master | Driver | (random) | Connect to application Notify executor state changes | spark.driver.port | Set to "0" to choose a port randomly. |
-| Executor / Driver | Executor / Driver | (random) | Block Manager port | spark.blockManager.port | Raw socket via ServerSocketChannel |
-
-
-
 # Errors
 
 [Jersey 1.17][Jersey 1.17]를 다운받아서 $SPARK_HOME/jars 안에 넣으면 됩니다.
@@ -233,6 +234,20 @@ Caused by: java.lang.ClassNotFoundException: com.sun.jersey.api.client.config.Cl
 	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
 	... 24 more
 {% endhighlight %}
+
+### Service 'sparkDriver' could not bind on port 0 
+
+spark-submit을 할때 발생을 합니다.
+
+{% highlight bash %}
+sudo -u spark  vi conf/spark-env.sh
+{% endhighlight %} 
+
+다음을 추가 시킵니다.
+
+{% highlight bash %}
+SPARK_LOCAL_IP=127.0.0.1
+{% endhighlight %} 
 
 
 ### References

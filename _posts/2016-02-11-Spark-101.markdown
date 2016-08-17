@@ -10,6 +10,42 @@ tags: ['SBT', 'Scala', 'PySpark']
 
 <img src="{{ page.static }}math.jpg" class="img-responsive img-rounded">
 
+
+
+
+# Run Spark Server
+
+{% highlight bash %}
+cd $SPARK_HOME/sbin
+# ./start-master.sh -h hostname -p 7077
+sudo ./start-master.sh -h localhost -p 7077
+ 
+# ./start-slaves.sh
+sudo ./start-slave.sh spark://localhost:7077
+
+{% endhighlight %}
+
+http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습니다.<br>
+기본 Listening port는 **7077** 입니다.<br>
+이때 hostname에다가 0.0.0.0을 쓰면 안됩니다. (Slave 추가할때 에러남)
+
+
+| Argument | Meaning |
+|:---------|:--------|
+| -h HOST, --host HOST | Hostname to listen on | 
+|-i HOST, --ip HOST | Hostname to listen on (deprecated, use -h or --host) |
+|-p PORT, --port PORT | Port for service to listen on (default: 7077 for master, random for worker) |
+|--webui-port PORT | Port for web UI (default: 8080 for master, 8081 for worker) |
+|-c CORES, --cores CORES | Total CPU cores to allow Spark applications to use on the machine<br>(default: all available); only on worker |
+|-m MEM, --memory MEM | Total amount of memory to allow Spark applications to use on the machine, <br>in a format like 1000M or 2G (default: your machine's total RAM minus 1 GB);<br>only on worker |
+|-d DIR, --work-dir DIR | Directory to use for scratch space and job output logs <br>(default: SPARK_HOME/work); only on worker |
+|--properties-file FILE | Path to a custom Spark properties file to load (default: conf/spark-defaults.conf) |
+
+<img src="{{ page.static }}spark_web.png" class="img-responsive img-rounded">
+
+
+
+
 # Scala Spark
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Installing SBT on Ubuntu
@@ -127,37 +163,6 @@ Project Structure에서 PySpark가 있는 위치를 Add Content Root를 눌러�
 
 
 
-
-
-# Run Spark Server
-
-{% highlight bash %}
-cd $SPARK_HOME/sbin
-# ./start-master.sh -h hostname -p 7077
-sudo ./start-master.sh -h localhost -p 7077
- 
-# ./start-slaves.sh
-sudo ./start-slave.sh spark://localhost:7077
-
-{% endhighlight %}
-
-http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습니다.<br>
-기본 Listening port는 **7077** 입니다.<br>
-이때 hostname에다가 0.0.0.0을 쓰면 안됩니다. (Slave 추가할때 에러남)
-
-
-| Argument | Meaning |
-|:---------|:--------|
-| -h HOST, --host HOST | Hostname to listen on | 
-|-i HOST, --ip HOST | Hostname to listen on (deprecated, use -h or --host) |
-|-p PORT, --port PORT | Port for service to listen on (default: 7077 for master, random for worker) |
-|--webui-port PORT | Port for web UI (default: 8080 for master, 8081 for worker) |
-|-c CORES, --cores CORES | Total CPU cores to allow Spark applications to use on the machine<br>(default: all available); only on worker |
-|-m MEM, --memory MEM | Total amount of memory to allow Spark applications to use on the machine, <br>in a format like 1000M or 2G (default: your machine's total RAM minus 1 GB);<br>only on worker |
-|-d DIR, --work-dir DIR | Directory to use for scratch space and job output logs <br>(default: SPARK_HOME/work); only on worker |
-|--properties-file FILE | Path to a custom Spark properties file to load (default: conf/spark-defaults.conf) |
-
-<img src="{{ page.static }}spark_web.png" class="img-responsive img-rounded">
 
 
 # PySpark Basic 101
