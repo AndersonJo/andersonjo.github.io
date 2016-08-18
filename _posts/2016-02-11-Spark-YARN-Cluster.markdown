@@ -80,13 +80,15 @@ No spark assembly jar for HDP on HDFS, defaultSparkAssembly:hdfs://hostname:8020
 ### Starting Master
 
 {% highlight bash %}
-sudo -u spark /usr/hdp/current/spark-client/sbin/start-master.sh -h 0.0.0.0 -p 7077
+cd /usr/hdp/current/spark-client
+sudo -u spark sbin/start-master.sh -h 0.0.0.0 -p 7077
 {% endhighlight %}
 
 ### Starting Slave
 {% highlight bash %}
 sudo -u spark mkdir /var/run/spark/work
-sudo -u spark /usr/hdp/current/spark-client/sbin/start-slave.sh spark://localhost:7077
+cd /usr/hdp/current/spark-client
+sudo -u spark sbin/start-slave.sh spark://localhost:7077
 {% endhighlight %}
 
 이때 *Service 'sparkWorker' could not bind on port 0. Attempting port 1* 에러가 발생한다면.. 
@@ -97,12 +99,30 @@ sudo -u spark vi conf/spark-env.sh
 export SPARK_LOCAL_IP=127.0.0.1
 {% endhighlight %}
 
+### Stoping Master & Slave
+
+{% highlight bash %}
+cd /usr/hdp/current/spark-client
+sudo -u spark sbin/stop-master.sh 
+sudo -u spark sbin/stop-slave.sh
+{% endhighlight %}
+
 
 ### Spark PI on Standalone Cluster
 
+**Running on HDP**
+
 {% highlight bash %}
+cd /usr/hdp/current/spark-client
 sudo -u spark spark-submit --class org.apache.spark.examples.SparkPi --master spark://hostname:7077 --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 lib/spark-examples*.jar 10
 {% endhighlight %}
+
+**Running on Pre-built Spark**
+ 
+{% highlight bash %}
+./bin/run-example SparkPi
+{% endhighlight %}
+
 
 ### Spark PI remotely
 
@@ -113,7 +133,7 @@ spark-submit --class org.apache.spark.examples.SparkPi --master spark://sf-maste
 {% endhighlight %}
 
 
-### Packaging Spark PI
+### Running Spark PI Code
 
 {% highlight scala %}
 package spark.pi
@@ -126,8 +146,12 @@ object SparkPi {
   def main(args: Array[String]) {
     val conf = new SparkConf()
       .setAppName("Spark Pi From Anderson")
-      .setMaster("spark://hostname:7077")
+      .setMaster("spark://localhost:7077")
+      .set("spark.executor.memory", "512m")
+      .set("spark.cores.max", "3")
+
     val spark = new SparkContext(conf)
+//    spark.addJar("target/scala-2.11/scalatutorial_2.11-1.0.jar")
 
     val slices = if (args.length > 0) args(0).toInt else 2
     val n = 100000 * slices
@@ -140,7 +164,19 @@ object SparkPi {
     spark.stop()
   }
 }
+ 
 {% endhighlight %}
+
+**IntelliJ**
+
+IntelliJ에서 집접 실행시킬수 있는데, java.lang.ClassNotFoundException: spark.pi.SparkPi$$anonfun$1 에러가 발생하면 다음의 코드르 넣어서 jar파일을 추가합니다.
+
+{% highlight scala %}
+spark.addJar("target/scala-2.11/scalatutorial_2.11-1.0.jar")
+{% endhighlight %}
+
+
+**Packaging via sbt**
 
 {% highlight bash %}
 sbt package
