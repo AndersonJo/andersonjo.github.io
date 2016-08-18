@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Spark Cluster & Yarn & PySpark"
+title:  "Spark Cluster, Yarn, PySpark"
 date:   2016-02-11 01:00:00
 categories: "spark"
 static: /assets/posts/Spark-Cluster/
@@ -11,20 +11,81 @@ tags: ['SBT', 'Scala', 'PySpark']
 <img src="{{ page.static }}spark.jpg" class="img-responsive img-rounded" style="width:100%">
 
 
+# Configuration
+
+### conf/spark-env.sh
+
+vi로 집접 입력시, Ambari에서 Spark Roboot시킬때 마다, 초기화가 됩니다. 
+
+{% highlight bash %}
+sudo -u spark vi /usr/hdp/current/spark-client/conf/spark-env.sh
+{% endhighlight %}
+ 
+{% highlight bash %}
+export HADOOP_CONF_DIR=/etc/hadoop/2.4.2.0-258/0/
+export SPARK_LOCAL_IP=0.0.0.0
+export SPARK_PUBLIC_DNS="current_node_public_dns"
+export SPARK_WORKER_CORES=6
+export SPARK_MASTER_WEBUI_PORT=8081
+
+export LD_LIBRARY_PATH=/usr/hdp/current/hadoop-client/lib/native/:$LD_LIBRARY_PATH
+{% endhighlight %}
+
+| Name | Description |
+| SPARK_MASTER_PORT / SPARK_MASTER_WEBUI_PORT | to use non-default ports|
+| SPARK_WORKER_CORES | to set the number of cores to use on this machine|
+| SPARK_WORKER_MEMORY | to set how much memory to use (for example 1000MB, 2GB) |
+| SPARK_WORKER_PORT |  SPARK_WORKER_WEBUI_PORT |
+| SPARK_WORKER_INSTANCE |  to set the number of worker processes per node |
+| SPARK_WORKER_DIR |  to set the working directory of worker processes |
+
+SPARK_WORKER_CORES의 경우 Spark Worker Machine이 갖는 물리적인 cores의 갯수를 뜻하는 것이 아니라,<br>
+Spark Worker가 Spark Executors에게 할당 할 수 있는 Spark tasks의 갯수(즉 threads)를 뜻합니다.
+
+예를 들어서 m4.large 인스턴스의 경우 2CPU cores를 갖고 있습니다. 이경우 하나의 Spark Executor가 해당 Spark Worker(EC2)안에서 생성이 된다고 가정할때, 
+2개의 CPU안에서 6개의 Spark tasks 가 분산처리 됩니다.
 
 
-# Spark Standalone Cluster
+### conf/slaves
 
-### HDP Spark
+Spark Worker Nodes들의 Public DNS들을 적습니다.
 
-**Starting Master**
+{% highlight bash %}
+spark_worker1_public_dns  
+spark_worker2_public_dns  
+spark_worker3_public_dns  
+{% endhighlight %}
+
+### HDP Spark Jar configuration
+
+{% highlight bash %}
+sudo su hdfs
+HDP_VERSION=2.4.2.0-258
+SPARK_JAR=spark-assembly-1.6.1.2.4.2.0-258-hadoop2.7.1.2.4.2.0-258.jar
+hdfs dfs -mkdir "/hdp/apps/${HDP_VERSION}/spark/"
+hdfs dfs -put "/usr/hdp/${HDP_VERSION}/spark/lib/$SPARK_JAR" "/hdp/apps/${HDP_VERSION}/spark/spark-hdp-assembly.jar"
+{% endhighlight %}
+
+안해주면.. 아래와 같은 에러가 나올수 있습니다.
+
+{% highlight text %}
+No spark assembly jar for HDP on HDFS, defaultSparkAssembly:hdfs://hostname:8020/hdp/apps/2.4.2.0-258/spark/spark-hdp-assembly.jar
+{% endhighlight %}
+
+* [starting-spark-jobs-directly-via-yarn][starting-spark-jobs-directly-via-yarn]참고
+
+
+# Standalone Cluster
+
+### Starting Master
 
 {% highlight bash %}
 sudo -u spark /usr/hdp/current/spark-client/sbin/start-master.sh -h 0.0.0.0 -p 7077
 {% endhighlight %}
 
-**Starting Slave**
+### Starting Slave
 {% highlight bash %}
+sudo -u spark mkdir /var/run/spark/work
 sudo -u spark /usr/hdp/current/spark-client/sbin/start-slave.sh spark://localhost:7077
 {% endhighlight %}
 
@@ -36,7 +97,60 @@ sudo -u spark vi conf/spark-env.sh
 export SPARK_LOCAL_IP=127.0.0.1
 {% endhighlight %}
 
-**Spark WEB UI**
+
+### Spark PI on Standalone Cluster
+
+{% highlight bash %}
+sudo -u spark spark-submit --class org.apache.spark.examples.SparkPi --master spark://hostname:7077 --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 lib/spark-examples*.jar 10
+{% endhighlight %}
+
+### Spark PI remotely
+
+{% highlight bash %}
+cd $SPARK_HOME
+export HADOOP_USER_NAME=spark
+spark-submit --class org.apache.spark.examples.SparkPi --master spark://sf-master:7077 --num-executors 3 --driver-memory 512m --executor-memory 512m --executor-cores 1 examples/jars/spark-examples*.jar 10
+{% endhighlight %}
+
+
+### Packaging Spark PI
+
+{% highlight scala %}
+package spark.pi
+
+import scala.math.random
+import org.apache.spark._
+
+/** Computes an approximation to pi */
+object SparkPi {
+  def main(args: Array[String]) {
+    val conf = new SparkConf()
+      .setAppName("Spark Pi From Anderson")
+      .setMaster("spark://hostname:7077")
+    val spark = new SparkContext(conf)
+
+    val slices = if (args.length > 0) args(0).toInt else 2
+    val n = 100000 * slices
+    val count = spark.parallelize(1 to n, slices).map { i =>
+      val x = random * 2 - 1
+      val y = random * 2 - 1
+      if (x * x + y * y < 1) 1 else 0
+    }.reduce(_ + _)
+    println("Pi is roughly " + 4.0 * count / n)
+    spark.stop()
+  }
+}
+{% endhighlight %}
+
+{% highlight bash %}
+sbt package
+{% endhighlight%}
+
+{% highlight bash %}
+HADOOP_USER_NAME=spark /home/anderson/apps/spark-1.6.1-bin-hadoop2.6/bin/spark-submit --class spark.pi.SparkPi  --master spark://hostname:7077 target/scala-2.10/scalatutorial_2.10-1.0.jar 10
+{% endhighlight%}
+
+### Spark WEB UI
 
 http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습니다.<br>
 기본 Master Listening port는 **7077** 입니다.<br>
@@ -62,41 +176,7 @@ http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습�
 
 Hadoop Namenode는 Spark Master로 사용되고, Hadoop Datanodes는 Spark workers로서 YARN에서 사용될 수 있습니다.
 
-### Configuration
 
-**conf/spark-env.sh**
- 
-{% highlight bash %}
-export HADOOP_CONF_DIR=/etc/hadoop/2.4.2.0-258/0/
-export SPARK_LOCAL_IP=0.0.0.0
-export SPARK_PUBLIC_DNS="current_node_public_dns"
-export SPARK_WORKER_CORES=6
-export SPARK_MASTER_WEBUI_PORT=8081
-{% endhighlight %}
-
-| Name | Description |
-| SPARK_MASTER_PORT / SPARK_MASTER_WEBUI_PORT | to use non-default ports|
-| SPARK_WORKER_CORES | to set the number of cores to use on this machine|
-| SPARK_WORKER_MEMORY | to set how much memory to use (for example 1000MB, 2GB) |
-| SPARK_WORKER_PORT |  SPARK_WORKER_WEBUI_PORT |
-| SPARK_WORKER_INSTANCE |  to set the number of worker processes per node |
-| SPARK_WORKER_DIR |  to set the working directory of worker processes |
-
-SPARK_WORKER_CORES의 경우 Spark Worker Machine이 갖는 물리적인 cores의 갯수를 뜻하는 것이 아니라,<br>
-Spark Worker가 Spark Executors에게 할당 할 수 있는 Spark tasks의 갯수(즉 threads)를 뜻합니다.
-
-예를 들어서 m4.large 인스턴스의 경우 2CPU cores를 갖고 있습니다. 이경우 하나의 Spark Executor가 해당 Spark Worker(EC2)안에서 생성이 된다고 가정할때, 
-2개의 CPU안에서 6개의 Spark tasks 가 분산처리 됩니다.
-
-**conf/slaves**
-
-Spark Worker Nodes들의 Public DNS들을 적습니다.
-
-{% highlight bash %}
-spark_worker1_public_dns  
-spark_worker2_public_dns  
-spark_worker3_public_dns  
-{% endhighlight %}
 
 ### Spark Pi on YARN host 
 
@@ -127,7 +207,8 @@ spark-submit --class org.apache.spark.examples.SparkPi --master yarn --num-execu
 
 
 
-# Spark Network Configuration
+
+### Spark Network Configuration
 
 **Standalone mode only**
 
@@ -227,6 +308,8 @@ object SimpleApp {
 
 
 # Errors
+
+### Missing Jersey 1.17
 
 [Jersey 1.17][Jersey 1.17]를 다운받아서 $SPARK_HOME/jars 안에 넣으면 됩니다.
 
@@ -786,3 +869,4 @@ JobTracker는 cluster resource management (aka **Global ResourceManager**) 그�
 
 [download]: http://spark.apache.org/downloads.html
 [Apache Spark Maven Repository]: https://mvnrepository.com/artifact/org.apache.spark/spark-core_2.10
+[starting-spark-jobs-directly-via-yarn]: https://community.hortonworks.com/articles/28070/starting-spark-jobs-directly-via-yarn-rest-api.html
