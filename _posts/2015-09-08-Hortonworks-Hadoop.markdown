@@ -28,6 +28,13 @@ Ubuntu 14.10 (trusty version) 에 Hortonworks Hadoop with Ambari를 설치하는
 sudo apt-get install libmysql-java ntp
 {% endhighlight %}
 
+
+### Configuring CentOS
+
+{% highlight bash %}
+sudo yum install mlocate
+{% endhighlight %}
+
 ### Default Ports
 
 | Service | Name | Port | Protocol |
