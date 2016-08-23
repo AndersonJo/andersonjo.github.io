@@ -105,7 +105,7 @@ $$ [ -\frac{1}{\sqrt{n}},\ \frac{1}{\sqrt{n}} ]$$
 여기서 n은 previous layer의 connection갯수를 뜻합니다.
 
 | Variable | Shape | Python | Description |
-| U | (100, 10000) | self.U.shape | (hidden layer size, 기억하려는 전체 단어 갯수). hidden layer마다 각각의 단어들이 나올수 있는 확률들이 들어있음 |
+| U | (100, 10000) | self.U.shape | hidden layer마다 각각의 단어들이 나올수 있는 확률들이 들어있음 |
 | V | (10000, 100) | self.V.shape | |
 | W | (100, 10000) | self.W.shape | |
 
@@ -163,10 +163,107 @@ output은 어떤 한 문장이, 전체 vocabulary (10,000개)안에서 나올수
 predict함수는 단순히 이중에서 가장 큰 확률(큰 값)을 argmax로 뽑아낸것.. 
 
 
-### Crosss-entropy Loss
+### Cross Entropy Loss
+
+$$ L(y, o) = -\sum_{i=0}{ln(o_i) * y_i} $$
+
+예를 들어서 다음과 같은 값이 있다고 한다면.. 
+
+{% highlight text %}
+output         |  y
+-------------------------
+0.1  0.3  0.6  |  0  0  1
+0.2  0.6  0.2  |  0  1  0
+0.3  0.4  0.3  |  1  0  0
+{% endhighlight %}
+
+**Squared Error - 첫번째 줄**<br>
+$$ (0.1-0)^2 + (0.3-0)^2 + (0.6-1)^2 = 0.01 + 0.09 + 0.16 = 0.26 $$
+
+**Squared Error - 두번째 줄**<br>
+$$ (0.2-0)^2 + (0.6-1)^2 + (0.2-0)^2 = 0.04 + 0.16 + 0.04 = 0.24 $$
+
+**Squared Error - 세번째 줄**<br>
+$$ (0.3-1)^2 + (0.4-0)^2 + (0.3-0)^2 = 0.49 + 0.16 + 0.09 = 0.74 $$
+
+따라서 **Average mean squared error**는 $$ \frac{(0.26 + 0.24 + 0.74)}{3} = 0.41 $$
+
+<br>
+
+**Cross entropy Error - 첫번째 줄**<br>
+$$ ln(0.1)*0 + ln(0.3)*0 + ln(0.6)*1 = -(-0.51) = 0.51 $$
+
+**Cross entropy Error - 두번째 줄**<br>
+$$ ln(0.2)*0 + ln(0.6)*1 + ln(0.2)*0 = -(-0.51) = 0.51 $$
+
+**Cross entropy Error - 세번째 줄**<br>
+$$ ln(0.3)*1 + ln(0.4)*0 + ln(0.3)*0 = -(-1.2) = 1.2 $$
+
+따라서 **Mean cross entropy**는 $$ \frac{(0.51 + 0.51 + 1.2)}{3} = 0.74 $$
+
+계산식에서 보듯이, Squared Error와 Cross Entropy Error(CE)의 차이점은 CE의 경우 관련 없는 변수들을 0으로 곱해주기 때문에 확률에서 아예 제외를 시켜버립니다.
+이런한 특징때문에 classification중에서도 predicting the next word 처럼 엄청나게 많은 분류가 필요한 경우 squared error보다는 cross entropy error가 훨씬더 
+정확하게 error률을 뽑아냅니다.
 
 
+### Cross Entropy Loss when y is unknown
 
+위의 cross entropy error의 경우 일반적으로 사용하는 경우입니다. 해당의 경우 답이 되는 y의 값을 알고 있는 경우 입니다.<br>
+예를 들어서 "I love you"라는 단어에서 output값 (각각의 단어들이 순서대로 나올 확률)과 y 확률이 다음과 같다면..
+ 
+{% highlight text %}
+word | output         |  y
+---------------------------------
+I    | 0.1  0.3  0.5  |  0  0  1
+love | 0.2  0.6  0.2  |  0  1  0
+you  | 0.3  0.4  0.3  |  1  0  0
+{% endhighlight %}
+
+y값의 확률을 알고 있다면.. 무슨 classification처럼.. 그렇다면 위의 공식을 적용할수 있지만,<br> 
+문제는 다음 단어가 뭐가 올지 우리는 정확한 답을 갖고 있지 않은 상태입니다. 따라서 다른 공식을 사용해야 합니다. 
+
+[Cross Entropy in Wikipedia][Cross Entropy in Wikipedia] 위키피디아를 보면 다음 공식이 있습니다.
+
+$$ L(y, o) = - \frac{1}{N} \sum_{i=0}{ln(o_i)} $$
+
+| Name       | Description |
+|:-----------|:------------|
+| N          | 전체 text set의 갯수 |
+| o - output | 어떤 문장에서, 문장의 순서대로 해당 단어가 나올 확률 |
+
+{% highlight python %}
+def cross_entropy(self, x, y):
+    N = np.sum((len(sentence) for sentence in y))
+    L = 0
+    for i in xrange(len(y)):
+        o, s = self.forward_propagation(x[i])
+        predicted_output = o[np.arange(len(y[i])), y[i]]
+        L += np.sum(np.log(predicted_output))
+    return -1 * L / N
+{% endhighlight %}
+
+{% highlight python %}
+# model.cross_entropy(x_train[26:27], y_train[26:27])
+o.shape: (8, 10000)
+s.shape: (9, 100)
+x: [[0, 61, 13, 68, 198, 175, 10, 2]]
+y: [[61, 13, 68, 198, 175, 10, 2, 1]]
+y[i]: [61, 13, 68, 198, 175, 10, 2, 1]
+Predicted Output: [.00009  .0001  .00009  .0001  .00009  .00009  .00009  .0001]
+cross entropy: 9.21043965588  # 아직 학습이 안되서 매우 높은 상태 :)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}cross_entropy.jpg" class="img-responsive img-rounded">
+
+### Training the RNN with SGD and Backpropagation Through Time (BPTT)
+ 
+Training의 궁극적인 목표는 total loss가 가장 적게 나오는 U, V, W값을 알아내는 것 입니다.<br>
+일반적으로 Stochastic Gradient Descent(SGD)를 많이 사용합니다. <br>
+SGD는 Training Data를 돌면서, error값을 줄이는 **방향** 그리고 **Learning Rate**로 U, V, W값들을 조정하는 것입니다.
+
+$$ \frac{\partial L}{ \partial U} \ \ \ \frac{\partial L}{ \partial V} \ \ \ \frac{\partial L}{ \partial W} $$
+
+RNN의 경우, 일반적인 Neural Network와는 다르게 time steps을 갖고 있기 때문에, Backpropagation through time (BTPP)를 이용합니다.
 
 # Mathmatics behind RNN
 
@@ -263,23 +360,6 @@ scatter(data, softmax(data))
 <img src="{{ page.asset_path }}softmax_scatter.png" class="img-responsive img-rounded">
 
 
-### Cross Entropy Loss
-
-$$ L(y, o) = -\frac{1}{N} \sum{y_n \ log \ o_n} $$
-
-### Cross-entropy loss in Logistic Regression 
-
-$$ \mathcal{L}(X, Y) = -\frac{1}{n} \sum_{i=1}^n y^{(i)} \ln a(x^{(i)}) + \left(1 - y^{(i)}\right) \ln \left(1 - a(x^{(i)})\right) $$
-
-* $$ X = \left\{x^{(1)},\dots,x^{(n)}\right\} $$ inputs값을 나타내며, 
-$$ Y=\left\{y^{(1)},\dots,y^{(n)} \right\} $$
-
-* $$ a(x) $$는 Neural Network에서 x값을 넣었을때 나오는 output입니다.
-
-* $$ y^{(i)} $$는 0 또는 1입니다.
-
-
-
 ### Numpy code 
 
 **s[t] = self.U[:, x[t]]**
@@ -325,3 +405,4 @@ array([ 1.74076969,  1.11103085,  1.54377131,  0.39413895])
 [WildML - Recurrent Neural Network]: http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implementing-a-language-model-rnn-with-python-numpy-and-theano/
 [Reddit Comment on Google BigQuery]: https://bigquery.cloud.google.com/dataset/fh-bigquery:reddit_comments
 [NLTK Library]: http://www.nltk.org/
+[Cross Entropy in Wikipedia]: https://en.wikipedia.org/wiki/Cross_entropy
