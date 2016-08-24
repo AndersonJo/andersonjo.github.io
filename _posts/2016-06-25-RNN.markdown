@@ -95,7 +95,7 @@ class RNNNumpy(object):
         self.bptt_truncate = bptt_truncate
         self.U = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
         self.V = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (word_dim, hidden_dim))
-        self.W = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
+        self.W = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, hidden_dim))
 {% endhighlight %}
 
 U, V, W를 Initialization을 해줘야 합니다. 여러가지 방법이 있을 수 있지만, 우리는 다음의 공식을 사용해서 초기화를 해줍니다.
@@ -111,6 +111,10 @@ $$ [ -\frac{1}{\sqrt{n}},\ \frac{1}{\sqrt{n}} ]$$
 
 ### Forward Propagation
 
+$$ s_t = tanh(U_{x_t} + W_{s_{t-1}}) $$<br>
+$$ \hat{y}_t = softmax(V_{s_t}) $$
+
+
 {% highlight python %}
 def forward_propagation(self, x):
     # The total number of time steps
@@ -123,7 +127,7 @@ def forward_propagation(self, x):
     # The outputs at each time step. Again, we save them for later.
     o = np.zeros((T, self.word_dim))
     for t in xrange(T):
-        s[t] = self.U[:, x[t]]
+        s[t] = np.tanh(self.U[:, x[t]] + self.W.dot(s[t - 1]))
         o[t] = self.softmax(self.V.dot(s[t]))
     return [o, s]
 {% endhighlight %}
