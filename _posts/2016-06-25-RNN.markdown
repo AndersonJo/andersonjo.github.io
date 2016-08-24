@@ -105,15 +105,11 @@ $$ [ -\frac{1}{\sqrt{n}},\ \frac{1}{\sqrt{n}} ]$$
 여기서 n은 previous layer의 connection갯수를 뜻합니다.
 
 | Variable | Shape | Python | Description |
-| U | (100, 10000) | self.U.shape | hidden layer마다 각각의 단어들이 나올수 있는 확률들이 들어있음 |
-| V | (10000, 100) | self.V.shape | |
-| W | (100, 10000) | self.W.shape | |
+| U | (100, 10000) | self.U.shape | 각각의 단어들이 나올수 있는 확률들이 들어있음 |
+| V | (10000, 100) | self.V.shape |  |
+| W | (100, 10000) | self.W.shape |  |
 
 ### Forward Propagation
-
-$$ s_t = tanh(U_{x_t} + W_{s_{t-1}}) $$<br>
-$$ \hat{y}_t = softmax(V_{s_t}) $$
-
 
 {% highlight python %}
 def forward_propagation(self, x):
@@ -147,6 +143,8 @@ o, s = model.forward_propagation(x_train[9])
 | Variable | Shape | Description |
 | o - output | (13, 10000) | 각각의 $$ o_t $$는 전체 vocabulary안에서의 확률을 나태내는 vector |
 | s - state | (14, 100) | 문장에서 각각의 단어가 나올수 있는 확률 vector들의 matrix <- U에서 가져옴 |
+| s[t - 1] | (100, )    | t-1 즉 -1부터 시작하게 되는데, state의 마지막부분에서 시작한다. | 
+| U[:, x[t] | (100, ) | U에서 특정단어(apple같은..)의 hidden(100)에 속한 모든 확률을 가져옴 |
 
 <img src="{{ page.asset_path }}forward_propagation.jpg" class="img-responsive img-rounded">
 
@@ -267,7 +265,21 @@ SGD는 Training Data를 돌면서, error값을 줄이는 **방향** 그리고 **
 
 $$ \frac{\partial L}{ \partial U} \ \ \ \frac{\partial L}{ \partial V} \ \ \ \frac{\partial L}{ \partial W} $$
 
-RNN의 경우, 일반적인 Neural Network와는 다르게 time steps을 갖고 있기 때문에, Backpropagation through time (BTPP)를 이용합니다.
+RNN의 경우, 일반적인 Neural Network와는 다르게 time steps을 갖고 있기 때문에, Backpropagation through time (BTPP)를 이용합니다.<br>
+일단 SGD는 derivative에 기반하기 때문에 foward, cost error에 사용한 공식들을 정리할 필요가 있습니다.
+
+**forward propagation에서 사용한 공식들**<br>
+<span style="font-size:1.2em"> $$ s_t = tanh(U_{x_t} + W_{s_{t-1}}) $$ </span><br>
+<span style="font-size:1.2em"> $$ \hat{y}_t = softmax(V_{s_t}) $$ </span>
+
+**cost function으로 사용한 공식**<br>
+<span style="font-size:1.2em"> $$ L(y, o) = - \frac{1}{N} \sum_{i=0}{ln(o_i)} $$ </span>
+
+**Stochastic Gradient for the RNN example**<br>
+<span style="font-size:1.4em"> $$ \frac{ \partial E}{ \partial W} = \sum \frac{ \partial E_t }{ \partial W} $$ </span>
+
+
+
 
 # Mathmatics behind RNN
 
