@@ -37,9 +37,12 @@ $$ \frac{d{f}}{d{x}} = e^{\sin x^2} * \cos x^2 * 2x $$
 
 
 
+# References 
+
+* [ℚuantitative √ourney - Backpropagation][ℚuantitative √ourney - Backpropagation]
 
 
-
+[ℚuantitative √ourney - Backpropagation]: http://outlace.com/Computational-Graph/
 
 
 
