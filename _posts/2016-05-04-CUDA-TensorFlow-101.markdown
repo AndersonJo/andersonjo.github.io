@@ -70,6 +70,7 @@ $ cuda_7.5.18_linux.run --override compiler
 그 다음으로 .bashrc에 다음을 추가해줍니다.
 
 {% highlight bash %}
+# CUDA & CUDNN
 export PATH=$PATH:/usr/local/cuda/bin
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/lib
 {% endhighlight %}

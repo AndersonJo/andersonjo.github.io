@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Logistic Regression"
-date:   2016-05-07 01:00:00
+date:   2016-04-27 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Logistic-Regression/
 tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio', 'maximum likelihood estimation']

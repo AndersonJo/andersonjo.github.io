@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "On Chain Rule, Calculus, and Backpropagation"
-date:   2012-01-03 01:00:00
+date:   2015-01-03 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Backpropagation/
 tags: ['RNN', 'Mathematics']
