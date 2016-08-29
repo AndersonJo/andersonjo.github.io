@@ -4,7 +4,7 @@ title:  "SSL + Nginx + RSA"
 date:   2015-11-25 01:00:00
 categories: "network"
 asset_path: /assets/posts/SSL/
-tags: ['rsa', 'nginx']
+tags: ['rsa', 'nginx', '.crt']
 ---
 <div>
     <img src="{{ page.asset_path }}logo.jpg" class="img-responsive img-rounded">
