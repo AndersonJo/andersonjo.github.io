@@ -46,7 +46,7 @@ mkdir /etc/openvpn/easy-rsa/keys
 KEY_NAME 을 변경하면 server.key 그리고 server.crt 등의 이름으로 설정 파일들을 만들수 있습니다.
 
 {% highlight bash %}
-sudo vi /etc/openvpn/easy-rsa/vars
+$ sudo vi /etc/openvpn/easy-rsa/vars
 
 export KEY_COUNTRY="KR"
 export KEY_PROVINCE="SEOUL"
@@ -60,43 +60,116 @@ export KEY_NAME="server"
 {% endhighlight %}
 
 Diffie-Hellman parameters 을 만들어야 합니다. (꽤 시간이 걸림)
+{% highlight bash %}
+openssl dhparam -out /etc/openvpn/dh2048.pem 2048
+{% endhighlight %}
+
 
 {% highlight bash %}
 cd /etc/openvpn/easy-rsa/
-source vars
+. ./vars
+{% endhighlight %}
+
+> . ./vars할때 .에 주의해야 합니다. 정확하게 . ./vars<br>
+><br>
+> NOTE: If you run ./clean-all, I will be doing a rm -rf on /etc/openvpn/easy-rsa/keys<br>
+> 위의 에러가 나오는데, keys디렉토리 안에 아무것도 없어서 나오는 warning이고, 신경쓸필요 없습니다.
+
+{% highlight bash %}
 ./clean-all
 ./build-ca
 {% endhighlight %}
 
-### Server Certificates
+clean-all을 통해서 혹시라고 old or example keys를 삭제 시킵니다.<br>
+build-ca를 실행시킬때, Country, State, Organization, Email등등 이미 기본값을 vars에다가 저장했으므로 그냥 엔터만 누르면 됩니다.
+
+
+
+### Generate Certificates and Keys for the Server
 
 {% highlight bash %}
-./build-key-server servername
+./build-key-server server
 ./build-dh
 {% endhighlight %}
 
 일반적으로 (common practice) /etc/openvpn/ 디렉토리 안에다가 certificates과 keys들을 위치시킵니다.
 
 {% highlight bash %}
-cd /etc/openvpn/easy-rsa/keys/
-sudo cp servername.crt servername.key ca.crt dh2048.pem /etc/openvpn/
+sudo cp /etc/openvpn/easy-rsa/keys/{server.crt,server.key,ca.crt} /etc/openvpn
 {% endhighlight %}
 
 
-### Client Certificates
+### Generate Certificates and Keys for Clients
+
+일반적으로 각각의 클라이언트는 unique certificate 그리고 key를 갖는 것이 좋습니다. 
+
+> By default, OpenVPN does not allow simultaneous connections to the server from clients using the same certificate and key. (See duplicate-cn in /etc/openvpn/server.conf.)
+
+build-key 를 해줄때, client1, client2, client3 처럼 클라이언트마다 각각의 
 
 {% highlight bash %}
-cd /etc/openvpn/easy-rsa/
-source vars
+cd /etc/openvpn/easy-rsa
+. ./vars
 ./build-key client1
+cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /etc/openvpn/easy-rsa/keys/client.ovpn
 {% endhighlight %}
 
-만들고 난뒤 다음의 파일들은 클라이언트로 복사합니다. <br>
-이후 클라이언트에서 필요한 파일들은, 클라이언에서만 필요하
+client certificates이 만들어지면, client에서 scp명령어로 복사해옵니다. (hostname 변경필요)
 
-* /etc/openvpn/ca.crt
-* /etc/openvpn/easy-rsa/keys/client1.crt
-* /etc/openvpn/easy-rsa/keys/client1.key
+{% highlight bash %}
+$ scp -i ~/.ssh/ec2.pem ubuntu@hostname:/etc/openvpn/easy-rsa/keys/client* ~/Downloads/
+$ scp -i ~/.ssh/dev.pem ubuntu@52.196.65.22:/etc/openvpn/easy-rsa/keys/ca* ~/Downloads/
+{% endhighlight %}
+
+완료가 되면 다음의 파일이 클라이언트에 있어야 합니다.
+
+* client1.crt
+* client1.key
+* client.ovpn
+* ca.crt
+
+### Creating a Unified OpenVPN Profile for client Devices
+
+client.ovpn파일 안에 CA, client's certificate 그리고 private key를 포함해서 손쉰게 client application으로 import가 될 수 있습니다.<br>
+클라이언트에서 client.ovpn파일을 편집합니다.
+
+{% highlight bash %}
+$ cd ~/Downloads/
+$ vi client.ovpn
+{% endhighlight %}
+
+hostname, port를 지정합니다.
+
+{% highlight bash %}
+remote my-server-1 1194
+{% endhighlight %}
+
+{% highlight bash %}
+user nobody
+group nogroup
+{% endhighlight %}
+
+ca, cert, key 는 commented out 시켜 버립니다.
+
+{% highlight bash %}
+# ca ca.crt
+# cert client.crt
+# key client.key
+{% endhighlight %}
+
+그 다음으로 
+
+{% highlight bash %}
+<ca>
+(insert ca.crt here)
+</ca>
+<cert>
+(insert client1.crt here)
+</cert>
+<key>
+(insert client1.key here)
+</key>
+{% endhighlight %}
 
 
 # Simple Server Configuration
@@ -110,10 +183,30 @@ sudo vi /etc/openvpn/server.conf
 /etc/openvpn/server.conf안의 내용들이 certificates 그리고 keys값들을 잘 참조하도록 설정합니다.
 
 {% highlight bash %}
+$ sudo vi /etc/openvpn/server.conf
+
 ca ca.crt
 cert servername.crt
 key servername.key
 dh dh2048.pem
+{% endhighlight %}
+
+
+/etc/openvpn/server.conf 파일을 열고 다음을 uncomment처리 해줍니다. (끝나면 다음과 같이 보여야 합니다.)
+
+{% highlight bash %}
+$ sudo vi /etc/openvpn/server.conf
+
+push "redirect-gateway def1 bypass-dhcp"
+
+push "dhcp-option DNS 208.67.222.222"
+push "dhcp-option DNS 208.67.220.220"
+
+proto tcp
+;proto udp
+
+user nobody
+group nogroup
 {% endhighlight %}
 
 /etc/sysctl.conf 파일을 열고, 다음의 내용을 uncomment처리 해줍니다.
@@ -127,3 +220,51 @@ net.ipv4.ip_forward=1
 {% highlight bash %}
 sudo sysctl -p /etc/sysctl.conf
 {% endhighlight %}
+
+테스트하는 방법은 다음과 같이 합니다. 
+{% highlight bash %}
+$ sudo openvpn --config server.conf
+$ ifconfig tun0
+tun0      Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  
+          inet addr:10.8.0.1  P-t-P:10.8.0.2  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:100 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+{% endhighlight %}
+
+
+# Client 
+
+{% highlight bash %}
+sudo apt-get install network-manager-openvpn
+sudo apt-get install network-manager-openvpn-gnome
+{% endhighlight %}
+
+VPN Connections -> Configure VPN... 선택
+
+<img src="{{ page.asset_path }}vpn01.png" class="img-responsive img-rounded">
+
+Add -> OpenVPN 선택
+
+<img src="{{ page.asset_path }}vpn02.png" class="img-responsive img-rounded">
+
+Client Certificate, CA, Private Key를 등록시켜줍니다. 
+
+<img src="{{ page.asset_path }}vpn03.png" class="img-responsive img-rounded">
+
+TCP, LZO Compression, TUN등등.. 설정을 해줍니다.
+
+<img src="{{ page.asset_path }}vpn04.png" class="img-responsive img-rounded">
+
+접속후 성공 화면. 
+
+<img src="{{ page.asset_path }}success.png" class="img-responsive img-rounded">
+
+
+### Open Internet Access
+
+VPN을 통해서 인터넷을 하려면, IPv4 Settings -> Routes -> Use this connection only for resources on its network 를 체크해주셔야 합니다.
+
+<img src="{{ page.asset_path }}internet.png" class="img-responsive img-rounded">
