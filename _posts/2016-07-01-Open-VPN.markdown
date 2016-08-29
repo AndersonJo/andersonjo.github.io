@@ -265,6 +265,7 @@ TCP, LZO Compression, TUN등등.. 설정을 해줍니다.
 
 ### Open Internet Access
 
-VPN을 통해서 인터넷을 하려면, IPv4 Settings -> Routes -> Use this connection only for resources on its network 를 체크해주셔야 합니다.
+클라이언트에서 인터넷을 접속하되, VPN에 있는 resources에 접속하려면 다음과 같이 설정합니다. <br>
+IPv4 Settings -> Routes -> Use this connection only for resources on its network 를 체크해주셔야 합니다.
 
 <img src="{{ page.asset_path }}internet.png" class="img-responsive img-rounded">
