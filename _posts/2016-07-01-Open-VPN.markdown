@@ -269,3 +269,30 @@ TCP, LZO Compression, TUN등등.. 설정을 해줍니다.
 IPv4 Settings -> Routes -> Use this connection only for resources on its network 를 체크해주셔야 합니다.
 
 <img src="{{ page.asset_path }}internet.png" class="img-responsive img-rounded">
+
+### Routing 
+
+예를 들어서 10.10.30.125 으로 접속해야 합니다.
+
+{% highlight bash %}
+$ ifconfig tun0
+tun0      Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  
+          inet addr:10.8.0.6  P-t-P:10.8.0.5  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:100 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+          
+$ route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         192.168.1.1     0.0.0.0         UG    100    0        0 enp0s31f6
+link-local      *               255.255.0.0     U     1000   0        0 enp0s31f6
+192.168.1.0     *               255.255.255.0   U     100    0        0 enp0s31f6
+{% endhighlight %}
+
+ifconfig tun0 쳤을때 P-t-P:10.8.0.5 라고 나온 부분이 바로 Gateway입니다.<br>
+route를 쳤을때 접속하려는 주소 10.10.30.125관련된 route정보가 안나온다면.. **VPN설정 -> IPv4 Settings -> Routes** 에서 다음과 같이 설정합니다.
+
+<img src="{{ page.asset_path }}route.png" class="img-responsive img-rounded">
