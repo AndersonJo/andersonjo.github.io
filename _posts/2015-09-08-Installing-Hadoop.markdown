@@ -71,19 +71,21 @@ sudo apt-get install openssh-server
 
 # Hadoop Installation
 
-### Installation from Source
+### Prerequisites
 
 다음을 설치해줍니다.
 
 {% highlight bash %}
-sudo apt-get install maven libssl-dev build-essential pkgconf cmake
+sudo apt-get install maven libssl-dev build-essential pkgconf cmake findbugs
 {% endhighlight %}
+
+**Protobuf-2.5**
 
 protobuf 는 반드시 2.5 여야 합니다. <br>
 protoc --version  버젼이 2.5 초과라면 다음과 같이 2.5를 설치합니다.
 
 {% highlight bash %}
-wget http://protobuf.googlecode.com/files/protobuf-2.5.0.tar.gz 
+wget https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz
 tar xzvf protobuf-2.5.0.tar.gz
 cd  protobuf-2.5.0
 ./configure
@@ -94,9 +96,22 @@ sudo ldconfig
 protoc --version 
 {% endhighlight %}
 
+**FindBugs Source**
+
+[findbugs-sourceforge][findbugs-sourceforge] 에서 source 를 다운받습니다.<br>
+압축해제후 원하는 곳으로 findbugs source를 이동시키고 FINDBUGS_HOME을 설정해줍니다. (아래는 예제)
+
+{% highlight bash %}
+unzip findbugs-3.0.1-source.zip
+export FINDBUGS_HOME=/home/anderson/apps/findbugs-3.0.1
+{% endhighlight %}
+
+
+### Installation from Source
+
 [Hadoop Download][hadoop-download] 
 
-다운로드 페이지에서 hadoop-2.7.2-src.tar.gz 파일을 다운로드 합니다. (소스 코드 파일)
+다운로드 페이지에서 hadoop-2.7.3-src.tar.gz 파일을 다운로드 합니다. (소스 코드 파일)
 압축을 해제시키고 압축을 해제한 폴더로 들어갑니다.
 
 * package 는  build 명령어
@@ -110,30 +125,17 @@ protoc --version
 
 {% highlight bash %}
 su hduser
-tar xvf hadoop-2.7.2-src.tar.gz
-cd hadoop-2.7.2-src
-mvn package -Pdist,native -DskipTests -Dtar
-sudo cp -R hadoop-dist/target/hadoop-2.7.2 /usr/local/
-sudo chown -R hduser:hadoop /usr/local/hadoop-2.7.2
-sudo ln -s /usr/local/hadoop-2.7.2/ /usr/local/hadoop
+tar xvf hadoop-*src.tar.gz
+cd hadoop-*src
+
+mvn package -Pdist,docs,src,native -DskipTests -Dtar
+sudo cp -R hadoop-dist/target/hadoop-* /usr/local/
+sudo chown -R hduser:hadoop /usr/local/hadoop-*
+sudo ln -s /usr/local/hadoop-2.7.3/ /usr/local/hadoop
 {% endhighlight %}
 
-빌드가 끝난후 hadoop-dist/target/hadoop-2.7.2 디렉토리를 /usr/local 에다가 복사합니다.<br>
-또는 이미 설치가 되있는 상태라면, hadoop-dist/target/hadoop-2.7.2/lib/native 안의 내용물만 복사하면 됩니다.
-
-확인 하는 방법..
-{% highlight bash %}
-hadoop checknative -a
-{% endhighlight %}
-
-다른 방법...
-
-{% highlight bash %}
-hduser:hadoop>file ./lib/native/libhadoop.so.1.0.0 
-./lib/native/libhadoop.so.1.0.0: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=cb34de90c6ae1192cf393441f9a5e0f6f0465e7c, not stripped
-{% endhighlight %}
-
-
+빌드가 끝난후 hadoop-dist/target/hadoop-2.7.3 디렉토리를 /usr/local 에다가 복사합니다.<br>
+또는 이미 설치가 되있는 상태라면, hadoop-dist/target/hadoop-2.7.3/lib/native 안의 내용물만 복사하면 됩니다.
 
 ### .bashrc
 
@@ -163,11 +165,26 @@ export PATH=$PATH:$HADOOP_PREFIX/sbin
 {% endhighlight %}
 
 
+### Checking Installation
+
+설치 확인 하는 방법..
+{% highlight bash %}
+hadoop checknative -a
+{% endhighlight %}
+
+다른 방법...
+
+{% highlight bash %}
+hduser:hadoop>file ./lib/native/libhadoop.so.1.0.0 
+./lib/native/libhadoop.so.1.0.0: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=cb34de90c6ae1192cf393441f9a5e0f6f0465e7c, not stripped
+{% endhighlight %}
+
+
+
 
 # Hadoop Configuration
 
-
-### Standalone Mode 
+### Standalone Mode Configuration
 기본적으로 하둡은 non-distributed mode 즉 single Java process로 돌아가도록 설정이 이미 되어 있습니다.<br>
 Standalone Mode는 개발, 디버깅, 테스팅을 위해서 유용합니다.<br>
 먼저 기본적으로 제공되는 conf파일들을 모두 설치된 하둡으로 카피해줍니다.<br>
@@ -175,14 +192,14 @@ Standalone Mode는 개발, 디버깅, 테스팅을 위해서 유용합니다.<br
 
 {% highlight bash %}
 # hduser인 상태에서..
-cp hadoop-dist/target/hadoop-2.7.2/etc/hadoop/*.xml /usr/local/hadoop/conf
+cp hadoop-dist/target/hadoop-*/etc/hadoop/*.xml /usr/local/hadoop/conf
 {% endhighlight %}
 
 그 다음 아래의 파일들과 동일하게 설정을 해줍니다.
 
 * [core-site.xml][conf-core-site.xml]
 * [hdfs-site.xml][conf-hdfs-site.xml]
-* [conf-hadoop-env.sh][conf-hadoop-env.sh]
+* [hadoop-env.sh][conf-hadoop-env.sh]
 * [mapred-site.xml][mapred-site.xml]
 
 
@@ -334,6 +351,7 @@ start-yarn.sh
 
           
 [supported-java]: http://wiki.apache.org/hadoop/HadoopJavaVersions
+[findbugs-sourceforge]: http://findbugs.sourceforge.net/downloads.html
 [hadoop-download]: http://www.apache.org/dyn/closer.cgi
 [hdfs-wiki]: http://hadoop.apache.org/docs/r2.4.1/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
 
