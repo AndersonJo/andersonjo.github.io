@@ -63,20 +63,88 @@ bin/ignite.sh examples/config/example-cache.xml
 [Apache Ignite Maven Repository][Apache Ignite Maven Repository]에서 
 Ignite-core 는 반드시 넣고, Ignite-spring (Optional)은 추가시킬수 있습니다. 
 
-**Gradle**
+**Gradle Example**
 
 {% highlight bash %}
 // Apache Ignite
 // https://mvnrepository.com/artifact/org.apache.ignite/ignite-core
-compile group: 'org.apache.ignite', name: 'ignite-core', version: '1.7.0'
+compile group: 'org.apache.ignite', name: 'ignite-core', version: '1.5.0.final'
+compile group: 'org.apache.ignite', name: 'ignite-spring', version: '1.5.0.final'
+
+// https://mvnrepository.com/artifact/com.h2database/h2
+compile group: 'com.h2database', name: 'h2', version: '1.0.60'
 {% endhighlight %}
 
-**SBT**
+**SBT 1.5 Example**
 
 {% highlight bash %}
 // Apache Ignite
 // https://mvnrepository.com/artifact/org.apache.ignite/ignite-core
-libraryDependencies += "org.apache.ignite" % "ignite-core" % "1.7.0"
+libraryDependencies += "org.apache.ignite" % "ignite-core" % "1.5.0.final"
+libraryDependencies += "org.apache.ignite" % "ignite-spring" % "1.5.0.final"
+
+// https://mvnrepository.com/artifact/com.h2database/h2
+libraryDependencies += "com.h2database" % "h2" % "1.0.60"
+{% endhighlight %}
+
+### IntelliJ Configuration
+
+| VM Option |  **-DIGNITE_HOME=[IGNITE_HOME_PATH]** | 
+
+### Cache Example
+
+{% highlight bash %}
+bin/ignite.sh examples/config/example-cache.xml
+{% endhighlight %}
+
+{% highlight java %}
+try (Ignite ignite = Ignition.start("examples/config/example-cache.xml")) {
+    IgniteCache<Integer, String> cache = ignite.getOrCreateCache("myCacheName");
+
+    // Store keys in cache (values will end up on different cache nodes).
+    for (int i = 0; i < 10; i++)
+        cache.put(i, Integer.toString(i));
+
+    for (int i = 0; i < 10; i++)
+        System.out.println("Got [key=" + i + ", val=" + cache.get(i) + ']');
+}
+{% endhighlight %}
+
+{% highlight text %}
+Got [key=0, val=0]
+Got [key=1, val=1]
+Got [key=2, val=2]
+Got [key=3, val=3]
+Got [key=4, val=4]
+Got [key=5, val=5]
+Got [key=6, val=6]
+Got [key=7, val=7]
+Got [key=8, val=8]
+Got [key=9, val=9]
+{% endhighlight %}
+
+### Compute Example
+
+{% highlight bash %}
+bin/ignite.sh
+{% endhighlight %}
+
+{% highlight java %}
+try (Ignite ignite = Ignition.start("examples/config/example-ignite.xml")) {
+    Collection<IgniteCallable<Integer>> calls = new ArrayList<>();
+
+    // Iterate through all the words in the sentence and create Callable jobs.
+    for (final String word : "Count characters using callable".split(" "))
+        calls.add(word::length);
+
+    // Execute collection of Callables on the grid.
+    Collection<Integer> res = ignite.compute().call(calls);
+
+    // Add up all the results.
+    int sum = res.stream().mapToInt(Integer::intValue).sum();
+
+    System.out.println("Total number of characters is '" + sum + "'.");
+}
 {% endhighlight %}
 
 [Download Ignite]: http://ignite.apache.org/download.cgi

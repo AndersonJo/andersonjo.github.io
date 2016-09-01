@@ -356,14 +356,18 @@ start-yarn.sh
 
 ### Prepare Installation
 
-1. [Microsoft Windows SDK v7.1][Microsoft Windows SDK v7.1]을 다운받고 설치합니다.
-2. [Maven][Maven]을 다운받고 설치합니다. (Binary로 C:\apache-maven에 설치후 PATH 지정해주면 됩니다.)
-3. [Cygwin][Cygwin]을 다운받고 설치합니다. (64bit  setup-x86_64.exe 파일로 설치합니다.)
-4. [Protobuf Releases][Protobuf Releases]에 들어가서 2.5를 다운받습니다. (바로 다운로드 받기 -> [Protobuf v2.5 Windows 32][Protobuf v2.5 Windows 32])
-5. [findbugs-sourceforge][findbugs-sourceforge] source를 설치합니다. (FINDBUGS_HOME을 설정)
-6. JAVA_HOME, M2_HOME(Maven), FINDBUGS_HOME, 그리고 Platform 에 대한 환경 변수를 설정해주어야 합니다.
-7. [Download Hadoop][hadoop-download] 하둡 source를 다운받습니다.  
-8. Visual Studio Command Prompt를 열고 하둡 source가 있는 곳으로 이동합니다. (Windows Powershell은 안됨)
+1. [Microsoft Windows SDK v7.1][Microsoft Windows SDK v7.1]을 다운받고 설치합니다. (MS Prompt제거했음. Visuall Studio 10이하버젼으로 설치해야함)
+2. Visual Studio 2010을 토렌트로 다운받고 ㅡㅡ;; 설치합니다. (Prompt때문에..)
+3. [Maven][Maven]을 다운받고 설치합니다. (Binary로 C:\apache-maven에 설치후 PATH 지정해주면 됩니다.)
+4. [CMAKE][CMAKE] (cygwin에 있는 cmake말고..) CMake를 집접 설치 합니다.
+4. [Cygwin][Cygwin]을 다운받고 설치합니다. (64bit  setup-x86_64.exe 파일로 설치합니다.)
+5. [Protobuf Releases][Protobuf Releases]에 들어가서 2.5를 다운받습니다. (바로 다운로드 받기 -> [Protobuf v2.5 Windows 32][Protobuf v2.5 Windows 32])
+6. [findbugs-sourceforge][findbugs-sourceforge] source를 설치합니다. (FINDBUGS_HOME을 설정)
+7. JAVA_HOME, M2_HOME(Maven), FINDBUGS_HOME, 그리고 Platform 에 대한 환경 변수를 설정해주어야 합니다.
+8. [Download Hadoop][hadoop-download] 하둡 source를 다운받습니다.  
+9. Visual Studio Command Prompt를 열고 하둡 source가 있는 곳으로 이동합니다. (Windows Powershell은 안됨)
+
+
 
 ### Permission Configuration
 
@@ -390,6 +394,10 @@ chmod -R 777 hadoop-2.7.3-src
 mvn package -Pdist,native-win -DskipTests -Dtar
 {% endhighlight %}
 
+### Easy way!! 
+
+실제로는 Windows에서 source로 build안됨. 그냥 binary 다운받고 bin디렉토리에는 winutil/bin에 있는 내용 (overwrite하지말고) 카피해주면 됨. ㅡㅡ;
+물론 build이전까지의 모든 내용들은 다 필요함.. ㅡㅡ;; 
           
           
 [supported-java]: http://wiki.apache.org/hadoop/HadoopJavaVersions
@@ -402,6 +410,7 @@ mvn package -Pdist,native-win -DskipTests -Dtar
 [Cygwin]: http://cygwin.com/install.html 
 [Protobuf Releases]: https://github.com/google/protobuf/releases?after=v2.6.1
 [Protobuf v2.5 Windows 32]: https://github.com/google/protobuf/releases/download/v2.5.0/protoc-2.5.0-win32.zip
+[CMAKE]: https://cmake.org/download/
 
 [conf-core-site.xml]: {{ page.asset_path }}core-site.xml
 [conf-hdfs-site.xml]: {{ page.asset_path }}hdfs-site.xml
