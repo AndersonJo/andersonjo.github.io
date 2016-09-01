@@ -349,11 +349,59 @@ start-yarn.sh
 {% endhighlight %}
 
 
+
+# Windows Installation
+
+>주의!: 개발, 테스트정도로 활용하지, 하둡을 윈도우에서 사용한다는건 정말 멍청한 짓입니다. 
+
+### Prepare Installation
+
+1. [Microsoft Windows SDK v7.1][Microsoft Windows SDK v7.1]을 다운받고 설치합니다.
+2. [Maven][Maven]을 다운받고 설치합니다. (Binary로 C:\apache-maven에 설치후 PATH 지정해주면 됩니다.)
+3. [Cygwin][Cygwin]을 다운받고 설치합니다. (64bit  setup-x86_64.exe 파일로 설치합니다.)
+4. [Protobuf Releases][Protobuf Releases]에 들어가서 2.5를 다운받습니다. (바로 다운로드 받기 -> [Protobuf v2.5 Windows 32][Protobuf v2.5 Windows 32])
+5. [findbugs-sourceforge][findbugs-sourceforge] source를 설치합니다. (FINDBUGS_HOME을 설정)
+6. JAVA_HOME, M2_HOME(Maven), FINDBUGS_HOME, 그리고 Platform 에 대한 환경 변수를 설정해주어야 합니다.
+7. [Download Hadoop][hadoop-download] 하둡 source를 다운받습니다.  
+8. Visual Studio Command Prompt를 열고 하둡 source가 있는 곳으로 이동합니다. (Windows Powershell은 안됨)
+
+### Permission Configuration
+
+Hadoop Source 디렉토리 전체에 대한 권한을 설정해줘야 합니다.
+
+{% highlight bash %}
+chmod -R 777 hadoop-2.7.3-src
+{% endhighlight %}
+
+
+### Environment Variables
+
+| Name | Value example | ETC | 
+|:----|:-------------|:---|
+| JAVA_HOME | C:\Program Files\Java\jdk1.8.0_91 | |
+| M2_HOME | C:\apache-maven-3.3.9 | | 
+| FINDBUGS_HOME | C:\findbugs-3.0.1 | |
+| Platform | x64 | Platform의 대소문자를 주의해야 합니다. |
+| Path | C:\Windows\Microsoft.NET\Framework\v4.0.30319 | 추가시킵니다. |
+
+### Build
+
+{% highlight bash %}
+mvn package -Pdist,native-win -DskipTests -Dtar
+{% endhighlight %}
+
+          
           
 [supported-java]: http://wiki.apache.org/hadoop/HadoopJavaVersions
 [findbugs-sourceforge]: http://findbugs.sourceforge.net/downloads.html
 [hadoop-download]: http://www.apache.org/dyn/closer.cgi
 [hdfs-wiki]: http://hadoop.apache.org/docs/r2.4.1/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
+
+[Microsoft Windows SDK v7.1]: http://www.microsoft.com/en-in/download/details.aspx?id=8279
+[Maven]: http://maven.apache.org/download.cgi
+[Cygwin]: http://cygwin.com/install.html 
+[Protobuf Releases]: https://github.com/google/protobuf/releases?after=v2.6.1
+[Protobuf v2.5 Windows 32]: https://github.com/google/protobuf/releases/download/v2.5.0/protoc-2.5.0-win32.zip
 
 [conf-core-site.xml]: {{ page.asset_path }}core-site.xml
 [conf-hdfs-site.xml]: {{ page.asset_path }}hdfs-site.xml
