@@ -185,3 +185,10 @@ try (Ignite ignite = Ignition.start("config/default-config.xml")) {
 12
 20
 {% endhighlight %}
+
+### LocalNode & Partitions
+
+{% highlight java %}
+ClusterNode localnode = ignite.cluster().localNode();
+int[] partitions = ignite.affinity("cache-name").allPartitions(localnode);
+{% endhighlight %}
