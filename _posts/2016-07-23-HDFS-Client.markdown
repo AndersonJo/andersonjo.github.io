@@ -14,6 +14,22 @@ tags: []
 
 # Java Client 101
 
+#### **Gradle, SBT**
+
+**SBT**<br>
+{% highlight bash %}
+libraryDependencies += "org.apache.hadoop" % "hadoop-client" % "2.7.3"
+{% endhighlight %}
+
+**Gradle**<br>
+{% highlight bash %}
+compile group: 'org.apache.hadoop', name: 'hadoop-client', version: '2.7.3'
+{% endhighlight %}
+
+
+
+
+
 #### **클라이언트 설정**
 
 {% highlight java %}

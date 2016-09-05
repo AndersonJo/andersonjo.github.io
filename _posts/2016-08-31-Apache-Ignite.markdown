@@ -123,29 +123,65 @@ Got [key=8, val=8]
 Got [key=9, val=9]
 {% endhighlight %}
 
-### Compute Example
+### Distributed Compute Example(MapReduce)
+
+각각의 node안에 있는 cache데이터를 꺼내와서 compute를 실행시킵니다. 
 
 {% highlight bash %}
 bin/ignite.sh
 {% endhighlight %}
 
 {% highlight java %}
-try (Ignite ignite = Ignition.start("examples/config/example-ignite.xml")) {
-    Collection<IgniteCallable<Integer>> calls = new ArrayList<>();
+Ignition.setClientMode(true);
+try (Ignite ignite = Ignition.start("config/default-config.xml")) {
 
-    // Iterate through all the words in the sentence and create Callable jobs.
-    for (final String word : "Count characters using callable".split(" "))
-        calls.add(word::length);
+    // Compute실행이 오직 remote nodes에서만 돌아갑니다.
+    ClusterGroup remoteClusterGroup = ignite.cluster().forRemotes();
+    IgniteCompute clusterCompute = ignite.compute(remoteClusterGroup);
 
-    // Execute collection of Callables on the grid.
-    Collection<Integer> res = ignite.compute().call(calls);
+    // Initialize Cache
+    IgniteCache<Integer, String> cache = ignite.getOrCreateCache("features");
+    cache.removeAll();
 
-    // Add up all the results.
-    int sum = res.stream().mapToInt(Integer::intValue).sum();
+    // Insert data into cache
+    for (int i = 0; i < 10; i++)
+        cache.put(i, "This is " + Integer.toString(i));
 
-    System.out.println("Total number of characters is '" + sum + "'.");
+    // MapReduce in distributed way
+    ArrayList<Integer> netResults;
+    netResults = (ArrayList<Integer>) clusterCompute.broadcast(
+            (IgniteClosure<Integer, Integer>) t -> {
+                int result = StreamSupport.stream(cache.localEntries(CachePeekMode.PRIMARY).spliterator(), false)
+                        .sorted((a, b) -> a.getKey().compareTo(b.getKey()))
+                        .map((e) -> {
+                            System.out.println(e.getKey() + " " + e.getValue());
+                            return e.getKey() * t;
+                        })
+                        .limit(3)
+                        .reduce((a, b) -> a + b).get();
+                return result;
+            }, 2);
+
+    netResults.forEach(System.out::println);
 }
 {% endhighlight %}
 
-[Download Ignite]: http://ignite.apache.org/download.cgi
-[Apache Ignite Maven Repository]: https://mvnrepository.com/artifact/org.apache.ignite
+**Node1**
+{% highlight bash %}
+0 * t = 0
+4 * t = 8
+6 * t = 12
+{% endhighlight %}
+
+**Node2**
+{% highlight bash %}
+1 * t = 2
+2 * t = 4
+3 * t = 6
+{% endhighlight %}
+
+**Client**
+{% highlight bash %}
+12
+20
+{% endhighlight %}
