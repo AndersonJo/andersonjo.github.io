@@ -6,9 +6,9 @@ categories: "network"
 asset_path: /assets/posts/Million-Connections/
 tags: ['ulimit']
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}city.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 # Server Socket Descriptors
 

@@ -7,7 +7,9 @@ static: /assets/posts/Upstart/
 tags: ['/etc/init.d', 'ubuntu', 'service']
 ---
 
+<header>
 <img src="{{ page.static }}upstart-logo.png" class="img-responsive img-rounded">
+</header>
 
 # Overview of Upstart
 

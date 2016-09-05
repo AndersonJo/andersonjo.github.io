@@ -8,7 +8,9 @@ tags: ['RNN', 'Mathematics']
 
 ---
 
+<header>
 <img src="{{ page.asset_path }}neural-network.png" class="img-responsive img-rounded" style="width:100%">
+</header>
 
 # Calculus' Chain Rule
 

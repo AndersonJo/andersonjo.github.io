@@ -7,9 +7,9 @@ asset_path: /assets/posts/MD5-GPU-Crack/
 tags: ['nvcc', 'Nsight', 'makefile', 'Python Wrapper', 'ssl']
 
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}password.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 ## MD5
 

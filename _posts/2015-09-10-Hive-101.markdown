@@ -6,9 +6,9 @@ categories: "hadoop"
 asset_path: /assets/posts/Hive-101/
 tags: ['Pycharm', 'JDBC', 'beeline']
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}hive.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 # Hadoop Ecosystem 
 

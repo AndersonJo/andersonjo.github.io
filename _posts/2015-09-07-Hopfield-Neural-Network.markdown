@@ -6,9 +6,9 @@ categories: "neural-network"
 tags: ['matrix', 'bipolar']
 asset_path: /assets/posts/Hopfield-Neural-Network/
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}robot.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 ## Preliminary
 

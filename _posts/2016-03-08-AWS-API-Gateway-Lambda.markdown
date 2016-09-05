@@ -12,7 +12,9 @@ tags: ['API Gateway', 'Lambda']
 
 ### Custom Authorizer Architecture
 
+<header>
 <img src="{{ page.static }}custom-auth-workflow.png" class="img-responsive img-rounded">
+</header>
 
 OAuth, SAML 등 다양한 authentication 방법들을 API Gateway의 custom authorization을 통해서 컨트롤 할 수 있습니다.
 Client가 request를 API Gateway로 authorization token을 헤더로 포함해서 보내면, 해당 Request를 Lambda로 보내고, 

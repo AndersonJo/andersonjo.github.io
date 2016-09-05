@@ -6,9 +6,9 @@ categories: "docker"
 asset_path: /assets/posts/Docker-MariaDB/
 tags: ["mariadb"]
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}docker.png" class="img-responsive img-rounded">
-</div>
+</header>
 
 Installing Docker on Ubuntu <br>
 [https://docs.docker.com/engine/installation/ubuntulinux/][https://docs.docker.com/engine/installation/ubuntulinux/]

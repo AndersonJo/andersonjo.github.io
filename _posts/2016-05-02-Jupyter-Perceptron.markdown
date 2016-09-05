@@ -7,8 +7,9 @@ static: /assets/posts/Perceptron/
 tags: ['python', 'data analytics', 'jupyter', 'ipython', 'notebook']
 ---
 
-
+<header>
 <img src="{{ page.static }}analytics.jpg" class="img-responsive img-rounded" style="width:100%">
+</header>
 
 # Installation
 

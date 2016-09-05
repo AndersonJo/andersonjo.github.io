@@ -6,7 +6,10 @@ categories: "cuda"
 asset_path: /assets/posts/How-To-Choose-Block-And-Thread/
 ---
 
+<header>
 <img src="{{page.asset_path}}gtx960.jpg" class="img-responsive img-rounded">
+</header>
+
 *\*위의 사진은 나의 애마.. GTX960*
 
 Neural Network, Image Recognition, Voice Recognition 등등 <br>

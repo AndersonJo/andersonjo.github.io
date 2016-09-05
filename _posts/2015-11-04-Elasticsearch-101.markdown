@@ -6,9 +6,9 @@ categories: "elastic"
 asset_path: /assets/posts/Elasticsearch-101/
 tags: ['logstash']
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}logo-elastic.png" class="img-responsive img-rounded">
-</div>
+</header>
 
 # Installing Elasticsearch
 

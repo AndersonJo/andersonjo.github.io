@@ -6,9 +6,9 @@ categories: "machine-learning"
 tags: ['Gradient Descent']
 asset_path: /assets/posts/Theano-Tutorial/
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}deep-learning.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 Deep Learning 을 구현하는데에 지원하는 많은 라이브러리및 프레임워크가 있습니다.
 DL4j, Caffe, Torch등등 많이 있지만.. 오늘 제가 소개해드릴 라이브러리는 Theano 라고 하는 강력한 툴입니다.

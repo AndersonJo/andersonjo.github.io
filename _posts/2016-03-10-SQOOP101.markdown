@@ -7,7 +7,9 @@ static: /assets/posts/Sqoop/
 tags: ['Sqoop', 'hadoop', 'hive']
 ---
 
+<header>
 <img src="{{ page.static }}train.jpg" class="img-responsive img-rounded" style="width:100%">
+</header>
 
 # Introduction
 

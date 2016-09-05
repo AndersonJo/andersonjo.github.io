@@ -11,7 +11,9 @@ tags: ['RVM', 'JAVA', '.bash.rc', 'format', 'my.cnf']
 이번에 GTX960 그래픽카드를 질렀습니다.<br> 
 설치 환경은 Ubuntu 15.04 + GTX960 인데, 혹시 나중에 다시 보게 될까봐 여기에다가 적습니다.
 
+<header>
 <img src="{{page.asset_path}}gtx960.jpg" class="img-responsive img-rounded">
+</header>
 
 ### ACPI PPC Probe failed
 

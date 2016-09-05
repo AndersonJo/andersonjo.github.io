@@ -8,7 +8,9 @@ tags: ['unicorn']
 
 ---
 
+<header>
 <img src="{{ page.static }}rubyrails.png" class="img-responsive img-rounded">
+</header>
 
 # Installation
 

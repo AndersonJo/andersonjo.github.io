@@ -6,9 +6,9 @@ categories: "devops"
 asset_path: /assets/posts/Chef-101/
 tags: ['docker']
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}chef_logo.png" class="img-responsive img-rounded">
-</div>
+</header>
 
 # Installation
 

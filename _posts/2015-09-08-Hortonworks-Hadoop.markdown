@@ -7,9 +7,9 @@ asset_path: /assets/posts/Hortonworks-Hadoop/
 tags: ['HDP']
 
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}HWX-RGB-full-tagline.png" class="img-responsive img-rounded">
-</div>
+</header>
 
 Ubuntu 14.10 (trusty version) 에 Hortonworks Hadoop with Ambari를 설치하는 방법입니다.
 

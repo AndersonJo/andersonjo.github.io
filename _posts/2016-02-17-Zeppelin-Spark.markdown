@@ -8,7 +8,9 @@ tags: ['hadoop', 'hortonworks']
 
 ---
 
+<header>
 <img src="{{ page.asset_path }}spark.jpg" class="img-responsive img-rounded" style="width:100%">
+</header>
 
 # Installing Zeppelin 
 

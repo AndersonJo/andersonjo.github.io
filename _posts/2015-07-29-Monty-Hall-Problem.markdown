@@ -7,7 +7,9 @@ tags: ['Conditional Probability']
 asset_path: /assets/posts/Monty-Hall-Problem/
 ---
 
+<header>
 <img src="{{page.asset_path}}saw-play-a-game.jpg" class="img-responsive img-rounded">
+</header>
 
 당신은 전날밤 술에 취했고 깨어나보니 어두운 방에 갖혀 있었다. <br>
 흐릿했던 초점이 돌아오고 정신이 드니 눈앞에 직소가 있었고 옆에는 3개의 문이 있다.<br>

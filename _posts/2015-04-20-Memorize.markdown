@@ -8,7 +8,9 @@ tags: []
 
 ---
 
+<header>
 <img src="{{ page.static }}notebook.jpeg" class="img-responsive img-rounded">
+</header>
 
 # Matrix
 

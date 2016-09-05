@@ -8,7 +8,9 @@ tags: ['node.js', 'jsx']
 
 ---
 
+<header>
 <img src="{{ page.static }}react-native-logo.jpg" class="img-responsive img-rounded">
+</header>
 
 # Atom or Nuclide
 

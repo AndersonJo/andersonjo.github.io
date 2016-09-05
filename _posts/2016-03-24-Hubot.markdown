@@ -7,8 +7,9 @@ static: /assets/posts/Hubot/
 tags: ['slack']
 ---
 
-
+<header>
 <img src="{{ page.static }}hubot.png" class="img-responsive img-rounded">
+</header>
 
 # Install Hubot
 

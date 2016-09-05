@@ -7,7 +7,9 @@ static: /assets/posts/Amanda/
 tags: ['amanda', '아만다']
 ---
 
+<header>
 <img src="{{ page.static }}amanda01.jpg" class="img-responsive img-rounded">
+</header>
 
 # What is this?
 
