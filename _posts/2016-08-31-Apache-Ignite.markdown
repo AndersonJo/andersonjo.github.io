@@ -8,14 +8,14 @@ tags: ['MapReduce', 'Spark']
 
 ---
 
-<div>
+<header>
     <img src="{{ page.asset_path }}682604.jpg" class="img-responsive img-rounded" style="width:100%">
     <div style="text-align:right;"> 
     <small>초등학교때부터 컴퓨터 학원 다니고, 게임하면서 했었던 둠.. 초등학교 4학년때 3.5 floppy 7개들고, 용산에 2번 왕복해서 Doom2 받은 기억이 새록새록.. <br>  
     나중에 커서 이런 게임 만들어야지 막 꿈을 키우던 시절.. ㅎㅎ 근데.. Apache Ignite하고 뭔 상관이지??<br>
     </small>
     </div>
-</div>
+</header>
 
 # Installation
 
