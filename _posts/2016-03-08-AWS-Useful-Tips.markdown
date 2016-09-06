@@ -11,7 +11,9 @@ tags: ['amazon', '아마존', 'CloudWatch']
 
 # CloudWatch
 
+<header>
 <img src="{{ page.static }}cloudwatch.png" class="img-responsive img-rounded">
+</header>
 
 ### More Detailed Mornitoring
 

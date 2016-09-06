@@ -8,7 +8,9 @@ tags: []
 
 ---
 
+<header>
 <img src="{{ page.static }}gradle.png" class="img-responsive img-rounded">
+</header>
 
 
 # Tasks

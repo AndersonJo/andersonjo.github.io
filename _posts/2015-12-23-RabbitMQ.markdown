@@ -6,9 +6,9 @@ categories: "queue"
 asset_path: /assets/posts/RabbitMQ/
 tags: ['Celery']
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}bunny.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 
 # RabbitMQ

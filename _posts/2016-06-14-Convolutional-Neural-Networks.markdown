@@ -8,9 +8,9 @@ tags: []
 
 ---
 
-<div>
+<header>
     <img src="{{ page.asset_path }}4ZSWD4L-e1436336191130.jpg" class="img-responsive img-rounded" style="width:100%">
-</div>
+</header>
 
 # Convolutional Neural Networks
 

@@ -6,9 +6,9 @@ categories: "network"
 tags: ["Nagle", "Slow Start", "Fast Retransmit", "socket"]
 asset_path: /assets/posts/TCP-101/
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}internet-cables.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 TCP는 기본적으로 서버 개발자가 알아야할 내용중의 하나입니다.<br>
 최대한 쉽게 설명해서 TCP가 무엇인지에 관해서 써봤습니다 :) <br>

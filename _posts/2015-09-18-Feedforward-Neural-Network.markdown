@@ -6,9 +6,9 @@ categories: "neural-network"
 tags: ['RMS Error', "Hebb's Rule", "아버지 아들 키"]
 asset_path: /assets/posts/Feedforward-Neural-Network/
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}chappie.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 Feedforward는 뉴론간의 연결이 서로 전방향으로만 연결된것을 말합니다.<br>
 [Neural Network for Concrete][ref-concrete]를 참고해주세요 :)

@@ -8,9 +8,9 @@ tags: ['MNIST', 'Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds rat
 
 ---
 
-<div>
+<header>
     <img src="{{ page.asset_path }}digits.png" class="img-responsive img-rounded">
-</div>
+</header>
 
 # MNIST
 

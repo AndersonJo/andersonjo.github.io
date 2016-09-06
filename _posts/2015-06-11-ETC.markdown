@@ -6,9 +6,9 @@ categories: "queue"
 asset_path: /assets/posts/ETC/
 tags: ['Linux', 'time', 'Cacti', 'Xenserver', 'Oracle']
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}power.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 
 # Linux (Ubuntu)

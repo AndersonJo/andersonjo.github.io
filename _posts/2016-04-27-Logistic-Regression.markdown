@@ -8,9 +8,9 @@ tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio', 'max
 
 ---
 
-<div>
+<header>
     <img src="{{ page.asset_path }}study.jpg" class="img-responsive img-rounded" style="width:100%">
-</div>
+</header>
 
 
 # Logistic Regression in R

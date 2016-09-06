@@ -5,9 +5,9 @@ date:   2015-09-08 02:00:00
 categories: "hadoop"
 asset_path: /assets/posts/Installing-Hadoop-On-Ubuntu/
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}server.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 # Preprequisites
 

@@ -9,9 +9,9 @@ tags: ['Medical Expenses', 'Matrix Inverse']
 
 ---
 
-<div>
+<header>
     <img src="{{ page.asset_path }}medical-expenses.jpg" class="img-responsive img-rounded" style="width:100%">
-</div>
+</header>
 
 
 # Formula 

@@ -7,7 +7,9 @@ asset_path: /assets/posts/Celery/
 tags: ['Celery', 'RabbitMQ', 'GCM']
 ---
 
+<header>
 <img src="{{ page.asset_path }}domino.jpg" class="img-responsive img-rounded" style="width:100%">
+</header>
 
 # Tutorial via Docker
 

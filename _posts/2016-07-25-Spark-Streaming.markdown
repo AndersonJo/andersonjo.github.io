@@ -8,9 +8,9 @@ tags: ['hadoop', 'kafka']
 
 ---
 
-<div>
+<header>
     <img src="{{ page.asset_path }}speed.jpg" class="img-responsive img-rounded" style="width:100%">
-</div>
+</header>
 
 # Introduction
 

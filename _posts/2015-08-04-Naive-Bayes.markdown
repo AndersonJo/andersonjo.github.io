@@ -6,9 +6,9 @@ categories: "machine-learning"
 asset_path: /assets/posts/Naive-Bayes/
 tags: ['Email Spam Filtering', 'Text Mining']
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}email.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 Bayes 공식이나 이론은 이미 [Monty Hall][bayes] 문제를 풀면서 설명을 했습니다.
 

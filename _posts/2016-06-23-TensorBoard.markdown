@@ -8,9 +8,9 @@ tags: []
 
 ---
 
-<div>
+<header>
     <img src="{{ page.asset_path }}graph_vis_animation.gif" class="img-responsive img-rounded">
-</div>
+</header>
 
 # Serializing the data
 

@@ -8,7 +8,9 @@ tags: ['SBT', 'Scala', 'PySpark']
 
 ---
 
+<header>
 <img src="{{ page.static }}spark.jpg" class="img-responsive img-rounded" style="width:100%">
+</header>
 
 
 # Configuration

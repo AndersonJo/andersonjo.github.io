@@ -6,9 +6,9 @@ categories: "database"
 asset_path: /assets/posts/MariaDB-Replication/
 tags: ["port forwarding"]
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}sealions.jpg" class="img-responsive img-rounded" style="width:100%">
-</div>
+</header>
 
 # Dockerinzing MariaDB
  

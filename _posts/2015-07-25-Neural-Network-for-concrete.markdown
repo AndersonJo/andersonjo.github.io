@@ -6,9 +6,10 @@ categories: "neural-network"
 tags: ['neuralnet']
 asset_path: /assets/posts/Neural-Network-for-concrete/
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}concrete.jpg" class="img-responsive img-rounded">
-</div>
+</header>
+
 신경망이라는 주제는 Machine Learning분야에서 80년대부터 계속해서 발전해온 기술입니다.<br>
 맛보기로 R을 사용해서 신경망(Neural Network)을 해보도록 하겠습니다.<br>
 

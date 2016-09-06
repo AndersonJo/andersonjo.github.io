@@ -8,9 +8,9 @@ tags: ['LSTM', 'tanh', 'hyperbolic tangent', 'cross-entropy loss', 'softmax']
 
 ---
 
-<div>
+<header>
     <img src="{{ page.asset_path }}brain.png" class="img-responsive img-rounded" style="width:100%">
-</div>
+</header>
 
 # Language Modeling
 

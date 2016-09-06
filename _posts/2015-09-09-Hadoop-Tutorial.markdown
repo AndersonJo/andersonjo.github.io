@@ -8,9 +8,9 @@ asset_path: /assets/posts/Hadoop-Tutorial/
 
 
 ---
-<div>
+<header>
     <img src="{{ page.asset_path }}server.jpg" class="img-responsive img-rounded">
-</div>
+</header>
 
 하둡 설치방법은 [Installing Hadoop on Ubuntu][installing-hadoop]을 참고 해주시기 바랍니다.
 
