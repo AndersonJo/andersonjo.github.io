@@ -192,3 +192,31 @@ try (Ignite ignite = Ignition.start("config/default-config.xml")) {
 ClusterNode localnode = ignite.cluster().localNode();
 int[] partitions = ignite.affinity("cache-name").allPartitions(localnode);
 {% endhighlight %}
+
+### Node Count
+
+Server로 띄워져있는 node들의 갯수를 알아보는 코드입니다.<br>
+!isClient() 함수로 체크를 안할시, 클라이언트또한 Node로 포함이 됩니다.
+
+{% highlight java %}
+StreamSupport.stream(this.ignite.cluster().nodes().spliterator(), false)
+        .filter((n) -> !n.isClient())
+        .count();
+{% endhighlight %}
+
+
+# Errors
+
+**BinaryObjectException: Cannot find schema for object with compact footer**
+
+binaryConfiguration를 추가시키면 됩니다.
+
+{% highlight xml %}
+<bean id="grid.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+    <property name="binaryConfiguration">
+        <bean class="org.apache.ignite.configuration.BinaryConfiguration">
+            <property name="compactFooter" value="false"/>
+        </bean>
+    </property>
+</bean>
+{% endhighlight %}
