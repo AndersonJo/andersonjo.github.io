@@ -96,7 +96,7 @@ sudo ldconfig
 protoc --version 
 {% endhighlight %}
 
-**FindBugs Source**
+**FindBugs Source (Windows)**
 
 [findbugs-sourceforge][findbugs-sourceforge] 에서 source 를 다운받습니다.<br>
 압축해제후 원하는 곳으로 findbugs source를 이동시키고 FINDBUGS_HOME을 설정해줍니다. (아래는 예제)
@@ -105,6 +105,8 @@ protoc --version
 unzip findbugs-3.0.1-source.zip
 export FINDBUGS_HOME=/home/anderson/apps/findbugs-3.0.1
 {% endhighlight %}
+
+* -Pdist 할때 docs를 넣게 되면 FindBugs가 필요합니다.
 
 
 ### Installation from Source
@@ -121,6 +123,7 @@ export FINDBUGS_HOME=/home/anderson/apps/findbugs-3.0.1
 * -DskipTests 테스트를 skip
 * -Dtar 는 tar파일을 만듭니다.
 
+
 **hduser로 로그인해서 해야합니다. 반드시!**
 
 {% highlight bash %}
@@ -128,10 +131,12 @@ su hduser
 tar xvf hadoop-*src.tar.gz
 cd hadoop-*src
 
+# mvn package -Pdist,docs,src,native -DskipTests -Dtar 
+
 mvn package -Pdist,docs,src,native -DskipTests -Dtar
 sudo cp -R hadoop-dist/target/hadoop-* /usr/local/
 sudo chown -R hduser:hadoop /usr/local/hadoop-*
-sudo ln -s /usr/local/hadoop-2.7.3/ /usr/local/hadoop
+sudo ln -s /usr/local/hadoop-*/ /usr/local/hadoop
 {% endhighlight %}
 
 빌드가 끝난후 hadoop-dist/target/hadoop-2.7.3 디렉토리를 /usr/local 에다가 복사합니다.<br>
@@ -192,6 +197,7 @@ Standalone Mode는 개발, 디버깅, 테스팅을 위해서 유용합니다.<br
 
 {% highlight bash %}
 # hduser인 상태에서..
+mkdir /usr/local/hadoop/conf
 cp hadoop-dist/target/hadoop-*/etc/hadoop/*.xml /usr/local/hadoop/conf
 {% endhighlight %}
 

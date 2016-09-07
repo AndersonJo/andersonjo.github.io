@@ -49,6 +49,7 @@ apache-flume-1.6.0-bin.tar.gz 파일을 누르면 됩니다.<br>
 **이때 wget으로 받고 user는 hduser로 로그인하고서 합니다.**
 
 {% highlight bash %}
+wget http://apache.mirror.cdnetworks.com/flume/1.6.0/apache-flume-1.6.0-bin.tar.gz
 tar -zxvf apache-flume-1.6.0-bin.tar.gz
 sudo mv apache-flume-1.6.0-bin /usr/local/flume
 sudo chown -R hduser:hadoop /usr/local/flume/
