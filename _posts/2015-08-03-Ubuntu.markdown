@@ -54,6 +54,35 @@ sudo apt-get install uim uim-byeoru
 uim-pref-gtk
 {% endhighlight %}
 
+Alt키 에러시 다음과 같이 합니다.
+
+{% highlight bash %}
+sudo vi /usr//share/X11/xkb/symbols/altwin
+{% endhighlight %}
+
+다음 부분을 comment out 합니다. (삭제 시켜줍니다.)
+{% highlight bash %}
+//    key <RALT> { type[Group1] = "TWO_LEVEL",
+//                symbols[Group1] = [ Alt_R, Meta_R ] };
+{% endhighlight %}
+
+Text Entry에서 Korea (101/104 key compatible)을 추가시켜줍니다.<br>
+다음의 파일들을 모두 삭제시킵니다.
+
+{% highlight bash %}
+sudo rm -fv /var/lib/xkb/*
+{% endhighlight %}
+
+리부트 필요
+
+{% highlight bash %}
+sudo reboot
+{% endhighlight %}
+
+
+
+
+
 ### XClip (Optional)
 
 {% highlight bash%}
