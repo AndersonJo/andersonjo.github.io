@@ -3,36 +3,84 @@ layout: post
 title:  "Spring Boot 101"
 date:   2005-04-01 01:00:00
 categories: "spring"
-asset_path: /assets/posts/Spring101/
+asset_path: /assets/posts2/Spring/
 tags: ['java']
 
 ---
 
 
+<header>
+    <img src="{{ page.asset_path }}dew.jpg" class="img-responsive img-rounded" style="width:100%">
+    <div style="text-align:right;"> 
+    <small>
+    Spring.. Java필요하거나 SI아니면.. 쓰레기.. 쓰지마세요. Python, Node.js에 정말 좋은 프레임워크많아요.<br>
+     You Fool! Run away from this!
+    </small>
+    </div>
+</header>
 
-### build.gradle
+# Useful Things
+
+### Continuous Auto-Restart
+
+**build.gradle** <small>dev configuration 그리고 spring-boot-devtools를 설치해야 합니다.</small>
+{% highlight bash %}
+configurations {
+    dev
+}
+
+dependencies {
+    dev("org.springframework.boot:spring-boot-devtools")
+}
+
+bootRun {
+    // Use Spring Boot DevTool only when we run Gradle bootRun task
+    classpath = sourceSets.main.runtimeClasspath + configurations.dev
+}
+{% endhighlight %}
+
+**Build** <small>Intellij에서는 Alt + F12. 다음 2개의 명령어를 서로 다른 terminal에서 실행시켜야 합니다.</small>
 
 {% highlight bash %}
-...
-dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web") {
-        exclude module: "spring-boot-starter-tomcat"
+./gradlew build --continuous --stacktrace
+./gradlew bootRun
+{% endhighlight %}
+
+
+# Recipes 
+
+### Restful Controller Example
+
+**Data Class**
+{% highlight bash %}
+public class Greeting {
+    public final int id;
+    public String content;
+
+    public Greeting(int id, String content) {
+        this.id = id;
+        this.content = content;
     }
-    compile('org.springframework.boot:spring-boot-starter')
-    compile("org.springframework.boot:spring-boot-starter-jetty")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 {% endhighlight %}
 
 
-### Running the aplication
+**Controller**
+{% highlight java %}
+@RestController
+public class GreetingController {
 
-**Gradle**
-{% highlight bash %}
-./gradlew build && java -jar build/libs/gs-spring-boot-0.1.0.jar
+    private static final String template = "Hello, %s!!";
+    private final AtomicInteger counter = new AtomicInteger();
+
+    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
+    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World", required = true) String name) {
+        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+    }
+}
 {% endhighlight %}
 
-**Maven**
-{% highlight bash %}
-mvn package && java -jar target/gs-spring-boot-0.1.0.jar
+**http://localhost:8080/greeting?name=Anderon**
+{% highlight json %}
+{"id":1,"content":"Hello, Anderon!!"}
 {% endhighlight %}
