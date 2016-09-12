@@ -139,6 +139,7 @@ pylab.imshow(cv2.cvtColor(img3, cv2.COLOR_BGR2RGB))
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}blended_baseball.png" class="img-responsive img-rounded">
+<small>근데 이거 사진이 너무 유치한데.. </small>
 
 [OpenNI]: http://structure.io/openni
 [OpenCV 3.1.0]: https://github.com/Itseez/opencv/archive/3.1.0.zip
