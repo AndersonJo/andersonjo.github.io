@@ -114,7 +114,7 @@ pylab.imshow(img_rgb)
 **Write an image as different format**
 
 
-### Spliting Image Channels
+### Spliting Image channels
 
 split 함수로 b, g, r 각각 따로따로 channel을 나눌수 있고, merge를 통해서 channel을 하나로 합칠수 있습니다.
 
@@ -126,6 +126,19 @@ img3 = cv2.merge((b2, g1, r2))
 
 <img src="{{ page.asset_path }}mixed_channels.png" class="img-responsive img-rounded">
 
+
+### Blending two images
+
+addWeightedb() 함수는 다음과 같은 공식을 따릅니다.
+
+$$ g(x) = (1 - \alpha)f_0(x) + \alpha f_1(x)$$ 
+
+{% highlight  python %}
+img3 = cv2.addWeighted(img1, 0.7, img2, 0.3, 0)
+pylab.imshow(cv2.cvtColor(img3, cv2.COLOR_BGR2RGB))
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}blended_baseball.png" class="img-responsive img-rounded">
 
 [OpenNI]: http://structure.io/openni
 [OpenCV 3.1.0]: https://github.com/Itseez/opencv/archive/3.1.0.zip
