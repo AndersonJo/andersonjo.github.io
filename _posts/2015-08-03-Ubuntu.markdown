@@ -89,6 +89,16 @@ sudo reboot
 sudo apt-get install xclip
 {% endhighlight %}
 
+### Unity Tools (Optional)
+
+{% highlight bash %}
+sudo add-apt-repository ppa:freyja-dev/unity-tweak-tool-daily
+sudo apt-get update
+sudo apt-get install unity-tweak-tool
+unity-tweak-tool
+{% endhighlight %}
+
+
 ### Install PIP
 
 apt-get install python-pip 하지 말것!

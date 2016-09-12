@@ -82,6 +82,38 @@ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ../
 {% endhighlight %}
 
 
+# Tutorial 
+
+### Image IO
+
+**Read Image as BGR Color**
+{% highlight python %}
+%pylab inline
+import numpy as np
+import cv2
+print "OpenCV Version : %s " % cv2.__version__
+{% endhighlight %}
+
+{% highlight python %}
+img = cv2.imread('../data/images/baseball.jpg', cv2.CV_LOAD_IMAGE_COLOR)
+pylab.imshow(img)
+{% endhighlight %}
+
+OpenCV에서는 BGR(RGB의 반대)로 읽기 때문에, cv2.imread할때 제대로 읽어와진것은 맞으나, Pylab에서 이미지를 띄울때 잘못된 색상으로 보여줍니다.
+
+<img src="{{ page.asset_path }}inverted_baseball.png" class="img-responsive img-rounded">
+
+**Convert BGR Image to RGB Image**
+{% highlight python %}
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+pylab.imshow(img_rgb)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}rgb_baseball.png" class="img-responsive img-rounded">
+
+**Write an image as different format**
+
+
 [OpenNI]: http://structure.io/openni
 [OpenCV 3.1.0]: https://github.com/Itseez/opencv/archive/3.1.0.zip
 [OpenCV Download Page]: http://opencv.org/downloads.html
