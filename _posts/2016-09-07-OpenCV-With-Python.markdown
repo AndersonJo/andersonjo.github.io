@@ -114,6 +114,19 @@ pylab.imshow(img_rgb)
 **Write an image as different format**
 
 
+### Spliting Image Channels
+
+split 함수로 b, g, r 각각 따로따로 channel을 나눌수 있고, merge를 통해서 channel을 하나로 합칠수 있습니다.
+
+{% highlight python %}
+b1, g1, r1 = cv2.split(img1)
+b2, g2, r2 = cv2.split(img2)
+img3 = cv2.merge((b2, g1, r2))
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}mixed_channels.png" class="img-responsive img-rounded">
+
+
 [OpenNI]: http://structure.io/openni
 [OpenCV 3.1.0]: https://github.com/Itseez/opencv/archive/3.1.0.zip
 [OpenCV Download Page]: http://opencv.org/downloads.html
