@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Spring 101"
+title:  "Spring Boot 101"
 date:   2005-04-01 01:00:00
 categories: "spring"
 asset_path: /assets/posts2/Spring/
@@ -45,6 +45,19 @@ bootRun {
 ./gradlew build --continuous --stacktrace
 ./gradlew bootRun
 {% endhighlight %}
+
+### Jetty instead of Tomcat
+
+spring-boot-starter-web은 Tomcat을 embedded container를 기본으로 사용합니다. 이것 대신에 Jetty를 넣을수 있습니다.
+
+{% highlight bash %}
+compile("org.springframework.boot:spring-boot-starter-web") {
+    exclude module: "spring-boot-starter-tomcat"
+}
+compile("org.springframework.boot:spring-boot-starter-jetty")
+{% endhighlight %}
+
+
 
 
 # Recipes 
