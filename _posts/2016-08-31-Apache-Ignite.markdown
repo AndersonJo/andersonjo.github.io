@@ -2,7 +2,7 @@
 layout: post
 title:  "Apche Ignite"
 date:   2016-08-31 01:00:00
-categories: "hadoop"
+categories: "in-memory-platform"
 asset_path: /assets/posts2/Ignite/
 tags: ['MapReduce', 'Spark']
 

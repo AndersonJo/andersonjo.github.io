@@ -4,7 +4,7 @@ title:  "Recurrent Neural Network with Python"
 date:   2016-06-25 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/RNN-With-Python/
-tags: ['LSTM', 'tanh', 'hyperbolic tangent', 'cross-entropy loss', 'softmax']
+tags: ['LSTM', 'tanh', 'hyperbolic tangent', 'cross-entropy loss', 'softmax', 'calculus', 'chain rule', 'backpropagation']
 
 ---
 
@@ -268,17 +268,72 @@ $$ \frac{\partial L}{ \partial U} \ \ \ \frac{\partial L}{ \partial V} \ \ \ \fr
 RNN의 경우, 일반적인 Neural Network와는 다르게 time steps을 갖고 있기 때문에, Backpropagation through time (BTPP)를 이용합니다.<br>
 일단 SGD는 derivative에 기반하기 때문에 foward, cost error에 사용한 공식들을 정리할 필요가 있습니다.
 
-**forward propagation에서 사용한 공식들**
 
-$$ s_t = tanh(U_{x_t} + W * s_{t-1}) $$
+**Example의 forward propagation에서 사용한 공식들**
+
+$$ s_t = tanh(U x_t + W * s_{t-1}) $$
 
 $$ \hat{y}_t = softmax(V * s_t ) $$ 
 
-$$ L(y, o) = - \frac{1}{N} \sum_{i=0}{ln(o_i)} $$ 
+$$ L(y, \hat{y}) = - \frac{1}{N} \sum_{i=0}{ln(\hat{y}_i)} $$ 
 
-**Stochastic Gradient for the RNN example**<br>
-<span style="font-size:1.4em"> $$ \frac{ \partial E}{ \partial W} = \sum \frac{ \partial E_t }{ \partial W} $$ </span>
 
+
+**Backpropagation through time**
+
+Traditional Neural Network의 경우에는 Backpropagation을 사용하면 되지만, RNN에서는 기존의 약간변형된 BPTT (Backpropagation Through Time) 을 사용합니다.
+RNN에서는 parameters들이 모든 steps에서 공유가 되기 때문에, gradient를 구할때, 현재의 time step뿐만 아니라 이전의 time steps 까지도 계산이 되어야 합니다.
+즉 Calculus의 chain rules 을 사용하면 됩니다.
+
+{% highlight python %}
+def bptt(self, x, y):
+    """
+    :param x: an array of a sentence
+    """
+    T = len(y)
+    o, s = self.forward_propagation(x)
+    dldU = np.zeros(self.U.shape)
+    dldV = np.zeros(self.V.shape)
+    dldW = np.zeros(self.W.shape)
+    delta_o = o
+    delta_o[np.arange(T), y] -= 1.
+
+    for t in np.arange(T)[::-1]:
+        dldV += np.outer(delta_o[t], s[t].T)
+        # Initial delta calculation
+        delta_t = self.V.T.dot(delta_o[t]) * (1 - (s[t] ** 2))
+
+        for bptt_step in np.arange(max(0, t - self.bptt_truncate), t + 1)[::-1]:
+            dldW += np.outer(delta_t, s[bptt_step - 1])
+            dldU[:, x[bptt_step]] += delta_t
+            delta_t = self.W.T.dot(delta_t) * (1 - s[bptt_step - 1] ** 2)
+    return dldU, dldV, dldW
+{% endhighlight %}
+
+**Stochastic Gradient Descent**
+
+{% highlight python %}
+def calculate_gradients(self, x, y, learning_rate=0.001):
+    # Calculate the gradients
+    dLdU, dLdV, dLdW = self.bptt(x, y)
+    # Change parameters according to gradients and learning rate
+    self.U -= learning_rate * dLdU
+    self.V -= learning_rate * dLdV
+    self.W -= learning_rate * dLdW
+{% endhighlight %}
+
+### Train
+
+{% highlight python %}
+def train(self, x_train, y_train, learning_rate=0.005, npoch=100):
+    N = len(y_train)
+    loss_show = N / 10
+
+    for i in xrange(npoch):
+        # One SGD step
+        rand_idx = randint(0, N)
+        self.calculate_gradients(x_train[rand_idx], y_train[rand_idx], learning_rate)
+{% endhighlight %}
 
 
 
@@ -377,49 +432,75 @@ scatter(data, softmax(data))
 <img src="{{ page.asset_path }}softmax_scatter.png" class="img-responsive img-rounded">
 
 
-### Numpy code 
 
-**s[t] = self.U[:, x[t]]**
+### Calculus' Chain Rule
+
+만약 $$  f(x) = e^{sin(x^2)} $$ 라는 공식이 있다면.. 다음과 같이 풀어서 쓸수도 있습니다.
+
+<p style="color:#E40041">
+$$ \frac{d{f}}{d{x}} = \frac{df}{du} * \frac{du}{dh} * \frac{dh}{dx} $$
+</p>
+
+이때 $$ f(x) = e^x $$, $$ u(x) = sin(x) $$, 그리고 $$ h(x) = x^2 $$ 이며 f(x)를 풀어서 쓰면 다음과 같습니다.
+
+$$ f(u(h(x))) = e^{u(h(x))} $$
+
+$$ \frac{df}{du} = e^{g(h(x))}, \ \ \frac{du}{dh} = cos(h(x)), \ \ \frac{dh}{dx} = 2x $$
+
+>derivative of e^x 는 그냥 e^x <br>
+>derivative of sin(x) = cos(x) <br>
+>derivative of x^2 = 2x
+
+따라서 다음과 같은 결론이 날 수 있습니다.
+
+<p style="color:#E40041">
+$$ \frac{d{f}}{d{x}} = e^{\sin x^2} * \cos x^2 * 2x $$
+</p>
+
+
+
+### RNN Feedworward network
+
+| Neural Layer | Description                   | Index |
+|:-------------|:------------------------------|:------|
+| x(t)         | input layer                   | i     |
+| s(t - 1)     | previous hidden (state) layer | h     |
+| s(t)         | hidden (state) layer          | j     |
+| y(t)         | output layer                  | k     |
+
+| Weight Layer | Description                           | Index | Code     |
+|:-------------|:--------------------------------------|:------|:---------|
+| U            | Input layer -> Hidden layer           | i, j  | U[:, x[t]] | 
+| W            | Previous hidden layer -> Hidden layer | h, j  | W.dot(s[t-1]) |
+| V            | Hidden layer -> Output layer          | j, k  | softmax(V.dot(s[t])) | 
 
 {% highlight python %}
-# Example
-d = np.random.uniform(0, 1, (3, 4))
-array([[ 0.43427081,  0.94898511,  0.57835844,  0.42443147],
-       [ 0.34749315,  0.03117266,  0.71706683,  0.52429841],
-       [ 0.37153541,  0.34595326,  0.85716003,  0.84554065]])
-       
-d[:, 2]
-array([ 0.57835844,  0.71706683,  0.85716003])
+s[t] = np.tanh(self.U[:, x[t]] + self.W.dot(s[t - 1]))
 {% endhighlight %}
 
-단순히 x[t] 즉 특정 단어의 index값을 이용해서 U에 들어서 있는 값을 단순히 state에 복사합니다.
+$$ net_j(t) = \sum_{i} x_i(t) * U_{ji} + \sum_h W_{jh} * s_h(t-1) + bias_j $$
 
-**np.argmax**
-
-가장 큰 값의 index를 리턴시킵니다. 
+$$ \hat{y}_j(t) =  f(net_j) $$
 
 {% highlight python %}
-array([[ 0.9223411 ,  0.69607165,  0.12235694],
-       [ 0.47028317,  0.56437696,  0.07637072],
-       [ 0.53217641,  0.26763567,  0.74395923],
-       [ 0.06988952,  0.11684923,  0.2074002 ]])
-       
-np.argmax(d, axis=1)
-array([0, 1, 2, 2])
-
-np.argmax(d)
-0
-
-np.sum(d, axis=1)
-array([ 1.74076969,  1.11103085,  1.54377131,  0.39413895])
+o[t] = self.softmax(self.V.dot(s[t]))
 {% endhighlight %}
+
+$$ net_k(t) = \sum_{j} V_{kj} * \hat{y}_j(t) + bias_k $$
+
+$$ \hat{y}_k(t) = g(net_k) $$
+
+
 
 # References 
 
 [WildML - Recurrent Neural Network][WildML - Recurrent Neural Network] 에서 거의 대부분의 자료들을 가져왔습니다. 
 파이썬으로 자세하게 써주셔서 감사합니다.
 
+[BPTT][BPTT] 논문에서 BPTT Backpropagation에 관한 내용을 가져왔습니다.
+
 [WildML - Recurrent Neural Network]: http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implementing-a-language-model-rnn-with-python-numpy-and-theano/
+[BPTT]: http://ir.hit.edu.cn/~jguo/docs/notes/bptt.pdf
 [Reddit Comment on Google BigQuery]: https://bigquery.cloud.google.com/dataset/fh-bigquery:reddit_comments
 [NLTK Library]: http://www.nltk.org/
 [Cross Entropy in Wikipedia]: https://en.wikipedia.org/wiki/Cross_entropy
