@@ -161,6 +161,7 @@ while True:
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}video_capture.png" class="img-responsive img-rounded">
+<small>아~~~~ 나도 좀 잘생겨 보고 싶다!!!!!!!!!!! 죄송죄송~</small>
 
 [OpenNI]: http://structure.io/openni
 [OpenCV 3.1.0]: https://github.com/Itseez/opencv/archive/3.1.0.zip
