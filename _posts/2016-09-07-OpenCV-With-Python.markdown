@@ -141,6 +141,27 @@ pylab.imshow(cv2.cvtColor(img3, cv2.COLOR_BGR2RGB))
 <img src="{{ page.asset_path }}blended_baseball.png" class="img-responsive img-rounded">
 <small>근데 이거 사진이 너무 유치한데.. </small>
 
+
+### Video Capture
+
+{% highlight python %}
+cap = cv2.VideoCapture(0)
+while True:
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+    
+    # Convert to RGB
+    color_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    
+    cv2.imshow('frame',frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+#     pylab.imshow(color_frame)
+#     pylab.show()
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}video_capture.png" class="img-responsive img-rounded">
+
 [OpenNI]: http://structure.io/openni
 [OpenCV 3.1.0]: https://github.com/Itseez/opencv/archive/3.1.0.zip
 [OpenCV Download Page]: http://opencv.org/downloads.html
