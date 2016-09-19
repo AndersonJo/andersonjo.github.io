@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "OpenCV with Python"
-date:   2016-08-31 01:00:00
+date:   2016-09-07 01:00:00
 categories: "vision"
 asset_path: /assets/posts2/OpenCV/
 tags: ['Python']
