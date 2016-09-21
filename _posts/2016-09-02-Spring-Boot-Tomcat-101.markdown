@@ -25,13 +25,22 @@ tags: ['java', 'Security', 'Tomcat']
 
 {% highlight bash %}
 sudo apt-get install tomcat8 tomcat8-docs tomcat8-admin tomcat8-examples
-sudo vi /etc/tomcat8/tomcat-users.xml
 {% endhighlight %}
 
 다음을 추가 합니다. 
 {% highlight bash %}
+$ sudo vi /etc/tomcat8/tomcat-users.xml
   <role rolename="admin"/>
   <user username="tomcat" password="1234" roles="admin"/>
+{% endhighlight %}
+
+**Change configuration directory for Intellij**
+
+{% highlight bash %}
+mkdir -p ~/tomcat/conf/
+sudo cp /etc/tomcat8/server.xml ~/tomcat/conf/
+sudo cp /etc/tomcat8/web.xml ~/tomcat/conf/
+sudo chown anderson:anderson ~/tomcat/conf/*
 {% endhighlight %}
 
 **Chaging default ports**
@@ -39,6 +48,26 @@ sudo vi /etc/tomcat8/tomcat-users.xml
 {% highlight bash %}
 sudo vi /etc/tomcat8/server.xml
 {% endhighlight %}
+
+
+### Tomcat on IntelliJ IDEA
+
+settings ->Build, Execution, Deployment -> Application Servers -> Tomcat 추가
+
+| Name | Value | ETC | 
+|:-----|:------|:----|
+| Tomcat or TomEE Home | /usr/share/tomcat8 | | 
+| Tomcat or TomEE directory | /home/anderson/tomcat | 해당 디렉토리 안의 conf 디렉토리를 찾음 | 
+
+<img src="{{ page.asset_path }}settings-tomcat.png" class="img-responsive img-rounded">
+
+Run -> Edit Configuration -> Add New Configuration -> Tomcat -> Application Server를 settings에서 미리 설정한 Tomcat Server를 선택
+
+<img src="{{ page.asset_path }}tomcat-run-configuration.png" class="img-responsive img-rounded">
+
+추가적으로 Deployment를 설정하고 artifact를 선택하면 됩니다.<br>
+이때 exploded war를 사용해야지 변경된 부분만 업데이트하거나 Auto deploy가 가능해집니다.
+ 
 
 # Useful Things
 
