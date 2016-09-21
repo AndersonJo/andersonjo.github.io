@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Spring Boot 101"
-date:   2005-04-01 01:00:00
+title:  "Spring Boot & Tomcat 101"
+date:   2016-09-02 01:00:00
 categories: "spring"
 asset_path: /assets/posts2/Spring/
-tags: ['java']
+tags: ['java', 'Security', 'Tomcat']
 
 ---
 
@@ -18,6 +18,27 @@ tags: ['java']
     </small>
     </div>
 </header>
+
+# Installation
+
+### Tomecat 8 on Ubuntu 15.10
+
+{% highlight bash %}
+sudo apt-get install tomcat8 tomcat8-docs tomcat8-admin tomcat8-examples
+sudo vi /etc/tomcat8/tomcat-users.xml
+{% endhighlight %}
+
+다음을 추가 합니다. 
+{% highlight bash %}
+  <role rolename="admin"/>
+  <user username="tomcat" password="1234" roles="admin"/>
+{% endhighlight %}
+
+**Chaging default ports**
+
+{% highlight bash %}
+sudo vi /etc/tomcat8/server.xml
+{% endhighlight %}
 
 # Useful Things
 

@@ -8,11 +8,13 @@ tags: ['RVM', 'JAVA', '.bash.rc', 'format', 'my.cnf']
 
 ---
 
-이번에 GTX960 그래픽카드를 질렀습니다.<br> 
-설치 환경은 Ubuntu 15.04 + GTX960 인데, 혹시 나중에 다시 보게 될까봐 여기에다가 적습니다.
-
 <header>
-<img src="{{page.asset_path}}gtx960.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}ubuntu.jpg" class="img-responsive img-rounded" style="width:100%">
+    <div style="text-align:right;"> 
+    <small>
+    Ubuntu로 주로 개발합니다. 서버, 안드로이드, 인공지능, 분석 기타등등.. 전부다.. 옛날에는 CentOS도 써봤는데.. 너무 불편한게 한두가지가 아니더군요.. Ubuntu가 갑 입니다.
+    </small>
+    </div>
 </header>
 
 ### ACPI PPC Probe failed

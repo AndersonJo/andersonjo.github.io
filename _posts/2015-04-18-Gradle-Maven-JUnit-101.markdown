@@ -13,6 +13,18 @@ tags: []
 </header>
 
 
+# Installation
+
+# Gradle 3.x on Ubuntu
+
+우분에서 기본적으로 제공하는 Gradle버젼은 2.5입니다. 3.x 버젼이상을 설치하기 위해서는 다음과 같이 합니다.
+
+{% highlight bash %}
+sudo add-apt-repository ppa:cwchien/gradle
+sudo apt-get update
+sudo apt-get install gradle
+{% endhighlight %}
+
 # Tasks
 
 ### Running Multiple Tasks
