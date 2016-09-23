@@ -84,6 +84,24 @@ time			exo	host	region	value
 1474258022478192898	13	serverA	japan	0.22
 {% endhighlight %}
 
+**Reading multiple series**
+
+InfluxDB는 SQL과 많이 닮아있지만, 다른점들도 있습니다. 그중에 하나가 multiple series를 가져올수 있는 것 입니다.<br>
+이게 중요한 이유는 Java Client에서 getSeries()함수를 부를때 아래처럼 여러개의 series를 불러오기 때문입니다.
+
+{% highlight bash %}
+$ select * from SENSOR, SENSOR2
+name: SENSOR
+------------
+time	count_status	count_temperature	count_value
+0	28		28			28
+
+name: SENSOR2
+-------------
+time	count_status	count_temperature	count_value
+0	7		7			7
+{% endhighlight %}
+
 # Java Client Tutorial
  
 ### Creating & Deleting database
@@ -125,5 +143,25 @@ Point point = Point.measurement(TEST_MEASUREMENT_NAME)
 influx.write(TEST_DATABASE_NAME, "autogen", point);
 {% endhighlight %}
 
+### Reading multiple series and values
+
+Java Client는 multiple series를 가져옵니다. (항상.. 하나의 measurement 명시할때도..)
+
+{% highlight java %}
+QueryResult queryResult = influx.query(new Query("SELECT * FROM SENSOR", DATABASE_NAME));
+for (QueryResult.Result r : queryResult.getResults()) {
+    r.getSeries().get(0).getValues().stream().forEach(System.out::println);
+    System.out.println(r.getSeries().size());
+}
+{% endhighlight %}
+
+결과 화면. 
+
+{% highlight text %}
+[2016-09-23T05:50:49.773Z, HostA, Korea, true, -13.0, 30.0]
+[2016-09-23T05:50:49.773Z, HostB, Korea, true, 7.0, 18.0]
+[2016-09-23T05:50:49.776Z, HostA, Korea, true, 37.0, 24.0]
+...
+{% endhighlight %}
 
 [Installation Guide]: https://docs.influxdata.com/influxdb/v1.0/introduction/installation/
