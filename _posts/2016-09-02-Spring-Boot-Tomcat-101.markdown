@@ -49,14 +49,10 @@ sudo chown anderson:anderson ~/tomcat/conf/*
 sudo vi /etc/tomcat8/server.xml
 {% endhighlight %}
 
-### Jetty on IntelliJ IDEA
 
-{% highlight bash %}
-sudo apt-get install jetty8
-{% endhighlight %}
+# Tomcat + Spring Boot + Intellij
 
-
-### Tomcat on IntelliJ IDEA
+### Configuring Intellij
 
 settings ->Build, Execution, Deployment -> Application Servers -> Tomcat 추가
 
@@ -73,6 +69,9 @@ Run -> Edit Configuration -> Add New Configuration -> Tomcat -> Application Serv
 
 추가적으로 Deployment를 설정하고 artifact를 선택하면 됩니다.<br>
 이때 exploded war를 사용해야지 변경된 부분만 업데이트하거나 Auto deploy가 가능해집니다.
+
+
+### Configuring Spring Boot 
 
 **pom.xml**
 
@@ -178,13 +177,16 @@ Run -> Edit Configuration -> Add New Configuration -> Tomcat -> Application Serv
 </project>
 {% endhighlight %}
 
-**io.anderson.Application.java**
+**io.anderson.Application.java**<br>
+SpringBootServletInitializer를 반드시 extends해야지 external tomcat실행시(embedded말고..) 실행될수 있습니다.
+
 {% highlight java %}
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class Application {
+public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

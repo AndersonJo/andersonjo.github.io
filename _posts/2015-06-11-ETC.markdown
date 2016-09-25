@@ -4,11 +4,24 @@ title:  "ETC - 알면 좋은 거"
 date:   2015-06-11 01:00:00
 categories: "queue"
 asset_path: /assets/posts/ETC/
-tags: ['Linux', 'time', 'Cacti', 'Xenserver', 'Oracle', 'Git', 'SSH']
+tags: ['Linux', 'time', 'Cacti', 'Xenserver', 'Oracle', 'Git', 'SSH', 'Sencha', 'Ext.JS']
 ---
 <header>
-    <img src="{{ page.asset_path }}power.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}rainbox.jpg" class="img-responsive img-rounded">
 </header>
+
+# Sencha Ext.JS
+
+#### Get Started
+
+Sencha Ext.js app을 만들고 서버를 실행시킵니다.<br>
+[http://localhost:1841][http://localhost:1841] 로 접속 
+
+{% highlight bash %}
+sencha -sdk /home/anderson/apps/ext-6.0.2 generate app Test ./test
+cd ./test
+sencha app  watch
+{% endhighlight %}
 
 
 # Linux (Ubuntu)
@@ -124,5 +137,7 @@ sudo ldconfig
 sqlplus username/password@//dbhost:1521/SID
 {% endhighlight %}
 
+
+[http://localhost:1841]: http://localhost:1841
 [Oracle Instant Client]: http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html
 
