@@ -70,6 +70,11 @@ Run -> Edit Configuration -> Add New Configuration -> Tomcat -> Application Serv
 추가적으로 Deployment를 설정하고 artifact를 선택하면 됩니다.<br>
 이때 exploded war를 사용해야지 변경된 부분만 업데이트하거나 Auto deploy가 가능해집니다.
 
+IntelliJ에서 개발시 public등 추가적인 web resource directory를 추가해야 될때는.. <br>
+Project Structure -> Modules -> Web -> public 디렉토리를 web Resource Directories configuration에서 추가하면 됩니다.
+
+<img src="{{ page.asset_path }}module_settings.png" class="img-responsive img-rounded">
+
 
 ### Configuring Spring Boot 
 
