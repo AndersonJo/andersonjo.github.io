@@ -55,7 +55,7 @@ if sys.argv[1:] == ['server']:
     print 'Reply sent, socket clossed'
 else:
     sock.connect((HOST, PORT))
-    print 'Client has been assigned socket name', sock.getsockname()
+    print 'Ext.js has been assigned socket name', sock.getsockname()
 
     text = raw_input('메세지:').decode('UTF-8')
     send_msg(sock, text)

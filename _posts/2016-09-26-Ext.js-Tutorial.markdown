@@ -1,0 +1,83 @@
+---
+layout: post
+title:  "Ext.js 6 Tutorial"
+date:   2016-09-26 01:00:00
+categories: "aws"
+asset_path: /assets/posts2/Ext.js/
+tags: ['Sencha']
+
+---
+
+<header>
+    <img src="{{ page.asset_path }}rainbow-11.jpg" class="img-responsive img-rounded" style="width:100%">
+    <div style="text-align:right;"> 
+    <small>요즘 즐겨하는 게임 Rainbow 6 Siege. 꼭 한번 해보세요. 개 쩔 음  ㄹ ㅇ. ㅇ ㅈ        
+    </small>
+    </div>
+</header>
+
+# Login System Tutorial
+
+### Generate Sencha Application
+
+Sencha Ext.js app을 만들고 서버를 실행시킵니다.<br>
+[http://localhost:1841][http://localhost:1841] 로 접속 
+
+{% highlight bash %}
+sencha -sdk /home/anderson/apps/ext-6.0.2 generate app Test ./test
+cd ./test
+sencha app  watch
+{% endhighlight %}
+
+### Create Login View Components
+
+app -> view -> login 디렉토리 생성 -> 파일 생성
+
+{% highlight text %}
+app
+├── Application.js
+└── view
+    ├── login
+    │   ├── LoginController.js
+    │   └── Login.js
+    └── main
+        ├── MainController.js
+        └── MainModel.js
+{% endhighlight %}
+
+app.js 파일의 코드를 보면.. mainview가 있는데.. 해당 컴포넌트를 자동으로 불러와서 초기화 합니다.<br>
+데스크탑에서 mainview는 classic/src/view/main/Main.js를 가르킵니다.
+
+{% highlight javascript %}
+mainView: 'MyApp.view.main.Main'
+{% endhighlight %}
+
+app.view.login.Login.js 파일에 다음과 같이 코딩합니다.<br>
+**xtype** 은 일종의 class에서 instantiated한 instance라고 생각하시면 됩니다.
+
+{% highlight javascript %}
+Ext.define('TutorialApp.view.login.Login', {
+    extend: 'Ext.window.Window',
+    xtype: 'login',
+
+    requires: [
+        'TutorialApp.view.login.LoginController',
+        'Ext.form.Panel'],
+
+    controller: 'login',
+    bodyPadding: 10,
+    title: 'Login.Window',
+    closable: false,
+    autoShow: true
+});
+{% endhighlight %}
+
+| Name | Description |
+|:-----|:------------|
+| xtype | 일종의 class에서 instantiated한 instance |
+| requires | instance (xtype)을 만들기전 필요한 dependencies를 가져옵니다. |
+| controller | 'login'이라는 Controller instance (xtype으로 나온) 를 Login Window view와 연결시킵니다. |
+
+
+
+[http://localhost:1841]: http://localhost:1841
