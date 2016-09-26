@@ -16,6 +16,63 @@ tags: ['Sencha']
     </div>
 </header>
 
+# Core Concepts
+
+### Class System
+
+{% highlight javascript %}
+Ext.define('Anderson.view.main.Anderson', {
+    name: 'Unknown',
+
+    constructor: function (config) {
+        this.initConfig(config.config);
+        this.name = config.name;
+    },
+
+    config: {
+        at: 'home'
+    },
+
+    applyAt: function (at) {
+        if (!Ext.isString(at) || at.length == 0) {
+            return this.getAt();
+        }
+        return at;
+    },
+
+    eat: function (foodType) {
+        console.log(this.name + " is drinking " + foodType + " at " + this.getAt());
+    }
+});
+
+var bob = Ext.create('Anderson.view.main.Anderson', {
+    name: 'Anderson',
+    config: {
+        at: 'company'
+    }
+});
+bob.eat("your brain");
+{% endhighlight %}
+
+{% highlight javascript %}
+Anderson is drinking your brain at company
+{% endhighlight %}
+
+**Ext.define** <small>class declaration</small><br>
+클래스를 선언합니다. 사용은 Ext.create 를 사용합니다.
+
+**constructor** <br>
+Ext.create('클래스 이름', constructure함수에 들어가는 arguments)
+
+**config & apply** <small>클래스가 생성되기 전에 configuration을 생성가능 </small><br>
+ - getter, setter가 자동 생성됨 (this.getAt() 또는 this.setAt('something') 처럼 사용가능)<br>
+ - apply함수 (applyAt function)을 통해서 setter를 호출시 (setAt) apply를 통해서 설정이 됩니다.<br>
+ - 인스턴스 생성시마다 다른 configuration을 설정 가능 (즉 config는 인스턴스 맴버. not static member)
+
+**this.initConfig()** <small>manually initialize configuration</small><br>
+초기화를 manually 실행시킵니다.
+
+
 # Login System Tutorial
 
 ### Generate Sencha Application
