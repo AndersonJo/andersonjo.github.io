@@ -488,4 +488,16 @@ Ext.define('Anderson.Application', {
 });
 {% endhighlight %}
 
+
+# Errors 
+
+###  C2008: Requirement had no matching files (Ext.fx.target.Element) 
+
+무슨 이유에서인지는 모르겠지만.. Ext.fx.target.Element 클래스가 없던 경우였고, 
+해결방법는 upgrade를 함으로서 .sencha 디렉토리에 있는 내용들, 빠진 클래스 파일들을 추가시켜주었습니다.
+
+{% highlight bash %}
+sencha app upgrade /home/anderson/apps/ext-6.0.2
+{% endhighlight %}
+
 [http://localhost:1841]: http://localhost:1841
