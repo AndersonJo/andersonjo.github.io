@@ -14,6 +14,14 @@ tags: ['node.js', 'jsx']
 
 # Atom or Nuclide
 
+### Installation
+
+{% highlight bash %}
+sudo add-apt-repository ppa:webupd8team/atom
+sudo apt-get update
+sudo apt-get install atom
+{% endhighlight %}
+
 ### Plugins
 
 Atom 설치이후에 apm을 통해서 react plugin 을 설치합니다.

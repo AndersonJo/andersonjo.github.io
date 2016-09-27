@@ -11,7 +11,7 @@ tags: ['Sencha']
 <header>
     <img src="{{ page.asset_path }}rainbow-11.jpg" class="img-responsive img-rounded" style="width:100%">
     <div style="text-align:right;"> 
-    <small>요즘 즐겨하는 게임 Rainbow 6 Siege. 꼭 한번 해보세요. 개 쩔 음  ㄹ ㅇ. ㅇ ㅈ        
+    <small>요즘 즐겨하는 게임 Rainbow 6 Siege. 꼭 한번 해보세요. 개 쩔 음  ㄹ ㅇ.        
     </small>
     </div>
 </header>
@@ -72,6 +72,262 @@ Ext.create('클래스 이름', constructure함수에 들어가는 arguments)
 **this.initConfig()** <small>manually initialize configuration</small><br>
 초기화를 manually 실행시킵니다.
 
+### Containers 
+
+Ext.JS는 Components들로 구성되어 있으며, Container는 다른 components들을 포함하고 있을수 있는 special type of component입니다.<br>
+가장 윗쪽으로는 viewport (root)가 있으며, 그 안으로 comtainers (예를 들어서 Panel)가 다른 components (Text, Button, etc)들을 포함하고 있습니다.
+
+<img src="{{ page.asset_path }}component_heirarchy.png" class="img-responsive img-rounded">
+
+
+{% highlight javascript %}
+Ext.define('Anderson.view.main.Tutorial', {
+    extend: 'Ext.panel.Panel',
+    renderTo: Ext.getBody(),
+    title: 'Anderson Jo Panel',
+    layout: 'column',
+    width: 400,
+    height: 200,
+    items: [{
+        xtype: 'panel',
+        title: 'Child Panel 1',
+        height: 100,
+        columnWidth: 0.5,
+    }, {
+        xtype: 'panel',
+        title: 'Child Panel 2',
+        height: 100,
+        columnWidth: 0.5
+    }]
+});
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}container_example1.png" class="img-responsive img-rounded">
+
+모든 Container는 layout을 갖고 있습니다. layout을 통해서 child components의 위치와 크기를 관리 할 수 있습니다.<br>
+내부적으로 Framework는 **updateLayout()** 함수를 사용합니다. 아래의 예제처럼 items를 미리 명시하는것이 아니라, dynamically add를 할 수 있는데, 
+이때 추가할때마다 updateLayout()을 호출하게 되고 performance에 영향을 미치게 됩니다. 이경우 **suspendLayout** 을 false로 잡고 bulk update 
+가 끝난후 **updateLayout()** 함수를 호출하여 layout을 재정렬 할 수 있습니다.
+
+{% highlight javascript %}
+Ext.define('Anderson.view.main.Tutorial', {
+    ...
+    suspendLayout: true
+});
+{% endhighlight %}
+
+{% highlight javascript %}
+tutorial.add({
+    xtype: 'panel',
+    title: 'Dynamic 1',
+    height: 100,
+    columnWidth: 0.5
+});
+
+tutorial.add({
+    xtype: 'panel',
+    title: 'Dynamic 2',
+    height: 100,
+    columnWidth: 0.5
+});
+
+tutorial.suspendLayout = false;
+tutorial.updateLayout();
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}container_example2.png" class="img-responsive img-rounded">
+
+
+### Viewport
+
+{% highlight javascript %}
+var childPanel1 = Ext.create('Ext.panel.Panel', {
+    title: 'Child Panel 1',
+    html: 'A Panel'
+});
+
+var childPanel2 = Ext.create('Ext.panel.Panel', {
+    title: 'Child Panel 2',
+    html: 'Another Panel'
+});
+
+Ext.create('Ext.container.Viewport', {
+    items: [childPanel1, childPanel2]
+});
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}viewport.png" class="img-responsive img-rounded">
+
+* viewport에서 출력시 화면 전체를 채우게 됩니다.
+
+
+### Custom View Components (Inheritance)
+
+새로운 UI Class를 만들려고 할때, **Ext.Component**로 부터 extend하던지, instance를 갖고 있어야 합니다.<br>
+render() 함수는 component에 정의되어 있고, 이것을 사용하는 것은 container's layout manager에서 호출합니다. <br>
+따라서 render()함수를 override하거나 집접 호출하는 방식으로 하면 안되며, **onRender()**함수를 통하여 확장하게 됩니다.
+
+
+<img src="{{ page.asset_path }}template_pattern.png" class="img-responsive img-rounded">
+
+ 
+{% highlight javascript %}
+Ext.define('Anderson.view.main.Tutorial', {
+    extend: 'Ext.Component',
+    onRender: function () {
+        this.callParent(arguments);
+        // perform additional rendering tasks here.
+    }
+});
+{% endhighlight %}
+
+
+### Data Package 
+
+**Ext.daata.Model**
+
+| Part of Model | Values |
+|:--------------|:-------|
+| Proxy         | AJAX, Rest, LocalStorage, JSON-P |
+| Fields        | String, Integer, Float, Boolean  |
+| Associations  | ManyToOne, OneToOne, ManyToMany  |
+| Validations   | Presence, Format, Length, Custom |
+
+**/app/model/User.js**
+
+{% highlight javascript %}
+Ext.define("Anderson.model.Base", {
+    extend: 'Ext.data.Model',
+    fields: [{name: 'id', type: 'int'}],
+
+    schema: {
+        namespace: 'Anderson.model',
+        proxy: {
+            type: 'ajax',
+            url: '/resources/user.json',
+            reader: {
+                type: 'json',
+                rootProperty: '{entityName:lowercase}'
+            }
+        }
+    },
+});
+
+Ext.define('Anderson.model.User', {
+    extend: 'Anderson.model.Base',
+    fields: [{name: 'title', type: 'string'}]
+});
+
+Ext.define('Anderson.model.Book', {
+    extend: 'Anderson.model.Base',
+    fields: [
+        {name: 'user_id', reference: 'User', type: 'int'},
+        {name: 'title', type: 'string'}]
+});
+{% endhighlight %}
+
+| Name | Description |
+|:-----|:------------|
+| Client Proxy | [Memory][Client Proxy Memory], [Local Storage][Client Proxy Local Storage] 2종류가 있으며, Model data를 불러오거나 저장하는데 사용되며, <br>Local Storage의 경우에는 HTML5 를 지원하지 않는 old browser에서는 작동하지 않습니다. |
+| Server Proxy | [Ajax][Server Proxy Ajax], [JSONP][Server Proxy JsonP],  [Rest][Server Proxy REST] 등이 사용됩니다.|
+
+
+schema란 a collection of entities로서, schema를 명시시에, 해당 스키마로부터 파생된 Model들은 Anderson.model.User로부터 inherit받습니다.<br>
+**namespace** 는 Models사이에 associations을 정의할때 사용됩니다.
+
+[Client Proxy Memory]: http://docs.sencha.com/extjs/6.2.0/classic/Ext.data.proxy.Memory.html
+[Client Proxy Local Storage]: http://docs.sencha.com/extjs/6.2.0/classic/Ext.data.proxy.LocalStorage.html
+[Server Proxy Ajax]: http://docs.sencha.com/extjs/6.2.0/classic/Ext.data.proxy.Ajax.html
+[Server Proxy JsonP]: http://docs.sencha.com/extjs/6.2.0/classic/Ext.data.proxy.JsonP.html
+[Server Proxy REST]: http://docs.sencha.com/extjs/6.2.0/classic/Ext.data.proxy.Rest.html
+
+**/resources/user.json**
+
+{% highlight json %}
+{
+  "success": "true",
+  "user": [
+    {
+      "id": 1,
+      "name": "Philip J. Fry"
+    },
+    {
+      "id": 2,
+      "name": "Hubert Farnsworth"
+    },
+    {
+      "id": 3,
+      "name": "Turanga Leela"
+    },
+    {
+      "id": 4,
+      "name": "Amy Wong"
+    }
+  ]
+}
+{% endhighlight %}
+
+**AJAX로 불러오기**
+
+{% highlight javascript %}
+var store = new Ext.data.Store({
+    model: 'Anderson.model.User'
+});
+console.log('entityName:', store.model.entityName);
+
+store.load({
+    callback: function () {
+        var items = this.getData().items;
+        var first_name = this.first().get('name');
+        items.forEach(function (item, i, data) {
+            console.log(item.data.id, item.data.name, item.data.title);
+        });
+
+        console.log('First Name:', first_name);
+    }
+})
+{% endhighlight %}
+
+결과
+
+{% highlight bash %}
+entityName: User
+1 "Philip J. Fry" ""
+2 "Hubert Farnsworth" ""
+3 "Turanga Leela" ""
+4 "Amy Wong" ""
+First Name: Philip J. Fry
+{% endhighlight %}
+
+
+**Reference**
+
+1번 유저를 불러와서, books를 등록시키는것
+
+{% highlight javascript %}
+Anderson.model.User.load(1, {
+    callback: function (user) {
+        console.log('User: ' + user.get('name'));
+
+        // book 추가
+        user.books().add({user_id: user.id, title: '해리포터'});
+        user.books().add({user_id: user.id, title: '출근하는데 집에 가고 싶다.'});
+        user.books().sync();
+
+        user.books(function (posts) {
+            posts.each(function (post) {
+                console.log('Book: ' + post.get('title'));
+            });
+        });
+    }
+});
+{% endhighlight %}
+
+{% highlight bash %}
+User: Philip J. Fry
+Book: 해리포터
+Book: 출근하는데 집에 가고 싶다.
+{% endhighlight %}
 
 # Login System Tutorial
 
