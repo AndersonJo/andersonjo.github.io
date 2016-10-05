@@ -173,6 +173,78 @@ b = tf.constant(32)
 print(sess.run(a + b)) # 42
 {% endhighlight %}
 
+### Install Tensorflow from Source
+
+TensorFlow build버젼은 기본적으로 CUDA Toolkit 7.5 그리고 cuDNN v5 와 작동하지만,<br> 
+그 이상의 버젼에서 돌리기 위해서는 반드시 source에서 설치해야 합니다.
+
+> Pascal Architecture는 CUDA 8.0 에서 지원되고 7.0 에서는 지원되지 않습니다.
+
+{% highlight bash %}
+git clone https://github.com/tensorflow/tensorflow
+{% endhighlight %}
+
+**Bazel설치하기**
+
+{% highlight bash %}
+echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
+{% endhighlight %}
+
+Update and Install Bazel
+
+{% highlight bash %}
+sudo apt-get install pkg-config zip g++ zlib1g-dev unzip
+sudo apt-get update
+sudo apt-get install bazel
+sudo apt-get upgrade bazel
+{% endhighlight %}
+
+**Install other dependencies**
+
+{% highlight bash %}
+# For Python 2.7:
+$ sudo apt-get install python-numpy swig python-dev python-wheel
+# For Python 3.x:
+$ sudo apt-get install python3-numpy swig python3-dev python3-wheel
+{% endhighlight %}
+
+**Check CUDA Version**
+
+{% highlight bash %}
+$ nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2015 NVIDIA Corporation
+Built on Tue_Aug_11_14:27:32_CDT_2015
+Cuda compilation tools, release 7.5, V7.5.17
+{% endhighlight %}
+
+**Install TensorFlow from source**
+
+{% highlight bash %}
+sudo apt-get install libcurl3-dev
+cd tensorflow
+./configure
+{% endhighlight %}
+
+configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참고<br>
+설치는 먼저 pip package를 만들고 그것을 설치합니다.
+
+| GPU | Compute Capability |
+|:----|:-------------------|
+| GeForce GTX 1080	| 6.1  |
+| GeForce GTX 1070	| 6.1  |
+| GeForce GTX 980	| 5.2  |
+| GeForce GTX 970	| 5.2  |
+| GeForce GTX 960	| 5.2  |
+
+
+{% highlight bash %}
+bazel clean
+bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+{% endhighlight %}
+
+
 # TensorFlow 101
 
 <img src="{{ page.static }}tensorflow-logo.jpg" class="img-responsive img-rounded">
@@ -304,3 +376,4 @@ with tf.Session() as sess:
 [Download CUDA Toolkit]: https://developer.nvidia.com/cuda-downloads
 [Download cuDNN]: https://developer.nvidia.com/cudnn
 [Download Nvidia Driver]: http://www.nvidia.com/Download/index.aspx?lang=en-kr
+[Cuda Compute Capabilities]: https://developer.nvidia.com/cuda-gpus
