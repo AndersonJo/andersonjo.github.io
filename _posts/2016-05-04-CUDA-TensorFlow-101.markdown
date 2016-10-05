@@ -178,10 +178,12 @@ print(sess.run(a + b)) # 42
 TensorFlow build버젼은 기본적으로 CUDA Toolkit 7.5 그리고 cuDNN v5 와 작동하지만,<br> 
 그 이상의 버젼에서 돌리기 위해서는 반드시 source에서 설치해야 합니다.
 
-> Pascal Architecture는 CUDA 8.0 에서 지원되고 7.0 에서는 지원되지 않습니다.
+<bold style="color:red; font-weight:bold;">Pascal Architecture는 CUDA 8.0부터 지원됩니다. 즉 GTX1080, GTX1070 사용지 반드시 source로 install해야 합니다.</bold>
+
+**Install Dependencies**
 
 {% highlight bash %}
-git clone https://github.com/tensorflow/tensorflow
+sudo apt-get install libcurl3-dev
 {% endhighlight %}
 
 **Bazel설치하기**
@@ -222,7 +224,10 @@ Cuda compilation tools, release 7.5, V7.5.17
 **Install TensorFlow from source**
 
 {% highlight bash %}
-sudo apt-get install libcurl3-dev
+git clone https://github.com/tensorflow/tensorflow
+{% endhighlight %}
+
+{% highlight bash %}
 cd tensorflow
 ./configure
 {% endhighlight %}
@@ -242,6 +247,8 @@ configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참�
 {% highlight bash %}
 bazel clean
 bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+sudo pip install /tmp/tensorflow_pkg/tensorflow-0.11.0rc0-py2-none-any.whl
 {% endhighlight %}
 
 
