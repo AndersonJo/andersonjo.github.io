@@ -82,15 +82,6 @@ sudo reboot
 {% endhighlight %}
 
 
-
-
-
-### XClip (Optional)
-
-{% highlight bash%}
-sudo apt-get install xclip
-{% endhighlight %}
-
 ### Unity Tools (Optional)
 
 {% highlight bash %}
@@ -210,6 +201,18 @@ fs.inotify.max_user_watches = 524288
 
 {% highlight bash %}
 sudo sysctl -p
+{% endhighlight %}
+
+### Ipython Custom Configuration
+
+**custom.css**
+
+{% highlight bash %}
+~/.ipython/custom/custom.css
+{% endhighlight %}
+
+{% highlight css %}
+table {float: left};
 {% endhighlight %}
 
 ### Sublime (Optional)
