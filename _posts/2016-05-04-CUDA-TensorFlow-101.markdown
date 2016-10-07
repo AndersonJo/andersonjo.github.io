@@ -87,9 +87,9 @@ Built on Tue_Aug_11_14:27:32_CDT_2015
 Cuda compilation tools, release 7.5, V7.5.17
 {% endhighlight %}
 
-### When Not Working
+### [Error] The driver installation is unable to locate the kernel source
 
-CUDA Toolkit설치시에 자동으로 Nvidia Driver가 자동으로 설치가 되지만, 안될시에는 드라이버를 집접 받아서 설치합니다.
+CUDA 드라이버 설치시, Linux Kernel source가 필요한데, source가 안보여서 생기는 문제. 
 
 [Download Nvidia Driver][Download Nvidia Driver]
 
@@ -98,6 +98,11 @@ sudo apt-get install linux-headers-`uname -r`
 ./NVIDIA-Linux-x86_64-367.18.run
 {% endhighlight %}
 
+또는 
+
+{% highlight bash %}
+sudo apt-get install linux-headers-generic
+{% endhighlight %}
 
 ### CUDA + cuDNN
 
@@ -160,18 +165,6 @@ $ sudo pip3 install --upgrade https://storage.googleapis.com/tensorflow/mac/tens
 {% endhighlight %}
 
 
-설치 확인 방법은 다음과 같이 합니다.
-
-{% highlight python %}
-import tensorflow as tf
-hello = tf.constant('Hello, TensorFlow!')
-sess =tf.Session() # 이때 GPU Device를 찾고 결과를 보여줍니다.
-print(sess.run(hello)) # Hello, TensorFlow!
-
-a = tf.constant(10)
-b = tf.constant(32)
-print(sess.run(a + b)) # 42
-{% endhighlight %}
 
 ### Install Tensorflow from Source
 
@@ -249,6 +242,22 @@ bazel clean
 bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 sudo pip install /tmp/tensorflow_pkg/tensorflow-0.11.0rc0-py2-none-any.whl
+{% endhighlight %}
+
+
+### 설치 확인 
+
+설치 확인 방법은 ipython후 다음과 같이 합니다.
+
+{% highlight python %}
+import tensorflow as tf
+hello = tf.constant('Hello, TensorFlow!')
+sess =tf.Session() # 이때 GPU Device를 찾고 결과를 보여줍니다.
+print(sess.run(hello)) # Hello, TensorFlow!
+
+a = tf.constant(10)
+b = tf.constant(32)
+print(sess.run(a + b)) # 42
 {% endhighlight %}
 
 
