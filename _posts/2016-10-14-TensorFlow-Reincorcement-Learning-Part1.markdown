@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "TensorFlow - Deep Reinforcement Learning Part 1"
-date:   2016-10-15 01:00:00
+date:   2016-10-14 01:00:00
 categories: "tensorflow"
 asset_path: /assets/posts2/TensorFlow/
 tags: ['game', 'deep Q-network']
@@ -207,9 +207,6 @@ Output은 각각의 actions에 따른 Q-values가 됩니다. Q-values는 real va
 <div class="thumbnail" style="padding:0px 10px 0 10px;">
 $$ \mathbf{L} = \frac{1}{2}\{ \mathbf{r} + max[ \mathbf{Q}(next\ state, next\ action)] - \mathbf{Q}(state, action) \}^2 $$
 </div>
-
-
-
  
 
 ### References 
