@@ -4,7 +4,7 @@ title:  "TensorFlow - Deep Reinforcement Learning Part 2"
 date:   2016-10-15 01:00:00
 categories: "tensorflow"
 asset_path: /assets/posts2/TensorFlow/
-tags: ['OpenAI', 'game']
+tags: ['OpenAI', 'Neon', 'format']
 
 ---
 
@@ -16,14 +16,60 @@ tags: ['OpenAI', 'game']
     </div>
 </header>
 
-# OpenAI Reinforcement Learning 
+# Installation
 
-### Installation
+### Environment
+
+GPU를 설치하기 위해서는 다음의 environment variable이 추가되어 있어야 합니다.<br>
+PyCUDA 설치시 cuda.h를 못찾아서 에러나는데 sudo실행시키면서 root 계정에서는 cuda를 못찾아서 발생하는 것.<br>
+sudo su 누르고 .bashrc 에 추가시켜주면 됨. (nvcc 도 확인해볼것)
+
+{% highlight bash %}
+export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib
+{% endhighlight %}
+
+### Installing PyCUDA (for supporting Neon GPU)
+
+어려울것 없지만, root계정에 위의 environment variables이 존재해야 합니다.<br>
+Neon설치시 자동으로 설치되지만, 에러가 많이 일으켜서 따로 먼저 설치해주고 Neon을 설치하는게 좋습니다.
+
+{% highlight bash %}
+sudo pip install pycuda
+{% endhighlight %}
+
+### Installing Neon
+
+자세한 내용은 [Neon 설치 문서](http://neon.nervanasys.com/docs/latest/installation.html)를 참고하시기 바랍니다.<br>
+Prerequisites을 설치합니다.<br>
+
+
+{% highlight bash %}
+sudo apt-get install libhdf5-dev libyaml-dev libopencv-dev pkg-config
+sudo apt-get install python python-dev python-pip python-virtualenv
+{% endhighlight %}
+
+Neon을 설치합니다.
+
+{% highlight bash %}
+git clone https://github.com/NervanaSystems/neon.git
+cd neon
+sudo make -e VIS=true sysinstall
+{% endhighlight %}
+
+### For Game Video (Optional)
+
+게임 비디오 프로듀스하기위해서는 다음을 설치합니다. 
+
+{% highlight bash %}
+sudo apt-get install libav-tools
+{% endhighlight %}
+
+### Installing OpenAI Gym
 
 {% highlight bash %}
 sudo pip install gym[all]
 {% endhighlight %}
-
 
 ### References
 
