@@ -29,6 +29,27 @@ export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib
 {% endhighlight %}
 
+### Installing Arcade Learning Environment
+
+[The Arcade Learning Environment (ALE)](https://github.com/mgbellemare/Arcade-Learning-Environment) AI Research에 사용되며, Stella, Atari 2600 VCS Emulator를 기반으로 하고 있습니다.
+
+**prerequisites**
+
+{% highlight bash %}
+sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev libsdl-image1.2-dev cmake
+{% endhighlight %}
+
+**Install ALE**
+
+{% highlight bash %}
+git clone https://github.com/mgbellemare/Arcade-Learning-Environment.git
+cd Arcade-Learning-Environment
+cmake -DUSE_SDL=ON -DUSE_RLGLUE=OFF -DBUILD_EXAMPLES=ON .
+make -j 4
+sudo pip install .
+{% endhighlight %}
+
+
 ### Installing PyCUDA (for supporting Neon GPU)
 
 어려울것 없지만, root계정에 위의 environment variables이 존재해야 합니다.<br>
