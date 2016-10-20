@@ -134,4 +134,4 @@ target_q_with_idx = tf.gather_nd(target_q, self.target_q_idx)  # Matrix Indexing
 * [OpenAI GYM](https://gym.openai.com/)
 * [Guest Post (Part II): Deep Reinforcement Learning with Neon](https://www.nervanasys.com/deep-reinforcement-learning-with-neon/)
 * [Blog Post (Part III): Deep Reinforcement Learning with OpenAI Gym](https://www.nervanasys.com/openai/)
-* [DQN-tensorflow]: https://github.com/devsisters/DQN-tensorflow
+* [DQN-tensorflow](https://github.com/devsisters/DQN-tensorflow)
