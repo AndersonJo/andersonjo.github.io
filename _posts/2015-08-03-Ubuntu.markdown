@@ -188,6 +188,10 @@ export PATH="$HOME/.rvm/gems/ruby-2.1.0/bin":$PATH
 export ORACLE_HOME=/usr/lib/oracle/12.1/client64/
 {% endhighlight %}
 
+### 설치하면 좋은 Ubuntu Applications
+
+* Kazam (데스크탑 비디오로 녹화)
+* GThumb (간단한 이미지 처리) 
 
 ### Increase Watch Limit
 
