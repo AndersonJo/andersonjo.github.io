@@ -92,8 +92,46 @@ sudo apt-get install libav-tools
 sudo pip install gym[all]
 {% endhighlight %}
 
+
+# Deep Q Learning with TensorFlow
+
+### Predicting Network
+
+{% highlight python %}
+states = tf.placeholder('float32', [None, self.history_length, self.screen_height, self.screen_width])
+
+# Convolutional Neural Network
+net = tflearn.conv_2d(self.states, 32, 8, strides=4, activation='relu')
+net = tflearn.conv_2d(net, 64, 4, strides=2, activation='relu')
+net = tflearn.conv_2d(net, 64, 3, strides=1, activation='relu')
+
+# Deep Neural Network
+net = fully_connected(net, 512, activation='relu', name='l4')
+q_values = tflearn.fully_connected(net, self.env.action_size, name='q')
+q_action = tf.argmax(q_values, dimension=1)
+{% endhighlight %}
+
+
+### Target Network
+
+{% highlight python %}
+target_states = tf.placeholder('float32', [None, self.history_length, self.screen_height, self.screen_width], name='target_s_t')
+target_net = tflearn.conv_2d(self.target_states, 32, 8, strides=4, activation='relu')
+target_net = tflearn.conv_2d(target_net, 64, 4, strides=2, activation='relu')
+target_net = tflearn.conv_2d(target_net, 64, 3, strides=1, activation='relu')
+
+target_net = fully_connected(target_net, 512, activation='relu', name='target_l4')
+target_q = tflearn.fully_connected(target_net, self.env.action_size, name='target_q')
+
+target_q_idx = tf.placeholder('int32', [None, None], 'outputs_idx')
+target_q_with_idx = tf.gather_nd(target_q, self.target_q_idx)  # Matrix Indexing
+{% endhighlight %}
+
+
+
 ### References
 
 * [OpenAI GYM](https://gym.openai.com/)
 * [Guest Post (Part II): Deep Reinforcement Learning with Neon](https://www.nervanasys.com/deep-reinforcement-learning-with-neon/)
 * [Blog Post (Part III): Deep Reinforcement Learning with OpenAI Gym](https://www.nervanasys.com/openai/)
+* [DQN-tensorflow]: https://github.com/devsisters/DQN-tensorflow

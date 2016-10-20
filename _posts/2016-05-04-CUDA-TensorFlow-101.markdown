@@ -385,6 +385,24 @@ with tf.Session() as sess:
 {% endhighlight %}
 
 
+### GPU 메모리 제한 두기
+
+서버가 multi-user environment이라면, 반드시 allow_growth=True를 써줘서 메모리를 효율적으로 사용해야 합니다.
+
+{% highlight python %}
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.4, allow_growth=True)
+with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
+    pass
+{% endhighlight %}
+
+**TFLearn** 에서는 다음과 같이 합니다.
+
+{% highlight python %}
+tflearn.config.init_graph(gpu_memory_fraction=0.4, allow_growth=True)
+{% endhighlight %}
+
+
+
 
 
 
