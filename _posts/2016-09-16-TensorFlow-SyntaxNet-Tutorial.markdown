@@ -25,17 +25,18 @@ tags: ['Python', 'NLU', 'NLP']
 
 **Bazel**
 
-[Bazel 0.2.2b][Bazel 0.2.2b]에 들어가서 Bazel Installer를 다운로드 받습니다. (*bazel-0.2.2b-installer-linux-x86_64.sh* 다운)
+[Bazel 0.3.1](https://github.com/bazelbuild/bazel/releases/tag/0.3.1)에 들어가서 Bazel Installer를 다운로드 받습니다. (*bazel-0.3.1-installer-linux-x86_64.sh* 다운)
 
 {% highlight bash %}
-$ chmod +x bazel-0.2.2b-installer-linux-x86_64.sh
-$ ./bazel-0.2.2b-installer-linux-x86_64.sh --user
+$ chmod +x bazel-0.3.1-installer-linux-x86_64.sh
+$ ./bazel-0.3.1-installer-linux-x86_64.sh --user
 {% endhighlight %}
 
 --user flag는 Bazel을 $HOME/bin 디렉토리에다가 설치를 합니다.<br>
 다음을 추가합니다.
 
 {% highlight bash %}
+# Bazel
 export PATH="$PATH:$HOME/bin"
 {% endhighlight %}
 
@@ -43,7 +44,7 @@ export PATH="$PATH:$HOME/bin"
 
 {% highlight bash %}
 $ bazel version
-Build label: 0.2.2b
+Build label: 0.3.1
 {% endhighlight %}
 
 **Swig**
