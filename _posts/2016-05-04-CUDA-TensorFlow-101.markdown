@@ -73,8 +73,8 @@ $ cuda_7.5.18_linux.run --override compiler
 
 {% highlight bash %}
 # CUDA & CUDNN
-export PATH=$PATH:/usr/local/cuda/bin
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/lib
+export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib
 {% endhighlight %}
 
 설치가 잘되었는지 확인은 다음과 같이 합니다.
@@ -383,6 +383,24 @@ with tf.Session() as sess:
 #         [ 3.,  7.],
 #         [ 4.,  8.]], dtype=float32)]
 {% endhighlight %}
+
+
+### GPU 메모리 제한 두기
+
+서버가 multi-user environment이라면, 반드시 allow_growth=True를 써줘서 메모리를 효율적으로 사용해야 합니다.
+
+{% highlight python %}
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.4, allow_growth=True)
+with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
+    pass
+{% endhighlight %}
+
+**TFLearn** 에서는 다음과 같이 합니다.
+
+{% highlight python %}
+tflearn.config.init_graph(gpu_memory_fraction=0.4, allow_growth=True)
+{% endhighlight %}
+
 
 
 
