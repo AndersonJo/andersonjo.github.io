@@ -11,10 +11,12 @@ tags: ['OpenAI', 'Neon', 'format']
 <header>
     <img src="{{ page.asset_path }}google-breakout.jpg" class="img-responsive img-rounded" style="width:100%">
     <div style="text-align:right;"> 
-    <small>Part 2 에서는 DeepMind 팀에서 내놓은 Playing Atari with Deep Reinforcement Learning 논문을 해부할 것입니다.        
+    <small> 
     </small>
     </div>
 </header>
+
+Part 2 에서는 DeepMind 팀에서 내놓은 Playing Atari with Deep Reinforcement Learning 논문을 해부할 것입니다.
 
 ### 1. Introduction
 
@@ -36,6 +38,20 @@ Recurrent Neural networks와 같은  컴퓨터 비전[11, 22, 16] 그리고 음�
 다른 이슈는 기존의 대부분의 deep learning이 모든 samples들이 independent 하다고 여깁니다.<br> 
 하지만 Deep Reinforcement Learning 에서는 매우 연관성이 높은 states의 sequences를 만나게 될 일이 많습니다.
 
+### 2. Background
+
+environment $$ \epsilon $$에 해당하는 Atari emulator안에서 Agent는 일련의 actions, observations, 그리고 rewards등을 받습니다.<br>
+각각의 time-step마다 Agent는 게임안에서 허용된 $$ A = \{1, ..., K\} $$ actions들로 부터 하나의 $$ a_{t} $$ (action)을 취하게 됩니다.<br>
+Action은 environment (Atari Emulator)안으로 들어가게 되고, Game state, score가 변하게 됩니다. 
+Emulator안의 내부 state자체를 Agent가 얻는것이 아니라 (예를 들어서 공 object의 위치나, paddle object의 위치 등등) 이미지 자체를 $$ x_t \in \Bbb{R}^d $$
+(x 값이라는 것은.. input data로 사용된다는 뜻이고 x_t 라는건 어느 시점 (time)의 input image data를 말함) 
+
+| Name | Math Symbol | Description |
+|:-----|:------------|:------------|
+| Environment | $$ \varepsilon $$ | Atari Emulator 를 뜻하며 Agent는 environment로 부터 actions, observations, rewards등을 주거니 받거니함<br>일반적으로  stochastic. |
+| Action      | $$ a_t $$ | 특정 시점의 action을 말하며, 게임안에서 허용된 $$ A = \{1, ..., K\} $$ 중에 하나를 사용함 |
+| Image (screen shot) | $$ x_t \in \Bbb{R}^d $$ | 현재시점의 화면을 나타내는 이미지 |
+| Reward | $$ r_t $$ | Reward는 이전 **전체** actions 그리고 observations과 연관이 있음. <br>즉 하나의 action에 대한 feedback을 받으려면 일반적으로 수천번의 time-steps이 지나간 이후 받을수 있음  |   
 
 
 ### References 
