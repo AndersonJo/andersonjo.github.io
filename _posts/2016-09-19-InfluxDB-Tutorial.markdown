@@ -164,4 +164,22 @@ for (QueryResult.Result r : queryResult.getResults()) {
 ...
 {% endhighlight %}
 
+### Convert Time to Date 
+
+자바에서 time을 불러오면은 **"2016-09-19T05:42:44.545699072Z"** 같은 형식의 String으로 되어 있는것을 볼 수 있습니다.<br>
+대략 다음과 같은 코드 String 을 Date로 변환할 수 있습니다.
+
+{% highlight java %}
+SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
+series.getValues().stream().map(c -> {
+    Date date = null;
+    try {
+        date = dateFormat.parse((String) c.get(0));
+    } catch (ParseException e) {
+        e.printStackTrace();
+        return null;
+    }
+})
+{% endhighlight %}
+
 [Installation Guide]: https://docs.influxdata.com/influxdb/v1.0/introduction/installation/
