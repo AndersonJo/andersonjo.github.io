@@ -22,6 +22,8 @@ tags: ['Python']
 
 ### Using the Ubuntu Repository (no support for depth camera)
 
+apt-get으로 python-opencv를 설치시 대략 2.x 버젼이 설치가 됩니다. (필자의 경우.. 2.4.9.1)
+
 {% highlight bash %}
 sudo apt-get update
 sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
@@ -29,60 +31,62 @@ sudo apt-get install libopencv-*
 sudo apt-get install python-opencv
 {% endhighlight %}
 
-### Using the CMkae and Compiler
+### Installing OpenCV 3 from Source on Ubuntu
 
-Depth camera를 지원하기 위해서는 (Kinect를 포함) OpenNI 그리고 SensorKinect를 설치해야 합니다. 
+먼저 dependencies롤 모두 설치해줍니다. 아래의 라이브러리는 이미지, 비디오, optimizaiton등을 위해서 필요한 라이브러리들입니다.
 
 {% highlight bash %}
 sudo apt-get update
-sudo apt-get install build-essential
-sudo apt-get install ffmpeg
-sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
-sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
-sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
+sudo apt-get upgrade
+sudo apt-get install build-essential cmake git pkg-config
+sudo apt-get install libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev
+sudo apt-get install libgtk2.0-dev
+sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+sudo apt-get install libatlas-base-dev gfortran
+sudo apt-get install python2.7-dev
+sudo apt-get -y install libopencv-dev build-essential cmake git libgtk2.0-dev pkg-config python-dev python-numpy libdc1394-22 libdc1394-22-dev libjpeg-dev libpng12-dev libjasper-dev libavcodec-dev libavformat-dev libswscale-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libv4l-dev libtbb-dev libqt4-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev x264 v4l-utils unzip
 {% endhighlight %}
 
-**OpenNI 설치**
-
-먼저 OpenNI dependencies를 설치합니다.
+그 다음은 Source에서 설치하기 위해서 git에서 clone합니다. (이거 졸라 개 오 래 걸 림) 
 
 {% highlight bash %}
-sudo apt-get install libusb-1.0-0-dev 
-{% endhighlight %}
-
-[OpenNI][OpenNI] 에 들어가서 다운을 받습니다.<br>
-
-{% highlight bash %}
-tar -xvf OpenNI-Linux-x64-2.2.0.33.tar.bz2
-cd OpenNI-Linux-x64-2.2/
-sudo chmod a+x install.sh
-sudo ./install.sh
+git clone https://github.com/Itseez/opencv.git
+cd opencv
+git checkout 3.1.0
 {% endhighlight %}
 
 
-**SeonsorKinect 설치**
- 
-[OpenCV 3.1.0][OpenCV 3.1.0]를 다운받습니다. 또는 [OpenCV Download Page][OpenCV Download Page]에서 원하는 버젼을 다운받습니다. 
+Makefile을 만들기 위해서 cmake를 합니다.
 
 {% highlight bash %}
-unzip opencv-3.1.0.zip
-cd opencv-3.1.0
 mkdir build
 cd build
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
+	-D CMAKE_INSTALL_PREFIX=/usr/local \
+	-D INSTALL_C_EXAMPLES=OFF \
+	-D INSTALL_PYTHON_EXAMPLES=ON \
+	-D BUILD_opencv_java=ON \
+	-D WITH_V4L=ON \
+	-D WITH_TBB=ON \
+	-D WITH_OPENGL=ON \
+	-D ENABLE_FAST_MATH=1 \
+	-D CUDA_FAST_MATH=1 \
+	-D WITH_CUBLAS=1 \
+	-D WITH_FFMPEG=ON \
+	-D BUILD_EXAMPLES=ON .. 
 {% endhighlight %}
+
+build를 합니다. (이때 -j8 같은 옵션을 줄 경우 CPU cores 8개를 사용하서 make를 합니다.)
 
 {% highlight bash %}
-cmake-gui
-{% endhighlight %}
-
-또는 집접 command 를 사용해서 build를 합니다.
-
-{% highlight bash %}
-cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ../
+make -j8
+sudo make install
+sudo ldconfig
 {% endhighlight %}
 
 
-# Tutorial 
+
+# Basic Tutorial 
 
 ### Image IO
 
@@ -162,6 +166,17 @@ while True:
 
 <img src="{{ page.asset_path }}video_capture.png" class="img-responsive img-rounded">
 <small>아~~~~ 나도 좀 잘생겨 보고 싶다!!!!!!!!!!! 죄송죄송~</small>
+
+
+# SIFT (Scale-Invariant Feature Transform)
+
+
+
+### References 
+
+* [SIFT Explained](http://aishack.in/tutorials/sift-scale-invariant-feature-transform-introduction/)
+
+
 
 [OpenNI]: http://structure.io/openni
 [OpenCV 3.1.0]: https://github.com/Itseez/opencv/archive/3.1.0.zip
