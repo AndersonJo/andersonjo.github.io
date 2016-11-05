@@ -47,13 +47,19 @@ sudo apt-get install python2.7-dev
 sudo apt-get -y install libopencv-dev build-essential cmake git libgtk2.0-dev pkg-config python-dev python-numpy libdc1394-22 libdc1394-22-dev libjpeg-dev libpng12-dev libjasper-dev libavcodec-dev libavformat-dev libswscale-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libv4l-dev libtbb-dev libqt4-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev x264 v4l-utils unzip
 {% endhighlight %}
 
-그 다음은 Source에서 설치하기 위해서 git에서 clone합니다. (이거 졸라 개 오 래 걸 림) 
+그 다음은 Source에서 설치하기 위해서 git에서 clone합니다. (이거 졸라 개 오 래 걸 림)<br>
+opencv_contrib또한 설치합니다. contributed sources 에는 SIFT등 다양한 non-free library들이 들어있습니다.
 
 {% highlight bash %}
+git clone https://github.com/opencv/opencv_contrib.git
 git clone https://github.com/Itseez/opencv.git
 cd opencv
-git checkout 3.1.0
 {% endhighlight %}
+
+이때 git checkout 3.1.0 같은 바보같은 짓은 하지 말고 둘다 master에서 설치하면 됩니다.<br>
+일단 3.1.0버젼에서 CUDA지원및 버그가 있습니다. master branch에서는 모두 고쳐진 내용입니다.
+
+
 
 
 Makefile을 만들기 위해서 cmake를 합니다.
@@ -63,6 +69,7 @@ mkdir build
 cd build
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
 	-D CMAKE_INSTALL_PREFIX=/usr/local \
+	-D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
 	-D INSTALL_C_EXAMPLES=OFF \
 	-D INSTALL_PYTHON_EXAMPLES=ON \
 	-D BUILD_opencv_java=ON \
@@ -82,6 +89,12 @@ build를 합니다. (이때 -j8 같은 옵션을 줄 경우 CPU cores 8개를 �
 make -j8
 sudo make install
 sudo ldconfig
+{% endhighlight %}
+
+버젼을 확인합니다.
+
+{% highlight bash%}
+pkg-config --modversion opencv
 {% endhighlight %}
 
 
