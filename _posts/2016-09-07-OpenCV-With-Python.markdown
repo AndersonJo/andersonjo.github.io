@@ -4,7 +4,7 @@ title:  "OpenCV with Python"
 date:   2016-09-07 01:00:00
 categories: "vision"
 asset_path: /assets/posts2/OpenCV/
-tags: ['Python']
+tags: ['Python', 'SIFT', 'LSH', 'Locality Sensitivity Hashing']
 
 ---
 
@@ -183,7 +183,31 @@ while True:
 
 # SIFT (Scale-Invariant Feature Transform)
 
+{% highlight python %}
+img = cv2.imread('../data/images/rainbowsix.jpg')
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+print 'image shape:\t', img.shape
+print 'gray shape:\t', gray.shape
+imshow(gray, cmap='Greys_r')
+{% endhighlight %}
 
+output 이미지는 drawKeypoints 함수에서 사용하는데 이때, key points를 color로 그리기 때문에, (None, None, 3) 같은 dimension이 필요합니다.
+
+{% highlight text %}
+image shape:	(450, 800, 3)
+gray shape:	(450, 800)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}sift_rainbowsix.png" class="img-responsive img-rounded">
+
+{% highlight python %}
+sift = cv2.xfeatures2d.SIFT_create()
+kps, des = sift.detectAndCompute(img, None) # Key Points
+kp_img = cv2.drawKeypoints(gray, kps, img) 
+imshow(img, cmap='Greys_r')
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}sift_rainbowsix2.png" class="img-responsive img-rounded">
 
 ### References 
 
