@@ -19,6 +19,8 @@ Installing Docker on Ubuntu <br>
 
 먼저 gpg 키를 등록시킵니다.
 {% highlight bash %}
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates
 sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 {% endhighlight %}
 
@@ -41,16 +43,15 @@ sudo vi /etc/apt/sources.list.d/docker.list
 열고 기존의 내용이 있다면 지우고 우분투 버젼에 따라 다음 내용을 넣습니다.<br> 
 **(다음 deb 중에  하나만 써야 합니다)**
 
-{% highlight bash %}
-# Ubuntu Wily 15.10
-deb https://apt.dockerproject.org/repo ubuntu-wily main
 
-# Ubuntu Vivid 15.04
-deb https://apt.dockerproject.org/repo ubuntu-vivid main
+| Ubuntu version | Repository |
+|:---------------|:-----------|
+| Precise 12.04 (LTS) | deb https://apt.dockerproject.org/repo ubuntu-precise main |
+| Trusty 14.04 (LTS) | deb https://apt.dockerproject.org/repo ubuntu-trusty main |
+| Wily 15.10         | deb https://apt.dockerproject.org/repo ubuntu-wily main   |
+| Vivid 15.04        | deb https://apt.dockerproject.org/repo ubuntu-vivid main  |
+| Xenial 16.04 (LTS) | deb https://apt.dockerproject.org/repo ubuntu-xenial main |
 
-# Ubuntu Trusty 14.04 (LTS)
-deb https://apt.dockerproject.org/repo ubuntu-trusty main
-{% endhighlight %}
 
 {% highlight bash %}
 sudo apt-get update

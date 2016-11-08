@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "InfluxDB Tutorial"
-date:   2016-09-19 01:00:00
+date:   2016-05-01 01:00:00
 categories: "database"
 asset_path: /assets/posts2/DB/
 tags: ['time-series', ]

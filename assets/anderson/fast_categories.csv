@@ -1,10 +1,9 @@
 machine-learning
-ubuntu
+Ubuntu
 format
-hadoop
-tensorflow
-regression
-humoungous
+Hadoop
+Tensorflow
+Elastic
 OpenCV
 AWS
 Spark
