@@ -44,6 +44,24 @@ sudo service elasticsearch start
 
 [http://localhost:9200/](http://localhost:9200/)
 
+
+### validation exception
+
+다음과 같은 에러가 날 수 있습니다.
+
+{% highlight bash %}
+validation exception
+bootstrap checks failed
+max virtual memory areas vm.max_map_count [65530] likely too low, increase to at least [262144]
+{% endhighlight %}
+
+해결책은 다음을 실행시켜줍니다.
+
+{% highlight bash %}
+sudo sysctl -w vm.max_map_count=262144
+{% endhighlight %}
+
+
 ### Running on Docker
 
 {% highlight bash %}
