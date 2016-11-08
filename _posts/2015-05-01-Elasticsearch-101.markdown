@@ -3,7 +3,7 @@ layout: post
 title:  "Elasticsearch & Logstash"
 date:   2015-11-04 01:00:00
 categories: "elastic"
-asset_path: /assets/posts/Elasticsearch-101/
+asset_path: /assets/posts2/Elasticsearch/
 tags: ['logstash']
 ---
 <header>
