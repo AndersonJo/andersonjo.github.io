@@ -30,3 +30,9 @@ Elasticsearch 1.0.1을 설치한이후, LIRE 플러그인을 설치합니다.
 {% highlight bash %}
 sudo /usr/share/elasticsearch/bin/plugin -install com.github.kzwang/elasticsearch-image/1.2.0
 {% endhighlight %}
+
+Python Client를 설치합니다.
+
+{% highlight bash %}
+sudo pip install 'elasticsearch>=1.0.0,<2.0.0'
+{% endhighlight %}

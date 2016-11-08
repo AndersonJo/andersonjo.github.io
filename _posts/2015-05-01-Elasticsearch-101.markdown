@@ -42,6 +42,8 @@ sudo /bin/systemctl start elasticsearch.service
 sudo service elasticsearch start
 {% endhighlight %}
 
+[http://localhost:9200/](http://localhost:9200/)
+
 ### Running on Docker
 
 {% highlight bash %}
@@ -51,10 +53,13 @@ docker run --name elasticsearch -p 9200:9200 -p 9300:9300 -d elasticsearch
 
 # Configuration
 
-sudo vi /etc/elasticsearch/elasticsearch.yml 에서 host를 변경가능
+**sudo vi /etc/elasticsearch/elasticsearch.yml** 에서 host를 변경가능
+
 {% highlight bash %}
 network.host: 0.0.0.0
 {% endhighlight %}
+
+
 
 
 
