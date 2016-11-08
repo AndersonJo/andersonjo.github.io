@@ -1,9 +1,9 @@
 ---
 layout: post
 title:  "Elasticsearch & Logstash"
-date:   2015-11-04 01:00:00
+date:   2014-03-14 01:00:00
 categories: "elastic"
-asset_path: /assets/posts/Elasticsearch-101/
+asset_path: /assets/posts2/Elasticsearch/
 tags: ['logstash']
 ---
 <header>
@@ -14,10 +14,10 @@ tags: ['logstash']
 
 ### Installing Elasticsearch
 
-JDK가 먼저 깔려 있어야 하고, devian package로 다운받으면 됩니다.
+JDK가 먼저 깔려 있어야 하고, [devian package로 다운](https://www.elastic.co/downloads/elasticsearch)받으면 됩니다.
 
 {% highlight bash %}
-dpkg -i elasticsearch-2.0.0.deb
+sudo dpkg -i elasticsearch-2.0.0.deb
 {% endhighlight %}
 
 ### Running as a service
@@ -42,11 +42,36 @@ sudo /bin/systemctl start elasticsearch.service
 sudo service elasticsearch start
 {% endhighlight %}
 
+[http://localhost:9200/](http://localhost:9200/)
+
+
+### validation exception
+
+다음과 같은 에러가 날 수 있습니다.
+
+{% highlight bash %}
+validation exception
+bootstrap checks failed
+max virtual memory areas vm.max_map_count [65530] likely too low, increase to at least [262144]
+{% endhighlight %}
+
+해결책은 다음을 실행시켜줍니다.
+
+{% highlight bash %}
+sudo sysctl -w vm.max_map_count=262144
+{% endhighlight %}
+
 ### Running on Docker
 
 {% highlight bash %}
 docker pull elasticsearch
 docker run --name elasticsearch -p 9200:9200 -p 9300:9300 -d elasticsearch
+{% endhighlight %}
+
+### Python Client
+
+{% highlight bash %}
+sudo pip install elasticsearch
 {% endhighlight %}
 
 # Configuration
