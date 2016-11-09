@@ -17,7 +17,7 @@ tags: ['logstash']
 JDK가 먼저 깔려 있어야 하고, devian package로 다운받으면 됩니다.
 
 {% highlight bash %}
-dpkg -i elasticsearch-2.0.0.deb
+sudo dpkg -i elasticsearch-2.0.0.deb
 {% endhighlight %}
 
 ### Running as a service

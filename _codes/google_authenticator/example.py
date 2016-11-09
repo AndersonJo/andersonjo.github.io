@@ -24,3 +24,5 @@ if __name__ == '__main__':
     for i in xrange(1, 10):
         # print i, get_hotp_token(secret, intervals_no=i)
         print i, get_totp_token(secret)
+
+
