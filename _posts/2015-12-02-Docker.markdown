@@ -63,6 +63,13 @@ sudo apt-get install docker-engine
 sudo service docker start
 {% endhighlight %}
 
+
+#### [Error] [graphdriver] prior storage driver \"aufs\" failed: driver not supported
+
+{% highlight bash %}
+m -rf /var/lib/docker/aufs
+{% endhighlight %}
+
 # Docker Configuration
 
 #### docker group 
@@ -163,6 +170,7 @@ apt-get install -y net-tools
 apt-get install -y openssh-server
 service ssh restart
 {% endhighlight %}
+
 
 
 # Docker 101
