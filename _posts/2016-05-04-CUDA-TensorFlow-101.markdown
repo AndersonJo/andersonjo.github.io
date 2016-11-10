@@ -87,6 +87,31 @@ Built on Tue_Aug_11_14:27:32_CDT_2015
 Cuda compilation tools, release 7.5, V7.5.17
 {% endhighlight %}
 
+### [Error] unsupported GNU version! gcc versions later than 5 are not supported!
+
+4.x 버젼의 gcc를 쿠다가 설치된 곳으로 softlink걸어주면 해결됨<br>
+먼저 GCC 4.8 그리고 G++ 4.8을 설치해줍니다. (두개의 버젼이 서로 동일해야합니다.)
+
+{% highlight bash %}
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt-get update
+sudo apt-get install gcc-4.8
+sudo apt-get install g++-4.8
+ 
+sudo rm /usr/bin/g++
+sudo ln -s /usr/bin/g++-4.8 /usr/bin/g++
+
+sudo rm /usr/bin/gcc
+sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
+{% endhighlight %}
+
+gcc-4.8을 쿠다가 설치된 곳으로 softlink를 걸어줍니다.
+
+{% highlight bash %}
+sudo ln -s /usr/bin/gcc-4.8 /usr/local/cuda/bin/gcc
+{% endhighlight %}
+
 ### [Error] The driver installation is unable to locate the kernel source
 
 CUDA 드라이버 설치시, Linux Kernel source가 필요한데, source가 안보여서 생기는 문제. 
