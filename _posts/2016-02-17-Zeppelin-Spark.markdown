@@ -12,7 +12,7 @@ tags: ['hadoop', 'hortonworks']
 <img src="{{ page.asset_path }}spark.jpg" class="img-responsive img-rounded" style="width:100%">
 </header>
 
-# Installing Zeppelin 
+# Installation 
 
 ### Prerequisites 
 
@@ -24,10 +24,57 @@ tags: ['hadoop', 'hortonworks']
 sudo apt-get install libfontconfig
 {% endhighlight %}
 
+### From Binary Package
 
-### Installing Zeppelin on HDP (easy way)
+먼저 [downloading pre-built binary package](http://zeppelin.apache.org/download.html)에서 다운로드 받습니다.<br>
 
-* [Hortonworks Zeppelin][Hortonworks Zeppelin]
+{% highlight bash %}
+sudo mv zeppelin* /usr/share/
+sudo ln -s /usr/share/zeppelin-0.6.2-bin-all/ /usr/share/zeppelin
+{% endhighlight %}
+ 
+그 다음 interpreters를 설치해줍니다.
+ 
+{% highlight bash %}
+./bin/install-interpreter.sh --all
+{% endhighlight %}
+
+### Git Repository로 notebook사용하기 
+
+conf디렉토리로 이동합니다. 
+
+{% highlight bash %}
+cd /usr/share/zeppelin/conf
+cp zeppelin-site.xml.template zeppelin-site.xml
+vi zeppelin-site.xml
+{% endhighlight %}
+
+다음의 내용을 uncomment 해줍니다.
+
+{% highlight bash %}
+<property>
+  <name>zeppelin.notebook.storage</name>
+  <value>org.apache.zeppelin.notebook.repo.GitNotebookRepo</value>
+  <description>notebook persistence layer implementation</description>
+</property>
+{% endhighlight %}
+
+
+
+### 실행하기 
+
+**Daemon으로 실행및 종료**
+
+{% highlight bash %}
+bin/zeppelin-daemon.sh start
+bin/zeppelin-daemon.sh stop
+{% endhighlight %}
+
+# Installing Zeppelin on HDP
+
+### Installing in easy way
+
+* [Hortonworks Zeppelin](http://hortonworks.com/apache/zeppelin/#section_3)
 
 {% highlight bash %}
 VERSION=`hdp-select status hadoop-client | sed 's/hadoop-client - \([0-9]\.[0-9]\).*/\1/'`
@@ -44,7 +91,7 @@ sudo ambari-server restart
 Ambari에서 Add Service -> Zeppelin Notebook 을 통해서 설치가 가능합니다.
 
 
-### Installing Zeppelin on HDP (hard way)
+### Installing in hard way
 
 {% highlight bash %}
 sudo apt-get remove zeppelin*
@@ -62,7 +109,7 @@ sudo cp zeppelin/conf/* /etc/zeppelin/conf.dist/
 
 ### Installing Zeppelin manually on HDP
 
-* [Zeppelin Installation][Zeppelin Installation]
+* [Zeppelin Installation](https://github.com/apache/zeppelin)
 
 {% highlight bash %}
 git clone https://github.com/apache/zeppelin.git
@@ -77,30 +124,3 @@ mvn clean package -DsipTests -Pspark-1.6 -Phadoop-2.6 -Pyarn
 {% endhighlight %}
 
 
-
-# Errors
-
-### zeppelin-2-4-2-0-258 dependency conflict
-
-{% highlight text %}
-Setting up zeppelin-2-4-2-0-258 (0.6.0.2.4.2.0-258) ...
-update-alternatives: error: alternative path /etc/zeppelin/conf.dist doesn't exist
-No apport report written because the error message indicates its a followup error from a previous failure.
-                                                                                                          dpkg: error processing package zeppelin-2-4-2-0-258 (--configure):
- subprocess installed post-installation script returned error exit status 2
-dpkg: dependency problems prevent configuration of zeppelin:
- zeppelin depends on zeppelin-2-4-2-0-258; however:
-  Package zeppelin-2-4-2-0-258 is not configured yet.
-
-dpkg: error processing package zeppelin (--configure):
- dependency problems - leaving unconfigured
-Errors were encountered while processing:
- zeppelin-2-4-2-0-258
- zeppelin
-E: Sub-process /usr/bin/dpkg returned an error code (1)
-{% endhighlight %}
-
-
-
-[Zeppelin Installation]: https://github.com/apache/zeppelin
-[Hortonworks Zeppelin]: http://hortonworks.com/apache/zeppelin/#section_3

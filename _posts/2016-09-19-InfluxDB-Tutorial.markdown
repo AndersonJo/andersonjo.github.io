@@ -70,7 +70,7 @@ CREATE DATABASE test
 | Name | In RDBMS | 
 |:-----|:---------|
 | measurement | Table |
-| tag | Indexed Column |
+| tag | Indexed Column |                         
 | field | Not Indexed Column |
 
 
