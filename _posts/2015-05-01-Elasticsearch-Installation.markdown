@@ -22,17 +22,6 @@ sudo dpkg -i elasticsearch-2.0.0.deb
 
 ### Running as a service
 
-재부팅이 될때마다 바로 실행이 되버리면 잘못된 configuration으로 cluster이 join하게 될 수 있으므로 기본적으로 
-집접 booted된 이후에 elasticsearch를 실행시키도록 만들어야 합니다.
-
-{% highlight bash %}
-sudo update-rc.d elasticsearch defaults 95 10
-sudo /etc/init.d/elasticsearch start
-sudo systemctl enable elasticsearch.service
-{% endhighlight %}
-
-Ubuntu14이상에서는 update-rc.d대신에 systemctl을 해줍니다.
-
 {% highlight bash %}
 sudo /bin/systemctl daemon-reload
 sudo /bin/systemctl enable elasticsearch.service
@@ -95,17 +84,20 @@ sudo vi /etc/kibana/kibana.yml
 server.host: "0.0.0.0"
 {% endhighlight %}
 
-
+아래의 링크에서 확인을 합니다.<br>
+[http://localhost:5601/](http://localhost:5601/)
 
 ### Installing Plugins
 
 **Installing X-Pack**
 
 * Elastic 5.0이후부터 **Marvel** 또한 X-pack의 일부입니다.
+* Kibana 설치이후에 x-pack을 설치해야 합니다. (Elasticsearch에 x-pack설치 한번하고, Kibana에서도 동일하게 x-pack을 설치다시한번 더 해야합니다.)
 
 {% highlight bash %}
 cd /usr/share/elasticsearch
 sudo ./bin/elasticsearch-plugin install x-pack
+sudo /usr/share/kibana/bin/kibana-plugin install x-pack
 {% endhighlight %}
 
 
@@ -168,4 +160,21 @@ filebeat.prospectors:
     - /var/log/logstash-tutorial-dataset
 output.logstash:
   hosts: ["localhost:5043"]
+{% endhighlight %}
+
+
+# Security
+
+### Disable security
+
+{% highlight bash %}
+sudo vi   /etc/elasticsearch/elasticsearch.yml
+{% endhighlight %}
+
+
+
+
+
+{% highlight bash %}
+xpack.security.enabled: false
 {% endhighlight %}
