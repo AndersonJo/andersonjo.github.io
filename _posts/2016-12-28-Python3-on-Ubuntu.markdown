@@ -44,6 +44,11 @@ make test
 sudo make altinstall 
 {% endhighlight %}
 
+Python3 명령어에 대한 soft link를 만들어줍니다.
+
+{% highlight bash %}
+sudo ln -s /usr/local/bin/python3.6 /usr/local/bin/python3
+{% endhighlight %}
 
 ### Installing PIP3 
 
