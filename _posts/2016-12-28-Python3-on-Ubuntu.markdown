@@ -29,7 +29,7 @@ Ubuntu에서 Python 3 를 설치하는 방법에 대해서 써놓겠습니다. <
 먼저 dependencies를 설치 합니다.
 
 {% highlight bash %}
-sudo apt-get install libssl-dev
+sudo apt-get install libreadline6-dev libbz2-dev libssl-dev libsqlite3-dev libncursesw5-dev libffi-dev libdb-dev libexpat1-dev zlib1g-dev liblzma-dev libgdbm-dev libffi-dev libmpdec-dev
 {% endhighlight %}
 
 [Python Download Page](https://www.python.org/downloads/)에서 3.x 버젼을 다운받고 다음과 같이 설치합니다.<br>
