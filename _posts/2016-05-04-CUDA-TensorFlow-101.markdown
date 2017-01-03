@@ -206,9 +206,11 @@ sudo apt-get install libcurl3-dev
 
 **Bazel설치하기**
 
+반드시 0.4 이상의 버젼 (0.3은 안됨)을 설치해야 합니다. 
+
 {% highlight bash %}
-echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
+$ echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+$ curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 {% endhighlight %}
 
 Update and Install Bazel
@@ -218,6 +220,12 @@ sudo apt-get install pkg-config zip g++ zlib1g-dev unzip
 sudo apt-get update
 sudo apt-get install bazel
 sudo apt-get upgrade bazel
+{% endhighlight %}
+
+0.4 이상의 버젼인지 확인합니다.
+{% highlight %}
+$ bazel version
+Build label: 0.4.3
 {% endhighlight %}
 
 **Install other dependencies**
