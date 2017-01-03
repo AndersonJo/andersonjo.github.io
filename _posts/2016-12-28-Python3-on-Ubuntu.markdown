@@ -101,13 +101,15 @@ source test/bin/activate
 너무 느려서 -v 옵션을 꼭 붙이는게 좋습니다. (개 오래 걸림)
 
 {% highlight bash %}
-pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy nose
+sudo pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy nose
 {% endhighlight %}
 
 **Ipython**
 
 {% highlight bash %}
-pip3 install ipython[all]
+sudo pip3 install ipython[all]
+sudo pip3 install ipywidgets
+sudo jupyter nbextension enable --py --sys-prefix widgetsnbextension
 {% endhighlight %}
 
 **Jupyter**
