@@ -50,6 +50,9 @@ Python3 명령어에 대한 soft link를 만들어줍니다.
 sudo ln -s /usr/local/bin/python3.6 /usr/local/bin/python3
 {% endhighlight %}
 
+만약 no module named something 같은 에러가 나온다면.. python3 명령어를 쳤을때 source에 있는 python3를 실행시키는게 아니라.. 
+Python3.5 (/usr/bin/python3 에 위치한)을 실행시키는 것일수도 있습니다. /usr/bin/python3 가 있다면.. 그냥 삭제. 
+
 ### Installing PIP3 
 
 [ensurepip - Bootstrapping the pip installer](https://docs.python.org/3/library/ensurepip.html)에서 자세한 내용을 참고 합니다.
