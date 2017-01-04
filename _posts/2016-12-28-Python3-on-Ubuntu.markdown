@@ -109,13 +109,21 @@ source test/bin/activate
 너무 느려서 -v 옵션을 꼭 붙이는게 좋습니다. (개 오래 걸림)
 
 {% highlight bash %}
-pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy nose
+sudo pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy nose  
+{% endhighlight %}
+
+visualization을 위해서 다음을 설치합니다. (pydot-ng가 아니라 pydot설치시 keras visualization할때 에러를 일으킴)
+
+{% highlight bash %}
+sudo pip3 install pydot-ng graphviz
 {% endhighlight %}
 
 **Ipython**
 
 {% highlight bash %}
-pip3 install ipython[all]
+sudo pip3 install ipython[all]
+sudo pip3 install ipywidgets
+sudo jupyter nbextension enable --py --sys-prefix widgetsnbextension
 {% endhighlight %}
 
 **Jupyter**

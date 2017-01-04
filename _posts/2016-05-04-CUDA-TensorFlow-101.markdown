@@ -34,7 +34,7 @@ enabling the pursuit of ambitious goals at much larger scale and an even faster 
 ### Current Nvidia Card
 
 현재 그래픽 카드 모델을 알고 싶을때는...
-{% highlight bash%}
+{% highlight bash %}
 lspci -vnn | grep -i VGA -A 12
 {% endhighlight %}
 
@@ -223,7 +223,7 @@ sudo apt-get upgrade bazel
 {% endhighlight %}
 
 0.4 이상의 버젼인지 확인합니다.
-{% highlight %}
+{% highlight bash %}
 $ bazel version
 Build label: 0.4.3
 {% endhighlight %}
@@ -271,10 +271,10 @@ configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참�
 
 
 {% highlight bash %}
-bazel clean
-bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
+$ bazel clean
+$ bazel build --copt=-march=native --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mfpmath=both -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+$ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+$ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
 {% endhighlight %}
 
 
