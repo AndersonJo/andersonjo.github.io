@@ -53,6 +53,14 @@ sudo ln -s /usr/local/bin/python3.6 /usr/local/bin/python3
 만약 no module named something 같은 에러가 나온다면.. python3 명령어를 쳤을때 source에 있는 python3를 실행시키는게 아니라.. 
 Python3.5 (/usr/bin/python3 에 위치한)을 실행시키는 것일수도 있습니다. /usr/bin/python3 가 있다면.. 그냥 삭제. 
 
+### Change system-wide Python
+
+Ubuntu에서 파이썬을 실행시킬때 특정 버젼의  Python을 실행시키도록 변경할수 있습니다.
+
+{% highlight %}
+/usr/lib/python3/dist-packages/debian/deb822.py
+{% endhighlight %}
+
 ### Installing PIP3 
 
 [ensurepip - Bootstrapping the pip installer](https://docs.python.org/3/library/ensurepip.html)에서 자세한 내용을 참고 합니다.
