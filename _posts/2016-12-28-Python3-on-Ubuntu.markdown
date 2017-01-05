@@ -48,6 +48,7 @@ Python3 명령어에 대한 soft link를 만들어줍니다.
 
 {% highlight bash %}
 sudo ln -s /usr/local/bin/python3.6 /usr/local/bin/python3
+sudo ln -fs /usr/local/bin/python3.6 /usr/bin/python3
 {% endhighlight %}
 
 만약 no module named something 같은 에러가 나온다면.. python3 명령어를 쳤을때 source에 있는 python3를 실행시키는게 아니라.. 
@@ -138,6 +139,7 @@ sudo pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy nose
 visualization을 위해서 다음을 설치합니다. (pydot-ng가 아니라 pydot설치시 keras visualization할때 에러를 일으킴)
 
 {% highlight bash %}
+sudo apt-get install graphviz
 sudo pip3 install pydot-ng graphviz
 {% endhighlight %}
 

@@ -277,6 +277,14 @@ $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 $ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
 {% endhighlight %}
 
+에러가 나면 bazel build시에 copt를 삭제 해보는것도 방법입니다.
+
+{% highlight bash %}
+$ bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+$ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+$ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
+{% endhighlight %}
+
 
 ### 설치 확인 
 
