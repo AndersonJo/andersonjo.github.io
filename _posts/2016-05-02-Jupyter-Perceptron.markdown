@@ -113,6 +113,56 @@ weights에 대한 업데이트 공식은 다음과 같습니다.
 * <img src="{{ page.static }}delta_w.png">의 크기는 x의 값에 비례해서 달라지게 됩니다.
 
 
+
+
+### Cost Function (Sum of squared Errors)
+
+먼저 **Object function** $ J(w) $ (Sum of squared Errors - SSE) 를 정의합니다.<br>
+이때 $ \phi(z^{(i)}) $ 는 Identity activation function 입니다.
+
+$$ \begin{align} 
+z &= \sum_{j=0} w_j x_j = w^T x + b \\
+\phi(z^{(i)}) &= z^{(i)} \\
+J(w) &= \frac{1}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right)^2 \\
+\end{align} $$
+
+### Calculate Gradient with regard to weights 
+
+$$ \begin{align} 
+\frac{\partial J}{\partial w_j} &= \frac{\partial}{\partial w_j}  \frac{1}{N} \sum_i \left(y^{(i)} - \phi(z^{(i)}) \right)^2 \\
+&= \frac{2}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right) \frac{\partial}{\partial w_j} \left(y^{(i)} - \phi(z^{(i)}) \right) \\
+&= \frac{2}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right) \frac{\partial}{\partial w_j} \left[ y^{(i)} - \sum_k \left( w^{(i)}_k x^{(i)}_k + b^{i} \right) \right] \\
+&= \frac{2}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right)(0 - (1 \cdot x^{(i)}_j + 0 ) ) \\
+&= - \frac{2}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right) \odot x^{(i)}_j
+\end{align}$$
+
+### Calculate Gradient with regard to bias 
+
+$$ \begin{align} 
+\frac{\partial J}{\partial b_j} &= \frac{\partial}{\partial b_j}  \frac{1}{N} \sum_i \left(y^{(i)} - \phi(z^{(i)}) \right)^2 \\
+&= \frac{2}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right) \frac{\partial}{\partial b_j} \left(y^{(i)} - \phi(z^{(i)}) \right) \\
+&= \frac{2}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right) \frac{\partial}{\partial b_j} \left[ y^{(i)} - \sum_k \left( w^{(i)}_k x^{(i)}_k + b^{i} \right) \right] \\
+&= \frac{2}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right)(0 - (0 + 1 ) ) \\
+&= - \frac{2}{N} \sum_i \left( y^{(i)} - \phi(z^{(i)}) \right) 
+\end{align}$$
+
+### Update Weights
+
+$$ \begin{align} 
+\Delta w &= - \eta \nabla J(w)  \\
+w &= w + \Delta w
+\end{align}$$
+
+
+
+
+
+
+
+
+
+
+
 # Iris Data
 
 * [Iris Data][iris-data]
@@ -157,45 +207,52 @@ Perceptron
 import numpy as np
 
 class Perceptron(object):
-    def __init__(self, eta=0.01, n_iter=10):
-        """
-        :param eta: Learning Rate (between 0.0 and 1.0)
-        :param n_iter: Training Dataset.
-        """
-        self.eta = eta
-        self.n_iter = n_iter
-
-    def fit(self, X, y):
-        """
-        Fit Training Data
-        """
-
-        self._w = np.zeros(1 + X.shape[1])
-        self._errors = []
-
-        for i in range(self.n_iter):
-            errors = 0
-            for x, target in zip(X, y):
-                update = self.eta * (target - self.predict(x))
-                self._w[1:] += update * x
-                self._w[0] += update
-                errors += int(update != 0.0)
-
-            self._errors.append(errors)
-        return self
-
-    def net_input(self, X):
-        """
-        Calculate net input
-        """
-        return np.dot(X, self._w[1:]) + self._w[0]
-
-    def predict(self, X):
-        """
-        Return class label after unit step
-        """
-        return np.where(self.net_input(X) >= 0.0, 1, -1)
-
+    
+    def __init__(self, learning_rate=0.02):
+        self.w = np.random.randn(2 + 1)
+        self.eta = learning_rate
+    
+    def predict(self, xdata):
+        phi = self.w[1:].dot(xdata.T) + self.w[0]
+        net = np.where(phi > 0, 1, -1)
+        return net                
+    
+    def relu(self, net):
+        return np.maximum(net, 0)
+    
+    def train(self, x_trains, y_trains, n_episode=10):
+        costs = []
+        
+        for self.step in range(n_episode):
+            cost = 0
+            
+            # Shuffle
+            rands = np.random.permutation(len(x_trains))
+            x_trains = x_trains[rands]
+            y_trains = y_trains[rands]
+            
+            for xi, yi in zip(x_trains, y_trains):
+                output = self.predict(xi)
+                                
+                update = self.eta * np.sum(yi - output)
+                self.w[1:] += update * xi
+                self.w[0] += update
+                
+                cost += np.sum((yi - output)**2)/2.
+                
+            costs.append( cost/len(x_trains))
+        return costs
+        
+            
+    def save(self):
+        np.save(open('iris.weights', 'wb'), perceptron.w)
+        
+    def load(self):
+        self.w = np.load(open('iris.weights', 'rb'))
+    
+    def cost(self, predicted_ys, ys):
+        ys - predicted_ys
+        
 {% endhighlight %}
 
 
@@ -204,8 +261,9 @@ y = df.iloc[0:100, 4].values
 y = np.where(y == 'Iris-setosa', -1, 1)
 X = df.iloc[0:100, [0, 3]].values
 
-ppn = Perceptron(eta=0.1, n_iter=10)
-ppn.fit(X, y)
+perceptron = Perceptron()
+costs = perceptron.train(X, Y)
+
 plt.plot(range(1, len(ppn._errors) + 1), ppn._errors, marker='o')
 plt.xlabel('Epochs')
 plt.ylabel('Number of misclassifications')

@@ -72,6 +72,7 @@ $ cuda_7.5.18_linux.run --override compiler
 그 다음으로 .bashrc에 다음을 추가해줍니다.
 
 {% highlight bash %}
+
 # CUDA & CUDNN
 export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib
@@ -85,6 +86,14 @@ nvcc: NVIDIA (R) Cuda compiler driver
 Copyright (c) 2005-2015 NVIDIA Corporation
 Built on Tue_Aug_11_14:27:32_CDT_2015
 Cuda compilation tools, release 7.5, V7.5.17
+{% endhighlight %}
+
+
+### Reinstallation
+
+{% highlight bash %}
+sudo apt-get remove --purge nvidia*
+sudo apt-get remove --purge  xserver-xorg-video-nouveau
 {% endhighlight %}
 
 ### [Error] unsupported GNU version! gcc versions later than 5 are not supported!

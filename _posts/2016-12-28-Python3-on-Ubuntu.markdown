@@ -104,10 +104,13 @@ source test/bin/activate
 sudo pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy nose  
 {% endhighlight %}
 
+**Keras**
+
 visualization을 위해서 다음을 설치합니다. (pydot-ng가 아니라 pydot설치시 keras visualization할때 에러를 일으킴)
 
 {% highlight bash %}
-sudo pip3 install pydot-ng graphviz
+sudo apt-get install graphviz
+sudo pip3 install keras pydot-ng graphviz
 {% endhighlight %}
 
 **Ipython**
