@@ -48,10 +48,42 @@ Python3 명령어에 대한 soft link를 만들어줍니다.
 
 {% highlight bash %}
 sudo ln -s /usr/local/bin/python3.6 /usr/local/bin/python3
+sudo ln -fs /usr/local/bin/python3.6 /usr/bin/python3
 {% endhighlight %}
 
 만약 no module named something 같은 에러가 나온다면.. python3 명령어를 쳤을때 source에 있는 python3를 실행시키는게 아니라.. 
 Python3.5 (/usr/bin/python3 에 위치한)을 실행시키는 것일수도 있습니다. /usr/bin/python3 가 있다면.. 그냥 삭제. 
+
+### Change system-wide Python
+
+Ubuntu에서 파이썬을 실행시킬때 특정 버젼의  Python을 실행시키도록 변경할수 있습니다.<br>
+다음은 Python alternatives를 모두 출력시킵니다.
+
+{% highlight bash %}
+$ sudo update-alternatives --list python
+update-alternatives: error: no alternatives for python
+{% endhighlight %}
+
+Python 2.7을 기본으로 사용하게 하는 방법
+
+{% highlight bash %}
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+{% endhighlight %}
+
+Python  3.6을 기본으로 사용하게 하는 방법
+
+{% highlight bash %}
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2
+{% endhighlight %}
+
+--install 옵션은 여러개의 arguments를 받을수 있으면 symbolic links 를 만듭니다.<br>
+마지막의 숫자는 priority로 생각하면 됩니다.
+
+특정 Python 버젼을 선택하는 방법입니다.
+
+{% highlight bash %}
+update-alternatives --config python
+{% endhighlight %}
 
 ### Installing PIP3 
 
