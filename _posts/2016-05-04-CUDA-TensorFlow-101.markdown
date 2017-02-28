@@ -237,6 +237,7 @@ configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참�
 
 | GPU | Compute Capability |
 |:----|:-------------------|
+| GeForce GTX Titan X | 6.1 |
 | GeForce GTX 1080	| 6.1  |
 | GeForce GTX 1070	| 6.1  |
 | GeForce GTX 980	| 5.2  |
