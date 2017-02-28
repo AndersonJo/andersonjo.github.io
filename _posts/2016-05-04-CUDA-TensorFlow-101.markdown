@@ -251,16 +251,17 @@ $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 $ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
 {% endhighlight %}
 
-| Option | Description |
-|:-------|:------------|
-| mavx  | Advanced Vector Extensions - [특정 프로세서](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#CPUs_with_AVX) 에서만 지원 (2008년 이후 Intel CPU에서 지원) |
-| mavx2  | Advanced Vector Extensions 2 - [특정 프로세서](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#CPUs_with_AVX2) 에서만 지원 (2008년 이후 Intel CPU에서 지원) |
-| fma    | FMA instruction set - 2013년 이후 Intel CPU에서 지원 |
-
+| Option | Description | me |
+|:-------|:------------|:---|
+| mavx  | Advanced Vector Extensions - [특정 프로세서](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#CPUs_with_AVX) 에서만 지원 (2008년 이후 Intel CPU에서 지원) | X |
+| mavx2  | Advanced Vector Extensions 2 - [특정 프로세서](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#CPUs_with_AVX2) 에서만 지원 (2008년 이후 Intel CPU에서 지원) | X |
+| fma    | FMA instruction set - 2013년 이후 Intel CPU에서 지원 | X |
+| -march=native | GCC Compilation 옵션 - 그냥 사용하면 됨 | | 
 
 에러가 나면 bazel build시에 copt를 삭제 해보는것도 방법입니다.
 
 {% highlight bash %}
+$ bazel build --copt=-march=native --copt=-mfpmath=both -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 $ bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 $ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
