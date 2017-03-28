@@ -46,7 +46,7 @@ Cuda Toolkit은 **/usr/local/cuda**안에 설치가 되어 있어야 합니다.<
 다음의 Dependencies를 설치해줍니다.
 
 {% highlight bash %}
-sudo apt-get install libglu1-mesa libxi-dev libxmu-dev
+sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc-4.9 g++-4.9
 {% endhighlight %}
 
 CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
@@ -99,26 +99,26 @@ sudo apt-get remove --purge  xserver-xorg-video-nouveau
 ### [Error] unsupported GNU version! gcc versions later than 5 are not supported!
 
 4.x 버젼의 gcc를 쿠다가 설치된 곳으로 softlink걸어주면 해결됨<br>
-먼저 GCC 4.8 그리고 G++ 4.8을 설치해줍니다. (두개의 버젼이 서로 동일해야합니다.)
+먼저 GCC 4.9 그리고 G++ 4.9을 설치해줍니다. (두개의 버젼이 서로 동일해야합니다.)
 
 {% highlight bash %}
 sudo apt-get install python-software-properties
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
-sudo apt-get install gcc-4.8
-sudo apt-get install g++-4.8
+sudo apt-get install gcc-4.9
+sudo apt-get install g++-4.9
  
 sudo rm /usr/bin/g++
-sudo ln -s /usr/bin/g++-4.8 /usr/bin/g++
+sudo ln -s /usr/bin/g++-4.9 /usr/bin/g++
 
 sudo rm /usr/bin/gcc
-sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
+sudo ln -s /usr/bin/gcc-4.9 /usr/bin/gcc
 {% endhighlight %}
 
-gcc-4.8을 쿠다가 설치된 곳으로 softlink를 걸어줍니다.
+gcc-4.9을 쿠다가 설치된 곳으로 softlink를 걸어줍니다.
 
 {% highlight bash %}
-sudo ln -s /usr/bin/gcc-4.8 /usr/local/cuda/bin/gcc
+sudo ln -s /usr/bin/gcc-4.9 /usr/local/cuda/bin/gcc
 {% endhighlight %}
 
 ### [Error] The driver installation is unable to locate the kernel source
@@ -232,6 +232,10 @@ cd tensorflow
 ./configure
 {% endhighlight %}
 
+1. Specify Python3.x location if you use Python3.x
+2. you should specify gcc-4.9 location (TensorFlow cannot use gcc version more than 5)
+
+
 configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참고<br>
 설치는 먼저 pip package를 만들고 그것을 설치합니다.
 
@@ -243,6 +247,9 @@ configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참�
 | GeForce GTX 980	| 5.2  |
 | GeForce GTX 970	| 5.2  |
 | GeForce GTX 960	| 5.2  |
+
+
+
 
 
 {% highlight bash %}
@@ -262,7 +269,7 @@ $ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
 에러가 나면 bazel build시에 copt를 삭제 해보는것도 방법입니다.
 
 {% highlight bash %}
-$ bazel build --copt=-march=native --copt=-mfpmath=both -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+$ bazel build --copt=-march=native -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 $ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
 {% endhighlight %}
