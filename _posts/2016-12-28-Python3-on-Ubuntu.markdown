@@ -44,13 +44,6 @@ make test
 sudo make altinstall 
 {% endhighlight %}
 
-Python3 명령어에 대한 soft link를 만들어줍니다.
-
-{% highlight bash %}
-sudo ln -s /usr/local/bin/python3.6 /usr/local/bin/python3
-sudo ln -fs /usr/local/bin/python3.6 /usr/bin/python3
-{% endhighlight %}
-
 만약 no module named something 같은 에러가 나온다면.. python3 명령어를 쳤을때 source에 있는 python3를 실행시키는게 아니라.. 
 Python3.5 (/usr/bin/python3 에 위치한)을 실행시키는 것일수도 있습니다. /usr/bin/python3 가 있다면.. 그냥 삭제. 
 
@@ -90,7 +83,7 @@ update-alternatives --config python
 [ensurepip - Bootstrapping the pip installer](https://docs.python.org/3/library/ensurepip.html)에서 자세한 내용을 참고 합니다.
 
 {% highlight bash %}
-sudo python3 -m ensurepip --upgrade
+sudo python3.6 -m ensurepip --upgrade
 sudo ln -s /usr/local/bin/pip3.6 /usr/local/bin/pip3
 {% endhighlight %}
 
@@ -113,7 +106,7 @@ pip 9.0.1 from /usr/local/lib/python3.6/site-packages (python 3.6)
 [Wheel Git Repository](https://bitbucket.org/pypa/wheel)에서 소스를 다운받습니다.
 
 {% highlight bash %}
-sudo python3 setup.py install
+sudo python3.6 setup.py install
 {% endhighlight %}
 
 python3를 실행한후 import wheel이 잘 되는지 확인해봅니다.
@@ -159,7 +152,7 @@ sudo jupyter nbextension enable --py --sys-prefix widgetsnbextension
 python2 -m pip install ipykernel
 python2 -m ipykernel install --user
 
-python3 -m pip install ipykernel
-python3 -m ipykernel install --user
+python3.6 -m pip install ipykernel
+python3.6 -m ipykernel install --user
 {% endhighlight %}
 
