@@ -4,7 +4,7 @@ title:  "Pytorch Getting Started"
 date:   2017-04-01 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts2/Pytorch/
-tags: ['Numpy']
+tags: ['Pytorch']
 
 ---
 

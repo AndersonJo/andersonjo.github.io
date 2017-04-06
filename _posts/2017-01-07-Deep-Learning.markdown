@@ -4,7 +4,7 @@ title:  "Deep Learning"
 date:   2017-01-07 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts2/TensorFlow/
-tags: ['Numpy']
+tags: ['Artificial-Intelligence']
 
 ---
 
