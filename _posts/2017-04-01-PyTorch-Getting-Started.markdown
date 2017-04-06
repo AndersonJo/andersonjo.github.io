@@ -35,6 +35,14 @@ cd pytorch
 sudo python3.6 setup.py install
 {% endhighlight %}
 
+### Install Torchvision from source
+
+{% highlight bash %}
+git clone https://github.com/pytorch/vision.git
+cd vision
+sudo python3.6 setup.py install
+{% endhighlight %}
+
 
 # Tutorial
 
