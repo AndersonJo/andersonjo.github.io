@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Logistic Regression"
+title:  "Logistic Regression in R"
 date:   2016-04-27 01:00:00
 categories: "machine-learning"
 asset_path: /assets/posts/Logistic-Regression/
