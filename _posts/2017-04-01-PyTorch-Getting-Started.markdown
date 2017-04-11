@@ -43,6 +43,21 @@ cd vision
 sudo python3.6 setup.py install
 {% endhighlight %}
 
+# Useful Tips
+
+### Data Types
+
+| Data type	| CPU tensor | GPU tensor | Numpy Type | Numpy Type Description |
+|:----------|:-----------|:-----------|:-----------|:-----------------------|
+| 32-bit floating point | torch.FloatTensor | torch.cuda.FloatTensor | float32 |  Single precision float: sign bit, 8 bits exponent, 23 bits mantissa |
+| 64-bit floating point | torch.DoubleTensor | torch.cuda.DoubleTensor | float64 | Double precision float: sign bit, 11 bits exponent, 52 bits mantissa |
+| 16-bit floating point | N/A | torch.cuda.HalfTensor | float16 | Half precision float: sign bit, 5 bits exponent, 10 bits mantissa |
+| 8-bit integer (unsigned) | torch.ByteTensor | torch.cuda.ByteTensor | uint8 | Unsigned integer (0 to 255) |
+| 8-bit integer (signed) | torch.CharTensor | torch.cuda.CharTensor | int8 | Byte (-128 to 127) |
+| 16-bit integer (signed) | torch.ShortTensor | torch.cuda.ShortTensor | int16 | Integer (-32768 to 32767) |
+| 32-bit integer (signed) | torch.IntTensor | torch.cuda.IntTensor | int32 | Integer (-2147483648 to 2147483647) |
+| 64-bit integer (signed) | torch.LongTensor | torch.cuda.LongTensor | int64 | Integer (-9223372036854775808 to 9223372036854775807) |
+
 
 # Tutorial
 
