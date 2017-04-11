@@ -11,3 +11,9 @@ Gemfile.lock
 
 # Node.js
 node_modules
+
+# Test Files
+_test.py
+
+# Pytorch
+data

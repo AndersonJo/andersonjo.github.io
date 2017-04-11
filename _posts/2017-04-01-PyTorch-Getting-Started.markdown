@@ -130,3 +130,118 @@ Variable containing:
 [torch.FloatTensor of size 2x2]
 {% endhighlight %}
 
+# MNIST Tutorial
+
+
+### Data
+
+* [Pytorch Transform Documentation](http://pytorch.org/docs/torchvision/transforms.html)
+
+
+1. **torchvision.transforms.Compose:** 여러개의 tranforms을 실행합니다.
+2. **torchvision.transforms.ToTensor:** PIL.Image 또는 [0, 255] range의 Numpy array(H x W x C)를 (C x H x W)의 **[0.0, 1.0] range**를 갖은 torch.FloatTensor로 변형시킵니다. <br>여기서 포인트가 0에서 1사이의 값을 갖은 값으로 normalization이 포함되있습니다.
+3. **dataloader.DataLoader:** 사용하여 training시킬때 1개의 batch를 가져올때 shape이 **torch.Size([64, 1, 28, 28])** 이렇게 나옵니다.
+
+{% highlight python %}
+train = MNIST('./data', train=True, download=True, transform=transforms.Compose([
+    transforms.ToTensor(), # ToTensor does min-max normalization.
+]), )
+
+test = MNIST('./data', train=False, download=True, transform=transforms.Compose([
+    transforms.ToTensor(), # ToTensor does min-max normalization.
+]), )
+
+# Create DataLoader
+dataloader_args = dict(shuffle=True, batch_size=64,num_workers=1, pin_memory=True)
+train_loader = dataloader.DataLoader(train, **dataloader_args)
+test_loader = dataloader.DataLoader(test, **dataloader_args)
+{% endhighlight %}
+
+### Model
+
+{% highlight python %}
+class Model(nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+
+        self.fc1 = nn.Linear(784, 548)
+        self.bc1 = nn.BatchNorm1d(548)
+
+        self.fc2 = nn.Linear(548, 252)
+        self.bc2 = nn.BatchNorm1d(252)
+
+        self.fc3 = nn.Linear(252, 10)
+
+
+    def forward(self, x):
+        x = x.view((-1, 784))
+        h = self.fc1(x)
+        h = self.bc1(h)
+        h = F.relu(h)
+        h = F.dropout(h, p=0.5, training=self.training)
+
+        h = self.fc2(h)
+        h = self.bc2(h)
+        h = F.relu(h)
+        h = F.dropout(h, p=0.2, training=self.training)
+
+        h = self.fc3(h)
+        out = F.log_softmax(h)
+        return out
+
+model = Model()
+model.cuda() # CUDA!
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+{% endhighlight %}
+
+### Train
+
+{% highlight python %}
+model.train()
+
+losses = []
+for epoch in range(15):
+    for batch_idx, (data, target) in enumerate(train_loader):
+        # Get Samples
+        data, target = Variable(data.cuda()), Variable(target.cuda())
+
+        # Init
+        optimizer.zero_grad()
+
+        # Predict
+        y_pred = model(data)
+
+        # Calculate loss
+        loss = F.cross_entropy(y_pred, target)
+        losses.append(loss.data[0])
+        # Backpropagation
+        loss.backward()
+        optimizer.step()
+
+
+        # Display
+        if batch_idx % 100 == 1:
+            print('\r Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                epoch,
+                batch_idx * len(data),
+                len(train_loader.dataset),
+                100. * batch_idx / len(train_loader),
+                loss.data[0]),
+                end='')
+
+    print()
+{% endhighlight %}
+
+## Evaluate
+
+{% highlight python %}
+evaluate_x = Variable(test_loader.dataset.test_data.type_as(torch.FloatTensor())).cuda()
+evaluate_y = Variable(test_loader.dataset.test_labels).cuda()
+
+output = model(evaluate_x)
+pred = output.data.max(1)[1]
+d = pred.eq(evaluate_y.data).cpu()
+accuracy = d.sum()/d.size()[0]
+
+print('Accuracy:', accuracy) # Accuracy: 0.9764
+{% endhighlight %}
