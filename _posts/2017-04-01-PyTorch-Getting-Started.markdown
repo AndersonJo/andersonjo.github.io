@@ -22,7 +22,8 @@ tags: ['Pytorch']
 ### Install Dependencies
 
 {% highlight bash %}
-sudo apt-get install cmake
+sudo apt-get install cmake xvfb libav-tools xorg-dev libsdl2-dev swig
+
 sudo pip3 install cffi
 {% endhighlight %}
 
