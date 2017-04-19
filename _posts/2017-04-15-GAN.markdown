@@ -92,7 +92,7 @@ $$ J^{(D)} \left(\theta^{(D)}, \theta^{(G)} \right) = - \frac{1}{N} \sum^N_{i=1}
 >  $$ \log (1-D(G(z^{(i)})) $$ 이 부분은 $$ y $$ 값을 0으로 주면 됩니다.
 
 
-
+$$ J^{(D)} \left(\theta^{(D)}, \theta^{(G)} \right) = H(1, D(x^{(i)}) + H(0, D(G(z^{(i)}))) $$
 
 # Cost Function for Generator
 
