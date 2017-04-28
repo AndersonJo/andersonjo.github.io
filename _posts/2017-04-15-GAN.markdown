@@ -131,7 +131,7 @@ J^{(G)} &= - \log(1-0.0001) \\
 
 위의 문제를 해결하기 위해서 crossentropy 를 계속 사용하되, sign 값을 뒤바꿔주는것이 아니라, crossentropy 에서 사용되는 target부분을 뒤바꿔줍니다.
 
-$$ J^{(G)} = - \mathbb{E}_{z \sim P_{z}(z)} \Big[\log D(G(z))\Big] $$
+$$ J^{(G)} = \mathbb{E}_{z \sim P_{z}(z)} \Big[\log D(G(z))\Big] $$
 
 해당 버젼의 게임에서는 원래 Minimax에서는 누군가 이기고, 누군가 지게 되는 상황인데, <br>
 누군가 지게(losing)되는 상황에서 강한 gradient를 갖도록 만듭니다. <br>
@@ -156,3 +156,83 @@ G는 고정되어있다고 가정하고, optimal discriminator D는 다음과 �
 $$ D^*_{G}(x) = \frac{ P_{\text{data}}(x) }{ P_{\text{data}}(x) + P_g(x)} $$
 
 
+
+# Code
+
+전체코드는 [Anderson Jo - GAN](https://github.com/AndersonJo/pytorch-examples/blob/master/50%20%5BHeuristic%20GAN%5D%20non-saturating%20game%20for%20MNIST.ipynb)
+에서 확인하실수 있습니다.
+
+### Training
+
+
+{% highlight python %}
+# Train Discriminator with Generator not being trained
+# 먼저 Discriminator를 학습시킵니다.
+# 이때 real image와 fake이미지 두개의 데이터를 사용하여 학습합니다.
+# Discriminator를 학습시킬때는 Generator는 학습시키면 안됩니다.
+params = list(G.parameters())
+d_params = list(D.parameters())
+
+for epoch in range(N_EPOCH):
+    for step, (real_images, _) in enumerate(train_loader):
+        # Samples
+        real_images = Variable(real_images.cuda())
+        z = Variable(torch.randn((BATCH_SIZE, 100)).cuda())
+
+        ###############################################
+        # Train D (But do not train G)
+        ###############################################
+        # Init D
+        d_optimizer.zero_grad()
+
+        # Calculate the loss with real images
+        y_real_pred = D(real_images)
+        d_real_loss = loss_f(y_real_pred, real_y)
+#         d_real_loss.backward()
+#         d_optimizer.step()
+
+        # Calculate the loss with fake images
+        fake_distributions = Variable(torch.randn((BATCH_SIZE, 100)).cuda())
+        fake_images = G(fake_distributions).detach()
+        y_fake_pred = D(fake_images)
+        d_fake_loss = loss_f(y_fake_pred, fake_y)
+#         d_fake_loss.backward()
+#         d_optimizer.step()
+
+        # Update D with G not being updated
+        d_loss = d_real_loss + d_fake_loss
+        d_loss.backward()
+        d_optimizer.step()
+
+        ###############################################
+        # Train G with fake images but do not train G
+        ###############################################
+        g_optimizer.zero_grad()
+
+        fake_distributions = Variable(torch.randn((BATCH_SIZE, 100)).cuda())
+        fake_images = G(fake_distributions)
+        y_pred = D(fake_images)
+        g_loss = loss_f(y_pred, real_y)
+        g_loss.backward()
+        g_optimizer.step()
+
+        ###############################################
+        # Visualization
+        ###############################################
+        d_real_losses.append(d_real_loss.data[0])
+        d_fake_losses.append(d_fake_loss.data[0])
+        d_losses.append(d_loss.data[0])
+        g_losses.append(g_loss.data.cpu().numpy()[0])
+
+        divergences.append(torch.mean(y_real_pred/(y_real_pred+y_fake_pred)).data[0])
+
+        if step % 50 == 0:
+            print(f'\r[{epoch+1}/{N_EPOCH}]',
+                  # '{:.4}'.format(torch.mean(params[0]).data[0]),
+#                   'divergence: {:<8.4}'.format(np.mean(divergences[-100:])),
+                  'D: {:<8.4}'.format(np.mean(d_fake_losses[-100:])),
+                  'D_real: {:<8.4}'.format(np.mean(d_real_losses[-100:])),
+                  'D_fake: {:<8.4}'.format(np.mean(d_fake_losses[-100:])),
+                  'G:{:<8.4}'.format(np.mean(g_losses[-100:])), end='')
+    print()
+{% endhighlight %}
