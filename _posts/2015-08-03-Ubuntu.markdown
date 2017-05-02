@@ -93,7 +93,7 @@ unity-tweak-tool
 
 ### Awesome Tools (Optional)
 
-{% highilght bash %}
+{% highlight bash %}
 sudo apt-get install vim gthumb smplayer
 {% endhighlight %}
 
