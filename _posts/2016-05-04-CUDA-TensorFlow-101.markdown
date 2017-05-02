@@ -12,24 +12,7 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 <img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded" style="width:100%">
 </header>
 
-
-# Google DeepMind uses it!
-
-구글 딥마인드는 Torch7에서 TensorFlow로 갈아타기 시작했습니다.
-
-[DeepMind moves to TensorFlow][DeepMind moves to TensorFlow]<br>
-*Today we are excited to announce that DeepMind will start using #TensorFlow  for all future research, 
-enabling the pursuit of ambitious goals at much larger scale and an even faster pace*
-
-
-[DeepMind moves to TensorFlow]: http://googleresearch.blogspot.kr/2016/04/deepmind-moves-to-tensorflow.html
-
 # Installation
-
-### Requirements
-
-* Python 2.7 or 3.3+
-* GPU - CUDA Toolkit 7.5 and cuDNN v4
 
 ### Current Nvidia Card
 
