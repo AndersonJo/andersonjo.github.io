@@ -12,24 +12,7 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 <img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded" style="width:100%">
 </header>
 
-
-# Google DeepMind uses it!
-
-구글 딥마인드는 Torch7에서 TensorFlow로 갈아타기 시작했습니다.
-
-[DeepMind moves to TensorFlow][DeepMind moves to TensorFlow]<br>
-*Today we are excited to announce that DeepMind will start using #TensorFlow  for all future research, 
-enabling the pursuit of ambitious goals at much larger scale and an even faster pace*
-
-
-[DeepMind moves to TensorFlow]: http://googleresearch.blogspot.kr/2016/04/deepmind-moves-to-tensorflow.html
-
 # Installation
-
-### Requirements
-
-* Python 2.7 or 3.3+
-* GPU - CUDA Toolkit 7.5 and cuDNN v4
 
 ### Current Nvidia Card
 
@@ -47,6 +30,7 @@ Cuda Toolkit은 **/usr/local/cuda**안에 설치가 되어 있어야 합니다.<
 
 {% highlight bash %}
 sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc-4.9 g++-4.9
+sudo apt-get install clang-3.9
 {% endhighlight %}
 
 CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
@@ -206,9 +190,10 @@ Build label: 0.4.3
 
 {% highlight bash %}
 # For Python 2.7:
-$ sudo apt-get install python-numpy swig python-dev python-wheel
+$ sudo pip install wheel
+
 # For Python 3.x:
-$ sudo apt-get install python3-numpy swig python3-dev python3-wheel
+$ sudo pip3 install wheel
 {% endhighlight %}
 
 **Check CUDA Version**
@@ -232,8 +217,22 @@ cd tensorflow
 ./configure
 {% endhighlight %}
 
-1. Specify Python3.x location if you use Python3.x
-2. you should specify gcc-4.9 location (TensorFlow cannot use gcc version more than 5)
+
+아래는 예제 입니다.
+
+| Question | Answer | ETC |
+|:---------|:-------|-----|
+| Please specify the location of python. [Default is /usr/bin/python]: | /usr/local/bin/python3.6 | |
+| Do you wish to use jemalloc as the malloc implementation? [Y/n] | y | |
+| Do you wish to build TensorFlow with Google Cloud Platform support? | y | |
+| Do you wish to build TensorFlow with Hadoop File System support? | y | |
+| Do you wish to build TensorFlow with the XLA just-in-time compiler (experimental)? | y | |
+| Do you wish to build TensorFlow with OpenCL support? | n | |
+| Do you wish to build TensorFlow with CUDA support? | y | |
+| Do you want to use clang as CUDA compiler? | n | NVCC사용시 no |
+| Please specify which gcc should be used by nvcc as the host compiler. [Default is /usr/bin/gcc]: | /usr/bin/gcc-4.9 | gcc 5 이상쓰면 안됨 |
+| Please specify the CUDA SDK version you want to use, e.g. 7.0. | 8.0 | nvcc --version 으로 알 수 있음 |
+| Please note that each additional compute capability <br>significantly increases your build time and binary size.<br>[Default is: "3.5,5.2"]: | 6.1 | 아래 compute capability 참고 |
 
 
 configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참고<br>

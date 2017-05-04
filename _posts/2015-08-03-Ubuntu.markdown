@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Ubuntu 15.04"
+title:  "Ubuntu Installation"
 date:   2015-08-03 02:00:00
 categories: "ubuntu"
 asset_path: /assets/posts/Ubuntu15.04/
@@ -89,6 +89,12 @@ sudo add-apt-repository ppa:freyja-dev/unity-tweak-tool-daily
 sudo apt-get update
 sudo apt-get install unity-tweak-tool
 unity-tweak-tool
+{% endhighlight %}
+
+### Awesome Tools (Optional)
+
+{% highlight bash %}
+sudo apt-get install vim gthumb smplayer
 {% endhighlight %}
 
 

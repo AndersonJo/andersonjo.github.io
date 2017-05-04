@@ -44,6 +44,24 @@ cd vision
 sudo python3.6 setup.py install
 {% endhighlight %}
 
+### [Error] unsupported GNU version! gcc versions later than 5 are not supported!
+
+TensorFlow도 동일한 증상이 날 수 있음.. 해결책음 동일합니다.
+
+{% highlight bash %}
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt-get update
+sudo apt-get install gcc-4.9
+sudo apt-get install g++-4.9
+
+sudo rm /usr/bin/g++
+sudo ln -s /usr/bin/g++-4.9 /usr/bin/g++
+
+sudo rm /usr/bin/gcc
+sudo ln -s /usr/bin/gcc-4.9 /usr/bin/gcc
+{% endhighlight %}
+
 # Useful Tips
 
 ### Data Types
@@ -67,6 +85,7 @@ sudo python3.6 setup.py install
 Tensor들은 cuda함수를 통해서 GPU로 이동시킬수 있습니다.
 
 {% highlight python %}
+import torch
 a = torch.rand(5, 3).cuda()
 b = torch.rand(3, 5).cuda()
 a.dot(b) # 4.939548492431641
