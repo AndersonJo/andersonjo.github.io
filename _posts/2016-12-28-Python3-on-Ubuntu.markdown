@@ -40,7 +40,7 @@ sudo apt-get install libdb-dev libexpat1-dev zlib1g-dev build-essential checkins
 {% highlight bash %}
 tar xvf Python-*.tar.xz
 cd Python-*
-./configure --enable-optimizations
+./configure --enable-optimizations --with-shared
 make -j8
 make test
 sudo make altinstall 
