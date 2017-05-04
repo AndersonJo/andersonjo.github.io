@@ -232,7 +232,7 @@ $$ \begin{align}
 [https://github.com/AndersonJo/deep-layer](https://github.com/AndersonJo/deep-layer) 에서 전체 코드를 볼 수 있습니다.<br>
 update부분에서 momentum을 적용했습니다.
 
-## Backpropagation Code
+### Backpropagation Code
 
 {% highlight python %}
 def backpropagation(self,
