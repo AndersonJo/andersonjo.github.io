@@ -162,17 +162,168 @@ $$ D^*_{G}(x) = \frac{ P_{\text{data}}(x) }{ P_{\text{data}}(x) + P_g(x)} $$
 전체코드는 [Anderson Jo - GAN](https://github.com/AndersonJo/pytorch-examples/blob/master/50%20%5BHeuristic%20GAN%5D%20non-saturating%20game%20for%20MNIST.ipynb)
 에서 확인하실수 있습니다.
 
-### Training
+### Configuration
 
+{% highlight python %}
+BATCH_SIZE = 32
+{% endhighlight %}
+
+### Data(MNIST)
+
+{% highlight python %}
+train = MNIST('./data', train=True, download=True, transform=transforms.Compose([
+    transforms.ToTensor(), # ToTensor does min-max normalization.
+]), )
+
+test = MNIST('./data', train=False, download=True, transform=transforms.Compose([
+    transforms.ToTensor(), # ToTensor does min-max normalization.
+
+]), )
+
+# Create DataLoader
+dataloader_args = dict(shuffle=True, batch_size=BATCH_SIZE ,num_workers=1, pin_memory=True)
+train_loader = dataloader.DataLoader(train, **dataloader_args)
+test_loader = dataloader.DataLoader(test, **dataloader_args)
+{% endhighlight %}
+
+
+### Discriminator
+
+{% highlight python %}
+class Discriminator(nn.Module):
+    def __init__(self):
+        super(Discriminator, self).__init__()
+
+        self.fc1 = nn.Linear(784, 441)
+        self.fc2 = nn.Linear(441, 256)
+        self.fc3 = nn.Linear(256, 32)
+        self.fc4 = nn.Linear(32, 1)
+
+        self.bc1 = nn.BatchNorm1d(441)
+        self.bc2 = nn.BatchNorm1d(256)
+
+    def forward(self, x):
+        x = x.view((-1, 784))
+        h = self.fc1(x)
+#         h = self.bc1(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.2, training=self.training)
+
+        h = self.fc2(h)
+#         h = self.bc2(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.2, training=self.training)
+
+        h = self.fc3(h)
+        h = F.leaky_relu(h)
+
+        h = self.fc4(h)
+        out = F.sigmoid(h)
+        return out
+
+D = Discriminator()
+print(D.cuda()) # CUDA!
+d_optimizer = optim.Adam(D.parameters(), lr=0.001)
+{% endhighlight %}
+
+
+### Generator
+
+{% highlight python %}
+class Generator(nn.Module):
+    def __init__(self):
+        super(Generator, self).__init__()
+
+        self.fc1 = nn.Linear(100, 196)
+        self.fc2 = nn.Linear(196, 289)
+        self.fc3 = nn.Linear(289, 361)
+        self.fc4 = nn.Linear(361, 400)
+        self.fc5 = nn.Linear(400, 512)
+        self.fc6 = nn.Linear(512, 625)
+        self.fc7 = nn.Linear(625, 784)
+        self.fc8 = nn.Linear(784, 784)
+
+        self.bc1 = nn.BatchNorm1d(196)
+        self.bc2 = nn.BatchNorm1d(289)
+        self.bc3 = nn.BatchNorm1d(361)
+        self.bc4 = nn.BatchNorm1d(400)
+        self.bc5 = nn.BatchNorm1d(512)
+        self.bc6 = nn.BatchNorm1d(625)
+        self.bc7 = nn.BatchNorm1d(784)
+
+    def forward(self, x):
+        h = self.fc1(x)
+        h = self.bc1(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.5, training=self.training)
+
+        h = self.fc2(h)
+        h = self.bc2(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.5, training=self.training)
+
+        h = self.fc3(h)
+        h = self.bc3(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.5, training=self.training)
+
+        h = self.fc4(h)
+        h = self.bc4(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.4, training=self.training)
+
+        h = self.fc5(h)
+        h = self.bc5(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.4, training=self.training)
+
+        h = self.fc6(h)
+        h = self.bc6(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.4, training=self.training)
+
+        h = self.fc7(h)
+        h = self.bc7(h)
+        h = F.leaky_relu(h)
+        h = F.dropout(h, p=0.4, training=self.training)
+
+        h = self.fc8(h)
+        out = F.sigmoid(h)
+        return out
+
+G = Generator()
+print(G.cuda())
+g_optimizer = optim.Adam(G.parameters(), lr=0.001)
+{% endhighlight %}
+
+
+
+
+### Training
 
 {% highlight python %}
 # Train Discriminator with Generator not being trained
 # 먼저 Discriminator를 학습시킵니다.
 # 이때 real image와 fake이미지 두개의 데이터를 사용하여 학습합니다.
 # Discriminator를 학습시킬때는 Generator는 학습시키면 안됩니다.
-params = list(G.parameters())
-d_params = list(D.parameters())
 
+N_EPOCH = 100
+
+real_y = Variable(torch.ones((BATCH_SIZE, 1)).cuda())
+fake_y = Variable(torch.zeros((BATCH_SIZE, 1)).cuda())
+loss_f = nn.BCELoss()
+
+d_real_losses = list()
+d_fake_losses = list()
+d_losses = list()
+g_losses = list()
+divergences = list()
+
+
+ Train Discriminator with Generator not being trained
+# 먼저 Discriminator를 학습시킵니다.
+# 이때 real image와 fake이미지 두개의 데이터를 사용하여 학습합니다.
+# Discriminator를 학습시킬때는 Generator는 학습시키면 안됩니다.
 for epoch in range(N_EPOCH):
     for step, (real_images, _) in enumerate(train_loader):
         # Samples
@@ -188,16 +339,12 @@ for epoch in range(N_EPOCH):
         # Calculate the loss with real images
         y_real_pred = D(real_images)
         d_real_loss = loss_f(y_real_pred, real_y)
-#         d_real_loss.backward()
-#         d_optimizer.step()
 
         # Calculate the loss with fake images
         fake_distributions = Variable(torch.randn((BATCH_SIZE, 100)).cuda())
         fake_images = G(fake_distributions).detach()
         y_fake_pred = D(fake_images)
         d_fake_loss = loss_f(y_fake_pred, fake_y)
-#         d_fake_loss.backward()
-#         d_optimizer.step()
 
         # Update D with G not being updated
         d_loss = d_real_loss + d_fake_loss
@@ -219,20 +366,123 @@ for epoch in range(N_EPOCH):
         ###############################################
         # Visualization
         ###############################################
-        d_real_losses.append(d_real_loss.data[0])
-        d_fake_losses.append(d_fake_loss.data[0])
-        d_losses.append(d_loss.data[0])
-        g_losses.append(g_loss.data.cpu().numpy()[0])
+        if step%5 == 0:
+            d_real_losses.append(d_real_loss.data[0])
+            d_fake_losses.append(d_fake_loss.data[0])
+            d_losses.append(d_loss.data[0])
+            g_losses.append(g_loss.data.cpu().numpy()[0])
 
-        divergences.append(torch.mean(y_real_pred/(y_real_pred+y_fake_pred)).data[0])
+            divergences.append(torch.mean(y_real_pred/(y_real_pred+y_fake_pred)).data[0])
 
         if step % 50 == 0:
             print(f'\r[{epoch+1}/{N_EPOCH}]',
-                  # '{:.4}'.format(torch.mean(params[0]).data[0]),
-#                   'divergence: {:<8.4}'.format(np.mean(divergences[-100:])),
-                  'D: {:<8.4}'.format(np.mean(d_fake_losses[-100:])),
-                  'D_real: {:<8.4}'.format(np.mean(d_real_losses[-100:])),
-                  'D_fake: {:<8.4}'.format(np.mean(d_fake_losses[-100:])),
-                  'G:{:<8.4}'.format(np.mean(g_losses[-100:])), end='')
+                  # '{:.3}'.format(torch.mean(params[0]).data[0]),
+                  'divergence: {:<8.3}'.format(np.mean(divergences[-100:])),
+                  'D: {:<8.3}'.format(np.mean(d_fake_losses[-100:])),
+                  'D_real: {:<8.3}'.format(np.mean(d_real_losses[-100:])),
+                  'D_fake: {:<8.3}'.format(np.mean(d_fake_losses[-100:])),
+                  'G:{:<8.3}'.format(np.mean(g_losses[-100:])), end='')
     print()
+
 {% endhighlight %}
+
+
+### Loss Visualization
+
+{% highlight python %}
+def smooth(x,window_len=100,window='hanning'):
+    x = np.array(x)
+
+    if x.ndim != 1:
+        raise ValueError("smooth only accepts 1 dimension arrays.")
+
+    if x.size < window_len:
+        raise ValueError("Input vector needs to be bigger than window size.")
+
+    if window_len<3:
+        return x
+
+    if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
+        raise ValueError("Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
+
+    s=numpy.r_[x[window_len-1:0:-1],x,x[-1:-window_len:-1]]
+
+    if window == 'flat': #moving average
+        w=numpy.ones(window_len,'d')
+    else:
+        w=eval('numpy.'+window+'(window_len)')
+
+    y=numpy.convolve(w/w.sum(),s,mode='valid')
+    return y
+
+
+figsize(16, 6)
+plot(smooth(d_real_losses), label='D(x) Loss')
+plot(smooth(d_fake_losses), label='D(G(z)) Loss')
+plot(smooth(g_losses), label='G(z) loss')
+plot(smooth(divergences), label='divergences')
+
+grid()
+legend()
+{% endhighlight %}
+
+<div style="text-align:center;">
+<img src="{{ page.asset_path }}gan_loss.png" class="img-responsive img-rounded" style="margin: 0 auto;">
+</div>
+
+### Evaluate
+
+{% highlight python %}
+fake_distributions = Variable(torch.randn((BATCH_SIZE, 100)).cuda())
+images = G(fake_distributions).view((-1, 28, 28)).data.cpu().numpy()
+
+imshow(images[0], cmap=cm.gray_r)
+
+fig, subplots = pylab.subplots(4, 7) # subplots(y축, x축 갯수)
+
+idx = 0
+for _subs in subplots:
+    for subplot in _subs:
+        d = images[idx]
+        subplot.get_xaxis().set_visible(False)
+        subplot.get_yaxis().set_visible(False)
+        subplot.imshow(d, cmap=cm.gray_r)
+        idx += 1
+{% endhighlight %}
+
+
+<img src="{{ page.asset_path }}gan_eva1.png" class="img-responsive img-rounded">
+
+<div style="text-align:center;">
+<img src="{{ page.asset_path }}gan_eva2.png" class="img-responsive img-rounded" style="margin: 0 auto;">
+</div>
+
+
+### Evaluate Discriminator
+
+{% highlight python %}
+
+n_test = test_loader.dataset.test_data.size()[0]
+y_test_real_labels = np.ones((n_test, 1))
+y_test_fake_labels = np.zeros((n_test, 1))
+
+# Predict Real Images
+test_data = Variable(test_loader.dataset.test_data.cuda().type_as(torch.cuda.FloatTensor()))
+y_test_real_pred = D(test_data)
+
+
+# Predict Fake Images
+fake_distributions = Variable(torch.randn((n_test, 100)).cuda())
+fake_images = G(fake_distributions).detach()
+y_test_fake_pred = D(fake_images)
+
+# Evaluate
+y_test_real_pred = torch.round(y_test_real_pred).data.cpu().numpy()
+y_test_fake_pred = torch.round(y_test_fake_pred).data.cpu().numpy()
+
+print('Discriminator Real Image Accuracy:', accuracy_score(y_test_real_labels, y_test_real_pred))
+print('Discriminator Fake Image Accuracy:', accuracy_score(y_test_fake_labels, y_test_fake_pred))
+{% endhighlight %}
+
+Discriminator Real Image Accuracy: 0.8037<br>
+Discriminator Fake Image Accuracy: 0.9195
