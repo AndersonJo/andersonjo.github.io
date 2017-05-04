@@ -2,7 +2,7 @@
 layout: post
 title:  "Recurrent Neural Network with Python"
 date:   2016-06-25 01:00:00
-categories: "machine-learning"
+categories: "artificial-intelligence"
 asset_path: /assets/posts/RNN-With-Python/
 tags: ['LSTM', 'tanh', 'hyperbolic tangent', 'cross-entropy loss', 'softmax', 'calculus', 'chain rule', 'backpropagation']
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Deep Learning"
+title:  "Deep Learning - Backpropagation"
 date:   2017-01-07 01:00:00
 categories: "artificial-intelligence"
 asset_path: /assets/posts2/TensorFlow/
@@ -226,3 +226,58 @@ $$ \begin{align}
 \Delta \theta^{(l)} &= \delta^{(l+1)} \left( h^{(l)} \right)^T \\
 \Delta b^{(l)} &=  \delta^{(l+1)}
 \end{align} $$
+
+# Code in Numpy
+
+[https://github.com/AndersonJo/deep-layer](https://github.com/AndersonJo/deep-layer) 에서 전체 코드를 볼 수 있습니다.<br>
+update부분에서 momentum을 적용했습니다.
+
+## Backpropagation Code
+
+{% highlight python %}
+def backpropagation(self,
+                    outputs: np.array,
+                    x: np.array,
+                    y: np.array,
+                    n_data: int = 2,
+                    eta: float = 0.01):
+    outputs.insert(0, x)
+
+    N = len(self.layers)
+    deltas = []
+    delta = None
+
+    loss = np.nan
+    for i in range(N, 0, -1):
+        output: np.array = outputs[i]
+        prev_output: np.array = outputs[i - 1]
+        layer: Layer = self.layers[i - 1]
+
+        if i == N:
+            d1 = self.dloss(y, output)
+            loss = np.sum(d1)
+        else:
+            layer2: Layer = self.layers[i]
+            w2, b2 = layer2.get_weights()
+            d1 = w2.dot(delta)
+
+        d2 = layer.dactivation(output).T
+        delta = d1 * d2
+
+        delta_w = delta.dot(prev_output).T
+        delta_b = delta.reshape([-1])
+        deltas.append((delta_w, delta_b))
+
+    layers = self.layers[::-1]
+    for i in range(len(deltas) - 1, -1, -1):
+        delta_w, delta_b = deltas[i]
+        layer = layers[i]
+
+        layer.update_w = 0.5 * layer.update_w + - 2 / n_data * eta * delta_w
+        layer.update_b = 0.5 * layer.update_b + - 2 / n_data * eta * delta_b
+
+        layer.w += layer.update_w
+        layer.b += layer.update_b
+
+    return dict(loss=loss)
+{% endhighlight %}

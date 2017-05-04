@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "TensorFlow - Convolutional Neural Networks Part 1"
+title:  "Convolutional Neural Networks Part 1"
 date:   2016-06-12 01:00:00
-categories: "machine-learning"
+categories: "artificial-intelligence"
 asset_path: /assets/posts/Convolutional-Neural-Networks/
 tags: ['CNN', 'Gimp', 'Nvidia', 'GPU Memory', 'ReLU', 'kernel', 'stride', 'Pooling', 'Convolution', 'Feature Map', 'SubSampling', 'DownSampling', 'Gimp']
 

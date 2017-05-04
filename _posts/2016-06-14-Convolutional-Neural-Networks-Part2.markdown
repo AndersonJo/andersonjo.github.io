@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "TensorFlow - Convolutional Neural Networks Part 2"
+title:  "Convolutional Neural Networks Part 2"
 date:   2016-06-14 01:00:00
-categories: "machine-learning"
+categories: "artificial-intelligence"
 asset_path: /assets/posts/Convolutional-Neural-Networks/
 tags: ['CNN', 'Memory']
 
