@@ -1,7 +1,7 @@
 # Site settings
-title: Anderson Jo Techs
+title: Anderson Jo
 email: a141890@gmail.com
-description: "Machine Learning, Deep Learning, Python, R, Game Server, Data Analysis, AWS, Hadoop, Hortonworks HDP, Spark, Scala, GPU (CUDA), TensorFlow..."
+description: "Artificial Intelligence and BigData"
 
 baseurl: ""
 url: "http://andersonjo.github.io/"
