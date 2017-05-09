@@ -82,10 +82,10 @@ sudo update-grub
 
 ### Installing Ambari
 
-[hortonworks hadoop with ambari][hortonworks hadoop with ambari] 링크를 참조
+[Apache Ambari Installation on Ubuntu 16](http://docs.hortonworks.com/HDPDocuments/Ambari-2.5.0.3/bk_ambari-installation/content/download_the_ambari_repo_ubuntu16.html) 링크를 참조
 
 {% highlight bash %}
-$ sudo wget -nv http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.2.2.0/ambari.list -O /etc/apt/sources.list.d/ambari.list
+$ sudo wget -O /etc/apt/sources.list.d/ambari.list http://public-repo-1.hortonworks.com/ambari/ubuntu16/2.x/updates/2.5.0.3/ambari.list
 
 $ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD
 $ sudo apt-get update
@@ -117,13 +117,49 @@ sudo cp -r /usr/lib/python2.6/site-packages/* /usr/local/lib/python2.7/dist-pack
 
 ### Mysql Setting
 
+* [MariaDB Server 설치 페이지](https://downloads.mariadb.org/mariadb/repositories/#mirror=kaist)
+
+만약 MySQL 또는 MariaDB를 새로 설치했다면 Encoding 먼저 설정합니다.<br>
+(아래는 MariaDB에서 encoding설정하는 방법)
+
+{% highlight bash %}
+sudo vi /etc/mysql/conf.d/mariadb.cnf
+{% endhighlight %}
+
+아래의 예제처럼 utf-8으로 설정을 합니다.
+
+{% highlight bash %}
+[mysqld_safe]
+default-character-set=utf8
+
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+{% endhighlight %}
+
+설정한 후에 restart 합니다.
+
+{% highlight bash %}
+sudo service mysql restart
+{% endhighlight %}
+
+
+
+
+HortonWorks Hadoop을 설정하기 위해서 먼저 MySQL Server에 접속합니다.
+
+{% highlight bash %}
+> mysql -u root -p
+{% endhighlight %}
+
 {% highlight sql %}
-CREATE USER `ambari`@`localhost` IDENTIFIED BY '1234';
-CREATE USER `ambari`@`%` IDENTIFIED BY '1234';
-CREATE USER `hive`@`localhost` IDENTIFIED BY '1234';
+CREATE USER `ambari`@`localhost` IDENTIFIED BY 'bigdata';
+CREATE USER `ambari`@`%` IDENTIFIED BY 'bigdata';
+CREATE USER `hive`@`localhost` IDENTIFIED BY 'bigdata';
 CREATE USER `hive`@`%` IDENTIFIED BY '1234';
-CREATE USER `oozie`@`localhost` IDENTIFIED BY '1234';
-CREATE USER `oozie`@`%` IDENTIFIED BY '1234';
+CREATE USER `oozie`@`localhost` IDENTIFIED BY 'bigdata';
+CREATE USER `oozie`@`%` IDENTIFIED BY 'bigdata';
 
 GRANT ALL PRIVILEGES ON *.* to `ambari`@`localhost` with grant option;
 GRANT ALL PRIVILEGES ON *.* to `ambari`@`%` with grant option;
@@ -146,9 +182,13 @@ mysql -u ambari -p ambari < /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CR
 
 ### Configuring root account
 
-여러모로 root로 계정으로 HDP를 설정하는것이 여러모로 이롭습니다.
+여러모로 root로 계정으로 HDP를 설정하는것이 여러모로 이롭습니다.<br>
+만약 pulblic key를 안만들었다면 다음을 참고 합니다.
 
-**On Localhost**
+* [Generating a new SSH key and adding it to the ssh-agent](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
+
+
+#### On Localhost
 
 SSH 를 먼저 설정해줍니다.<br>
 포인트는 root계정으로 해야하며,  ssh root@localhost를 했을때 에러가 없어야 합니다.
@@ -158,7 +198,7 @@ $ sudo su
 $ cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
 {% endhighlight %}
 
-**On AWS EC2**
+#### On AWS EC2
 
 만약 EC2라면 ubuntu계정의 authorized_keys값을 root의 authorized_keys값에 넣습니다.
 {% highlight bash %}
@@ -176,6 +216,8 @@ ssh -i private-key.pem root@localhost 을 했을때 접속이 잘되면 EC2에�
 
 
 ### Setting up Ambari
+
+* [Set Up the Ambari Server](http://docs.hortonworks.com/HDPDocuments/Ambari-2.5.0.3/bk_ambari-installation/content/set_up_the_ambari_server.html) 페이지 참고
 
 {% highlight bash %}
 sudo ambari-server setup
@@ -199,6 +241,30 @@ Customize user account for ambari-server daemon [y/n] (n)? n
 
 ### Hostname Settings
 
+#### On Localhost
+
+Ambari Agent에 설정된 hostname을 확인합니다.<br>
+(아래 "anderson-desktop"은 나중에  ambari설치시에 사용되게 됩니다.)
+
+{% highlight bash %}
+$ sudo su
+$ hostname -f
+anderson-desktop
+{% endhighlight %}
+
+ambari-agent.ini 파일을 열고 hostname을 변경합니다.
+
+{% highlight bash %}
+$ sudo vi /etc/ambari-agent/conf/ambari-agent.ini
+[server]
+hostname=anderson-desktop
+url_port=8440
+secured_url_port=8441
+{% endhighlight %}
+
+
+#### On AWS
+
 /etc/hosts로 들어가서 public domain을 넣습니다.
 
 {% highlight bash %}
@@ -220,6 +286,7 @@ sudo vi /etc/ambari-agent/conf/ambari-agent.ini
 hostname=PRIVATE_DOMAIN_NAME
 {% endhighlight %}
 
+
 ### Start Ambari
 
 {% highlight bash %}
@@ -227,9 +294,41 @@ $ sudo ambari-server start
 {% endhighlight %}
 
 <span style="color:red">
-실행시킨후 8080포트로 들어가면 Ambari Webpage를 볼 수 있습니다.<br>
-기본 ID/Password는 admin/admin 입니다.
+실행시킨후 [http://localhost:8080](http://localhost:8080)로 들어가면 Ambari Webpage를 볼 수 있습니다.<br>
+기본 ID/Password는 **admin/admin** 입니다.
 </span>
+
+
+
+### Installing HDP on Localhost
+
+(AWS에서의 설치는 해당 부분을 skip합니다.)
+
+
+[1] Cluster Name을 설정합니다.
+
+<img src="{{ page.asset_path }}ambari_install_localhost01.png" class="img-responsive img-rounded">
+
+[2] Hostname과 SSH Private Key를 등록시킵니다.
+
+hostname 찾는것은 다음과 같습니다.
+
+{% highlight bash %}
+$ sudo su
+$ hostname -f
+anderson-desktop
+{% endhighlight %}
+
+SSH Private key 찾는 것은 다음과 같습니다.
+
+{% highlight bash %}
+$ sudo su
+$ cat ~/.ssh/id_rsa
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}ambari_install_localhost02.png" class="img-responsive img-rounded">
+
+<img src="{{ page.asset_path }}ambari_install_localhost03.png" class="img-responsive img-rounded">
 
 
 ### Installing HDP on AWS
@@ -243,8 +342,28 @@ $ sudo ambari-server start
 <img src="{{ page.asset_path }}install-options.png" class="img-responsive img-rounded">
 
 
+# Installing Services
 
-### Success
+먼저 JDBC를 설치합니다.
+
+{% highlight bash %}
+sudo ambari-server setup --jdbc-db=mysql --jdbc-driver=/usr/share/java/mysql-connector-java.jar
+{% endhighlight %}
+
+### Oozie
+
+Derby 사용하는 서비스들에서 MySQL/PostgreSQL 로 변경해주는 것이 좋습니다.
+
+### Hive
+
+Hive Database를 existing MySQL/ MariaDB Database 로 변경합니다.
+
+
+
+
+
+
+# Finish
 
 
 <img src="{{ page.asset_path }}ambari.png" class="img-responsive img-rounded">
@@ -333,11 +452,55 @@ ls /
 create /ams-hbase-unsecure mydata
 {% endhighlight %}
 
- 
+
+
+
+
 
 
 
 # Errors
+
+### not supported os type
+
+공식적으로 support하고 있는 OS 버젼이 아닌곳에서 설치하기 때문에 발생한 에러입니다.<br>
+(Ambari Agent를 server에 등록시 OS를 체크하게 되는데 이때 발생됨)<br>
+에러메세지는 다음과 같습니다.
+
+{% highlight bash %}
+Controller.py:162 - Cannot register host with not supported os type, hostname=localhost, serverOsType=ubuntu16, agentOsType=ubuntu16
+{% endhighlight %}
+
+/usr/lib/python2.6/site-packages/ambari_agent/Facter.py 파일을 열어서 다음과 같이 수정합니다.
+
+{% highlight python %}
+$ sudo vi /usr/lib/python2.6/site-packages/ambari_agent/Facter.py
+
+  # Returns the OS name
+  def getKernel(self):
+    return 'ubuntu14' # platform.system()
+
+  # Returns the full name of the OS
+  def getOperatingSystem(self):
+    return '14.04' # OSCheck.get_os_type()
+
+{% endhighlight %}
+
+pyc파일을 삭제합니다.
+
+{% highlight bash %}
+sudo rm /usr/lib/python2.6/site-packages/ambari_agent/Facter.pyc
+{% endhighlight %}
+
+
+restart합니다.
+
+{% highlight bash %}
+sudo service ambari-agent restart
+sudo ambari-server restart
+{% endhighlight %}
+
+
 
 ### mysql-connector-java Error (when installing Oozie)
 
@@ -488,7 +651,7 @@ java.net.BindException: Port in use: ec2-52-192-233-209.ap-northeast-1.compute.a
 | dfs.namenode.rpc-address | 0.0.0.0:8020 |
 | dfs.namenode.secondary.http-address | 0.0.0.0:50090 |
 
-[HDFS default configurations][HDFS default configurations] 를 참조.
+[HDFS default configurations](https://hadoop.apache.org/docs/r2.4.1/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml) 를 참조.
 
 ### Ambari Metrics Errors
 
@@ -511,5 +674,30 @@ java.net.ConnectException: Connection refused
 
 
 
+# Remove Ambari Completely!!
+
+Ambari삭제하는 방법입니다.
+
+먼저 Ambari server와 agent의 서비스를 중단합니다.
+
+{% highlight bash %}
+sudo ambari-server stop
+sudo ambari-agent stop
+
+sudo apt-get remove ambari-server ambari-agent ambari-metrics-assembly
+
+sudo rm -rf /var/lib/ambari-server/
+sudo rm -rf /var/lib/ambari-agent/
+sudo rm -rf /var/run/ambari-server/
+
+sudo rm -rf /usr/lib/ambari-server/
+sudo rm -rf /usr/lib/ambari-metrics-hadoop-sink/
+sudo rm -rf /usr/lib/ambari-metrics-kafka-sink/
+
+sudo rm /etc/apt/sources.list.d/ambari.list
+sudo rm /etc/apt/sources.list.d/ambari.list.save
+{% endhighlight %}
+
+
+
 [hortonworks hadoop with ambari]: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.2.0/bk_Installing_HDP_AMB/content/_download_the_ambari_repo_ubuntu14.html
-[HDFS default configurations]: https://hadoop.apache.org/docs/r2.4.1/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
