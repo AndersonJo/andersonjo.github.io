@@ -605,7 +605,7 @@ sudo apt-get install ambari-agent
 {% endhighlight %}
 
 
-## Unable to locate package [package-name]
+### Unable to locate package [package-name]
 
 {% highlight bash %}
 sudo vi /etc/apt/sources.list.d/ambari.list
