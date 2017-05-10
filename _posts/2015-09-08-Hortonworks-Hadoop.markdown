@@ -154,12 +154,12 @@ HortonWorks Hadoop을 설정하기 위해서 먼저 MySQL Server에 접속합니
 {% endhighlight %}
 
 {% highlight sql %}
-CREATE USER `ambari`@`localhost` IDENTIFIED BY 'bigdata';
-CREATE USER `ambari`@`%` IDENTIFIED BY 'bigdata';
-CREATE USER `hive`@`localhost` IDENTIFIED BY 'bigdata';
+CREATE USER `ambari`@`localhost` IDENTIFIED BY '1234';
+CREATE USER `ambari`@`%` IDENTIFIED BY '1234';
+CREATE USER `hive`@`localhost` IDENTIFIED BY '1234';
 CREATE USER `hive`@`%` IDENTIFIED BY '1234';
-CREATE USER `oozie`@`localhost` IDENTIFIED BY 'bigdata';
-CREATE USER `oozie`@`%` IDENTIFIED BY 'bigdata';
+CREATE USER `oozie`@`localhost` IDENTIFIED BY '1234';
+CREATE USER `oozie`@`%` IDENTIFIED BY '1234';
 
 GRANT ALL PRIVILEGES ON *.* to `ambari`@`localhost` with grant option;
 GRANT ALL PRIVILEGES ON *.* to `ambari`@`%` with grant option;
