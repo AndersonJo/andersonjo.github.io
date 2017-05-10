@@ -4,7 +4,7 @@ title:  "Convolutional Neural Networks Part 1.5"
 date:   2016-06-12 01:00:00
 categories: "artificial-intelligence"
 asset_path: /assets/posts/Convolutional-Neural-Networks/
-tags: ['CNN', 'Gimp', 'Nvidia', 'GPU Memory', 'ReLU', 'kernel', 'stride', 'Pooling', 'Convolution', 'Feature Map', 'SubSampling', 'DownSampling', 'Gimp']
+tags: ['CNN', 'Pytorch', 'Convolution', 'Convnet', 'TensorFlow', 'Numpy']
 
 ---
 

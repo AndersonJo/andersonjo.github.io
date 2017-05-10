@@ -81,6 +81,16 @@ GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 transparent_hugepage=neve
 sudo update-grub
 {% endhighlight %}
 
+### Configure .bashrc
+
+.bashrc에 다음과 같이 추가합니다.
+
+{% highlight bash %}
+# Java
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+unset JAVA_TOOL_OPTIONS
+{% endhighlight %}
+
 ### Installing Ambari
 
 [Apache Ambari Installation on Ubuntu 16](http://docs.hortonworks.com/HDPDocuments/Ambari-2.5.0.3/bk_ambari-installation/content/download_the_ambari_repo_ubuntu16.html) 링크를 참조
@@ -372,7 +382,7 @@ Hive Database를 existing MySQL/ MariaDB Database 로 변경합니다.
 
 
 
-### Removing Service
+# Removing Service
 
 Ambari를 사용중에 있다가 도중에 Service를 삭제해야할때도 있습니다. 이경우 다음과 같이 합니다.
 
