@@ -89,6 +89,20 @@ sudo update-grub
 # Java
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 unset JAVA_TOOL_OPTIONS
+
+# Hadoop
+export HADOOP_PREFIX=/usr/hdp/current/hadoop-client
+export HADOOP_MAPRED_HOME=$HADOOP_PREFIX
+export HADOOP_COMMON_HOME=$HADOOP_PREFIX
+export HADOOP_HDFS_HOME=$HADOOP_PREFIX
+export YARN_HOME=$HADOOP_PREFIX
+export HADOOP_CONF_DIR=$HADOOP_PREFIX/conf
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_PREFIX/lib/native
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_PREFIX/lib/native"
+export HADOOP_CLASSPATH=$HADOOP_PREFIX/conf
+export CLASSPATH=$CLASSPATH:$HADOOP_PREFIX/lib/*:.
+export PATH=$PATH:$HADOOP_PREFIX/bin
+export PATH=$PATH:$HADOOP_PREFIX/sbin
 {% endhighlight %}
 
 ### Installing Ambari
