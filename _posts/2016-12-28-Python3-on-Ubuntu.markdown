@@ -2,7 +2,7 @@
 layout: post
 title:  "Python 3 on Ubuntu"
 date:   2016-12-28 01:00:00
-categories: "aws"
+categories: "python"
 asset_path: /assets/posts2/Language/
 tags: ['format', 'Jupyter', 'Scipy', 'Numpy']
 
