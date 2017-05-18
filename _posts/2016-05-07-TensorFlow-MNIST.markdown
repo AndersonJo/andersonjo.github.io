@@ -2,7 +2,7 @@
 layout: post
 title:  "TensorFlow - Softmax Regression"
 date:   2016-05-07 01:00:00
-categories: "machine-learning"
+categories: "tensorflow"
 asset_path: /assets/posts/TensorFlow-Softmax-Regression/
 tags: ['MNIST', 'Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio']
 

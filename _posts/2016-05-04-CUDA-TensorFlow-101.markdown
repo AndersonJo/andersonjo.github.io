@@ -2,7 +2,7 @@
 layout: post
 title:  "CUDA Toolkit, cuDNN, TensorFlow 101"
 date:   2016-05-04 01:00:00
-categories: "machine-learning"
+categories: "tensorflow"
 static: /assets/posts/TensorFlow-101/
 tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 

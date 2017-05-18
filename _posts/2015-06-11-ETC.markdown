@@ -2,7 +2,7 @@
 layout: post
 title:  "ETC - 알면 좋은 거"
 date:   2015-06-11 01:00:00
-categories: "queue"
+categories: "etc"
 asset_path: /assets/posts/ETC/
 tags: ['Linux', 'time', 'Cacti', 'Xenserver', 'Oracle', 'Git', 'SSH', 'Sencha', 'Ext.JS']
 ---

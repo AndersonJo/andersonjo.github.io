@@ -2,7 +2,7 @@
 layout: post
 title:  "Jupyter & Perceptron"
 date:   2016-05-02 01:00:00
-categories: "machine-learning"
+categories: "jupyter"
 static: /assets/posts/Perceptron/
 tags: ['python', 'data analytics', 'jupyter', 'ipython', 'notebook']
 ---

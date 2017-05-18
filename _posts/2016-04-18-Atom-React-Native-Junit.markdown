@@ -2,7 +2,7 @@
 layout: post
 title:  "Atom & React Native 101"
 date:   2016-04-18 01:00:00
-categories: "react"
+categories: "atom"
 static: /assets/posts/React-Native-101/
 tags: ['node.js', 'jsx']
 
