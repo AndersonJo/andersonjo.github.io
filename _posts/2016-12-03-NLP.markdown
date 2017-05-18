@@ -74,13 +74,12 @@ tags: ['KoNLPy']
 | SP  | 쉼표 <br>가운뎃점 <br>콜론 <br>빗금 |
 | SO  | 붙임표 | (물결,숨김,빠짐) |
 | SW  | 기타기호 | (논리수학기호,화폐기호) |
-| SH  | 한자 |
-| SL  | 외국어 |
-
-SN	숫자
-NF	명사추정범주
-NV	용언추정범주
-NA	분석불능범주
+| SH  | 한자 | | |
+| SL  | 외국어 | | `hello`, `hi` |
+| SN  | 숫자 | | `1`, `2`, `3` |
+| NF  | 명사추정범주 |
+| NV  | 용언추정범주 |
+| NA  | 분석불능범주 |
 
 # KoNLPy
 
@@ -88,7 +87,7 @@ KoNLPy의 장점은 이미 잘 만들어진 형태소 엔진을 파이썬에서 
 Kkma, 한나눔, Komoran, Mecab, Twitter의 사전을 하나의 라이브러리에서 사용할수 있습니다.
 
 
-### 설치
+## 설치
 
 * [KoNLPy 공식 설치 문서 참고](http://konlpy-ko.readthedocs.io/ko/v0.4.3/install/)
 
