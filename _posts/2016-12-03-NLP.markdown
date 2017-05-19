@@ -35,7 +35,7 @@ tags: ['KoNLPy']
 
 | tag | name     | description | example |
 |:----|:---------|:------------|:--------|
-| NNG | 일반 명사  | 일반적인 사물의 이름을 가르킨다 |  하늘, 나무, 사랑, 희망 |
+| NNG |  일반 명사  | 일반적인 사물의 이름을 가르킨다 |  하늘, 나무, 사랑, 희망 |
 | NNP | 고유 명사  | 특정한 사람이나 사물의 이름을 가르킨다 | 안창호, 금강산, 신라, 한강 |
 | NNB | 의존 명사  | 자립명사라고도 하며 스스로 뜻을 지니고 있어 <br>다른 말의 도움없이 쓰이는 명사 | 뿐, 바, 따름, 이, 데, 줄, 나름, 나위 |
 | NR  | 수사      | 사물의 수량이나 순서를 나타냄 | 하나, 둘, 셋, 넷, 다섯, 첫째, 둘째, 셋째 |
@@ -84,7 +84,7 @@ tags: ['KoNLPy']
 # KoNLPy
 
 KoNLPy의 장점은 이미 잘 만들어진 형태소 엔진을 파이썬에서 사용할수 있도록 해준다는 것입니다.<br>
-Kkma, 한나눔, Komoran, Mecab, Twitter의 사전을 하나의 라이브러리에서 사용할수 있습니다.
+꼬꼬마 (Kkma), 한나눔(Hannanum), 자바 한국어 형태소 분석기 (Komoran), 은전한닢 프로젝트 (Mecab), Twitter의 사전을 하나의 라이브러리에서 사용할수 있습니다.
 
 
 ## 설치
@@ -96,8 +96,276 @@ MeCab도 같이 설치를 합니다.
 
 {% highlight bash %}
 sudo pip3 install konlpy
-bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh)
 {% endhighlight %}
+
+Mecab 설치는 다음과 같이 합니다.
+
+{% highlight bash %}
+wget https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh
+{% endhighlight %}
+
+mecab.sh 파일을 다운받으면 `python3` 명령어를 `sudo python3.6`으로 바꿔줍니다. (Python3.6 사용시)
+
+{% highlight bash %}
+bash mecab.sh
+{% endhighlight %}
+
+## 형태소 분석 비교
+
+### 아버지가방에들어가신다
+
+`아버지가방에들어가신다` 를 갖고서 각각의 사전에 대한 spacing algorithm을 비교합니다.<br>
+`아버지가 방에 들어 가신다` 이렇게 제대로 해석한것은 **Mecab**이며, <br>
+Kkma, Twitter는 `아버지 가방에 들어 가신다` 라고 분석했습니다.
+
+
+| Hannanum               | Kkma        | Komoran                 | Mecab        | Twitter      |
+|:-----------------------|:------------|:------------------------|:-------------|:-------------|
+| 아버지가방에들어가 / N    | 아버지 / NNG | 아버지가방에들어가신다 / NNP |	아버지 / NNG | 아버지 / Noun |
+| 이 / J	                 | 가방 /       |                         | 가 / JKS     | 가방 / Noun   |
+| 시ㄴ다 / E	             | 에 / JKM    |                          | 방 / NNG	    |  에 / Josa   |
+|                        |  들어가 / VV |                          | 에 / JKB    | 들어가신 / Verb |
+|                        | 시 / EPH	 	|                        | 들어가 / VV	| 다 / Eomi     |
+|                        | ㄴ다 / EFN	|                         |	신다 / EP+EC |              |
+
+
+### 머리를 감기다
+
+`머리를 감기다` 에서는 감기가 병을 가르키는 명사 `감기`를 가르키는 것인지, 동사 `감기다`를 말하는 것인지 구분합니다. <br>
+궁극적으로 Komoran 그리고 Mecab 만 `감기`를 동사로 제대로 구분을 해냈습니다.
+
+
+| Hannanum               | Kkma        | Komoran                 | Mecab        | Twitter      |
+|:-----------------------|:------------|:------------------------|:-------------|:-------------|
+| 머리 / N                | 머리 / NNG   | 머리 / NNG              | 머리 / NNG    | 머리 / Noun   |
+| 를 / J                 | 를 / JKO     | 를 / JKO                | 를 / JKO     | 를 / Josa     |
+| 감기 / N                | 감기 / NNG    | 감기 / VV               | 감기 / VV    | 감기 / Noun   |
+| 이 / J                 | 이 / VCP     |                         |              |              |
+| 다/ E                  | 다 / EFN   | 다 / EC                   | 다 / EC      | 다 / Josa       |
+
+## 처리 속도 비교
+
+`중성자별(neuron star)은 초신성 폭발 직후 무거운 별이 중력붕괴하여 만들어진 밀집성의 일종이다` 라는 문장을 갖고서 속도 측정을 하였습니다.
+
+|         | Hannanum          | Kkma        | Komoran         | Mecab        | Twitter      |
+|         |:------------------|:------------|:----------------|:-------------|:-------------|
+| mean    | 17.1 ms           | 693 ms      | 6.92 ms         | 0.0901 ms    | 16.3 ms      |
+| slowest | 607 ms            | 3850 ms     | 1750 ms         | 1.45 ms      | 882 ms       |
+
+속도 측면에서 **Mecab이 가장 빠릅**니다.
+
+> Komoran의 경우 java.lang.OutOfMemoryError: GC overhead limit exceeded  에러가 빈번하게 나오며, 거의 멈춰있는 수준까지도 됨
+
+
+# KoNLPy API 사용
+
+## Tag Package
+
+### 불러오기
+
+다음의 사전 클래스들을 다음과 같이 불러오고 instantiate 해줄수 있습니다.
+
+{% highlight python %}
+from konlpy.tag import Kkma, Hannanum, Komoran, Mecab, Twitter
+
+twitter = Twitter()
+mecab = Mecab()
+kkma = Kkma()
+hannanum = Hannanum()
+komoran = Komoran()
+{% endhighlight %}
+
+### 문장을 형태소로 변환
+
+
+#### Hannanum
+
+{% highlight python %}
+> hannanum.morphs('@챗봇 내일 판매율 예측해서 Anderson한테 이메일로 보내줘.')
+['@챗봇', '내', '이', 'ㄹ', '판매율', '예측해서', 'Anderson', '한테', '이메일', '로', '보내', '어', '주', '어', '.']
+{% endhighlight %}
+
+
+#### Kkma
+
+{% highlight python %}
+> kkma.morphs('@챗봇 내일 판매율 예측해서 Anderson한테 이메일로 보내줘.')
+['@', '챗봇', '내일', '판매', '율', '예측', '하', '어서', 'Anderson', '한테', '이메일', '로', '보내주', '어', '.']
+{% endhighlight %}
+
+#### Komoron
+
+{% highlight python %}
+> komoran.morphs('@챗봇 내일 판매율 예측해서 Anderson한테 이메일로 보내줘.')
+['@챗봇', '내일', '판매', '율', '예측', '하', '아서', 'Anderson', '한테', '이메일', '로', '보내', '어', '주', '어', '.']
+{% endhighlight %}
+
+
+#### Mecab
+
+{% highlight python %}
+> mecab.morphs('@챗봇 내일 판매율 예측해서 Anderson한테 이메일로 보내줘.')
+['@', '챗', '봇', '내일', '판매', '율', '예측', '해서', 'Anderson', '한테', '이메일', '로', '보내', '줘', '.']
+{% endhighlight %}
+
+#### Twitter
+
+{% highlight python %}
+> twitter.morphs('@챗봇 내일 판매율 예측해서 Anderson한테 이메일로 보내줘.')
+['@', '챗봇', '내일', '판매', '율', '예측해서', 'Anderson', '한테', '이메일', '로', '보내', '줘', '.']
+{% endhighlight %}
+
+
+### POS (Part of speech) Tags
+
+최근 Twitter 또는 인스타그램등등의 SNS에서 사용될 만한 문장으로 예제를 돌려보았습니다.<br>
+특히 Twitter 사전의 경우 `@누구` 또는 `#태그` 를 정확하게 SNS에서 사용하는 hashtag로 인식을 했으며, <br>
+그 외의 사전은 `먹스타그램` 처럼 하나의 형태소별로 쪼개놓을 것을 알 수 있습니다.
+
+#### Hannanum
+
+{% highlight python %}
+> hannanum.pos('@anderson 어제 비올렛 스테이크 핵존맛! #쩔어 #먹스타그램')
+[('@', 'S'),
+ ('anderson', 'F'),
+ ('어제', 'N'),
+ ('비올렛', 'N'),
+ ('스테이크', 'N'),
+ ('핵존맛', 'N'),
+ ('!', 'S'),
+ ('#쩔어', 'N'),
+ ('#먹스타그램', 'N')]
+{% endhighlight %}
+
+#### Kkma
+
+{% highlight python %}
+> kkma.pos('@anderson 어제 비올렛 스테이크 핵존맛! #쩔어 #먹스타그램')
+[('@', 'SW'),
+ ('anderson', 'OL'),
+ ('어제', 'NNG'),
+ ('비올', 'NNG'),
+ ('렛', 'UN'),
+ ('스테이크', 'NNG'),
+ ('핵', 'NNG'),
+ ('존', 'NNP'),
+ ('맛', 'NNG'),
+ ('!', 'SF'),
+ ('#', 'SW'),
+ ('쩔', 'VV'),
+ ('어', 'ECD'),
+ ('#', 'SW'),
+ ('먹', 'NNG'),
+ ('스타', 'NNG'),
+ ('그램', 'NNM')]
+{% endhighlight %}
+
+
+#### Komoran
+
+{% highlight python %}
+> komoran.pos('@anderson 어제 비올렛 스테이크 핵존맛! #쩔어 #먹스타그램')
+[('@', 'SW'),
+ ('anderson', 'SL'),
+ ('어제', 'MAG'),
+ ('비올렛', 'NA'),
+ ('스테이크', 'NNG'),
+ ('핵', 'NNG'),
+ ('존', 'NNG'),
+ ('맛', 'NNG'),
+ ('!', 'SF'),
+ ('#쩔어', 'NA'),
+ ('#', 'SW'),
+ ('먹', 'NNG'),
+ ('스타', 'NNG'),
+ ('그램', 'NNB')]
+{% endhighlight %}
+
+
+#### Mecab
+
+{% highlight python %}
+> mecab.pos('@anderson 어제 비올렛 스테이크 핵존맛! #쩔어 #먹스타그램')
+[('@', 'SY'),
+ ('anderson', 'SL'),
+ ('어제', 'NNG'),
+ ('비올', 'NNG'),
+ ('렛', 'NNP'),
+ ('스테이크', 'NNG'),
+ ('핵', 'NNG'),
+ ('존', 'NNP'),
+ ('맛', 'NNG'),
+ ('!', 'SY'),
+ ('#', 'SY'),
+ ('쩔', 'VA'),
+ ('어', 'EC'),
+ ('#', 'SY'),
+ ('먹스', 'NNG'),
+ ('타', 'XSV+EC'),
+ ('그램', 'NNG')]
+{% endhighlight %}
+
+#### Twitter
+
+{% highlight python %}
+> twitter.pos('@anderson 어제 비올렛 스테이크 핵존맛! #쩔어 #먹스타그램')
+[('@anderson', 'ScreenName'),
+ ('어제', 'Noun'),
+ ('비올', 'Noun'),
+ ('렛', 'Noun'),
+ ('스테이크', 'Noun'),
+ ('핵존맛', 'Noun'),
+ ('!', 'Punctuation'),
+ ('#쩔어', 'Hashtag'),
+ ('#먹스타그램', 'Hashtag')]
+{% endhighlight %}
+
+
+
+### 단어만 추출
+
+단어를 추출하는데 크게 문제는 없지만, Kkma의 경우 명사 + 명사 로 만들어진 부분을 중복해서 집어내고 있으며,<br>
+Mecab의 경우 '인스타그램'이라는 최신 단어를 분리시키는 단점들을 보이고 있습니다.
+
+#### Hannanum
+
+{% highlight python %}
+> hannanum.nouns('철학은 기술을 만들고 기술은 문화를 만든다')
+['철학', '기술', '기술', '문화']
+{% endhighlight %}
+
+
+#### Kkma
+
+{% highlight python %}
+> kkma.nouns('롯데마트의 간장치킨이 영세상인들을 울게 만들다')
+['롯데', '롯데마트', '마트', '간장', '간장치킨', '치킨', '영세', '영세상인', '상인']
+{% endhighlight %}
+
+#### Komoron
+
+{% highlight python %}
+> komoran.nouns('치킨월드의 불닭볶음은 대중의 많은 인기를 얻고 있다')
+['치킨', '월드', '불닭', '볶음', '대중', '인기']
+{% endhighlight %}
+
+
+#### Mecab
+
+{% highlight python %}
+> mecab.nouns('소녀시대 태연은 인스타그램을 통해 일본투어를 시작하겠다고 전해왔다')
+['소녀', '시대', '태연', '인', '스타', '그램', '일본', '투어', '시작']
+{% endhighlight %}
+
+#### Twitter
+
+{% highlight python %}
+> twitter.nouns('소녀시대 태연은 인스타그램을 통해 일본투어를 시작하겠다고 전해왔다')
+['소녀시대', '태연', '인스타그램', '통해', '일본', '투어', '전해']
+{% endhighlight %}
+
+
+
 
 
 # References

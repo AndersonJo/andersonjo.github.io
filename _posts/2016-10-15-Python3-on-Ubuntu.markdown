@@ -47,6 +47,14 @@ sudo make altinstall
 {% endhighlight %}
 
 
+헤더파일을 옮깁니다.
+
+{% highlight python %}
+sudo mkdir /usr/include/python3.6
+sudo cp Include/* /usr/include/python3.6/
+{% endhighlight %}
+
+
 ### Installing PIP3 
 
 [ensurepip - Bootstrapping the pip installer](https://docs.python.org/3/library/ensurepip.html)에서 자세한 내용을 참고 합니다.
