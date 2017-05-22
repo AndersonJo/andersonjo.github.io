@@ -89,6 +89,8 @@ KoNLPy의 장점은 이미 잘 만들어진 형태소 엔진을 파이썬에서 
 
 ## 설치
 
+### KoNLPy 설치
+
 * [KoNLPy 공식 설치 문서 참고](http://konlpy-ko.readthedocs.io/ko/v0.4.3/install/)
 
 KoNLPy (코엔엘파이라고 읽음)을 설치는 매우 단순합니다. <br>
@@ -98,17 +100,77 @@ MeCab도 같이 설치를 합니다.
 sudo pip3 install konlpy
 {% endhighlight %}
 
-Mecab 설치는 다음과 같이 합니다.
+
+### MECAB 설치
+
+KoNLPy에서 쉽게 설치하는 방법이 있는데 (mecab.sh사용) 해당 방식으로 설치시 <br>
+낮은 버젼의 Mecab이 설치가 되며, 추후 사전추가시 어려움이 생길수 있습니다.<br>
+Mecab은 따로 최신버젼을 설치를 합니다.
+
+#### MECAB-KO 형태소 분석기 엔진 설치
+
+은전한닢 프로젝트에서 만든 MeCab의 fork 프로젝트이며 한국어의 특성에 맞는 기능을 추가하였습니다.<br>
+[다운로드 페이지](https://bitbucket.org/eunjeon/mecab-ko/downloads/)에서 최신 버젼을 다운로드 할수 있습니다.
 
 {% highlight bash %}
-wget https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh
+wget https://bitbucket.org/eunjeon/mecab-ko/downloads/mecab-0.996-ko-0.9.2.tar.gz
+tar -zxvf mecab-*-ko-*.tar.gz
+cd mecab-*-ko-*
+./configure
+make
+make check
+sudo make install
 {% endhighlight %}
 
-mecab.sh 파일을 다운받으면 `python3` 명령어를 `sudo python3.6`으로 바꿔줍니다. (Python3.6 사용시)
+버젼을 확인합니다.
 
 {% highlight bash %}
-bash mecab.sh
+$ mecab --version
+mecab of 0.996/ko-0.9.2
 {% endhighlight %}
+
+#### MECAB-KO 사전 설치
+
+[다운로드 페이지](https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/) 최신 사전 파일을 다운로드 받을수 있습니다.<br>
+설치는 기본적으로 `/usr/local/lib/mecab/dic/mecab-ko-dic` 에 설치 됩니다.
+
+Dependencies를 설치합니다.
+
+{% highlight bash %}
+sudo apt-get install automake
+{% endhighlight %}
+
+MeCAB-KO-DIC을 설치합니다.<br>
+특히 마지막 *.def 를 복사하는 부분을 놓치면 안됩니다.
+
+{% highlight bash %}
+wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.0.1-20150920.tar.gz
+tar -zxvf mecab-ko-dic-2.0.1-20150920.tar.gz
+cd mecab-ko-dic-2.0.1-20150920/
+./autogen.sh
+./configure
+make
+sudo make install
+
+sudo cp *.def /usr/local/lib/mecab/dic/mecab-ko-dic/
+sudo cp -R tools/ /usr/local/lib/mecab/dic/mecab-ko-dic/
+{% endhighlight %}
+
+
+#### MECAB-KO 설치 확인 테스트
+
+{% highlight bash %}
+$ mecab -d /usr/local/lib/mecab/dic/mecab-ko-dic
+사나는 사랑이다
+
+사나	NNG,*,F,사나,*,*,*,*
+는	JX,*,T,는,*,*,*,*
+사랑	NNG,*,T,사랑,*,*,*,*
+이	VCP,*,F,이,*,*,*,*
+다	EC,*,F,다,*,*,*,*
+EOS
+{% endhighlight %}
+
 
 ## 형태소 분석 비교
 
@@ -365,7 +427,85 @@ Mecab의 경우 '인스타그램'이라는 최신 단어를 분리시키는 단�
 {% endhighlight %}
 
 
+# 사전 추가하기
 
+## MeCAB 사전 추가
+
+먼저 `mecab-ko-dic`가 설치된 곳으로 이동합니다.<br>
+만약 없으면 "MECAB-KO 사전 설치" 부분을 다시 보고 설치를 합니다.<br>
+`user.csv` 파일을 만들고 아래의 형식대로 단어를 추가할 수 있습니다.
+
+{% highlight bash %}
+gedit user.csv
+{% endhighlight %}
+
+user.csv에는 다음과 같은 형태로 지정합니다.
+
+> 자세한 내용은 [mecab-ko-dic 품사 태그 설명](https://docs.google.com/spreadsheets/d/1-9blXKjtjeKZqsf4NzHeYJCrr49-nXeRF6D80udfcwY/edit#gid=1718487366)을 참조 합니다.
+
+
+| 표층형 | 좌ID    | 우ID   | 우선도 | 품사 | 의미 부류 | 종성 유무 | 발음 | 타입 | 첫번째 품사 | 마지막 품사 | 표현  |
+|:------|:-------|:-------|:-----|:----|:--------|:---------|:----|:----|:----------|:----------|:-----|
+| 태양   |        |        | 0    | NNG | *       | T        | 태양 | *   | *         | *        | *    |
+| 서울   |        |        | 0    | NNP | 지명     | T        | 서울 | *   | *         | *        | *    |
+| 불태워졌 |       |        | 0    | VV+EM+VS+EP | | T        | 불태워졌 | Inflected | VV | EP     | 불태우/VV/*+어/EC/*+지/VX/*+었/EP/* |
+| 해수욕장 |       |        | 0    | NNG |         | T        | 해수욕장 | Compound  | *  | *      |해수/NNG/*+욕/NNG/*+장/NNG/* |
+
+
+| 이름 | 영어명 | 설명 |
+|:----|:------|:----|
+| 표층형 | Surface layer shape | 단어명 |
+| 좌측 ID | Left context ID  | MeCAB내부에서 사용되는 ID값이며, left-id.def 에서 참조함. 빈칸으로 냅둘시 자동으로 ID를 할당함 |
+| 우측 ID | Right context ID | MeCAB내부에서 사용되는 ID값이며, right-id.def에서 참조함. 빈칸으로 냅둘시 자동으로 ID를 할당함 |
+| 우선도  | Cost | 해당 단어가 얼마나 자주 나타나는지를 나타내며, 값이 작을수록 더 자주 나타난다는 뜻. 그냥 빈칸으로 두면 됨 |
+| 품사   | Part of speech | 품사 Tag값이 설정됨 |
+| 의미 부류 |  | `인명`, `지명`, `*` 이 들어갈수 있음 |
+| 종성 유무 |  | 받침이 있으면 `T` 없으면 `F` |
+| 발음 | Pronunciation | 발음을 적음 |
+| 타입 |    | `Inflected` - 활용, `Compound` - 복합명사, `Preanalysis` - 기분석, `*` |
+| 첫번째 품사 | | |
+| 마지막 품사 | | |
+| 표현 |  | 활용, 복합명사, 기분석이 어떻게 구성되는지 알려줌 |
+
+
+예를 들어서 `user.csv`에는 다음과 같이 단어를 추가할 수 있습니다.
+
+{% highlight csv %}
+가모라,,,0,NNP,인명,F,가모라,*,*,*,*
+{% endhighlight %}
+
+추가후에 `add-userdic.sh`를 실행시킵니다.
+
+{% highlight bash %}
+$ ./tools/add-userdic.sh
+generating userdic...
+nnp.csv
+... (생략)
+reading ./NNG.csv ... 205269
+emitting double-array: 100% |###########################################|
+reading ./matrix.def ... 3819x2694
+emitting matrix      : 100% |###########################################|
+
+done!
+To enable dictionary, rewrite /usr/local/etc/mecabrc as "dicdir = /usr/local/lib/mecab/dic/mecab-ko-dic"
+{% endhighlight %}
+
+마지막으로 설치를 합니다.
+
+{% highlight bash %}
+sudo make install
+{% endhighlight %}
+
+마지막으로 '가모라'가 인명으로 하나의 이름으로 인식되는지 확인해봅니다.<br>
+아래에서처럼 '가모라'는 하나의 단어로 인식이 잘 됩니다.
+
+{% highlight bash %}
+$ mecab
+가모라
+
+가모라	NNP,인명,F,가모라,*,*,*,*
+EOS
+{% endhighlight %}
 
 
 # References
