@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Cost Functions in Numpy, Scipy, and Pytorch"
+title:  "[Optimizer] Momentum"
 date:   2017-04-08 01:00:00
-categories: "machine-learning"
+categories: "artificial-intelligence"
 asset_path: /assets/posts2/Pytorch/
 tags: ['Loss', 'Cost', 'Objective', 'Numpy', 'Scipy', 'Pytorch']
 

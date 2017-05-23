@@ -110,6 +110,8 @@ mecab.sh 파일을 다운받으면 `python3` 명령어를 `sudo python3.6`으로
 bash mecab.sh
 {% endhighlight %}
 
+
+
 ## 형태소 분석 비교
 
 ### 아버지가방에들어가신다
@@ -365,8 +367,96 @@ Mecab의 경우 '인스타그램'이라는 최신 단어를 분리시키는 단�
 {% endhighlight %}
 
 
+# 사전 추가
 
+## Mecab에 사전 추가
 
+먼저 특정 위치에 추가할 사전파일을 만듭니다.
+
+{% highlight bash %}
+mkdir mecab-dict
+cd mecab-dict/
+vi user.csv
+{% endhighlight %}
+
+user.csv파일 안에는 다음과 같이 입력을 합니다.
+
+{% highlight csv %}
+스파크플러그,,,,NNP,인명,F,스파크플러그,*,*,*,*,*
+닥터 스트레인지,,,,NNP,인명,F,닥터 스트레인지,*,*,*,*,*
+모킹버드,,,,NNP,인명,F,모킹버드,*,*,*,*,*
+{% endhighlight %}
+
+compile 해주가 위해서 다음과 같이 합니다.
+
+{% highlight bash %}
+export DIC_PATH=/usr/local/lib/mecab/dic/mecab-ko-dic/
+
+{% endhighlight %}
+
+## twitter-korean-text에 사전 추가
+
+사전에 Marvel Comics 영울들의 이름을 추가시켜보도록 하겠습니다.<br>
+먼저 twitter-korean-text 를 git에서 clone을 합니다.
+
+{% highlight bash %}
+git clone https://github.com/twitter/twitter-korean-text.git
+{% endhighlight  %}
+
+IntelliJ Idea를 열고 위의 프로젝트를 엽니다.
+
+<img src="{{ page.asset_path }}twitter-open.png" class="img-responsive img-rounded">
+
+twitter-korean-text/src/main/resources/com/twitter/penguin/korean/util 위치에 보면 다양한 사전이 txt파일 형식으로 저장이 되어 있습니다.
+
+<img src="{{ page.asset_path }}twitter_dict_dir.png" class="img-responsive img-rounded">
+
+비교를 하기 위해서 먼저 테스트 케이스를 만듭니다.<br>
+/src/test/scala/com/twitter/penguin/korean/MarvelTest.scala 에 다음과 같은 코드를 넣습니다.
+
+{% highlight scala %}
+package com.twitter.penguin.korean
+class MarvelTest extends TestBase {
+  var text = "앤더슨조는 무적 헐크버스터, 자이언트루퍼와 맞서 싸웠다"
+
+  test("new word") {
+    var tokens = TwitterKoreanProcessor.tokenize(text)
+    println(tokens)
+  }
+}
+{% endhighlight %}
+
+실행시킨 결과는 아래와 같으며, 앤더슨조, 헐크버스터, 자이언트루퍼를 하나의 단어가 아니라 독립된 단어로 형태로를 구분하였습니다.
+
+{% highlight scala %}
+List(앤더슨(ProperNoun: 0, 3), 조(Suffix: 3, 1), 는(Josa: 4, 1),  (Space: 5, 1), 무족(Noun: 6, 2),  (Space: 8, 1), 헐크(ProperNoun: 9, 2), 버스터(ProperNoun: 11, 3), ,(Punctuation: 14, 1),  (Space: 15, 1), 자이언트(ProperNoun: 16, 4), 루퍼(ProperNoun: 20, 2), 와(Josa: 22, 1),  (Space: 23, 1), 맞서(Verb: 24, 2),  (Space: 26, 1), 싸웠(Verb: 27, 2), 다(Eomi: 29, 1))
+{% endhighlight %}
+
+사전에 "앤더슨조", "헐크버스터", "자이언트루퍼"를 추가시키겠습니다.
+
+<img src="{{ page.asset_path }}twitter_add_dict.png" class="img-responsive img-rounded">
+
+twitter-korean-text/src/main/scala/com/twitter/penguin/korean/tools/DeduplicateAndSortDictionaries.scala 파일을 열고, <br>
+DeduplicateAndSortDictionaries 를 실행해서 사전을 업데이터 해줍니다.
+
+<img src="{{ page.asset_path }}twitter_sort_dict.png" class="img-responsive img-rounded">
+
+다시한번 MarvelTest 실행시켜서 테스트 합니다.<br>
+이번에는 "앤더슨조", "헐크버스터", 그리고, "자이언트루퍼"를 하나의 대명사로 인식을 하였습니다.
+
+{% highlight scala %}
+List(앤더슨조(ProperNoun: 0, 4), 는(Josa: 4, 1),  (Space: 5, 1), 무적(Noun: 6, 2),  (Space: 8, 1), 헐크버스터(Noun: 9, 5), ,(Punctuation: 14, 1),  (Space: 15, 1), 자이언트루퍼(ProperNoun: 16, 6), 와(Josa: 22, 1),  (Space: 23, 1), 맞서(Verb: 24, 2),  (Space: 26, 1), 싸웠(Verb: 27, 2), 다(Eomi: 29, 1))
+{% endhighlight %}
+
+Maven Project에서 package를 실행합니다.
+
+<img src="{{ page.asset_path }}twitter_package.png" class="img-responsive img-rounded">
+
+만들어진 jar 파일을 konlpy로 옮겨줍니다.
+
+{% highlight bash %}
+sudo mv target/twitter-korean-text-2.4.3.jar /usr/local/lib/python3.6/site-packages/konlpy/java/
+{% endhighlight %}
 
 # References
 
