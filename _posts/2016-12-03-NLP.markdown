@@ -66,7 +66,7 @@ tags: ['KoNLPy']
 | XPN | 체언 접두사 | 낱말의 앞에 붙어서 의미를 첨가하여 <br>다른 낱말을 이루는 말. | `갓`마흔, `갓`서른, `갓`졸업하다 (지금, 막, 금방) <br>`군`말, `군`소리, `군`침 (쓸데없는) <br> `날`고기, `날`감자 (익지 않은, 마르지 않은, 가공하지 않은) <br> `덧`칠하다, `덧`붙이다 (더해진, 부가된) <br>`되`풀이하다, `되`새김질, `되`돌아보다 (다시, 되풀이하다)<br>`맞`선, `맞`벌이, `맞`절 (마주보다, 함께, 반대방향으로) <br>`매`년, `매`달, `매`번, `매`사 (하나하나의, 각각의) <br>`맨`주먹, `맨`바닥 (더하지 않은) <br>`빗`나가다, `빗`맞다 (비뚜로, 잘못, 기울어진) <br>`생`매장, `생`쌀, `생`맥주 (날것, 익히지 않은, 자연의) <br>`설`익다 (불충분함) <br>`알`밤, `알`사탕, `알`약, `알`몸 (작고 둥근, 벌거벗은, 주요한) <br>`외`길, `외`나무다리, `외`아들, `외`톨이 (오직, 하나의) <br>`잔`기침, `잔`돈, `잔`소리, `잔`주름 (작은, 필요치 않은) <br>`짓`누르다, `짓`밟다 (함부로, 마구, 흠씬) <br>`첫`걸음, `첫`날, `첫`눈, `첫`사랑 (처음의, 초기의) <br>`총`계, `총`선거, `총`액 (모든, 전체의, 종합적인) <br>`최`고, `최`근, `최`상급, `최`소, `최`신식 (가장 앞선/좋은/많은) <br>`풋`사랑, `풋`사과 (덜 익은, 경험이 부족한, 신선한, 새로운) <br>`햇`감자, `햇`곡식, `햇`과일, `햅`쌀 (새로운, 그해의 가장 처음) <br>`한`밤중, `한`가운데, `한`마음, `한`민족 (큰, 넓은, 중심의) <br>`헛`기침, `헛`고생, `헛`수고 (속이 빈, 소용이 없는) <br>`홀`몸, `홀`아비, `홀`어머니 (외로운, 짝이없는, 하나뿐인)|
 | XSN | 명사파생 접미사 | 명사 + 접미사 = 명사 | 부자`간`, 형제`간`, 서울과 부산`간`, 며칠`간` (~간, 사이의, 관계) <br>장난`감`, 일`감`, 사윗`감`, 우월`감` (~에 적합한 사람, ~를 위한 재료) <br> 12시`경`, 초순`경` (~경, 시간, 쯤, 무렵) <br>어선`군`, 유빙`군` (~군, 무리, 떼) <br>마음`껏`, 힘`껏`, 소신`껏` (~껏, 가장 높은 한도에 이르도록) <br> 잠`꾸러기`, 말썽`꾸러기` (~꾸러기, 버릇이 많거나, 일으키는 사람) <br>구경`꾼`, 나무`꾼`, 춤`꾼` (그 일을 잘하는 사람, 몰려드는 사람) <br>여자`끼리`, 우리`끼리` (~끼리, 여럿이 함께 패를 지음) <br>사장`님`, 선생`님`, 달`님` (~님, 호칭에 붙어 높임을 나타냄) <br>게으름`뱅이`, 주정`뱅이` (습관 성질등을 얕잡아 이름) <br>떡`보`, 술`보`, 울`보` (유달리 즐기거나 정도가 심함) <br> 생김`새`, 모양`새`, 쓰임`새` (됨됨이, 정도, 상태) <br> 마음`씨`, 김해 김`씨`, 말`씨` (태도, 같은 성의 계통) <br> 둘`씩`, 다섯`씩` (각각 같은 수효로 나눔) <br> 오늘`쯤`, 어디`쯤` (어느정도)|
 | XSV | 동사 파생 접미사 | 동사 + 접미사 = 동사 | 기웃`거리다`, 북적`거리다`, 투덜`거리다`, 헐떨`거리다`<br>(~거리다, ~대다, 어떤 행동을 반복하다) <br>깨`뜨리다`, 넘어`뜨리다`, 떨어`뜨리다` (동사를 힘주어 나타냄) <br> 형`만한` 아우, 우리 집`만한` 집이 없다, 주먹`만한` 돌 (~만한 크기의) |
-| XSA | 형용사 파생 접미사 | 형용사 + 접미사 = 형용사 | 학생`답다`, 여자`답다`, 군인`답다` (~답다, ~같은, ~라 할 만하다) <br>자유`롭다`, 신비`롭다`, 해`롭다` (~한 성경을 지니는) <br>사랑`스럽다`, 자랑`스럽다`, 걱정`스럽다` (~와 같은, ~처럼 보이는) <br>겸연`쩍다`, 미심`쩍다`, 수상`쩍다` (~한 느낌을 갖다/주다/느끼다)|
+| XSA | 형용사 파생 접미사 | 형용사 + 접미사 = 형용사 | 학생`답다`, 여자`답다`, 군인`답다` (~답다, ~같은, ~라 할 만하다) <br>자유`롭다`, 신비`롭다`, 해`롭다` (~한 성격을 지니는) <br>사랑`스럽다`, 자랑`스럽다`, 걱정`스럽다` (~와 같은, ~처럼 보이는) <br>겸연`쩍다`, 미심`쩍다`, 수상`쩍다` (~한 느낌을 갖다/주다/느끼다)|
 | XR  | 어근 | 중심이 되는 낱말 | `사람`, `학교`, `나`, 풋`사과`, `점`쟁이, `초등 학교`, `깨끗`하다 |
 | SF  | 마침표 <br>물음표 <br>느낌표 | | `.`, `!`, `?` |
 | SE  | 줄임표 | | `...` |
@@ -89,6 +89,8 @@ KoNLPy의 장점은 이미 잘 만들어진 형태소 엔진을 파이썬에서 
 
 ## 설치
 
+### KoNLPy 설치
+
 * [KoNLPy 공식 설치 문서 참고](http://konlpy-ko.readthedocs.io/ko/v0.4.3/install/)
 
 KoNLPy (코엔엘파이라고 읽음)을 설치는 매우 단순합니다. <br>
@@ -98,20 +100,79 @@ MeCab도 같이 설치를 합니다.
 sudo pip3 install konlpy
 {% endhighlight %}
 
-Mecab 설치는 다음과 같이 합니다.
+
+### MECAB 설치
+
+KoNLPy에서 쉽게 설치하는 방법이 있는데 (mecab.sh사용) 해당 방식으로 설치시 <br>
+낮은 버젼의 Mecab이 설치가 되며, 추후 사전추가시 어려움이 생길수 있습니다.<br>
+Mecab은 따로 최신버젼을 설치를 합니다.
+
+#### MECAB-KO 형태소 분석기 엔진 설치
+
+은전한닢 프로젝트에서 만든 MeCab의 fork 프로젝트이며 한국어의 특성에 맞는 기능을 추가하였습니다.<br>
+[다운로드 페이지](https://bitbucket.org/eunjeon/mecab-ko/downloads/)에서 최신 버젼을 다운로드 할수 있습니다.
 
 {% highlight bash %}
-wget https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh
+wget https://bitbucket.org/eunjeon/mecab-ko/downloads/mecab-0.996-ko-0.9.2.tar.gz
+tar -zxvf mecab-*-ko-*.tar.gz
+cd mecab-*-ko-*
+./configure
+make
+make check
+sudo make install
 {% endhighlight %}
 
-mecab.sh 파일을 다운받으면 `python3` 명령어를 `sudo python3.6`으로 바꿔줍니다. (Python3.6 사용시)
+버젼을 확인합니다.
 
 {% highlight bash %}
-bash mecab.sh
+$ mecab --version
+mecab of 0.996/ko-0.9.2
+{% endhighlight %}
+
+#### MECAB-KO 사전 설치
+
+[다운로드 페이지](https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/) 최신 사전 파일을 다운로드 받을수 있습니다.<br>
+설치는 기본적으로 `/usr/local/lib/mecab/dic/mecab-ko-dic` 에 설치 됩니다.
+
+Dependencies를 설치합니다.
+
+{% highlight bash %}
+sudo apt-get install automake
+{% endhighlight %}
+
+MeCAB-KO-DIC을 설치합니다.
+
+{% highlight bash %}
+wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.0.1-20150920.tar.gz
+tar -zxvf mecab-ko-dic-2.0.1-20150920.tar.gz
+cd mecab-ko-dic-2.0.1-20150920/
+./autogen.sh
+./configure
+make
+sudo make install
+
 {% endhighlight %}
 
 
+#### MECAB-KO 설치 확인 테스트
 
+{% highlight bash %}
+$ mecab -d /usr/local/lib/mecab/dic/mecab-ko-dic
+사나는 사랑이다
+
+사나	NNG,*,F,사나,*,*,*,*
+는	JX,*,T,는,*,*,*,*
+사랑	NNG,*,T,사랑,*,*,*,*
+이	VCP,*,F,이,*,*,*,*
+다	EC,*,F,다,*,*,*,*
+EOS
+{% endhighlight %}
+
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> 3a0eb43403fcbeb071d82f2479a554a386ad96b6
 ## 형태소 분석 비교
 
 ### 아버지가방에들어가신다
@@ -367,32 +428,94 @@ Mecab의 경우 '인스타그램'이라는 최신 단어를 분리시키는 단�
 {% endhighlight %}
 
 
-# 사전 추가
 
-## Mecab에 사전 추가
 
-먼저 특정 위치에 추가할 사전파일을 만듭니다.
+
+# 사전 추가하기
+
+## MeCAB 사전 추가
+
+먼저 `mecab-ko-dic`가 설치된 곳으로 이동합니다.<br>
+만약 없으면 "MECAB-KO 사전 설치" 부분을 다시 보고 설치를 합니다.<br>
+`user.csv` 파일을 만들고 아래의 형식대로 단어를 추가할 수 있습니다.
 
 {% highlight bash %}
-mkdir mecab-dict
-cd mecab-dict/
-vi user.csv
+gedit user.csv
 {% endhighlight %}
 
-user.csv파일 안에는 다음과 같이 입력을 합니다.
+user.csv에는 다음과 같은 형태로 지정합니다.
+
+> 자세한 내용은 [mecab-ko-dic 품사 태그 설명](https://docs.google.com/spreadsheets/d/1-9blXKjtjeKZqsf4NzHeYJCrr49-nXeRF6D80udfcwY/edit#gid=1718487366)을 참조 합니다.
+
+
+| 표층형 | 좌ID    | 우ID   | 우선도 | 품사 | 의미 부류 | 종성 유무 | 발음 | 타입 | 첫번째 품사 | 마지막 품사 | 표현  |
+|:------|:-------|:-------|:-----|:----|:--------|:---------|:----|:----|:----------|:----------|:-----|
+| 태양   |        |        | 0    | NNG | *       | T        | 태양 | *   | *         | *        | *    |
+| 서울   |        |        | 0    | NNP | 지명     | T        | 서울 | *   | *         | *        | *    |
+| 불태워졌 |       |        | 0    | VV+EM+VS+EP | | T        | 불태워졌 | Inflected | VV | EP     | 불태우/VV/*+어/EC/*+지/VX/*+었/EP/* |
+| 해수욕장 |       |        | 0    | NNG |         | T        | 해수욕장 | Compound  | *  | *      |해수/NNG/*+욕/NNG/*+장/NNG/* |
+
+
+| 이름 | 영어명 | 설명 |
+|:----|:------|:----|
+| 표층형 | Surface layer shape | 단어명 |
+| 좌측 ID | Left context ID  | MeCAB내부에서 사용되는 ID값이며, left-id.def 에서 참조함. 빈칸으로 냅둘시 자동으로 ID를 할당함 |
+| 우측 ID | Right context ID | MeCAB내부에서 사용되는 ID값이며, right-id.def에서 참조함. 빈칸으로 냅둘시 자동으로 ID를 할당함 |
+| 우선도  | Cost | 해당 단어가 얼마나 자주 나타나는지를 나타내며, 값이 작을수록 더 자주 나타난다는 뜻. 그냥 빈칸으로 두면 됨 |
+| 품사   | Part of speech | 품사 Tag값이 설정됨 |
+| 의미 부류 |  | `인명`, `지명`, `*` 이 들어갈수 있음 |
+| 종성 유무 |  | 받침이 있으면 `T` 없으면 `F` |
+| 발음 | Pronunciation | 발음을 적음 |
+| 타입 |    | `Inflected` - 활용, `Compound` - 복합명사, `Preanalysis` - 기분석, `*` |
+| 첫번째 품사 | | |
+| 마지막 품사 | | |
+| 표현 |  | 활용, 복합명사, 기분석이 어떻게 구성되는지 알려줌 |
+
+
+예를 들어서 `user.csv`에는 다음과 같이 단어를 추가할 수 있습니다.
 
 {% highlight csv %}
-스파크플러그,,,,NNP,인명,F,스파크플러그,*,*,*,*,*
-닥터 스트레인지,,,,NNP,인명,F,닥터 스트레인지,*,*,*,*,*
-모킹버드,,,,NNP,인명,F,모킹버드,*,*,*,*,*
+가모라,,,0,NNP,인명,F,가모라,*,*,*,*
 {% endhighlight %}
 
-compile 해주가 위해서 다음과 같이 합니다.
+추가후에 `add-userdic.sh`를 실행시킵니다.
 
 {% highlight bash %}
-export DIC_PATH=/usr/local/lib/mecab/dic/mecab-ko-dic/
+$ ./tools/add-userdic.sh
+generating userdic...
+nnp.csv
+... (생략)
+reading ./NNG.csv ... 205269
+emitting double-array: 100% |###########################################|
+reading ./matrix.def ... 3819x2694
+emitting matrix      : 100% |###########################################|
 
+done!
+To enable dictionary, rewrite /usr/local/etc/mecabrc as "dicdir = /usr/local/lib/mecab/dic/mecab-ko-dic"
 {% endhighlight %}
+
+마지막으로 설치를 합니다.
+
+{% highlight bash %}
+sudo make install
+{% endhighlight %}
+
+마지막으로 '가모라'가 인명으로 하나의 이름으로 인식되는지 확인해봅니다.<br>
+아래에서처럼 '가모라'는 하나의 단어로 인식이 잘 됩니다.
+
+{% highlight bash %}
+$ mecab
+가모라
+
+가모라	NNP,인명,F,가모라,*,*,*,*
+EOS
+{% endhighlight %}
+
+
+
+
+
+
 
 ## twitter-korean-text에 사전 추가
 
@@ -408,6 +531,7 @@ IntelliJ Idea를 열고 위의 프로젝트를 엽니다.
 <img src="{{ page.asset_path }}twitter-open.png" class="img-responsive img-rounded">
 
 twitter-korean-text/src/main/resources/com/twitter/penguin/korean/util 위치에 보면 다양한 사전이 txt파일 형식으로 저장이 되어 있습니다.
+
 
 <img src="{{ page.asset_path }}twitter_dict_dir.png" class="img-responsive img-rounded">
 
@@ -457,6 +581,14 @@ Maven Project에서 package를 실행합니다.
 {% highlight bash %}
 sudo mv target/twitter-korean-text-2.4.3.jar /usr/local/lib/python3.6/site-packages/konlpy/java/
 {% endhighlight %}
+
+<span style="color:red;">
+현재 Twitter에 사전추가는 되지만 추가된 사전을 KoNLPy와 연동시키는 부분에 관해서는 KoNLPy의 소스코드를 변경이 필요하다는 결론을 냈습니다.<br>
+KoNLPy에서는 jar파일로 Twitter-korean-text를 갖고 있습니다. <br>
+문제는 버젼이 낮으며 업데이트가 안되어 있는 상태입니다.
+</span>
+
+
 
 # References
 
