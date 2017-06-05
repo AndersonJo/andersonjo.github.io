@@ -237,8 +237,8 @@ data.plot()
 게임을 진행하면서 학습을 할 경우 observation sequence같의 연관성(correlation)때문에 학습이 제대로 안 될수 있습니다.<br>
 연관성을 끊어주는 방법으로 experience replay를 사용합니다.
 
-먼저 Agent의 experiences $ e_t = (s_t, a_t, r_t, s_{t+1} )$를 각각의 time-step마다 data set $ D_t = \{ e_1, e_2, ..., e_t \} $에 저장합니다.<br>
-학습시 Q-Learning updates를 uniformly random으로 꺼내진 experiences $ (s, a, r, s^{\prime}) \sim U(D) $ 통해 실행하게 됩니다.<br>
+먼저 Agent의 experiences $$ e_t = (s_t, a_t, r_t, s_{t+1} )$$를 각각의 time-step마다 data set $$ D_t = \{ e_1, e_2, ..., e_t \} $$에 저장합니다.<br>
+학습시 Q-Learning updates를 uniformly random으로 꺼내진 experiences $$ (s, a, r, s^{\prime}) \sim U(D) $$ 통해 실행하게 됩니다.<br>
 궁극적으로 <span style="color:red">**Loss function**</span> 은 다음과 같게 됩니다.
 
 $$ L_i(\theta_i) = \mathbb{E}_{s, a, r, s^{\prime}} \sim U(D) \left[ \left( r + \gamma \max_{a^{\prime}} Q\left(s^{\prime}, a^{\prime}; \theta^{-}_i\right) - Q\left( s, a; \theta_i \right) \right)^2 \right] $$
