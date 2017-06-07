@@ -257,4 +257,30 @@ $$ L_i(\theta_i) = \mathbb{E}_{s, a, r, s^{\prime} \sim U(D)}  \left[ \left( r +
 
 
 
+# Code
 
+## Installing Dependencies
+
+Pygame을 설치합니다.
+
+{% highlight bash %}
+sudo pip3 install pygame
+{% endhighlight %}
+
+
+Pygame Environment를 설치합니다.
+
+{% highlight bash %}
+git clone https://github.com/ntasfi/PyGame-Learning-Environment.git
+cd PyGame-Learning-Environment/
+sudo pip3 install -e .
+{% endhighlight %}
+
+
+Pygame을 Gym에서 실행시켜줄수 있는 gym-ple를 설치합니다.
+
+{% highlight bash %}
+git clone https://github.com/lusob/gym-ple.git
+cd gym-ple/
+sudo pip3 install -e .
+{% endhighlight %}
