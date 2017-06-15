@@ -30,12 +30,12 @@ Cuda Toolkit은 **/usr/local/cuda**안에 설치가 되어 있어야 합니다.<
 
 {% highlight bash %}
 sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc-4.9 g++-4.9
-sudo apt-get install clang-3.9
+# sudo apt-get install clang-3.9
 {% endhighlight %}
 
 CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
 아래의 주소에서 RUN파일을 다운로드 받습니다.<br>
-[https://developer.nvidia.com/cuda-downloads][cuda-toolkit]
+[https://developer.nvidia.com/cuda-downloads](cuda-toolkit)
 
 1. 다운받은 폴더로 들어갑니다.
 2. chmod로 실행파일로 바꿔줍니다.
