@@ -29,10 +29,14 @@ sudo pip3 install cffi
 
 ### Install Pytorch from Source
 
+master는 experiment가 있으므로 tag를 이용해서 최신 버젼으로 변경한후 진행하는게 좋습니다.
+
 {% highlight bash %}
 git clone https://github.com/pytorch/pytorch.git
 cd pytorch
 
+git tag  # 버젼 확인
+git checkout v0.1.12  # 최신 버젼으로 변경
 sudo python3.6 setup.py install
 {% endhighlight %}
 
