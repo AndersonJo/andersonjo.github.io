@@ -16,11 +16,15 @@ tags: ['DQN']
     </div>
 </header>
 
+# 실제 화면
+
+아래는 실제로 DQN을 갖고서 돌린 실제 예제입니다.<br>
+실제 코드로 돌려보고 거의 1년후에나 블로그에 정리하네요.. ㅎㅎ;;
+
 <img src="{{ page.asset_path }}flappybird.gif">
 
 
-실제 코드로 돌려보고 거의 1년후에나 블로그에 정리하네요.. ㅎㅎ;;<br>
-딥마인드 팀에서 내놓은 Human-level control through deep reinforcement learning 논문을 좀 자세하게 정리를 해봤습니다.
+
 
 # Deep Reinforcement Learning
 
