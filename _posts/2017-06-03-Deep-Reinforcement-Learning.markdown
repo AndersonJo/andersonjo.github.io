@@ -16,6 +16,9 @@ tags: ['DQN']
     </div>
 </header>
 
+<img src="{{ page.asset_path }}flappybird.gif">
+
+
 실제 코드로 돌려보고 거의 1년후에나 블로그에 정리하네요.. ㅎㅎ;;<br>
 딥마인드 팀에서 내놓은 Human-level control through deep reinforcement learning 논문을 좀 자세하게 정리를 해봤습니다.
 
@@ -284,3 +287,16 @@ git clone https://github.com/lusob/gym-ple.git
 cd gym-ple/
 sudo pip3 install -e .
 {% endhighlight %}
+
+## Convert Video To GIF
+
+기록된 게임 플레이 동영상은 GIF로 변경할수 있습니다.
+
+{% highlight bash %}
+mkdir frames
+ffmpeg -i video.mp4 -qscale:v 2  -r 25 'frames/frame-%03d.jpg'
+cd frames
+convert -delay 4 -loop 0 *.jpg myimage.gif
+{% endhighlight %}
+
+[자세한 링크](https://askubuntu.com/questions/648603/create-animated-gif-from-mp4-video-via-command-line)
