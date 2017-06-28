@@ -21,9 +21,7 @@ tags: ['DQN']
 아래는 실제로 DQN을 갖고서 돌린 실제 예제입니다.<br>
 실제 코드로 돌려보고 거의 1년후에나 블로그에 정리하네요.. ㅎㅎ;;
 
-<img src="{{ page.asset_path }}flappybird.gif">
-
-
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MkE6bnK7_DE" frameborder="0" allowfullscreen></iframe>
 
 
 # Deep Reinforcement Learning
@@ -266,7 +264,11 @@ $$ L_i(\theta_i) = \mathbb{E}_{s, a, r, s^{\prime} \sim U(D)}  \left[ \left( r +
 
 # Code
 
-## Installing Dependencies
+전체코드는 아래의 링크에서 확인 할수 있습니다. <br>
+[https://github.com/AndersonJo/dqn-pytorch](https://github.com/AndersonJo/dqn-pytorch)
+
+
+### Installing Dependencies
 
 Pygame을 설치합니다.
 
@@ -292,7 +294,205 @@ cd gym-ple/
 sudo pip3 install -e .
 {% endhighlight %}
 
-## Convert Video To GIF
+
+### Replay Memory
+
+{% highlight python %}
+class ReplayMemory(object):
+    def __init__(self, capacity=REPLAY_MEMORY):
+        self.capacity = capacity
+        self.memory = deque(maxlen=self.capacity)
+        self.Transition = namedtuple('Transition', ('state', 'action', 'reward', 'next_state'))
+        self._available = False
+
+    def put(self, state: np.array, action: torch.LongTensor, reward: np.array, next_state: np.array):
+        """
+        저장시 모두 Torch Tensor로 변경해준다음에 저장을 합니다.
+        action은 select_action()함수에서부터 LongTensor로 리턴해주기 때문에,
+        여기서 변경해줄필요는 없음
+        """
+        state = torch.FloatTensor(state)
+        reward = torch.FloatTensor([reward])
+        if next_state is not None:
+            next_state = torch.FloatTensor(next_state)
+        transition = self.Transition(state=state, action=action, reward=reward, next_state=next_state)
+        self.memory.append(transition)
+
+    def sample(self, batch_size):
+        transitions = sample(self.memory, batch_size)
+        return self.Transition(*(zip(*transitions)))
+{% endhighlight %}
+
+### Model
+
+딥마인드팀에서 사용한 DQN 모델입니다.
+
+| Layer | Input        | Filter Size | Stride | Filter 갯수 | Activation | Output       |
+|:------|:-------------|:------------|:-------|:-----------|:-----------|:-------------|
+| conv1 | 84 x 84 x 4  | 8 x 8       | 4      | 32         | ReLU       | 20 x 20 x 32 |
+| conv2 | 20 x 20 x 32 | 4 x 4       | 2      | 64         | ReLU       | 9 * 9 * 64   |
+| conv2 | 9 x 9 x 64   | 3 x 3       | 1      | 64         | ReLU       | 7 x 7 x 64   |
+| fc1   | 7 x 7 x 64   |             |        | 512        | ReLU       | 512          |
+| fc2   | 512          |             |        | 2          | ReLU       | 2            |
+
+
+{% highlight python %}
+class DQN(nn.Module):
+    def __init__(self, n_action):
+        super(DQN, self).__init__()
+        self.n_action = n_action
+
+        self.conv1 = nn.Conv2d(4, 32, kernel_size=8, stride=4, padding=0)  # (In Channel, Out Channel, ...)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=0)
+        self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=0)
+
+        self.affine1 = nn.Linear(3136, 512)
+        self.affine2 = nn.Linear(512, self.n_action)
+
+    def forward(self, x):
+        h = F.relu(self.conv1(x))
+        h = F.relu(self.conv2(h))
+        h = F.relu(self.conv3(h))
+
+        h = F.relu(self.affine1(h.view(h.size(0), -1)))
+        h = self.affine2(h)
+        return h
+{% endhighlight %}
+
+### Training
+
+{% highlight python %}
+def train(self, gamma: float = 0.99, mode: str = 'rgb_array'):
+    while True:
+        states = self.get_initial_states()
+        losses = []
+        checkpoint_flag = False
+        target_update_flag = False
+        play_steps = 0
+
+        reward = 0
+        done = False
+        while True:
+            # Get Action
+            action: torch.LongTensor = self.select_action(states)
+
+            for _ in range(self.frame_skipping):
+                # step 에서 나온 observation은 버림
+                observation, reward, done, info = self.env.step(action[0, 0])
+                next_state = self.env.get_screen()
+                self.add_state(next_state)
+
+                if done:
+                    break
+
+            # Store the infomation in Replay Memory
+            next_states = self.recent_states()
+            if done:
+                self.replay.put(states, action, reward, None)
+            else:
+                self.replay.put(states, action, reward, next_states)
+
+            # Change States
+            states = next_states
+
+            # Optimize
+            if self.replay.is_available():
+                loss, reward_sum, q_mean, target_mean = self.optimize(gamma)
+                losses.append(loss[0])
+
+            if done:
+                break
+
+            # Increase step
+            self.step += 1
+            play_steps += 1
+
+            # Target Update
+            if self.step % TARGET_UPDATE_INTERVAL == 0:
+                self._target_update()
+                target_update_flag = True
+
+
+def optimize(self, gamma: float):
+
+    # Get Sample
+    transitions = self.replay.sample(BATCH_SIZE)
+
+    # Mask
+    non_final_mask = torch.ByteTensor(list(map(lambda ns: ns is not None, transitions.next_state))).cuda()
+    final_mask = 1 - non_final_mask
+
+    state_batch: Variable = Variable(torch.cat(transitions.state).cuda())
+    action_batch: Variable = Variable(torch.cat(transitions.action).cuda())
+    reward_batch: Variable = Variable(torch.cat(transitions.reward).cuda())
+    non_final_next_state_batch = Variable(torch.cat([ns for ns in transitions.next_state if ns is not None]).cuda())
+    non_final_next_state_batch.volatile = True
+
+    # Reshape States and Next States
+    state_batch = state_batch.view([BATCH_SIZE, self.action_repeat, self.env.width, self.env.height])
+    non_final_next_state_batch = non_final_next_state_batch.view(
+        [-1, self.action_repeat, self.env.width, self.env.height])
+    non_final_next_state_batch.volatile = True
+
+    # Clipping Reward between -2 and 2
+    reward_batch.data.clamp_(-1, 1)
+
+    # Predict by DQN Model
+    q_pred = self.dqn(state_batch)
+    q_values = q_pred.gather(1, action_batch)
+
+    # Predict by Target Model
+    target_values = Variable(torch.zeros(BATCH_SIZE, 1).cuda())
+    target_pred = self.target(non_final_next_state_batch)
+    target_values[non_final_mask] = reward_batch[non_final_mask] + target_pred.max(1)[0] * gamma
+    target_values[final_mask] = reward_batch[final_mask]
+
+    loss = F.smooth_l1_loss(q_values, target_values)
+    # loss = torch.mean((target_values - q_values) ** 2)
+    self.optimizer.zero_grad()
+    loss.backward()
+
+    if self.clip:
+        for param in self.dqn.parameters():
+            param.grad.data.clamp_(-1, 1)
+    self.optimizer.step()
+
+    reward_score = int(torch.sum(reward_batch).data.cpu().numpy()[0])
+    q_mean = torch.sum(q_pred, 0).data.cpu().numpy()[0]
+    target_mean = torch.sum(target_pred, 0).data.cpu().numpy()[0]
+
+    return loss.data.cpu().numpy(), reward_score, q_mean, target_mean
+
+{% endhighlight %}
+
+
+### DQN 학습시 중요 포인트
+
+<span style="color:red;"> **모델을 만드는 중 알아낸 사실들**</span>
+
+**1. Pooling Layer 사용하지 말것**<br>
+object recognition같은 부분에서는 pooling layer가 효율적이지만,
+DQN처럼 새의 위치, 파이프의 위치, 공의 위치, 벽돌의 위치, 주인공의 위치 등등 이러한 위치정보가 중요한 경우 pooling layer사용시 translation invariance 를 일으켜서
+위치정보 자체가 없어지게 됩니다. 실제 pooling layer를 설정하고 학습시.. 학습을 하면서 에러률이 떨어지는게 아니라 갑작스럽게 큰 loss값이 나오게 됩니다.
+0.013, 0.024 뭐 이런식으로 나오다가 갑작이 60 이렇게 나옵니다. 계속 학습시 loss값은 점점 더 높아지면서 500~600처럼 말도안되게 큰 값이 계속 나옵니다.
+
+**2. Dropout 효율성 없음**<br>
+CNN에서 Dropout자체가 효율성이 없음.
+
+**3. Batch Normalization 은 ReLU다음에 사용**<br>
+이게 좋다고 함
+
+**4. prediction값이 이상함**<br>
+예측값이 이상하게 모든 상황에서 값이 거의 동일하게 나온다면 Target Network update주기가 너무 느려서 그런 경우가 있음. <br>
+이 경우 target network의 update 주기를 좀 더 빠르게 해 주면 됨
+
+
+**5. loss 값을 주시할것**<br>
+Loss값이 안정적으로 큰 틀 안에서 떨어지는 것이 중요함. <br>
+DQN의 특성상.. 로그로 올라오는 loss값을 보면 oscillation이 약간 존재하나.. (예를 들어 0.0013 -> 0.021 -> 0.0056 처럼 왔다리 갔다리 함)
+몇십분동안 큰 loss의 트렌드는 떨어지는 것을 확인 할수 있다. 이런 트렌드를 그리지 않으면.. 모델에 문제가 있는 경우.
+
+### Convert Video To GIF
 
 기록된 게임 플레이 동영상은 GIF로 변경할수 있습니다.
 
