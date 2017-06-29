@@ -333,7 +333,7 @@ class ReplayMemory(object):
 | conv2 | 20 x 20 x 32 | 4 x 4       | 2      | 64         | ReLU       | 9 * 9 * 64   |
 | conv2 | 9 x 9 x 64   | 3 x 3       | 1      | 64         | ReLU       | 7 x 7 x 64   |
 | fc1   | 7 x 7 x 64   |             |        | 512        | ReLU       | 512          |
-| fc2   | 512          |             |        | 2          | ReLU       | 2            |
+| fc2   | 512          |             |        | 2          | Linear     | 2            |
 
 
 {% highlight python %}
