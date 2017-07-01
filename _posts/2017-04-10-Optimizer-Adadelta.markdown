@@ -261,48 +261,48 @@ for _ in range(45):
     print('Accuracy:', round(accuracy, 2), '\t\tweights:', w)
 {% endhighlight %}
 
-Accuracy: 0.0 <br>
-Accuracy: 0.0 <br>
-Accuracy: 0.0 <br>
-Accuracy: 0.0 <br>
-Accuracy: 0.0 <br>
-Accuracy: 0.0 <br>
-Accuracy: 0.07 <br>
-Accuracy: 0.43 <br>
-Accuracy: 0.5 <br>
-Accuracy: 0.5 <br>
-Accuracy: 0.5 <br>
-Accuracy: 0.5 <br>
-Accuracy: 0.5 <br>
-Accuracy: 0.57 <br>
-Accuracy: 0.67 <br>
-Accuracy: 0.7 <br>
-Accuracy: 0.73 <br>
-Accuracy: 0.83 <br>
-Accuracy: 0.83 <br>
-Accuracy: 0.9 <br>
-Accuracy: 0.93 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 0.97 <br>
-Accuracy: 1.0 <br>
-Accuracy: 1.0 <br>
-Accuracy: 1.0 <br>
-Accuracy: 1.0 <br>
-Accuracy: 1.0 <br>
+[ 0] Accuracy: 0.0 <br>
+[ 1] Accuracy: 0.0 <br>
+[ 2] Accuracy: 0.0 <br>
+[ 3] Accuracy: 0.0 <br>
+[ 4] Accuracy: 0.0 <br>
+[ 5] Accuracy: 0.0 <br>
+[ 6] Accuracy: 0.07<br>
+[ 7] Accuracy: 0.43<br>
+[ 8] Accuracy: 0.5 <br>
+[ 9] Accuracy: 0.5 <br>
+[10] Accuracy: 0.5 <br>
+[11] Accuracy: 0.5 <br>
+[12] Accuracy: 0.5 <br>
+[13] Accuracy: 0.57<br>
+[14] Accuracy: 0.67<br>
+[15] Accuracy: 0.7 <br>
+[16] Accuracy: 0.73<br>
+[17] Accuracy: 0.83<br>
+[18] Accuracy: 0.83<br>
+[19] Accuracy: 0.9 <br>
+[20] Accuracy: 0.93<br>
+[21] Accuracy: 0.97<br>
+[22] Accuracy: 0.97<br>
+[23] Accuracy: 0.97<br>
+[24] Accuracy: 0.97<br>
+[25] Accuracy: 0.97<br>
+[26] Accuracy: 0.97<br>
+[27] Accuracy: 0.97<br>
+[28] Accuracy: 0.97<br>
+[29] Accuracy: 0.97<br>
+[30] Accuracy: 0.97<br>
+[31] Accuracy: 0.97<br>
+[32] Accuracy: 0.97<br>
+[33] Accuracy: 0.97<br>
+[34] Accuracy: 0.97<br>
+[35] Accuracy: 0.97<br>
+[36] Accuracy: 0.97<br>
+[37] Accuracy: 0.97<br>
+[38] Accuracy: 0.97<br>
+[39] Accuracy: 0.97<br>
+[40] Accuracy: 1.0 <br>
+[41] Accuracy: 1.0 <br>
+[42] Accuracy: 1.0 <br>
+[43] Accuracy: 1.0 <br>
+[44] Accuracy: 1.0 <br>
