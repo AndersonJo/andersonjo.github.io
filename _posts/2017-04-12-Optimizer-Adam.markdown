@@ -208,10 +208,11 @@ def adam_nn(w, X, Y, eta=0.001, alpha=0.001, beta1=0.9, beta2=0.999, weight_size
     for t in range(N):
         x = X[t]
         y = Y[t]
+        x = x.reshape((-1, 2))
         yhat = predict(w, x)
 
         # Calculate the gradients
-        gradient_w = 2/N*-(y-yhat)*x
+        gradient_w = 2/N*-(y-yhat).dot(x)
         gradient_b = 2/N*-(y-yhat)
 
         # Update biased first moment estimate
