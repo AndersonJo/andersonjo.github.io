@@ -57,6 +57,8 @@ correlation을 통해서 얼마만큼의 lag variables을 사용해야될지 알
 집접 데이터를 가공해서 만들수도 있지만, Pandas에서는 lag_plot이라는 함수를 통해서 쉽게 lag plot을 그려볼 수 있습니다.
 
 {% highlight python %}
+from pandas.plotting import lag_plot
+
 lag_plot(dataframe, lag=1)
 title('lag plot')
 {% endhighlight %}
@@ -85,6 +87,8 @@ t-1 과 t의 상관관계를 pearson correlation으로 구할수 있습니다. <
 아래의 예제에서는 0.77487의 correlation값을 보이는데 positive correlated이며 correlation이 높다고 할 수 있습니다.
 
 {% highlight python %}
+from pandas.plotting import autocorrelation_plot
+
 data2 = pd.concat([dataframe.shift(2), dataframe.shift(1), dataframe], axis=1)
 data2.columns = ['t-2', 't-1', 't']
 data2.corr()
@@ -106,6 +110,8 @@ autocorrelation_plot(data)
 statsmodel 라이브러리에서 제공하는 plot_acf를 사용할수도 있습니다.
 
 {% highlight python %}
+from statsmodels.graphics.tsaplots import plot_acf
+
 plot_acf(data, lags=50)
 print(end='')
 {% endhighlight %}
@@ -239,6 +245,8 @@ statsmodel에서 제공하는 AR 을 사용하면 Autoregressive Model을 구현
 이는 라이브러리가 학습했었던 데이터 자체를 갖고 있고, 이것을 토대로 하여 예측을 하기 때문에, 학습 데이터의 범위를 넘어서 예측을 하려고 하면 잘 되지를 않습니다.
 
 {% highlight python %}
+from statsmodels.tsa.ar_model import AR
+
 PRED_N = 300
 model = AR(train)
 model = model.fit(disp=True)
