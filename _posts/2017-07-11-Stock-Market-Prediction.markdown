@@ -86,7 +86,7 @@ def create_model():
 TRAIN r^2 score: 0.959102586953
 TRAIN MSE score: 0.0107864570781
 TEST  r^2 score: 0.970326221792
-TRAIN MSE score: 0.0120543421595
+TEST  MSE score: 0.0120543421595
 {% endhighlight %}
 
 파란선은 training 데이터로부터 예측할 결과물이고, 빨간색선은 test데이터로부터 예측된 결과값입니다.
