@@ -1,0 +1,56 @@
+---
+layout: post
+title:  "Stock Market Prediction"
+date:   2017-07-11 01:00:00
+categories: "deep-learning"
+asset_path: /assets/images/
+tags: ['']
+
+---
+
+
+<header>
+    <img src="{{ page.asset_path }}stockmarket_wallpaper.jpg" class="img-responsive img-rounded" style="width:100%">
+    <div style="text-align:right;">
+    <small><a href="https://unsplash.com/?photo=LjtWRSV3CoE">Geetanjal Khanna의 사진</a>
+    </small>
+    </div>
+</header>
+
+# Stock Market Prediction
+
+과거 38일의 데이터를 본후, 그 다음날 (즉 39일째 되느날)의 종가 가격을 예측합니다. <br>
+
+
+## Data
+
+[S&P 500 (^GSPC)](https://finance.yahoo.com/quote/%5EGSPC/history?period1=-631184400&period2=1499612400&interval=1d&filter=history&frequency=1d)
+에서 1950/01/01 부터 07/07/2017년까지의 데이터를 받았습니다.<br>
+38일간의 시작가, 종가, 최고가, 최저가, 가격의 데이터를 받아서, 39일이 되는.. 즉 다음날의 종가를 예측합니다.
+
+전체 데이터는 다음과 같은 그래프를 그립니다.
+
+<img src="{{ page.asset_path }}stockmarket_data_graph.png" class="img-responsive img-rounded">
+
+
+아래 그래프와 같이 과거 38일의 데이터를 본후(파란색선), 다음날의 종가 (빨간점)을 예측합니다.
+
+<img src="{{ page.asset_path }}stockmarket_training_data.png" class="img-responsive img-rounded">
+
+
+## Model
+
+
+## 결과
+
+{% highlight python %}
+TRAIN r^2 score: 0.959102586953
+TRAIN MSE score: 0.0107864570781
+TEST  r^2 score: 0.970326221792
+TRAIN MSE score: 0.0120543421595
+{% highlight %}
+
+
+## References
+
+* [Neural networks for algorithmic trading. Simple time series forecasting](https://medium.com/@alexrachnog/neural-networks-for-algorithmic-trading-part-one-simple-time-series-forecasting-f992daa1045a)
