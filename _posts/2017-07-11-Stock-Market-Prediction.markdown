@@ -20,6 +20,8 @@ tags: ['']
 # Stock Market Prediction
 
 과거 38일의 데이터를 본후, 그 다음날 (즉 39일째 되느날)의 종가 가격을 예측합니다. <br>
+[Github Code](https://github.com/AndersonJo/stock-market-prediction/blob/master/02%20Simple%20S%26P%20500%20Prediction%20(Deep%20Learning).ipynb)
+를 누르면 전체 소스코드를 확인할 수 있습니다.
 
 
 ## Data
@@ -38,7 +40,44 @@ tags: ['']
 <img src="{{ page.asset_path }}stockmarket_training_data.png" class="img-responsive img-rounded">
 
 
-## Model
+## Model 그리고 Training
+
+모델은 아래와 같이 일반적인 Deep Learning구조를 갖고 있습니다.<br>
+중요한 부분은 얼마만큼 overfitting을 일으키지 않도록 구조화되어 있느냐를 잘 보면 됩니다.
+
+{% highlight python %}
+def create_model():
+    model = Sequential()
+    model.add(Dense(512, kernel_regularizer=l2(0.0001), batch_input_shape=(None, BATCH_SIZE*5)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    model.add(Dropout(0.6))
+
+    model.add(Dense(384, kernel_regularizer=l2(0.0001)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    model.add(Dropout(0.6))
+
+    model.add(Dense(256, kernel_regularizer=l2(0.0001)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    model.add(Dropout(0.6))
+
+    model.add(Dense(128, kernel_regularizer=l2(0.0001)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    model.add(Dropout(0.6))
+
+    model.add(Dense(64, kernel_regularizer=l2(0.0001)))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    model.add(Dropout(0.6))
+
+    model.add(Dense(1))
+    model.add(Activation('linear'))
+    model.compile(loss='mean_squared_error', optimizer='adam', metrics=[mean_squared_error])
+    return model
+{% endhighlight %}
 
 
 ## 결과
@@ -48,8 +87,11 @@ TRAIN r^2 score: 0.959102586953
 TRAIN MSE score: 0.0107864570781
 TEST  r^2 score: 0.970326221792
 TRAIN MSE score: 0.0120543421595
-{% highlight %}
+{% endhighlight %}
 
+파란선은 training 데이터로부터 예측할 결과물이고, 빨간색선은 test데이터로부터 예측된 결과값입니다.
+
+<img src="{{ page.asset_path }}stockmarket_result.png" class="img-responsive img-rounded">
 
 ## References
 
