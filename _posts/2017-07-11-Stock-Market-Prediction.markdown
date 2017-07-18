@@ -4,7 +4,7 @@ title:  "Stock Market Prediction"
 date:   2017-07-11 01:00:00
 categories: "deep-learning"
 asset_path: /assets/images/
-tags: ['']
+tags: ['keras', 'early-stopping', 'callback']
 
 ---
 
@@ -78,6 +78,50 @@ def create_model():
     model.compile(loss='mean_squared_error', optimizer='adam', metrics=[mean_squared_error])
     return model
 {% endhighlight %}
+
+## Training
+
+Training에서는 최소 몇번의 epoch를 돌린뒤, Keras에서 제공하는 EarlyStopping을 사용합니다.
+
+{% highlight python %}
+class CustomEarlyStopping(EarlyStopping):
+    def __init__(self, *args, min_epoch=0, **kwargs):
+        super(CustomEarlyStopping, self).__init__(*args, **kwargs)
+        self.min_epoch = min_epoch
+
+    def on_epoch_end(self, epoch, logs=None):
+        if epoch <= self.min_epoch:
+            return
+        super(CustomEarlyStopping, self).on_epoch_end(epoch, logs)
+
+early_stopping = CustomEarlyStopping('val_mean_squared_error',
+                                     min_epoch=13,
+                                     min_delta=0.06,
+                                     patience=0)
+history = model.fit(train_x, train_y,
+                    verbose=2,
+                    epochs=20,
+                    validation_data=(test_x, test_y),
+                    callbacks=[early_stopping])
+{% endhighlight %}
+
+EarlyStopping 클래스는 다음과 같이 설정할 수 있습니다.
+
+| Argument | Description | Example |
+|:---------|:------------|:--------|
+| monitor  | 측정한 변수 이름. <br>history.history dictionary안의 key값을 보면 됨 | 'val_loss', 'val_mean_squared_error' |
+| min_delta | 측정하는 값이 이하로 떨어지면, 더이상 학습효과가 없다고 판단하며 중단함 | 0, 0.0025 |
+| patience  | 측정하는 값이 떨어지지 않고 (또는 오히려 loss값이 커질때) 몇번의 epoch를 더 진행할지 설정 | 0, 1 |
+| mode      | 'min', 'max', 'auto' 3가지중에 선택가능하며.. <br>min은 떨어지지 않을때 중단하며, <br>max는 증가하지 않을때 중단, <br>auto는 측정하려는 값의 이름을 보고 min으로 할지 max할지 자동으로 결정 | 'min', 'max', 'auto' |
+| verbose   | | 0 , 1, 2 |
+
+
+
+
+
+
+
+
 
 
 ## 결과
