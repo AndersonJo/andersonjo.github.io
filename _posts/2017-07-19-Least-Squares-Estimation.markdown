@@ -24,7 +24,7 @@ tags: ['regression', 'ols', 'ordinary-least-squares']
 $$ y_i = \beta_{const} + \beta_1 x_1 + \beta_2 x_2 + ... + \beta_k x_k + e_i $$
 
 
-예를 들어 학생별 공부한 시간대비 퀴즈 성적표를 데이터로 쓴다면 다음과 같습니ㅏㄷ.
+예를 들어 학생별 공부한 시간대비 퀴즈 성적표를 데이터로 쓴다면 다음과 같습니다.
 
  * $$ \hat{y} $$ : 퀴즈 점수
  * $$ x $$ : 공부한 시간
