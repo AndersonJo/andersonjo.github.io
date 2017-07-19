@@ -19,12 +19,42 @@ asset_path: /assets/posts/Neural-Network-for-concrete/
 Neural Network를 이용하면 특별한 수학적 공식 (콘크리트의 강도를 알아내는..) 없이 ANN(Artificial Neural Network)을 트레이닝 시키고
 훈련된 ANN으로 다시 새로운 데이터로 예측을 할 것입니다.<br>
 
-<h3>Data & References</h3>
+
+
+# Installing R
+
+먼저  R을 설치합니다.
+
+{% highlight bash %}
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+sudo add-apt-repository 'deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu xenial/'
+sudo apt-get update
+sudo apt-get install r-base
+{% endhighlight %}
+
+필수적인 libraries들을 설치합니다.
+
+{% highlight bash %}
+sudo -i R
+{% endhighlight %}
+
+### Installing Native R Kernel for Jupyter
+
+{% highlight r %}
+install.packages('devtools')
+install.packages(c('repr', 'IRdisplay', 'evaluate', 'crayon', 'pbdZMQ', 'devtools', 'uuid', 'digest'))
+devtools::install_github('IRkernel/IRkernel')
+IRkernel::installspec()
+{% endhighlight %}
+
+# Neural Network in R
+
+### Data & References
 [concrete.csv][csv]<br>
 [example.R][r]<br>
 [Machine Learning with R][book]
 
-<h3>Neuralnet 설치 </h3>
+### Neuralnet 설치
 
 여러 Neural Network 라이브러리들이 있지만.. Neuralnet이라는 라이브러리를 사용할 것입니다.
 
@@ -32,7 +62,7 @@ Neural Network를 이용하면 특별한 수학적 공식 (콘크리트의 강�
 install.packages("neuralnet")
 {% endhighlight %}
 
-<h3>일단 코드로 써보자</h3>
+### 일단 코드로 써보자
 
 read.csv 함수를 통해서 concrete.csv파일을 읽습니다.<br>
 stringAsFactors는 R의 데이터타입중에 string을 factor로 읽지 않고  vector로 읽겠다는 뜻이며, F는 FALSE(boolean)값과 같습니다.<br>
@@ -97,7 +127,7 @@ test_data <- concrete[slice_index:max_index,]
 
 {% endhighlight %}
 
-<h3>Neural Network 트레이닝 시키기</h3>
+### Neural Network 트레이닝 시키기
 자 이제 모든 준비가 끝났으니 Neural Network를 트레이닝 시키겠습니다. <br>
 
 {% highlight r %}
@@ -137,7 +167,7 @@ cor(model_results$net.result, test_data$strength)
 0.8201494476
 {% endhighlight %}
 
-<h3> Facebook </h3>
+### Facebook
 
 [Facebook Link][facebook]
 
