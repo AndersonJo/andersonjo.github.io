@@ -119,6 +119,13 @@ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblc
 sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead jpegoptim
 {% endhighlight %}
 
+### Python Libraries
+
+{% highlight bash%}
+sudo pip3 install psycopg2
+{% endhighlight %}
+
+
 ### Command Prompt 설정 (Optional)
 
 .bashrc 파일에 추가
@@ -126,7 +133,6 @@ sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead 
 
 {% highlight bash%}
 parse_git_branch() {
-
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 
 }
