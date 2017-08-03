@@ -157,9 +157,33 @@ Network가 지나치게 커지는 것을 막기 위해서 k의 값은 대략 작
 
 **BN -> ReLU -> Conv(1x1) -> BN -> ReLU -> Conv(3x3)**
 
+## Compression Factor
+
+모델의 효율화를 위해서 transition layer에서 feature-maps의 갯수를 compression factor $$ \theta $$ 값에 따라서 줄여줍니다.<br>
+이때 compression factor 는 $$ 0 \lt \theta \le 1 $$ 사이의 값을 갖으며,
+$ \theta = 1 $일경우 dense block에서 output으로 내놓은 feature-maps의 갯수는 transition layer에서 변경되지 안습니다. DnseNet-C 모델에서는 $$ \theta = 0.5 $$ 로 주었습니다.
+
 ## DenseNet Architecture for ImageNet
 
 <img src="{{ page.asset_path }}densenet_architecture_for_imagenet.png" class="img-responsive img-rounded">
+
+* 3개의 동일한 갯수의 레이어를 포함하고 있는 dense blocks
+* Input image는 먼저 convolution을 태워서 16 또는 growth rate의 2배값이 되는 output channels을 내놓음
+* 모든 3 x 3 convolution의 모든 input images는 1 pixel zero-padding을 함으로서 feature-map의 크기가 변경되지 않도록 함
+* Dense blocks사이에는 transition layer를 사용
+* Transition layers들은 1 x 1 convolution을 통해 feature-maps size를 줄이고, 2 x 2 average pooling을 적용함
+* 마지막 dense block에서는 global average pooling 그리고 softmax classifier을 적용
+* 3개의 dense blocks의 feature-maps sizes는 각각 32 x 32, 16 x 16,  그리고 8 x 8
+
+논문에서 DenseNet 구조는 다음과 같이 실험이 되었습니다.
+
+| Name | Layer $ L $ | growth rate $ k $ |
+|:-----|:------------|:------------------|
+| DenseNet | 40      | 12                |
+| DenseNet | 100     | 24                |
+| DenseNet with bottleneck | 100 | 12    |
+| DenseNet with bottleneck | 250 | 24    |
+| DenseNet with bottleneck | 190 | 40    |
 
 
 # References
