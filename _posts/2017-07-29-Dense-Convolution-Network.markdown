@@ -161,7 +161,7 @@ Network가 지나치게 커지는 것을 막기 위해서 k의 값은 대략 작
 
 모델의 효율화를 위해서 transition layer에서 feature-maps의 갯수를 compression factor $$ \theta $$ 값에 따라서 줄여줍니다.<br>
 이때 compression factor 는 $$ 0 \lt \theta \le 1 $$ 사이의 값을 갖으며,
-$ \theta = 1 $일경우 dense block에서 output으로 내놓은 feature-maps의 갯수는 transition layer에서 변경되지 안습니다. DnseNet-C 모델에서는 $$ \theta = 0.5 $$ 로 주었습니다.
+$$ \theta = 1 $$일경우 dense block에서 output으로 내놓은 feature-maps의 갯수는 transition layer에서 변경되지 안습니다. DnseNet-C 모델에서는 $$ \theta = 0.5 $$ 로 주었습니다.
 
 ## DenseNet Architecture for ImageNet
 
@@ -177,7 +177,7 @@ $ \theta = 1 $일경우 dense block에서 output으로 내놓은 feature-maps의
 
 논문에서 DenseNet 구조는 다음과 같이 실험이 되었습니다.
 
-| Name | Layer $ L $ | growth rate $ k $ |
+| Name | Layer $$ L $$ | growth rate $$ k $$ |
 |:-----|:------------|:------------------|
 | DenseNet | 40      | 12                |
 | DenseNet | 100     | 24                |
