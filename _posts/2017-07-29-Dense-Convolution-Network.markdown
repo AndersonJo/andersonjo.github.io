@@ -164,5 +164,5 @@ Network가 지나치게 커지는 것을 막기 위해서 k의 값은 대략 작
 
 # References
 
-* [https://arxiv.org/pdf/1608.06993.pdf](Densely Connected Convolutional Networks)
+* [Densely Connected Convolutional Networks](https://arxiv.org/pdf/1608.06993.pdf)
 * [Memory-Efficient Implementation of DenseNets](https://arxiv.org/pdf/1707.06990.pdf)
