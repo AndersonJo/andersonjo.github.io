@@ -167,7 +167,7 @@ $$ \theta = 1 $$일경우 dense block에서 output으로 내놓은 feature-maps�
 
 <img src="{{ page.asset_path }}densenet_architecture_for_imagenet.png" class="img-responsive img-rounded">
 
-* 3개의 동일한 갯수의 레이어를 포함하고 있는 dense blocks
+* 3개의 dense blocks을 갖고 있으며, 각각의 dense blocks은 모두 동일한 갯수의 레이어를 갖고 있음
 * Input image는 먼저 convolution을 태워서 16 또는 growth rate의 2배값이 되는 output channels을 내놓음
 * 모든 3 x 3 convolution의 모든 input images는 1 pixel zero-padding을 함으로서 feature-map의 크기가 변경되지 않도록 함
 * Dense blocks사이에는 transition layer를 사용
