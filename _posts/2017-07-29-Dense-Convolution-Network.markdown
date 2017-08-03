@@ -161,3 +161,8 @@ Network가 지나치게 커지는 것을 막기 위해서 k의 값은 대략 작
 
 <img src="{{ page.asset_path }}densenet_architecture_for_imagenet.png" class="img-responsive img-rounded">
 
+
+# References
+
+* [https://arxiv.org/pdf/1608.06993.pdf](Densely Connected Convolutional Networks)
+* [Memory-Efficient Implementation of DenseNets](https://arxiv.org/pdf/1707.06990.pdf)
