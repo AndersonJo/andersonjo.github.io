@@ -86,8 +86,43 @@ $$ \mathbf{y}_{\mathscr{l}} = H_{\mathscr{l}} \left( \left[ \mathbf{y}_0, \mathb
 여기서 $$ \left[ \mathbf{y}_0, \mathbf{y}_1 , ..., \mathbf{y}_{\mathscr{l}-1}\right] $$의 의미는 feature-maps들의 concatenation을 의미합니다.
 
 
+## Initial Convolution
 
-## Composite Function
+DenseNet의 가장 첫번째 layer는 feature-maps 의 크기를 변경시키는 convolution입니다. <br>
+해당 convolution은 Channel의 크기를 변경시키며 그 외의 Input의 이미지 싸이즈등은 변경하지 않습니다.<br>
+설정은 다음과 같습니다.
+
+
+| Name | Example 1 | Example 2 |
+|:-----|:----------|:----------|
+| In Channel Size | 3 | 동일 |
+| Out Channel Size | 16 또는 $$ 2k $$ 로 설정 (k는 growth rate) | 동일 |
+| Kernel Size | 3 | 1 |
+| Stride | 1 | 1 |
+| Padding | 1 | 0 |
+| Bias | False |  False |
+
+
+
+## Bottleneck Layers
+
+3 x 3 convolution앞에 **bottleneck layer로서 1 x 1 convolution**을 놓아서 feature-maps의 갯수를 줄일수 있습니다.<br>
+특히 1 x 1 convolution은 DenseNet에서 매우 효과적으로 움직이며 논문에서는 다음과 같은 $$ H_{\mathscr{l}} $$에서 효과적이었다고 말합니다.
+
+**BN -> ReLU -> Conv(1x1) -> BN -> ReLU -> Conv(3x3)**
+
+1 x 1 Conv의 설정은 다음과 같이 합니다.
+
+| Name           | Value |
+|:---------------|:------|
+| In Filter Size | 각 레이어마다 growth rate $$ k * (\mathscr{l} - 1) + k_0  $$ 를 사용 |
+| Out Filter Size | $$ k $$ * 4 (여기서 k는 growth rate) |
+| Kernel Size    | 1 x 1 |
+| Stride         | 1 |
+| Padding        | 0 |
+
+
+## Dense Layers
 
 Composite function $$ H_{\mathscr{l}}() $$ 는 다음의 순서를 갖은 operations을 의미합니다.
 
@@ -96,8 +131,16 @@ Composite function $$ H_{\mathscr{l}}() $$ 는 다음의 순서를 갖은 operat
 3. 3 x 3 Convolution (Conv)
 
 
+| Name           | Value |
+|:---------------|:------|
+| In Filter Size | Bottleneck의 output size ( $$ k * 4 $$ ) |
+| Out Filter Size | growth rate $$ k $$ |
+| Kernel Size    | 3 |
+| Stride         | 1 |
+| Padding        | 1 |
 
-## Pooling Layer
+
+## Transition Layer
 
 Dense Connectivity에 있는 공식에서 **concatenation operation**이 사용이 됩니다.<br>
 하지만 concatenation operation은 feature-maps의 크기가 달라지면 적용을 할 수가 없게 됩니다.
@@ -114,14 +157,31 @@ block 사이에 있는 layers들을 <span style="color:red">**transition layers*
 2. 1 x 1 Convolution Layer
 3. 2 x 2 Average Pooling Layer
 
+모델의 효율화를 위해서 transition layer에서 feature-maps의 갯수를 compression factor $$ \theta $$ 값에 따라서 줄여줍니다.<br>
+이때 compression factor 는 $$ 0 \lt \theta \le 1 $$ 사이의 값을 갖으며,
+$$ \theta = 1 $$일경우 dense block에서 output으로 내놓은 feature-maps의 갯수는 transition layer에서 변경되지 안습니다. DnseNet-C 모델에서는 $$ \theta = 0.5 $$ 로 주었습니다.
+
+## Last Layer
+
+마지막 dense layer에서는 transition을 타지 않습니다. <br>
+transition은 dense layer사이에서만 진행이 됩니다.
+
+마지막 dense layer이후에는 global average pooling이 실행됩니다. <br>
+또는 다음과 같이 진행이 될 수 도 있습니다.
+
+**Last Dense Layer -> Batch Normalization -> ReLU -> Global Average Pooling -> Squeeze (Flatten) -> FC Layer**
 
 ## Growth Rate
 
-특정 Layer의 Input feature-maps의 사이즈는 다음과 같습니다. <br>
+Growth rate란 마친 0~1사이의 값을 갖은 값이라고 생각이 들텐데 전혀 아닙니다.<br>
+Growth rate를 쉽게 말하면 DenseNet의 hyper-parameter의 하나이며, 특정 dense layer의 feature-maps 의 크기를 결정짓습니다. <br>
+특정 $$ \mathscr{l} $$의 feature-maps의 크기 (filter size)는 다음과 같은 공식으로 구할 수 있습니다.
 
 $$ k * (\mathscr{l} - 1) + k_0  $$
 
-* $$ k_0 $$: Input 이미지의 채널값 입니다.
+* $$ k_0 $$: Input 이미지의 채널값 입니다. 이미 초기 convolution을 거쳤기 때문에 값은 24, 48, 80 같은 값이 될 것입니다.
+* $$ \mathscr{l} $$: 1부터 시작을 합니다.
+
 
 {% highlight python %}
 from mpl_toolkits.mplot3d import Axes3D
@@ -149,19 +209,6 @@ ax.legend()
 Network가 지나치게 커지는 것을 막기 위해서 k의 값은 대략 작은 값으로 제한합니다. (예.. $$ k = 12 $$)<br>
 여기서 k의 값은 hyper-parameter로 두며 논문에서는 작은값.. (12, 24, 40) 등으로도 충분한 결과를 내놓고 있다고 합니다.
 
-
-## Bottleneck Layers
-
-3 x 3 convolution앞에 **bottleneck layer로서 1 x 1 convolution**을 놓아서 feature-maps의 갯수를 줄일수 있습니다.<br>
-특히 1 x 1 convolution은 DenseNet에서 매우 효과적으로 움직이며 논문에서는 다음과 같은 $$ H_{\mathscr{l}} $$에서 효과적이었다고 말합니다.
-
-**BN -> ReLU -> Conv(1x1) -> BN -> ReLU -> Conv(3x3)**
-
-## Compression Factor
-
-모델의 효율화를 위해서 transition layer에서 feature-maps의 갯수를 compression factor $$ \theta $$ 값에 따라서 줄여줍니다.<br>
-이때 compression factor 는 $$ 0 \lt \theta \le 1 $$ 사이의 값을 갖으며,
-$$ \theta = 1 $$일경우 dense block에서 output으로 내놓은 feature-maps의 갯수는 transition layer에서 변경되지 안습니다. DnseNet-C 모델에서는 $$ \theta = 0.5 $$ 로 주었습니다.
 
 ## DenseNet Architecture for ImageNet
 
