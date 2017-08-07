@@ -14,7 +14,7 @@ tags: ['resnet', 'densenet']
 
 | Name | Value |
 |:-----|:------|
-| CPU  | Intel I7 6700K CPU 4.00GHz |
+| CPU  | Intel I7 6700K CPU 4.00GHz, 8 cores |
 | Memory | 32GB |
 | GPU  | [NVIDIA GTX 1080](https://www.geforce.co.uk/hardware/desktop-gpus/geforce-gtx-1080/specifications), 8GB GDDR5X Memory |
 | OS   | Ubuntu 16.04 |
