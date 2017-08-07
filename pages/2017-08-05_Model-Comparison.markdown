@@ -1,14 +1,12 @@
 ---
 layout: page
-title: Model Comparison
+title: 딥러닝 모델 비교 분석
 date:   2017-08-05 01:00:00
 categories: "deep-learning"
 asset_path: /assets/images/
 tags: ['resnet', 'densenet']
 
 ---
-
-# Deep Learning 비교 분석
 
 ## System
 
@@ -18,21 +16,23 @@ tags: ['resnet', 'densenet']
 |:-----|:------|
 | CPU  | Intel I7 6700K CPU 4.00GHz |
 | Memory | 32GB |
-| GPU  | NVIDIA GTX 1080, 8GHz Memory |
+| GPU  | [NVIDIA GTX 1080](https://www.geforce.co.uk/hardware/desktop-gpus/geforce-gtx-1080/specifications), 8GB GDDR5X Memory |
 | OS   | Ubuntu 16.04 |
 
 
 ## Models
 
-| Model | Data | Loss | Accuracy | Parameters | Memory | CPU(T) | CPU(P) | GPU(T) | GPU(P) | ETC |
-|:------|:-----|:-----|:---------|:-----------|:-------|:-------|:-------|:-------|:-------|:----|
-| DenseNet | CIFAR-10 | | | 1 conv -> 3 x 24 dense -> fc | 6619MB |
+| Model | Params | Lib | Data | Loss | Accuracy | Memory | CPU(T) | CPU(P) | GPU(T) | GPU(P) | ETC |
+|:------|:-------|:----|:-----|:-----|:---------|:-------|:-------|:-------|:-------|:-------|:----|
+| DenseNet | 3 x 24 dense | Pytorch | CIFAR-10 | | |  6619MB | 120 | 25.23 | 0.337 | 0.111 | |
 
 * **Models**
   - DenseNet : 메모리 최적화되지 않은 [Densely Connected Convolutional Networks](https://arxiv.org/pdf/1608.06993.pdf)의 구현된 모델
 * **Parameters**
   - convolution : Convolution Layer
   - fc : Fully Connected Layer (또는 Affine, Linear 라고 보면 됨)
+* **Data**
+  - CIFAR-10 : 32 x 32 이미지, 10 categories
 * **BATCH** : 모든 모델의 Batch 의 크기는 32를 사용하였습니다.
 * **Memory** : GPU의 메모리 사용량을 의미합니다.
 * **CPU(T)** : T는 Training을 가르키며, CPU기반 학습할때 초당 1 Batch 데이터를 처리하는 속도입니다.
