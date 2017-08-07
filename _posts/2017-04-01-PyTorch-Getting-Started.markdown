@@ -24,7 +24,7 @@ tags: ['Pytorch']
 {% highlight bash %}
 sudo apt-get install cmake xvfb libav-tools xorg-dev libsdl2-dev swig
 
-sudo pip3 install cffi
+sudo pip3 install cffi, pyyaml
 {% endhighlight %}
 
 ### Install Pytorch from Source

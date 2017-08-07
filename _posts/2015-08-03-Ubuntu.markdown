@@ -4,7 +4,7 @@ title:  "Ubuntu Installation"
 date:   2015-08-03 02:00:00
 categories: "ubuntu"
 asset_path: /assets/posts/Ubuntu15.04/
-tags: ['RVM', 'JAVA', '.bash.rc', 'format', 'my.cnf']
+tags: ['RVM', 'JAVA', '.bash.rc', 'format', 'my.cnf', 'Atom']
 
 ---
 
@@ -140,10 +140,6 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 # Hostname Version
 # export PS1='\[\033[00;36m\]$(hostname) \u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
-# Android
-export ANDROID_HOME=/home/anderson/apps/android-sdk
-export PATH=$PATH:$ANDROID_HOME:$ANDROID_HOME/platform-tools
-
 # Java
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 unset JAVA_TOOL_OPTIONS
@@ -230,6 +226,58 @@ sudo sysctl -p
 {% highlight css %}
 table {float: left};
 {% endhighlight %}
+
+
+
+
+
+
+### Atom or Nuclide
+
+{% highlight bash %}
+sudo add-apt-repository ppa:webupd8team/atom
+sudo apt-get update
+sudo apt-get install atom
+{% endhighlight %}
+
+
+Atom 설치이후에 apm을 통해서 react plugin 을 설치합니다.
+
+{% highlight bash %}
+apm install react
+apm install atom-react-native-css
+apm install goto
+apm install autocomplete-plus
+{% endhighlight %}
+
+React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<br>
+
+**keymap.cson** 에서 키맵을 재 설정합니다.
+
+{% highlight bash %}
+'atom-text-editor':
+  'shift-space': 'autocomplete-plus:activate'
+  'ctrl-shift-f': 'editor:auto-indent'
+  'unset!': 'find-and-replace:find-next'
+
+'.platform-linux atom-workspace atom-text-editor':
+  'f3': 'goto:declaration'
+
+'atom-workspace atom-text-editor:not([mini])':
+  'alt-down': 'editor:move-line-down'
+  'alt-up': 'editor:move-line-up'
+
+'.platform-win32, .platform-linux':
+  'ctrl-h': 'project-find:show'
+
+'.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
+  'unset!': 'find-and-replace:find-next'
+{% endhighlight %}
+
+
+
+
+
 
 ### Sublime (Optional)
 
