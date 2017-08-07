@@ -4,9 +4,6 @@ layout: default
 
 <div class="home">
     <div ng-controller="AndersonPostContoller">
-        {% for page in site.pages %}
-          {% if page.title %}<a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>{% endif %}
-        {% endfor %}
 
         <script>
             var global_post_data = [{% for page in site.pages %} {% if page.title %}
