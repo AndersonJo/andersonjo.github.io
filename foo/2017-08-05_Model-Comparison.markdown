@@ -1,6 +1,6 @@
 ---
-layout: post
-
+layout: page
+title: Model Comparison
 date:   2017-08-05 01:00:00
 categories: "deep-learning"
 asset_path: /assets/images/
