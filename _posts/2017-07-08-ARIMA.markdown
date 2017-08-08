@@ -4,7 +4,7 @@ title:  "ARIMA - Basic Time Series Analysis"
 date:   2017-07-08 01:00:00
 categories: "statistics"
 asset_path: /assets/images/
-tags: ['lag', 'autocorrelation', 'trend', 'statsmodel']
+tags: ['lag', 'autocorrelation', 'trend', 'statsmodel', 'temperature', 'stationary']
 
 ---
 
@@ -21,13 +21,13 @@ tags: ['lag', 'autocorrelation', 'trend', 'statsmodel']
 # Time Series
 
 
-## Basic
+### Basic
 
 시간에 따른 일련의 데이터를 Time series data라고 합니다. <br>
 단 한개의 변수로 이루어진 time series를 **univariate** 이라고 하며, 2개 이상의 변수로 이루어진 time series를 **multivariate**이라고 합니다.
 
 
-## Trend, Cyclical, Seasonal, Irregular
+### Trend, Cyclical, Seasonal, Irregular
 
 Time series는 일반적으로 4개의 요소 (Trend, Cyclical, Seasonal 그리고 Irregular)에 의해 영향을 받습니다.
 
@@ -37,6 +37,57 @@ Time series는 일반적으로 4개의 요소 (Trend, Cyclical, Seasonal 그리�
 | **Seasonality(계절성)** | 특정 구간동안의 (1년, 한달, 일주일..) 변동성(fluctuations)를 나타냅니다. <br>예를 들어서 아이스크림 판매량은 여름에 늘어나고, 외투는 겨운에 판매량이 늘어날 것입니다. 또는 피트니스센터의 고객은 매년 결심을 하는 1월 초에 가장많은 사람들이 나올것입니다. 하지만 매월초가 될수도 있고, 매주초가 될 수도 있습니다. 따라서 피트니스센터는 년, 월, 주단위 seasonality를 갖고 있다고 할수 있습니다. |
 | **Cycle(주기)** | Seasonality는 특정 기간에 정확하게 나타나는 변동성을 갖고 있는 반면, Cycle의 경우 특정 시간에 구애 받지 않습니다. 하지만 동일하게 특정 패턴을 갖고 있습니다. 보통 2~3년처럼 장기간에 걸친 패턴을 갖고 있을수 있습니다. 예를 들어서 business cycle의 경우에는 호황 -> 불황 -> 침체 -> 회복 의 cycle을 갖고 있습니다. |
 | **Irregularity(불규칙성)** | 또는 random variations이라고 불리며 예상치 못한 영향에 의해서 나타납니다. 예를 들어서 전쟁, 지진, 홍수, 혁명등등이 될 수 있습니다. |
+
+
+### Stationary Time Series
+
+다음과 같은 조건을 갖으면 Stationary Time Series라고 할 수 있습니다.
+
+**모든 $$ t $$에 관하여 일정한 평균**<br>
+$$ E(x_t) = \mu $$
+
+**모든 $$ t $$에 관하여 일정한 분산**<br>
+$$ E[(x_t - \mu)^2] = Var(x_t) = \sigma^2 = \gamma(0)  $$
+
+**covariance는 t가 아닌 s에 의존**<br>
+$$ cov(y_t, t_{t+s}) = cov(y_t, y_{t-s}) = \gamma_s $$
+
+즉 평균과 분산이 각각 상수를 갖고 있으며, 시간이 지나도 평균과 분산이 변하지 않는다는 뜻입니다. <br>
+
+
+
+# Data
+
+아래의 링크에서 데이터를 다운받을 수 있습니다.<br>
+[Daily minimum temperatures in Melbourne, Australia, 1981-1990](https://datamarket.com/data/set/2324/daily-minimum-temperatures-in-melbourne-australia-1981-1990#!ds=2324&display=line)
+
+{% highlight python %}
+TEST_SIZE = 50
+
+dataframe = pd.read_csv('international-airline-passengers.csv',
+                   names=[ 'passenger'], index_col=0,
+                   skiprows=1)
+dataframe.index = pd.to_datetime(dataframe.index)
+dataframe = dataframe.astype('float64')
+print(dataframe.head())
+
+scaler = MinMaxScaler()
+data = scaler.fit_transform(dataframe.values.reshape((-1, 1)))
+
+# Mean Adjusted Time Series
+mu = np.mean(data)
+data_adjusted = data - mu
+
+train, test = data_adjusted[:-TEST_SIZE], data_adjusted[-TEST_SIZE:]
+
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}arima_passenger_data.png" class="img-responsive img-rounded">
+
+
+
+
+
 
 
 # Autocorrelation Checking
@@ -51,7 +102,10 @@ correlation을 통해서 얼마만큼의 lag variables을 사용해야될지 알
 
 
 
-## Lag Plot
+
+
+
+### Lag Plot
 
 빠르게 correlation이 존재하는지 확인하는 방법은 step t 와 t-1 을 scatter plot으로 그래서 확인하는 방법입니다.<br>
 집접 데이터를 가공해서 만들수도 있지만, Pandas에서는 lag_plot이라는 함수를 통해서 쉽게 lag plot을 그려볼 수 있습니다.
@@ -76,7 +130,7 @@ title('random variable lag plot')
 <img src="{{ page.asset_path }}arima_lagplot_random.png" class="img-responsive img-rounded">
 
 
-## Pearson Correlation Coefficient
+### Pearson Correlation Coefficient
 
 t-1 과 t의 상관관계를 pearson correlation으로 구할수 있습니다. <br>
 
@@ -97,7 +151,7 @@ data2.corr()
 <img src="{{ page.asset_path }}arima_pearson_correlation.png" class="img-responsive img-rounded">
 
 
-## Autocorrelation Plot
+### Autocorrelation Plot
 
 각각의 lag variable에 대한 correlation을 plotting할 수 도 있지만, Pandas에서 이미 지원해주고 있습니다.
 
@@ -208,6 +262,12 @@ Seconds Difference의 예제는 다음과 같습니다.
 
 
 
+
+
+
+
+
+
 # AR (Autoregressive) Model
 
 AR(p) (AutoRegressive of order p)는 간단하게 과거의 패턴이 지속된다면 <br>
@@ -238,50 +298,98 @@ Var[X_t] &= \frac{\sigma^2}{1-\sigma^2}
 \end{align} $$
 
 
-## Code Example
+
+### [Code] Using StatsModels
 
 statsmodel에서 제공하는 AR 을 사용하면 Autoregressive Model을 구현할 수 있습니다.<br>
 문제는 해당 라이브러리가 학습된 부분에서 예측을 하면 잘되나, forecast를 하려고 하면 잘 나오지를 않습니다. <br>
 이는 라이브러리가 학습했었던 데이터 자체를 갖고 있고, 이것을 토대로 하여 예측을 하기 때문에, 학습 데이터의 범위를 넘어서 예측을 하려고 하면 잘 되지를 않습니다.
 
 {% highlight python %}
-from statsmodels.tsa.ar_model import AR
-
 PRED_N = 300
-model = AR(train)
-model = model.fit(disp=True)
+model_ar = AR(train)
+model_ar = model_ar.fit(disp=True)
 
-pred = model.predict(start=model.k_ar, end=len(train)+model.k_ar-1)
-
-plot(pred, label='pred', color='red')
-plot(train, linestyle="--", label='true', color="#555555")
-legend()
-
-print('Lag:', model.k_ar)
-print('Params:', model.params)
-print('R^2 Score:', r2_score(pred, train))
+pred_train = model_ar.predict(start=model_ar.k_ar, end=len(train)-1)
+pred_test = model_ar.predict(start=len(train), end=len(train)+len(test)-1)
+### 생략 ###
 {% endhighlight %}
 
-Lag: 12<br>
-Params: [ 0.01898271  0.48485522 -0.25494785  0.182324   -0.20208175  0.20946825 -0.12631762  0.09739854 -0.19255776  0.20917163 -0.20369166  0.34405421 0.55972614]<br>
-R^2 Score: 0.830431464963
 
-<img src="{{ page.asset_path }}arima_AR.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_ar_statsmodels.png" class="img-responsive img-rounded">
 
 
-학습된 구간이 아닌, **학습되지 않은 부분을 예측**하는 부분은 예측률이 매우 많이 떨어집니다.
+### [Code] Using Oridinary Least Square Estimation
 
 {% highlight python %}
-pred = model.predict(start=len(train), end=len(train)+len(test)-1)
-plot(pred, color='red')
-plot(test, linestyle="--", color="#555555")
+ols = sm.OLS(train[LAG+1:], sm.add_constant(ts_train)[:-1], )
+ols = ols.fit()
+display(ols.summary())
 
-print('R^2 Score:', r2_score(pred, test))
+def predict_with_ols(ols, x, length):
+    h = np.ones(x.shape[0] + 1)
+    h[1:] = x
+
+    response = list()
+    for _ in range(length):
+        p = ols.predict(h)
+        h[1:-1] = h[2:]
+        h[-1] = p
+        response.append(p)
+    response = np.array(response)
+    return response
+
+train_pred = ols.predict(sm.add_constant(ts_train))
+test_pred = predict_with_ols(ols, ts_train[-1], length=len(test))
+
+show_result(train, test, train_pred, test_pred, lag=LAG)
 {% endhighlight %}
 
-R^2 Score: 0.491448579238
+<img src="{{ page.asset_path }}arima_ols_summary.png" class="img-responsive img-rounded">
 
-<img src="{{ page.asset_path }}arima_AR_test.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_ols_result.png" class="img-responsive img-rounded">
+
+
+
+
+
+
+
+### [Code] Using Polynomial Curve Fitting
+
+과거 12개 데이터를 통해서 그 다음을 예측합니다.
+
+{% highlight python %}
+LAG = 12
+DEGREE = 1
+
+def poly_pred(poly, x, lag, length):
+    h = x
+    result = list()
+
+    for _ in range(math.ceil(length/lag)):
+        h = np.polyval(poly, h)
+        result += h.reshape(-1).tolist()
+
+    result = np.array(result[:length])
+    return result
+
+poly = np.polyfit(train[:-LAG].reshape(-1), train[LAG:].reshape(-1), DEGREE)
+train_pred = np.polyval(poly, train[:-LAG])
+test_pred = poly_pred(poly, train[-LAG:], lag=LAG, length=len(test)) # np.polyval(poly, train[-LAG:])
+
+show_result(train, test, train_pred, test_pred, lag=LAG)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}arima_ar_poly.png" class="img-responsive img-rounded">
+
+
+
+
+
+
+
+
 
 
 # Moving Average Model

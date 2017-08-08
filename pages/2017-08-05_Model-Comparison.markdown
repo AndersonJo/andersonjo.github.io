@@ -22,13 +22,21 @@ tags: ['resnet', 'densenet']
 
 ## Models
 
-| Model | Params | Lib | Data | Loss | Accuracy | Memory | CPU(T) | CPU(P) | GPU(T) | GPU(P) | ETC |
-|:------|:-------|:----|:-----|:-----|:---------|:-------|:-------|:-------|:-------|:-------|:----|
-| DenseNet | 3 x 24 dense | Pytorch | CIFAR-10 | | |  6619MB | 120 | 25.23 | 0.337 | 0.111 | |
+| Model | Params | Lib | Data | Loss | Accuracy | Memory | CPU(T) | CPU(P) | GPU(T) | GPU(P) |
+|:------|:-------|:----|:-----|:-----|:---------|:-------|:-------|:-------|:-------|:-------|
+| AR(OLS)  | 12 Lag <br>1 x w, 1 x b | Numpy   | Airline Passenger | 0.05 | -0.18| | | | |
+| AR(Polyfit) | 12 Lag <br>1 degree    | Numpy   | Airline Passenger | 0.01 | 0.62 | | | | |
+| DenseNet | 3 x 24 dense | Pytorch | CIFAR-10 | | |  6619MB | 120 | 25.23 | 0.337 | 0.111 |
+
 
 * **Models**
+  - OLS : Ordinary Least Square Estimation
+  - PolyFit : Polinomial Curve Fitting
+  - AR : Autoregressive Model
   - DenseNet : 메모리 최적화되지 않은 [Densely Connected Convolutional Networks](https://arxiv.org/pdf/1608.06993.pdf)의 구현된 모델
 * **Parameters**
+  - w: weight
+  - b: bias
   - convolution : Convolution Layer
   - fc : Fully Connected Layer (또는 Affine, Linear 라고 보면 됨)
 * **Data**
