@@ -24,9 +24,11 @@ tags: ['resnet', 'densenet']
 
 | Model | Params | Lib | Data | Loss | Accuracy | Memory | CPU(T) | CPU(P) | GPU(T) | GPU(P) |
 |:------|:-------|:----|:-----|:-----|:---------|:-------|:-------|:-------|:-------|:-------|
-| AR(OLS)  | 12 Lag <br>1 x w, 1 x b | Numpy   | Airline Passenger | 0.05 | -0.18| | | | |
-| AR(Polyfit) | 12 Lag <br>1 degree    | Numpy   | Airline Passenger | 0.01 | 0.62 | | | | |
-| DenseNet | 3 x 24 dense | Pytorch | CIFAR-10 | | |  6619MB | 120 | 25.23 | 0.337 | 0.111 |
+| LSTM  | lstm <br>linear            | Keras       | Airline Passenger | 0.0088 | 0.593| | | | 0.01 | 0.008 |
+| AR    | 12 Lag                     | statsmodels | Airline Passenger | 0.013  | 0.38 | | | | |
+| AR(OLS)  | 12 Lag <br>1 x w, 1 x b | Numpy       | Airline Passenger | 0.05   | -0.18| | | | |
+| AR(Polyfit) | 12 Lag <br>1 degree  | Numpy       | Airline Passenger | 0.0088 | 0.597| | | | |
+| DenseNet | 3 x 24 dense            | Pytorch     | CIFAR-10          |        | |  6619MB | 120 | 25.23 | 0.337 | 0.111 |
 
 
 * **Models**
@@ -41,6 +43,10 @@ tags: ['resnet', 'densenet']
   - fc : Fully Connected Layer (또는 Affine, Linear 라고 보면 됨)
 * **Data**
   - CIFAR-10 : 32 x 32 이미지, 10 categories
+* **Loss**
+  - Regression: Mean Squared Error 사용
+* **Accuracy**
+  - Regression: R^2 Score 사용
 * **BATCH** : 모든 모델의 Batch 의 크기는 32를 사용하였습니다.
 * **Memory** : GPU의 메모리 사용량을 의미합니다.
 * **CPU(T)** : T는 Training을 가르키며, CPU기반 학습할때 초당 1 Batch 데이터를 처리하는 속도입니다.
