@@ -22,7 +22,7 @@ tags: ['Artificial-Intelligence']
 ## Input
 
 먼저 input의 weighted sum을 구합니다. <br>
-공식에 bias를 따로 $ b $로 잡았지만, 보통 weight의 첫번째 element는 bias로 사용합니다.
+공식에 bias를 따로 $$ b $$로 잡았지만, 보통 weight의 첫번째 element는 bias로 사용합니다.
 
 
 $$ z = h(x; \theta, b) = \left[ \sum^K_{i=1} w_i x_i \right] + b = w^T x + b $$
@@ -40,7 +40,7 @@ $$ \frac{\partial}{\partial b} \left[ w^T x + b \right] = 1$$
 
 ## Activation Function
 
-$ \phi $ 함수는 activation fuction을 나타내며 예제를 위해서 sigmoid function (or logistic function)을 사용하겠습니다.
+$$ \phi $$ 함수는 activation fuction을 나타내며 예제를 위해서 sigmoid function (or logistic function)을 사용하겠습니다.
 
 $$ \phi(z; w) = \frac{1}{1 + e^{-z}} $$
 
