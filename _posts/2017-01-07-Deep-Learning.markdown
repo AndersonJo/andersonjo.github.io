@@ -212,7 +212,7 @@ $$ l =  L -1, L -2, L -3 $$, ... 부터 다음과 같은 계산을 합니다.<br
 
 $$ \begin{align}
 \delta^{(l)} &= \left[ \left( \theta^{(l)} \right)^T \delta^{(l+1)} \right] \odot \phi^{\prime} \left( \left( \theta^{(l-1)} \right)^T h^{(l-1)} + b^{(l-1)} \right) & [1] \\
-&= \left[ \left( \theta^{(l)} \right)^T \delta^{(l+1)} \right] \odot h^{(l)}(1-h^{(l)}) \cdot h^{(l-1)} & [2]
+&= \left[ \left( \theta^{(l)} \right)^T \delta^{(l+1)} \right] \odot h^{(l)}(1-h^{(l)}) & [2]
 \end{align} $$
 
 * **[1]**에서 $$\left( \theta^{(l)} \right)^T \delta^{(l+1)}  $$ 는 feedword 에서 각 layer의 output을 받아서 다른 layer에서 연산하던 과정을 다시역으로 계산하면서 나타난 부분입니다.
