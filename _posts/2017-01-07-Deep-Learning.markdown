@@ -197,7 +197,7 @@ $$ \begin{align}
 \frac{\partial}{\partial h^{(L-1)}} \left[ \frac{1}{1-e^{-h^{(L-1)}}} \right] \cdot
 \frac{\partial}{\partial \theta^{(L-1)}} \left[ \left( \theta^{(L-1)} \right)^T h^{(L-1)} + b^{(L-1)} \right] & [1] \\
 &= \frac{2}{N} \left[ \sum \left( h^{(L)} - y^{(i)} \right) \right] \odot \phi^{\prime} \left( (\theta^{(L-1)})^T h^{(L-1)} + b^{(L-1)} \right) & [2] \\
-&= \frac{2}{N} \left[ \sum \left( h^{(L)} - y^{(i)} \right) \right] \odot h^{(L)} (1- h^{(L)}) \cdot h^{(L-1)} & [3]
+&= \frac{2}{N} \left[ \sum \left( h^{(L)} - y^{(i)} \right) \right] \odot h^{(L)} (1- h^{(L)}) & [3]
 \end{align} $$
 
 * **[1]** $$ \frac{1}{N}\sum $$ 부분에서 N을 2값으로 변경하여 ($$ \frac{1}{2} \sum $$) 계산 효율을 높일수 있습니다.
