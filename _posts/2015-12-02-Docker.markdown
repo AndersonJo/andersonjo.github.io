@@ -15,59 +15,27 @@ Installing Docker on Ubuntu <br>
 
 # Install Docker
 
-#### Install Docker
+#### Installing Docker Community Edition on Ubuntu 16.04
 
-먼저 gpg 키를 등록시킵니다.
+이전 버전의 docker를 지워줍니다.
+
+{% highlight bash %}
+sudo apt-get remove docker docker-engine docker.io
+{% endhighlight %}
+
+gpg 키를 등록시킵니다.
 {% highlight bash %}
 sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates
-sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-{% endhighlight %}
-
-우분투의 버젼을 체크 합니다.
-{% highlight bash %}
-lsb_release -a
-
-No LSB modules are available.
-Distributor ID:	Ubuntu
-Description:	Ubuntu 15.10
-Release:	15.10
-Codename:	wily
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 {% endhighlight %}
 
 
-{% highlight bash %}
-sudo vi /etc/apt/sources.list.d/docker.list
-{% endhighlight %}
-
-열고 기존의 내용이 있다면 지우고 우분투 버젼에 따라 다음 내용을 넣습니다.<br> 
-**(다음 deb 중에  하나만 써야 합니다)**
-
-
-| Ubuntu version | Repository |
-|:---------------|:-----------|
-| Precise 12.04 (LTS) | deb https://apt.dockerproject.org/repo ubuntu-precise main |
-| Trusty 14.04 (LTS) | deb https://apt.dockerproject.org/repo ubuntu-trusty main |
-| Wily 15.10         | deb https://apt.dockerproject.org/repo ubuntu-wily main   |
-| Vivid 15.04        | deb https://apt.dockerproject.org/repo ubuntu-vivid main  |
-| Xenial 16.04 (LTS) | deb https://apt.dockerproject.org/repo ubuntu-xenial main |
-
+Repository를 설치후 Docker Community Edition을 설치합니다.
 
 {% highlight bash %}
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt-get update
-sudo apt-get install linux-image-extra-$(uname -r)
-apt-get purge lxc-docker
-apt-cache policy docker-engine
-
-sudo apt-get install docker-engine
-sudo service docker start
-{% endhighlight %}
-
-
-#### [Error] [graphdriver] prior storage driver \"aufs\" failed: driver not supported
-
-{% highlight bash %}
-m -rf /var/lib/docker/aufs
+sudo apt-get install docker-ce
 {% endhighlight %}
 
 # Docker Configuration
@@ -86,12 +54,7 @@ docker group을 만들고 ubuntu user를 추가시켜줍니다.
 sudo usermod -aG docker ubuntu
 {% endhighlight %}
 
-로그 아웃후 다시 로그인 합니다.<br>
-sudo 없이 docker가 실행되는지 확인해 봅니다.
-
-{% highlight bash %}
-docker hello-world
-{% endhighlight %}
+로그 아웃후 다시 로그인 합니다.
 
 #### iptables option
 
@@ -180,6 +143,36 @@ service ssh restart
 {% highlight bash %}
 docker info
 docker pull ubuntu       
+{% endhighlight %}
+
+Images 보기
+
+{% highlight bash %}
+$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos              7                   328edcd84f1b        5 weeks ago         193MB
+{% endhighlight %}
+
+실행중이거나 중단된 containers보기
+
+{% highlight bash %}
+$ docker ps -a
+CONTAINER ID    IMAGE    COMMAND        CREATED           STATUS                     PORTS    NAMES
+3032c49eb6a3    centos   "/bin/bash"    11 seconds ago    Up 10 seconds                       tender_morse
+8142605eda66    centos   "/bin/bash"    2 minutes ago     Exited (0) 2 minutes ago            centos
+{% endhighlight %}
+
+
+종료된 container 삭제시키기
+{% highlight bash %}
+$ docker rm 8142605eda66
+{% endhighlight %}
+
+
+Host File <--> Docker Container 복사하기
+{% highlight bash %}
+docker cp foo.txt mycontainer:/foo.txt
+docker cp mycontainer:/foo.txt foo.txt
 {% endhighlight %}
 
 #### Interactive Mode
