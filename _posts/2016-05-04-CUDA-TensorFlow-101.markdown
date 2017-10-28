@@ -12,7 +12,7 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 <img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded" style="width:100%">
 </header>
 
-# Installation
+# Install CUDA
 
 ### Current Nvidia Card
 
@@ -21,7 +21,13 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 lspci -vnn | grep -i VGA -A 12
 {% endhighlight %}
 
-### CUDA Toolkit
+### Install Linux Kernel & Headers
+
+{% highlight bash %}
+sudo apt-get install linux-headers-generic
+{% endhighlight %}
+
+### Install CUDA Toolkit
 
 Cuda Toolkit은 **/usr/local/cuda**안에 설치가 되어 있어야 합니다.<br>
 [Download CUDA Toolkit][Download CUDA Toolkit]
@@ -73,56 +79,8 @@ Cuda compilation tools, release 7.5, V7.5.17
 {% endhighlight %}
 
 
-### Reinstallation
 
-{% highlight bash %}
-sudo apt-get remove --purge nvidia*
-sudo apt-get remove --purge  xserver-xorg-video-nouveau
-{% endhighlight %}
-
-### [Error] unsupported GNU version! gcc versions later than 5 are not supported!
-
-4.x 버젼의 gcc를 쿠다가 설치된 곳으로 softlink걸어주면 해결됨<br>
-먼저 GCC 4.9 그리고 G++ 4.9을 설치해줍니다. (두개의 버젼이 서로 동일해야합니다.)
-
-{% highlight bash %}
-sudo apt-get install python-software-properties
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-sudo apt-get update
-sudo apt-get install gcc-4.9
-sudo apt-get install g++-4.9
- 
-sudo rm /usr/bin/g++
-sudo ln -s /usr/bin/g++-4.9 /usr/bin/g++
-
-sudo rm /usr/bin/gcc
-sudo ln -s /usr/bin/gcc-4.9 /usr/bin/gcc
-{% endhighlight %}
-
-gcc-4.9을 쿠다가 설치된 곳으로 softlink를 걸어줍니다.
-
-{% highlight bash %}
-sudo ln -s /usr/bin/gcc-4.9 /usr/local/cuda/bin/gcc
-{% endhighlight %}
-
-### [Error] The driver installation is unable to locate the kernel source
-
-CUDA 드라이버 설치시, Linux Kernel source가 필요한데, source가 안보여서 생기는 문제. 
-
-[Download Nvidia Driver][Download Nvidia Driver]
-
-{% highlight bash %}
-sudo apt-get install linux-headers-`uname -r`
-./NVIDIA-Linux-x86_64-367.18.run
-{% endhighlight %}
-
-또는 
-
-{% highlight bash %}
-sudo apt-get install linux-headers-generic
-{% endhighlight %}
-
-### CUDA + cuDNN
+### Install CuDNN
 
 또한 cuDNN v4가 설치되어 있어야 합니다. v5설치시 TensorFlow는 source로 빌드되어야 합니다.<br>
 [Download cuDNN][Download cuDNN]
@@ -149,20 +107,42 @@ sudo cp -r ./cuda/* /usr/local/cuda/
 {% endhighlight %}
 
 
-### Install Tensorflow from Source
+
+
+
+
+
+
+
+
+
+
+# Install TensorFlow from Source
 
 TensorFlow build버젼은 기본적으로 CUDA Toolkit 7.5 그리고 cuDNN v5 와 작동하지만,<br> 
 그 이상의 버젼에서 돌리기 위해서는 반드시 source에서 설치해야 합니다.
 
 <bold style="color:red; font-weight:bold;">Pascal Architecture는 CUDA 8.0부터 지원됩니다. 즉 GTX1080, GTX1070 사용지 반드시 source로 install해야 합니다.</bold>
 
-**Install Dependencies**
+### Install Dependencies
 
 {% highlight bash %}
 sudo apt-get install libcurl3-dev
 {% endhighlight %}
 
-**Bazel설치하기**
+
+### Install Python Wheel
+
+{% highlight bash %}
+# For Python 2.7:
+$ sudo pip install wheel
+
+# For Python 3.x:
+$ sudo pip3 install wheel
+{% endhighlight %}
+
+
+### Install Bazel
 
 반드시 0.4 이상의 버젼 (0.3은 안됨)을 설치해야 합니다. 
 
@@ -186,15 +166,7 @@ $ bazel version
 Build label: 0.4.3
 {% endhighlight %}
 
-**Install other dependencies**
 
-{% highlight bash %}
-# For Python 2.7:
-$ sudo pip install wheel
-
-# For Python 3.x:
-$ sudo pip3 install wheel
-{% endhighlight %}
 
 **Check CUDA Version**
 
@@ -206,7 +178,9 @@ Built on Tue_Aug_11_14:27:32_CDT_2015
 Cuda compilation tools, release 7.5, V7.5.17
 {% endhighlight %}
 
-**Install TensorFlow from source**
+
+
+### Install TensorFlow from source
 
 {% highlight bash %}
 git clone https://github.com/tensorflow/tensorflow
@@ -227,7 +201,7 @@ cd tensorflow
 | Do you wish to build TensorFlow with Google Cloud Platform support? | y | |
 | Do you wish to build TensorFlow with Hadoop File System support? | y | |
 | Do you wish to build TensorFlow with the XLA just-in-time compiler (experimental)? | y | |
-| Do you wish to build TensorFlow with OpenCL support? | n | |
+| Do you wish to build TensorFlow with OpenCL support? | n | SYCL 1.2 is needed |
 | Do you wish to build TensorFlow with CUDA support? | y | |
 | Do you want to use clang as CUDA compiler? | n | NVCC사용시 no |
 | Please specify which gcc should be used by nvcc as the host compiler. [Default is /usr/bin/gcc]: | /usr/bin/gcc-4.9 | gcc 5 이상쓰면 안됨 |
