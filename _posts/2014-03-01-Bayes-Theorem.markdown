@@ -124,11 +124,11 @@ Anderson은 아침에 옥수수를 먹는 것을 좋아하고, 점심에는 피�
 * P(피자) = 0.5
 * P(옥수수 \| 피자) = 0.7
 
-이 부분에서 **P(옥수수) != P(옥수수|피자)** 이므로 아침에 옥수수먹는 일과 점심에 피자를 먹는 일은 **dependent** 하다고 볼 수 있습니다.<br>
+이 부분에서 **P(옥수수) != P(옥수수 \| 피자)** 이므로 아침에 옥수수먹는 일과 점심에 피자를 먹는 일은 **dependent** 하다고 볼 수 있습니다.<br>
 만약 P(A) = P(A|B) 라면 서로의 이벤트들은 independent하다고 볼 수 있습니다.
 
 
-이제 이러한 상황을 알 고 있고, **반대로 아침에 옥수수를 먹었고, 점심에 피자를 먹을 확률  P(피자|옥수수)** 을 알고자 한다면 Bayes Theorem이 필요로 하게 됩니다.
+이제 이러한 상황을 알 고 있고, **반대로 아침에 옥수수를 먹었고, 점심에 피자를 먹을 확률  P(피자 \| 옥수수)** 을 알고자 한다면 Bayes Theorem이 필요로 하게 됩니다.
 
 
 
@@ -143,8 +143,8 @@ Bayes Theorem은 원래 역확률(inverse problem)을 해결하기 위한 방법
 
 $$ P(A|B) = \frac{P(A \cap B)}{P(B)} = \frac{P(A)P(B|A)}{P(B)} $$
 
-* $$ P(A | B) $$ : Conditional Probability 입니다. B가 주어졌을때 A가 일어날 확률
-* $$ P(B | A) $$ : 이것또한 Conditional Probability 입니다. A가 주어졌을때 B가 일어날 확률
+* P(A \| B) : Conditional Probability 입니다. B가 주어졌을때 A가 일어날 확률
+* P(B \| A) : 이것또한 Conditional Probability 입니다. A가 주어졌을때 B가 일어날 확률
 
 중요하게 볼 부분은 Bayes's formula 는 두개의 서로다른 conditional probabilities (P(A | B) 그리고 P(B | A)) 를 서로 연결 시키며, 궁극적으로 조건이 되는 부분을 서로 뒤집어 버립니다.
 결론적으로 Bayes는 conditional probability를 이용하며, 공식이 동일하며, 이때 **역확률 (inverse probability 또는 Posterior probability)**을 알고자 할때 사용한다는 것이 핵심 포인트입니다.
@@ -183,12 +183,12 @@ $$ P(New|Sedan) = \frac{P(New)P(Sedan|New)}{P(Sedan)} = \frac{0.65 * 0.6154}{0.5
 불행하게도 기상캐스터는 바로 결혼식날인 내일 비가 온다고 예보를 하였습니다. <br>
 통계적으로 기상캐스터가 비가 내린다고 예보한뒤 실제로 비가 내린 확률은 90%이며, 실제로 비가 내리지 않는데 비가 내린다고 잘못 예보한 경우는 10%입니다. 그렇다면 내일 결혼식날에 비가 내일 확률은 얼마나 될까요?
 
-* $$ P(\text{rain}) = \frac{5}{365} = 0.0136985 $$ (정아의 결혼식에 비가 내릴 확률)
-* $$ P(\text{not rain}) = \frac{360}{365} = 0.9863014 $$ (정아의 결혼식에 비가 내리지 않을 확률)
-* $$ P(\text{C}\ |\ \text{rain}) = 0.9 $$  (실제 비가 온날, 기상캐스터가 정확하게 비가 온다고 예측한 확률)
-* $$ P(\text{C}\ |\ \text{not rain}) = 0.1 $$ (비가 내리지 않는 날, 기상캐스터가 비가 온다고 잘못 예보한 확률)
+* P(rain) = 5/365 = 0.0136985  (정아의 결혼식에 비가 내릴 확률)
+* P(not rain) =  360/365 = 0.9863014  (정아의 결혼식에 비가 내리지 않을 확률)
+* P(C \| rain) = 0.9  (실제 비가 온날, 기상캐스터가 정확하게 비가 온다고 예측한 확률)
+* P(C \| not rain) = 0.1  (비가 내리지 않는 날, 기상캐스터가 비가 온다고 잘못 예보한 확률)
 
-알고싶은것은 $$ P(\text{rain}\ |\ \text{weatherman rain}) $$  입니다.
+알고싶은것은 P(rain \| C) 입니다.
 
 $$ \begin{align}
 P(\text{rain}\ |\ \text{C}) &= \frac{P(\text{rain}) P(\text{C}\ |\ \text{rain})}{ P(\text{rain}) P(\text{C}\ |\ \text{rain}) + P(\text{not rain}) P(\text{C}\ |\ \text{not rain})} \\
