@@ -163,7 +163,7 @@ $$ P(Deb | Short) = \frac{P(Deb \cap Short)}{P(Short)} = \frac{\frac{4}{50}}{ \f
 
 이때 P(Deb \| Long) = P(Deb)이므로 Deb 와 Long은 Independent이다.
 
-### Bayes Theorem
+두번째 예제...
 
 $$ P(A|B) = \frac{P(A)P(B|A)}{P(B)} $$
 

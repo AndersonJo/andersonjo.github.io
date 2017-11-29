@@ -8,7 +8,6 @@ tags: ['몬테카를로', 'Monte Carlo']
 ---
 
 
-# Importance Sampling
 
 ## Introduction to Importance Sampling
 
@@ -230,4 +229,6 @@ Uniform error:0.9%     Importance error:0.8%    Uniform:1.01     Importance:0.99
 
 **integral $$ f(X) $$ 에 대해서 모르고 있다면**<br>
   - 전혀 알수 없다면 uniform distribution을 사용한다.
+
+
 
