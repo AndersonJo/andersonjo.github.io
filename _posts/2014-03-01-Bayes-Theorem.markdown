@@ -76,7 +76,7 @@ P(A \cap B) &= P(A) * P(B) \\
 
 
 
-## Mutually Exclusive and Collectively Exhaustive Events
+### Mutually Exclusive and Collectively Exhaustive Events
 
 
 **Mutually Exclusive Events**란 두개의 이벤트가 동시에 일어날수 없는 것입니다.<br>
