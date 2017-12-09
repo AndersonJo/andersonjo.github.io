@@ -24,7 +24,7 @@ tags: ['Pytorch']
 {% highlight bash %}
 sudo apt-get install cmake xvfb libav-tools xorg-dev libsdl2-dev swig
 
-sudo pip3 install cffi, pyyaml
+sudo pip3 install cffi pyyaml
 {% endhighlight %}
 
 ### Install Pytorch from Source
@@ -36,7 +36,8 @@ git clone https://github.com/pytorch/pytorch.git
 cd pytorch
 
 git tag  # 버젼 확인
-git checkout v0.1.12  # 최신 버젼으로 변경
+git checkout v0.3.0  # 최신 버젼으로 변경
+git submodule update --init
 sudo python3.6 setup.py install
 {% endhighlight %}
 
