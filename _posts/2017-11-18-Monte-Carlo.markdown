@@ -110,7 +110,7 @@ $$ F = \int^b_a f(x)\ dx $$
 
 위의 아이디어처럼 samples (직사각형)의 갯수가 늘어나면 날수록 integral 결과값에 approximate한다는 것을 수식화하면 다음과 같습니다.
 
-$$ \langle F^N \rangle = (b-a) \frac{1}{N} \sum^{N}_{i=1} f(X_i) $$
+$$ \langle F^N \rangle = (b-a) \frac{1}{N} \sum^{N-1}_{i=0} f(X_i) $$
 
 * $$ N $$ : Sample의 갯수
 * $$ f(X_i) $$ : 위의 예제에서 직사각형의 높이
