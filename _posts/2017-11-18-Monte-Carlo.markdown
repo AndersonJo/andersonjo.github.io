@@ -148,7 +148,7 @@ E[ \langle F^N \rangle ] &= E \left[ (b-a) \frac{1}{N} \sum^{N-1}_{i=0} f(x_i) \
 * [1] : basic monte carlo를 적용하며, 해당 공식은 uniform distribution에만 적용될 수 있다.
 * [2] : expectation은 상수를 밖으로 뺄수 있으며, summation 안쪽으로 들어올수 있다.
 * [3] : continuous random variable에 대한 expectation으로 바꿔준다.
-* [4] : pdf는 continuous data이기 때문에 $$ \frac{a}{b-a} $$ 이며, 이는 앞쪽의 $$ (b-a) $$ 를 상쇄시킨다. <br> summation은 $$ \sum^{N-1}_{i=0} = \sum^{N}_{i=1} $$ 이다.
+* [4] : pdf는 continuous data이기 때문에 $$ \frac{1}{b-a} $$ 이며, 이는 앞쪽의 $$ (b-a) $$ 를 상쇄시킨다. <br> summation은 $$ \sum^{N-1}_{i=0} = \sum^{N}_{i=1} $$ 이다.
 * [5] : $$ \sum^N_{i=1} I $$ 가 있다면 $$ N * I $$ 와 같게 된다.
 
 
