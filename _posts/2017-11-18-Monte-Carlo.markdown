@@ -13,9 +13,10 @@ tags: ['몬테카를로', 'expected value', '기대값', 'variance', 'importance
     </div>
 </header>
 
+
 # [Note] Prerequisites
 
-### Expected Value
+### Expected Value of Discrete Random Variable
 
 Discrete random variable $$ X $$ 를 $$ f $$ 확률의 함수로 $$ S $$ 에서 어떤 값을 꺼낸다면  $$ E(X) $$ (expected valud of $$ X $$ 라고 함) 는 다음과 같습니다.
 
@@ -25,6 +26,7 @@ $$ E(X) = \sum_{i = 1} x_i p_i  $$
 * $$ p_i $$ : 각각의 random variable $$ x_i $$ 의 확률이며, 위키피디아에서는 $$ f(x) $$ 를 사용하여 probability density function으로 표현하기도 한다.
 * $$ E(X) $$ : weighted avarage of the values $$ X $$
 
+### Expected Value of Continuous Random Variable
 
 Continuous random variable $$ Y = f(X) $$ 에 대한 expected value는 다음과 같습니다.
 
@@ -41,6 +43,8 @@ E(X) &= 1*P(x=1) + 2*P(x=2) + 3*P(x=3) + 4*P(x=4) + 5*P(x=5) + 6*P(x=6)  \\
 따라서 expected value $$ E(X) $$ 는 3.5 입니다.
 
 
+
+
 ### Expected Value Rules
 
 * Random variables 합의 expected value 는 expected values의 합과 동일합니다.
@@ -52,6 +56,8 @@ $$ E\left[ \sum_{i} Y_i  \right] = \sum_{i} E[Y_i] $$
 $$ E[aX + b] = aE[X] + b $$
 
 $$ E[aY] = aE[Y] $$
+
+
 
 
 ### Variance
@@ -72,6 +78,9 @@ $$ \sigma^2[aY] = a^2 \sigma^2[Y] $$
 $$ \sigma^2 \left[ \sum_i Y_i \right] = \sum_i \sigma^2 [Y_i] $$
 
 
+
+
+
 ### The Law of Large Numbers
 
 * **The Law of Large Numbers** : Sample size 가 증가할수록 population의 평균값에 가까워진다는 뜻으로.. 예를 들어서 동전 던지기를 대략 1,000,000번 던지면 앞면 뒷면이 나올 확률이 1:1로 거의 유사하게 나올 것 입니다. 하지만 10번정도밖에 안 던지면 1:1이 아닌 3:7 또는 2:8처럼 모수와 전혀 다른 비율로 나올 것 입니다.
@@ -79,7 +88,10 @@ $$ \sigma^2 \left[ \sum_i Y_i \right] = \sum_i \sigma^2 [Y_i] $$
 * 즉.. 여러번의 experiments (또는 trials) 를 거치고 난뒤의 평균값은 **expected value** 와 점점 가까워지게 될 것입니다.
 
 
-# Monte Carlo Method
+
+
+
+# Basic Monte Carlo Method
 
 ## Intuition
 
@@ -90,16 +102,16 @@ $$ F = \int^b_a f(x)\ dx $$
 잘 알다시피, Integration은 함수의 curve아래의 면적을 구합니다. (Fgure 1) <br>
 만약 random value x 를 하나 선택한뒤 $$ f(x) * (b-a) $$ 를 하게 되면 Figure 2 처럼 직사각형 형태를 면적으로 구하게 됩니다.<br>
 
-
-<img src="{{ page.asset_path }}monte_integrate_fx.png" class="img-responsive img-rounded">
+![one-dimensional-function]({{ page.asset_path }}monte_integrate_fx.png)
 
 적당한 값을 찾아서 직사각형의 넓이를 구한다면 조잡하지만 curve아래의 정확한 면적을 approximate할수 있게 됩니다. <br>
 하지만 만약 $$ x_1 $$ 을 선택하게 된다면 면적을 너무 좁게 볼 것이고, $$ x_2 $$ 로 잡으면 면적을 너무 크게 잡게 될 것입니다.<br>
 
-
-<img src="{{ page.asset_path }}monte_integrate_fx2.png" class="img-responsive img-rounded">
+![one-dimensional-function]({{ page.asset_path }}monte_integrate_fx2.png)
 
 한번에 정확한 면적을 구할수는 없지만, 여러번의 random points를 잡아서 계속해서 직사각형의 면적을 구하고, 평균을 구하면 실제 curve아래의 면적과 유사해질것입니다. 포인트는 samples의 갯수가 늘어날수록 좀 더 정확한 approximation 을 할 수 있게 됩니다.
+
+
 
 
 
@@ -110,7 +122,7 @@ $$ F = \int^b_a f(x)\ dx $$
 
 위의 아이디어처럼 samples (직사각형)의 갯수가 늘어나면 날수록 integral 결과값에 approximate한다는 것을 수식화하면 다음과 같습니다.
 
-$$ \langle F^N \rangle = (b-a) \frac{1}{N} \sum^{N}_{i=1} f(X_i) $$
+$$ \langle F^N \rangle = (b-a) \frac{1}{N} \sum^{N-1}_{i=0} f(X_i) $$
 
 * $$ N $$ : Sample의 갯수
 * $$ f(X_i) $$ : 위의 예제에서 직사각형의 높이
@@ -121,7 +133,7 @@ $$ \langle F^N \rangle = (b-a) \frac{1}{N} \sum^{N}_{i=1} f(X_i) $$
 
 * **Uniformly Distributed Random Value**<br>
 $$ x_i = U(b-a) $$
-$$ U $$ 는 uniformly distributed 라는 뜻으로, $$ b-a $$ 의 값중에서 모두 동일한 확률로 sampling하겠다는 뜻
+ $$ U $$ 는 uniformly distributed 라는 뜻으로, $$ b-a $$ 의 값중에서 모두 동일한 확률로 sampling하겠다는 뜻
 
 * **PDF** : Probability Density Function의 경우 동일한 확률(equiprobability)로 뽑혔기 때문에 $$ \frac{1}{b-a} $$ 이다. <br>
 만약 discrete 데이터이라면 $$ \frac{1}{\text{total number of outcomes}} $$ 하면되나, 여기에서는 continuous 데이터이기 때문에 1에다 interval [a, b] 를 나누게 된다.
@@ -148,8 +160,9 @@ E[ \langle F^N \rangle ] &= E \left[ (b-a) \frac{1}{N} \sum^{N-1}_{i=0} f(x_i) \
 * [1] : basic monte carlo를 적용하며, 해당 공식은 uniform distribution에만 적용될 수 있다.
 * [2] : expectation은 상수를 밖으로 뺄수 있으며, summation 안쪽으로 들어올수 있다.
 * [3] : continuous random variable에 대한 expectation으로 바꿔준다.
-* [4] : pdf는 continuous data이기 때문에 $$ \frac{a}{b-a} $$ 이며, 이는 앞쪽의 $$ (b-a) $$ 를 상쇄시킨다. <br> summation은 $$ \sum^{N-1}_{i=0} = \sum^{N}_{i=1} $$ 이다.
+* [4] : pdf는 continuous data이기 때문에 $$ \frac{1}{b-a} $$ 이며, 이는 앞쪽의 $$ (b-a) $$ 를 상쇄시킨다. <br> summation은 $$ \sum^{N-1}_{i=0} = \sum^{N}_{i=1} $$ 이다.
 * [5] : $$ \sum^N_{i=1} I $$ 가 있다면 $$ N * I $$ 와 같게 된다.
+
 
 
 
@@ -162,6 +175,7 @@ E[ \langle F^N \rangle ] &= E \left[ (b-a) \frac{1}{N} \sum^{N-1}_{i=0} f(x_i) \
 위에거는 외울 필요가 없지만, 아래것은 외워야 합니다.
 
 $$ \langle F^N \rangle = \frac{1}{N} \sum^{N-1}_{i=0} \frac{f(x_i)}{pdf(x_i)} $$
+
 
 위의 generalized estimator는 다음과 같은 expected value를 갖습니다.
 
@@ -183,40 +197,6 @@ Deterministic Quadrature techniques 경우 $$ N^d $$ samples이 d-dimensional in
 
 
 
-## Variance Reduction
-
-Monte Carlo integration의 퀄리티를 높이기 위해서는 variance 를 낮춰야 합니다.<br>
-Monte Carlo에서 사용되는 Samples들은 independent하기 때문에 $$ \sigma^2 \left[ \sum_i Y_i \right] = \sum_i \sigma^2 [Y_i] $$ property를 이용해서 문제를 더 간결하게 만들수 있습니다.
-
-
-$$ \begin{align}
-\sigma^2\left[ \langle F^N \rangle \right] &= \sigma^2 \left[ \frac{1}{N} \sum^{N-1}_{i=0} \frac{f(X_i)}{pdf(X_i)} \right] &[1] \\
-&= \frac{1}{N^2} \sum^{N-1}_{i=0} \sigma^2 \left[  \frac{f(X_i)}{pdf(X_i)} \right] &[2] \\
-&= \frac{1}{N^2} \sum^{N-1}_{i=0} \sigma^2 [Y_i] &[3] \\
-&= \frac{1}{N} \sigma^2[Y] &[4]
-\end{align} $$
-
-따라서...
-
-$$ \sigma \left[ \langle F^N \rangle \right] = \frac{1}{\sqrt{N}} \sigma[Y]   $$
-
-* $$ Y_i = \frac{f(X_i)}{pdf(X_i)} $$ 이렇게 축약합니다.
-* $$ Y $$ : 어떤 특정 $$ Y_i $$ 의 값을 뜻합니다. $$ Y = Y_i $$
-
-위의 유도공식(derivation)은 위에서 언급한 standard deviationdms $$ O(\sqrt{N}) $$ 로 converge가 되는 것을 증명합니다.<br>
-각각의 $$ Y_i $$ 의 variance를 낮춤으로서 전체적인 $$ \langle F^N \rangle $$ 의 variance또한 낮춰줍니다.
-
-Variance Reduction 기법은 각각의 $$ Y_i $$ 를 가능하면 constant로 만들려고 하는 것입니다. 이를 통해서 전체적인 에러률을 낮춥니다.
-
-
-왜 f(x) 를 pdf(x) 로 나누려고 하는지 직관적으로 설명하겠습니다.<br>
-pdf가 높다는것은 random variable $$ X $$ 가 어떤 값 $$ x_i $$ 을 가져올 확률을 높여줍니다.<br>
-예를 들어 아래 그림의 normal distribution에서 중앙에 samples들이 몰려있기 때문에 중앙부분..즉 높은 pdf값을 갖은 samples들을 Monte Carlo 알고리즘에 사용이 될 것입니다. 즉 위의 예제처럼 면적을 구하고자 할때.. y축으로 높은 부분을 사용해서 계산하기 때문에 당연히 결과값도 bias가 생기게 될 것입니다.
-
-하지만 f(x) 를 pdf(x)로 나누면 확률이 높은 부분은 더 낮아지고, 반대로 확률이 적은 부분은 높아지게 됩니다.<br>
-예를 들어서 rare한 부분의 sample의 경우 1/0.1 = 10 처럼 값이 더 올라가게 됩니다.
-
-<img src="{{ page.asset_path }}monte_density.png" class="img-responsive img-rounded">
 
 # References
 
