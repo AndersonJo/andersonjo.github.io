@@ -2,11 +2,10 @@
 layout: post
 title:  "Word2Vec - The problem of Softmax & Information Content"
 date:   2017-11-25 01:00:00
-categories: "statistics"
+categories: "nlp"
 asset_path: /assets/images/
 tags: ['word2vec', 'softmax', 'skipgram', 'sampling', 'nce', 'noise-constrastive-estimation', 'information-theory', 'entropy']
 ---
-
 
 # Word2Vec
 
@@ -32,6 +31,8 @@ Word embedding은 단어간의 의미를 포함하는 dense vector를 얻도록 
 두번째 페이퍼는 [Distributed Representations of Words and Phrases and their Compositionality](https://arxiv.org/abs/1310.4546) 으로서, 첫번째 페이퍼에서 내놓은 2개의 모델을 개선함으로서, 속도 그리고 정확도를 더 높였습니다.
 
 
+
+
 ## Skip-Gram Model
 
 아래는 orginal skip-gram 모델 아키텍쳐이며, 목표는 주변의 단어를 잘 예측하는 word vector representations 를 학습하는 것 입니다.<br>
@@ -43,6 +44,7 @@ J_{\theta} = \frac{1}{T} \sum^T_{t=1} \sum_{-c\ \le\ j\ \le\ c, \ j \ne 0} \log 
 \end{align} $$
 
 
+
 자세한 그림을 갖고서 설명하면 다음과 같습니다.<br>
 위의 공식에서 $$ w_t $$ 는 아래 그림에서 $$ x_k $$ 와 동일하며, $$ w_{t+j} $$ 는 아래 그림에서 $$ y_{c,j} $$ 와 동일합니다.
 
@@ -52,18 +54,26 @@ J_{\theta} = \frac{1}{T} \sum^T_{t=1} \sum_{-c\ \le\ j\ \le\ c, \ j \ne 0} \log 
 $$ x_k $$ 는 `커피` 라는 one-hot vector이며, $$ W $$ 는 V x N 형태의 weight matrix로서 word embedding에서 우리가 알아내고자 하는 matrix입니다. one-hot vector와 matrix를 곱하게 되면 실질적으로는 $$ W $$ 의 1 x N (N은 neurons의 갯수) vector를 그냥 꺼내오게 됩니다. 이후 output layer $$ W' $$  (N x V) 와 dot product연산을 하게 되며 결과적으로 C x V dimension의 vectors가 만들어지게 됩니다.
 
 
+
+
+
+
+
 이후 softmax function을 사용하여 각 단어가 나올 확률을 계산하게 됩니다.
 
 $$ p(w_O|w_I) = \dfrac{\text{exp}(v'^\top_{w_O} v_{w_I})}{\sum^V_{w=1}\text{exp}(v'^\top_{w} v_{w_I})} $$
 
 * $$ w_I $$ : 단어에 대한 one-hot vector
 * $$ w_O $$ : surrounding words 로서 $$ w_{t+j} $$
-* $$ v_w $$ : Input vector representations of $$ w $$. Embedding을 말할때 $$ v_w $$ embedding을 가르킨다.
-* $$ v^{\prime}_w $$ : Output vector representations of $$ w $$ (representation이라는 말에 주의하자. 이값은 weight와 dot product로 계산해서 나온 결과값이다.)
+* $$ V_{w} $$ : $$ W $$ 의 row vector를 가르킨다. 즉 input -> hidden matrix 를 가르킨다.
+* $$ V'_{w} $$ : $$ W' $$ 의 column vector를 가르킨다. 즉 hidden -> output matrix 를 가르킨다. (dot product로 계산된 결과값)
 * $$ V $$ : 단어의 갯수
 
-문제가 되는부분은 각각의 단어에 대해서 합을 구하는 denominator부분입니다. <br>
-연산량 자체가 많기 때문에 실제로 최소 몇만단어에서 몇백만까지 vector의 크기가 늘어날수 있는 상황에서 softmax를 그대로 쓰는것은 문제가 있습니다.
+$$ V'^\top_{w_O} $$ 를 학습할때 실제로는 "얼음" 이라는 단어의 one-hot vector가 들어갈것입니다.<br>
+하지만 실제 추론시에는 hidden -> output matrix로 dot product가 계산된 결과값이며, 여기에는 여러 단어들이 나올 확률이 dense vector로 나올 것입니다. 그중에 "얼음" 이라는 해당 output vector안의 특정 element(실제로는 확률) 을 가르키는 것입니다.
+
+
+
 
 ## The Problem of Softmax
 
@@ -81,6 +91,7 @@ Word2Vec의 저자는 이러한 문제를 인지하고 그의 [두번째](https:
 3. `Negative Sampling`이라는 테크닉을 통해서 각각의 training sample은 오직 모델의 업데이트를 제한하도록 한다.
 
 결론적으로 softmax layer의 denominator부분의 연산량을 줄이는것과, sampling방법으로 최적화를 하는것이 word embedding models의 챌린지였습니다. 다음에 소개할 부분들을 이러한 문제들을 해결한 여러가지 방안에 대해서 소개를 합니다.
+
 
 
 
@@ -112,7 +123,7 @@ $$ J_\theta $$ 는 전체 모든 단어에 대한 nagative log-probabilities 의
 <small style="color:#777">
     참고로.. <br>
     $$ \log_a \left(\frac{x}{y} \right) = \log_a x - \log_a y $$   <br>
-    $$ \log_a \left(xy \right) = \log_a x + \log_a b $$
+    $$ \log_a \left(xy \right) = \log_a x + \log_a b $$ <br>
 </small>
 
 $$ J_\theta = \mathcal{E}(w) + \log \sum_{w_i \in V} exp(-\mathcal{E}(w_i)) $$
@@ -166,10 +177,6 @@ Sampling-based 방법의 주요 목표는 바로 저 **negative reinforcement** 
 
 
 
-
-
-
-
 # [Note] Information Theory
 
 ## Information Content
@@ -210,7 +217,6 @@ $$ h_i = -log_2 p_i $$
 
 확률 $$ p_i = 1 $$ 이라면 $$ h_i = 0 $$ 일것이고, $$ p_i $$ 가 0에 가까워질수록 $$ h_i $$ 는 무한에 가까워질 것입니다.
 
-
 ![Surprisal]({{ page.asset_path }}word2vec_surprisal.png)
 
 ## Entropy (Uncertainty Measure)
@@ -223,6 +229,7 @@ $$ H = \sum_i p_i h_i = -\sum p_i log_2 p_i $$
 아래는 Scipy에서 제공하는 entropy와 제가 만든 entropy의 구현입니다. <br>
 Scipy가 사용하는 공식은 $$ S = -\sum p_i * \log p_i $$ 로서 natural log를 사용합니다.
 따라서 결과값이 위에서 말한 공식과는 좀 다릅니다.
+
 
 {% highlight python %}
 def my_entropy(x):
@@ -238,7 +245,7 @@ print('불균형한 분포 entropy   :', entropy([0.1, 0.1, 0.1, 0.7]))
 print('불균형한 분포 my entropy:', my_entropy([0.1, 0.1, 0.1, 0.7]))
 {% endhighlight %}
 
-{% highlight python %}
+{% highlight text %}
 entropy   : 1.38629436112
 my entropy: 2.0
 
