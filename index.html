@@ -30,9 +30,8 @@ layout: default
                 <span class="post-category" ng-repeat="category in post.categories">{(category)} </span>
                 <a class="post-comment-count" href="{( post.url )}#disqus_thread"></a>
                 <div>
-                    <a class="post-link post-tag" href="{( post.url )}" data-toggle="popover"
-                       tooltip='{(post.tags | tagFilter)}'
-                       tooltip-placement="right"
+                    <a class="post-link post-tag" href="{( post.url )}" data-toggle="tooltip"
+                       title='{(post.tags | tagFilter)}'
                        data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
                         {(post.title)}
                     </a>
