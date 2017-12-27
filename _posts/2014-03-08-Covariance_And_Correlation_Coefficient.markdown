@@ -17,24 +17,16 @@ Sample covariance의 공식은 다음과 같습니다.
 $$ S_{XY} = \frac{\sum^N_{i=1} (X_i - \bar{X})(Y_i - \bar{Y}) }{N-1} $$
 
 
-## Example
-
-수학, 영어 그리고 물리의 A학급의 점수가 다음과 같이 있을때 각 과목마다의 covariance는?
-
-| Student | Math | English | Physics |
-|:--------|:-----|:--------|:--------|
-| A       | 4.0     | 2.0  | 0.6   |
-| B       | 4.2     | 2.1  | 0.59  |
-| C       | 3.9     | 2.0  | 0.58  |
-| D       | 4.3     | 2.1  | 0.62  |
-| E       | 4.1     | 2.2  | 0.63  |
-
-
+## Code Examples
 
 {% highlight python %}
 def covariance(data, data2=None, ddof=0):
     k = data.shape[0]
     N = data.shape[1]
+
+    if data2 is not None:
+        k += data2.shape[0]
+        data = np.vstack((data, data2))
 
     cov = np.zeros((k, k))
     for i in range(k):
@@ -76,6 +68,7 @@ colorbar(cax)
 ![Data Class]({{ page.asset_path }}cov_colorbar.png)
 
 
+
 ## Problems with Interpretation
 
 Covariance의 값이 크면 클수록 strong relationship을 나타냅니다. <br>
@@ -94,11 +87,17 @@ $$ Cor(X, Y) = \frac{Cov(X, Y)}{\sigma_X \sigma_Y} $$
 
 
 {% highlight python %}
-def correlation_coefficient(data, ddof=0):
+def correlation_coefficient(data, data2=None, ddof=0):
     k = data.shape[0]
     N = data.shape[1]
 
+    if data2 is not None:
+        assert data2.shape[0] == k
+        k *= 2
+        data = np.vstack((data, data2))
+
     cov = np.zeros((k, k))
+
     for i in range(k):
         for j in range(k):
             a = data[i]
