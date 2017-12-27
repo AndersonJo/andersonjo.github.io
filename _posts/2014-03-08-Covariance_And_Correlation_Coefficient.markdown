@@ -92,8 +92,7 @@ def correlation_coefficient(data, data2=None, ddof=0):
     N = data.shape[1]
 
     if data2 is not None:
-        assert data2.shape[0] == k
-        k *= 2
+        k += data2.shape[0]
         data = np.vstack((data, data2))
 
     cov = np.zeros((k, k))
