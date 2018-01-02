@@ -1,2 +1,1 @@
-import numpy as np
-np.sta
+from scipy.stats import multivariate_normal
