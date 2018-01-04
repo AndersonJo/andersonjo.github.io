@@ -393,7 +393,7 @@ $$ J(\theta) = max(0,\ 1 - y * f(x)) $$
 
 # KL-Divergence
 
-$ p $ 그리고 $ q $ 는 확률분포 (0에서 1사이의 값) 이어야 합니다.
+$$ p $$ 그리고 $$ q $$ 는 확률분포 (0에서 1사이의 값) 이어야 합니다.
 
 
 $$ D_{KL}\left(p(x), q(x)\right) = \sum_{x \in X} p(x) \ln\frac{p(x)}{q(x)} $$

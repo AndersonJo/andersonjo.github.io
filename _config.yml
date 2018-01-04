@@ -1,11 +1,11 @@
 # Site settings
-title: Anderson Jo
+title: Incredible.AI
 email: a141890@gmail.com
 description: "Artificial Intelligence and BigData"
 encoding: utf-8
 
 baseurl: ""
-url: "http://andersonjo.github.io/"
+url: "http://incredible.ai"
 
 # twitter_username:
 github_username:  AndersonJo
