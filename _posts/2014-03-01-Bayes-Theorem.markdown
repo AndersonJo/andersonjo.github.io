@@ -152,9 +152,10 @@ $$ P(A|B) = \frac{P(A \cap B)}{P(B)} = \frac{P(A)P(B|A)}{P(B)} $$
 위의 공식에서 조금 더 일반화를 하면 다음과 같이 쓸 수 있습니다.
 
 $$ \begin{align}
-P(A_k | B) &= \frac{P(A_k) \cap B)}{P(A_1 \cap B) + P(A_2 \cap B) + ... + P(A_n \cap B)}    \\
+P(A_k | B) &= \frac{P(A_k \cap B)}{P(A_1 \cap B) + P(A_2 \cap B) + ... + P(A_n \cap B)}    \\
 &= \frac{P(A_k) P(B|A_k)}{ \sum^n_{i=1} P(A_i) P(B|A_i) }
 \end{align} $$
+
 
 
 
