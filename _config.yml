@@ -6,6 +6,8 @@ encoding: utf-8
 
 baseurl: ""
 url: "http://incredible.ai"
+exclude: ["_backups"]
+
 
 # twitter_username:
 github_username:  AndersonJo
