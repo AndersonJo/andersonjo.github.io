@@ -38,7 +38,8 @@ $$  C_t =  \left\{
 \right.
  $$
 
-![Data Class]({{ page.asset_path }}nce_class.png)
+
+<img src="{{ page.asset_path }}nce_class.png" class="img-responsive img-rounded">
 
 
 Random vector $$ \mathbf{x} \in \mathbb{R}^n $$ 의 샘플 데이터(진짜 데이터)는 위에서 언급했듯이 **unknown probability density function (PDF)** $$ P_d $$ 를 따릅니다.<br>

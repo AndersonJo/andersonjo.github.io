@@ -14,7 +14,8 @@ tags: ['몬테카를로', 'Monte Carlo']
 
 아래의 토끼는 배경에서 반사된 빛을 받아서 다시 재반사(reflect)하여 카메라에 투영된 이미지의 모습입니다. <br>
 
-![Illumination Integral Illustration]({{ page.asset_path }}impsam_rabbit.jpg)
+
+<img src="{{ page.asset_path }}impsam_rabbit.jpg" class="img-responsive img-rounded">
 
 3D rendering으로 나온 토끼의 이미지처럼, 특정 방향 $$ L_i(\mathbf{u}) $$ 으로부터 들어오는 빛을 받아서, 카메라 $$ \mathbf{v} $$ 방향으로 재반사 하기 위해서는, Bidirectional reflectance distribution function (BRDF) 라는 material function $$ f $$ 를 사용합니다.  전체 반사되는 빛 $$ L_0(\mathbf{v}) $$ 의 양을 계산하기 위해서는 모든 각각의 방향 $$ \mathbf{u} $$ 으로부터 오는 모든 빛을 합 하거나 또는 integration해야 합니다. 공식은 다음과 같습니다.
 
@@ -24,8 +25,8 @@ $$ L_0(\mathbf{v}) = \int_H L_i(\mathbf{u}) f(\mathbf{u}, \mathbf{v}) \cos \thet
 포인트는 모든 방향에서는 오는 빛을 계산하여 반사되는 빛을 계산하여 적분하는것은 계산의 양이 너무나 많기 때문에 할 수 없는 방법입니다.<br>
 따라서 uniform distribution으로 랜덤으로 들어오는 빛을 samples로 integral을 계산합니다. 샘플들의 평균은 해당 integral의 approximation과도 같습니다.
 
-![Illumination Integral Illustration]({{ page.asset_path }}impsam_light.jpg)
 
+<img src="{{ page.asset_path }}impsam_light.jpg" class="img-responsive img-rounded">
 
 <span style="color:#cc3333">
 **만약 integrated function이 어떻게 작동하는줄 대략적으로 알고 있다면**</span>, <br>
@@ -71,8 +72,8 @@ pdf가 높다는것은 random variable $$ X $$ 가 어떤 값 $$ x_i $$ 을 가�
 하지만 f(x) 를 pdf(x)로 나누면 확률이 높은 부분은 더 낮아지고, 반대로 확률이 적은 부분은 높아지게 됩니다.<br>
 예를 들어서 rare한 부분의 sample의 경우 1/0.1 = 10 처럼 값이 더 올라가게 됩니다.
 
-![higher density of samples]({{ page.asset_path }}monte_density.png)
 
+<img src="{{ page.asset_path }}monte_density.png" class="img-responsive img-rounded">
 
 
 
@@ -93,7 +94,8 @@ Constant function으로 만든다는 뜻은 variance은 0으로 만들며 approx
 이는 Monte Carlo Integration의 목표가 variance를 최대한 작게 만들고, samples은 최대한 적은 양을 사용하는 것과도 부합합니다.<br>
 아래의 그림처럼 constant function이 되면 uniform distribution으로 samples을 얻을 수 있게 됩니다.
 
-![constant-function]({{ page.asset_path }}impsam_uniform.png)
+
+<img src="{{ page.asset_path }}impsam_uniform.png" class="img-responsive img-rounded">
 
 물론 이는 가장 이상적인 상황일때 입니다. 실제로 이런 일은 일어나기 쉽지 않습니다.
 
@@ -107,7 +109,8 @@ Constant function으로 만든다는 뜻은 variance은 0으로 만들며 approx
 예를 들어서 $$ f(0)=2 $$ 일때  $$ \frac{f(0)}{2} = 1 $$ 이 되고,  <br>
 $$ f(2)=0.5 $$ 일때 $$ \frac{f(2)}{0.5} = 1 $$ 이 되게 됩니다.
 
-![function f(x) is divided by itset](images/impsam_divided_by_self.png)
+
+<img src="{{ page.asset_path }}impsam_divided_by_self.png" class="img-responsive img-rounded">
 
 General Monte Carlo integration $$ \langle F^N \rangle = \frac{1}{N} \sum^{N-1}_{i=0} \frac{f(x_i)}{pdf(x_i)} $$ 에서 $$ pdf(x_i) $$ 부분을 $$ pdf(x_i) = cf(x_i) $$ 바꿔서줄 수 있습니다. <br>
 (이때 조건은 가장 이상적인 상황으로서 $$ pdf(x_i) $$ 는 integral과 정확히 또는 매우 유사하게 비례한다고 가정한다. <br>
@@ -132,7 +135,9 @@ $$ c = \frac{1}{\int f(x)\ dx} $$
 따라서 실제 적용은 매우 어려운 경우가 많습니다. (일단 integral f(x)를 한다는 것 자체를 모르기 때문에 못하는 경우가 많기 때문에)<br>
 아래 그림에서 <span style="color:blue;">파란색은 intgrand function</span> 이고 <span style="color:red;">빨간색은 pdf</span>를 나타냅니다.
 
-![Importance Sampling to work]({{ page.asset_path }}impsam_pdf.png)
+
+<img src="{{ page.asset_path }}impsam_pdf.png" class="img-responsive img-rounded">
+
 
 만약 integrand function의 shape에 대해서 전혀 모른다면 그냥 uniform distribution으로 가는게 좋습니다.<br>
 물론 pdf와 intgrand가 유사한 분포를 갖고 있는것보다는 좋지 않겠지만.. 잘못 선택하여 전혀 다른 분포를 갖은 pdf 를 사용하는 것 보다는 낫습니다.
@@ -166,7 +171,8 @@ F &= \left[ - \cos \left( x \right) \right]^{\frac{\pi}{2}}_0  \\
 아래 그림에서 보듯이 두번째 PDF가 uniform probability distribution보다 integrand의 shape에 더 유사합니다.<br>
 위에서 배운 이론대로라면 uniform probability distribution보다 두번째 PDF가 variance를 더 줄여줍니다.
 
-![example]({{ page.asset_path }}impsam_example.png)
+
+<img src="{{ page.asset_path }}impsam_example.png" class="img-responsive img-rounded">
 
 ### 첫번째 Uniform Distribution에 대해서..
 * **Uniform distribution에는 다음의 estimator를 사용합니다.**<br>
