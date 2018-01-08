@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Multivariate Gaussian Distribution in Python"
-date:   2018-01-01 01:00:00
+date:   2014-03-15 01:00:00
 categories: "statistics"
 asset_path: /assets/images/
 tags: ['3d', 'contour', 'normal distribution', 'probability density function', 'pdf']
