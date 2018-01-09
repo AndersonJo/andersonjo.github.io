@@ -65,8 +65,8 @@ colorbar(cax)
  [ 0.00175  0.00135  0.00043]]
 {% endhighlight %}
 
-![Data Class]({{ page.asset_path }}cov_colorbar.png)
 
+<img src="{{ page.asset_path }}cov_colorbar.png" class="img-responsive img-rounded">
 
 
 ## Problems with Interpretation

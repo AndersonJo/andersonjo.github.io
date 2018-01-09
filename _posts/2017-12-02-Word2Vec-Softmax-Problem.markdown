@@ -48,7 +48,10 @@ J_{\theta} = \frac{1}{T} \sum^T_{t=1} \sum_{-c\ \le\ j\ \le\ c, \ j \ne 0} \log 
 자세한 그림을 갖고서 설명하면 다음과 같습니다.<br>
 위의 공식에서 $$ w_t $$ 는 아래 그림에서 $$ x_k $$ 와 동일하며, $$ w_{t+j} $$ 는 아래 그림에서 $$ y_{c,j} $$ 와 동일합니다.
 
-![skipgram]({{ page.asset_path }}word2vec_skipgram2.png)
+
+
+<img src="{{ page.asset_path }}word2vec_skipgram2.png" class="img-responsive img-rounded">
+
 
 예를 들어서 `커피` 라는 단어가 주어졌을때, `얼음` 이라는 단어가 나올 확률은.. P("얼음" | "커피") 을 알아보도록 하겠습니다. <br>
 $$ x_k $$ 는 `커피` 라는 one-hot vector이며, $$ W $$ 는 V x N 형태의 weight matrix로서 word embedding에서 우리가 알아내고자 하는 matrix입니다. one-hot vector와 matrix를 곱하게 되면 실질적으로는 $$ W $$ 의 1 x N (N은 neurons의 갯수) vector를 그냥 꺼내오게 됩니다. 이후 output layer $$ W' $$  (N x V) 와 dot product연산을 하게 되며 결과적으로 C x V dimension의 vectors가 만들어지게 됩니다.
@@ -217,7 +220,8 @@ $$ h_i = -log_2 p_i $$
 
 확률 $$ p_i = 1 $$ 이라면 $$ h_i = 0 $$ 일것이고, $$ p_i $$ 가 0에 가까워질수록 $$ h_i $$ 는 무한에 가까워질 것입니다.
 
-![Surprisal]({{ page.asset_path }}word2vec_surprisal.png)
+
+<img src="{{ page.asset_path }}word2vec_surprisal.png" class="img-responsive img-rounded">
 
 ## Entropy (Uncertainty Measure)
 

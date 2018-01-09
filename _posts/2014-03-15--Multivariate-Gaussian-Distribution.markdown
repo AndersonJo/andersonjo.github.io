@@ -31,7 +31,8 @@ $$ -\frac{(x-\mu)^2}{2 \sigma^2} $$ 이 부분이 quadratic function (2차함수
 참고로 **downward parabola**는 다음과 같이 생겼습니다.
 
 
-![Downwards Parabola]({{ page.asset_path }}multi_gaussian_downward_parabola.png)
+
+<img src="{{ page.asset_path }}multi_gaussian_downward_parabola.png" class="img-responsive img-rounded">
 
 
 ### Code Example
@@ -58,7 +59,8 @@ def example_normal_distributions(mean):
 example_normal_distributions(mean=15)
 {% endhighlight %}
 
-![Downwards Parabola]({{ page.asset_path }}multi_gaussian_example1.png)
+
+<img src="{{ page.asset_path }}multi_gaussian_example1.png" class="img-responsive img-rounded">
 
 
 
@@ -130,7 +132,8 @@ MSE General  Normal Distribution: 0.0
 MSE Standard Normal Distribution: 0.0
 {% endhighlight %}
 
-![Downwards Parabola]({{ page.asset_path }}multi_gaussian_example2.png)
+
+<img src="{{ page.asset_path }}multi_gaussian_example2.png" class="img-responsive img-rounded">
 
 
 ### [NOTE] Sampling Distribution of the Mean
@@ -154,8 +157,8 @@ sample_means = test_sample_mean_is_normal_distribution(n=50000)
 plt.hist(sample_means, bins=100)
 {% endhighlight %}
 
-![Downwards Parabola]({{ page.asset_path }}multi_gaussian_example3.png)
 
+<img src="{{ page.asset_path }}multi_gaussian_example3.png" class="img-responsive img-rounded">
 
 
 # Multivariate Normal Distribution
@@ -209,7 +212,8 @@ def example_multivariate_normal_distribution2():
 example_multivariate_normal_distribution2()
 {% endhighlight %}
 
-![Downwards Parabola]({{ page.asset_path }}multi_gaussian_visual_example.png)
+
+<img src="{{ page.asset_path }}multi_gaussian_visual_example.png" class="img-responsive img-rounded">
 
 ### 남자 여자의 키 분포 예제
 
@@ -266,6 +270,5 @@ ax.set_zlabel('PDF')
 mean: [ 69.02634591  63.7087736 ]
 {% endhighlight %}
 
-![Downwards Parabola]({{ page.asset_path }}multi_gaussian_example4.png)
-
-![Downwards Parabola]({{ page.asset_path }}multi_gaussian_example5.png)
+<img src="{{ page.asset_path }}multi_gaussian_example4.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}multi_gaussian_example5.png" class="img-responsive img-rounded">

@@ -102,12 +102,14 @@ $$ F = \int^b_a f(x)\ dx $$
 잘 알다시피, Integration은 함수의 curve아래의 면적을 구합니다. (Fgure 1) <br>
 만약 random value x 를 하나 선택한뒤 $$ f(x) * (b-a) $$ 를 하게 되면 Figure 2 처럼 직사각형 형태를 면적으로 구하게 됩니다.<br>
 
-![one-dimensional-function]({{ page.asset_path }}monte_integrate_fx.png)
+
+<img src="{{ page.asset_path }}monte_integrate_fx.png" class="img-responsive img-rounded">
 
 적당한 값을 찾아서 직사각형의 넓이를 구한다면 조잡하지만 curve아래의 정확한 면적을 approximate할수 있게 됩니다. <br>
 하지만 만약 $$ x_1 $$ 을 선택하게 된다면 면적을 너무 좁게 볼 것이고, $$ x_2 $$ 로 잡으면 면적을 너무 크게 잡게 될 것입니다.<br>
 
-![one-dimensional-function]({{ page.asset_path }}monte_integrate_fx2.png)
+
+<img src="{{ page.asset_path }}monte_integrate_fx2.png" class="img-responsive img-rounded">
 
 한번에 정확한 면적을 구할수는 없지만, 여러번의 random points를 잡아서 계속해서 직사각형의 면적을 구하고, 평균을 구하면 실제 curve아래의 면적과 유사해질것입니다. 포인트는 samples의 갯수가 늘어날수록 좀 더 정확한 approximation 을 할 수 있게 됩니다.
 
