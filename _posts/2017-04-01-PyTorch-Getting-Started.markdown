@@ -91,9 +91,17 @@ Tensor들은 cuda함수를 통해서 GPU로 이동시킬수 있습니다.
 
 {% highlight python %}
 import torch
-a = torch.rand(5, 3).cuda()
-b = torch.rand(3, 5).cuda()
-a.dot(b) # 4.939548492431641
+from torch.autograd import Variable
+
+a = Variable(torch.FloatTensor([[1, 2, 3], [0, 1, 1], [1, 0, 3]]))
+b = Variable(torch.FloatTensor([[1, 0, 4], [1, 5, 3], [2, 3, 0]]))
+a.matmul(b) # a @ b
+
+# Variable containing:
+#   9  19  10
+#   3   8   3
+#   7   9   4
+# [torch.FloatTensor of size 3x3]
 {% endhighlight %}
 
 ### Autograd
@@ -104,6 +112,9 @@ autograd.Variable class는 tensor를 wrapping하고 있으며, 대부분의 연�
 연산을 마친후, .backward()함수를 통해서 자동으로 gradients를 구할 수 있습니다.
 
 {% highlight python %}
+import torch
+from torch.autograd import Variable
+
 >> x = Variable(torch.ones(4, 4), requires_grad=True)
 >> x.data
 
@@ -118,8 +129,8 @@ autograd.Variable class는 tensor를 wrapping하고 있으며, 대부분의 연�
 
 {% highlight python %}
 >> y = x * 3
->> y.creator
-<torch.autograd._functions.basic_ops.MulConstant at 0x7f33f0b85e48>
+>> y.grad_fn  # y.creator is deprecated
+<MulBackward0 at 0x7f99c0c7d438>
 {% endhighlight %}
 
 #### Gradients
