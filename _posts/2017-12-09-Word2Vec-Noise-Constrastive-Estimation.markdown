@@ -7,6 +7,12 @@ asset_path: /assets/images/
 tags: ['softmax', 'entropy']
 ---
 
+- [Noise Constrastive Estimation (NCE)](#noise-constrastive-estimation-nce)
+  - [Definition](#definition)
+  - [Objective Function](#objective-function)
+  - [NCE Estimator](#nce-estimator)
+- [References](#references)
+
 
 # Noise Constrastive Estimation (NCE)
 
