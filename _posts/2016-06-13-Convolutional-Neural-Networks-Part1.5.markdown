@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Convolutional Neural Networks Part 1.5"
+title:  "Convolution Arithmetic"
 date:   2016-06-12 01:00:00
 categories: "artificial-intelligence"
 asset_path: /assets/posts/Convolutional-Neural-Networks/
-tags: ['CNN', 'Pytorch', 'Convolution', 'Convnet', 'TensorFlow', 'Numpy']
+tags: ['CNN', 'Pytorch', 'Convolution', 'Convnet', 'TensorFlow', 'Numpy', 'Cross Correlation']
 
 ---
 
@@ -17,9 +17,7 @@ tags: ['CNN', 'Pytorch', 'Convolution', 'Convnet', 'TensorFlow', 'Numpy']
 </header>
 
 
-# Convolution Neural Network
-
-## Convolution
+# Convolution
 
 Convolution은 2개의 함수들 (e.g. $$ f $$ * $$ g $$ 처럼 * asterisk를 사용)에 적용되는 일종의 덧셈 뺄셈과 같은 operations이며, 새로운 함수인 $$ h $$를 생성을 합니다. <br>
 새로운 함수 $$ h $$는 함수 $$ f $$가 다른 함수 $$ g $$위를 지나가면서 중첩된 부분을 element-wise multiplication으로 연산뒤 각 구간별 integral을 나타냅니다.
@@ -181,40 +179,41 @@ legend()
 
 ## 2D Convolution Operation
 
-2D Convolution은 CNN에서 일반적으로 사용하는 방법입니다. <br>
-실제 convolution을 연산하는 방법의 종류는 다양하게 있으나 TensorFlow에서는 cross correlation을 사용합니다. <br>
+2D Convolution은 CNN에서 일반적으로 사용하는 방법입니다.
+실제 convolution을 연산하는 방법의 종류는 다양하게 있으나 TensorFlow에서는 cross correlation을 사용합니다.
 
-예를들어 convolution 연산은 다음과 같이 일어납니다. <br>
-왼쪽은 input matrix, 중간은 kernel matrix, 그리고 오른쪽은 결과물입니다. <br>
-아래와 같이 element-wise product를 한뒤, sum을 해줍니다.
+Convolution VS Cross Correlation
+Convolution과 cross correlation은 서로 동일하게 element-wise multiplication을 합니다.
+다만 convolution은 kernel(filter)가 되는 matrix을 거꾸로 한번 뒤집어 준다음에 연산을 하고,
+Cross correlation은 뒤집는 것없이 바로 element-wise multiplication을 한 후 합을 구합니다.
 
 <div style="text-align:center;">
-<img src="{{ page.asset_path }}simple_convolution_operation.png" class="img-responsive img-rounded" style="margin: 0 auto;">
+<img src="{{ page.asset_path }}conv_2d_example.gif" class="img-responsive img-rounded" style="margin: 0 auto;">
 </div>
 
 #### [Scipy]
 
 {% highlight python  %}
->> g = np.array([[22, 15, 1, 3, 60],
-                 [42, 5, 38, 39, 7],
-                 [28, 9, 4, 66, 79],
-                 [0, 2, 25, 12, 17],
-                 [9, 14, 2, 51,  3]], dtype='float32')
->> f = np.array([[0, 0, 1],
-                 [0, 0, 0],
-                 [1, 0, 0]], dtype='float32')
->> sg.convolve2d(g, f, mode='valid')
-[[ 29.  12.  64.]
- [ 38.  41.  32.]
- [ 13.  80.  81.]]
- {% endhighlight %}
+>> image = np.array([[3, 3, 2, 1, 0],
+>>                   [0, 0, 1, 3, 1],
+>>                   [3, 1, 2, 2, 3],
+>>                   [2, 0, 0, 2, 2],
+>>                   [2, 0, 0, 0, 1]])
+>> kernel = np.array([[0, 1, 2],
+>>                    [2, 2, 0],
+>>                    [0, 1, 2]])
+>> sg.convolve2d(image, kernel, mode='valid')
+[[18 20 19]
+ [10  9 17]
+ [11  8 14]]
+{% endhighlight %}
 
 
 {% highlight python %}
->> sg.correlate(g, f, mode='valid')  # Cross Correlate
-[[ 29.  12.  64.]
- [ 38.  41.  32.]
- [ 13.  80.  81.]]
+>> h = sg.correlate2d(image, kernel, mode='valid')  # Cross Correlate
+[[12 12 17]
+ [10 17 19]
+ [ 9  6 14]]
 {% endhighlight %}
 
 #### [TensorFlow]
@@ -228,8 +227,8 @@ Filter 또는 kernel의 shape은 <span style="color:red">$$( H_{filter}, W_{filt
 * $$ C $$: Channel (Color)
 
 {% highlight python %}
->> _g = g.reshape(-1, 5, 5, 1)
->> _f = f.reshape(3, 3, 1, 1)
+>> _g = image.reshape(-1, 5, 5, 1)
+>> _f = kernel.reshape(3, 3, 1, 1)
 >> g_tf = tf.placeholder('float32', shape=(None, None, 5, 1), name='g')
 >> f_tf = tf.placeholder('float32', shape=(3, 3, 1, 1), name='f')
 
@@ -237,9 +236,9 @@ Filter 또는 kernel의 shape은 <span style="color:red">$$( H_{filter}, W_{filt
 >> conv_op = tf.reshape(conv_op, (3, 3))
 
 >> print(sess.run(conv_op, feed_dict={g_tf:_g, f_tf:_f}))
-[[ 29.  12.  64.]
- [ 38.  41.  32.]
- [ 13.  80.  81.]]
+[[12. 12. 17.]
+ [10. 17. 19.]
+ [ 9.  6. 14.]]
 {% endhighlight %}
 
 #### [Pytorch]
@@ -265,15 +264,15 @@ out(N_i, C_{out_j})  = bias(C_{out_j}) + \sum_{k=0}^{C_{in}-1} weight(C_{out_j},
 >>     conv_f.register_parameter('bias', torch.nn.Parameter(bias_ts))
 >>     return conv_f
 >>
->> _g = g.reshape(-1, 1, 5, 5)
->> _f = f.reshape(-1, 1, 3, 3)
+>> _g = image.reshape(-1, 1, 5, 5)
+>> _f = kernel.reshape(-1, 1, 3, 3)
 >> g_tensor = Variable(torch.FloatTensor(_g))
 >>
 >> conv = create_conv(_f)
 >> print(conv(g_tensor).data.numpy()[0][0])
-[[ 29.  12.  64.]
- [ 38.  41.  32.]
- [ 13.  80.  81.]]
+[[12. 12. 17.]
+ [10. 17. 19.]
+ [ 9.  6. 14.]]
 {% endhighlight %}
 
 
