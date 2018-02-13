@@ -227,7 +227,7 @@ configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참�
 
 {% highlight bash %}
 $ bazel clean
-$ bazel build --copt=-march=native --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mfpmath=both -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+$ bazel build --copt=-march=native --action_env="LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mfpmath=both -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 $ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
 {% endhighlight %}
@@ -242,7 +242,7 @@ $ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
 에러가 나면 bazel build시에 copt를 삭제 해보는것도 방법입니다.
 
 {% highlight bash %}
-$ bazel build --copt=-march=native -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+$ bazel build --copt=-march=native -c opt --config=cuda --action_env="LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" //tensorflow/tools/pip_package:build_pip_package
 $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 $ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
 {% endhighlight %}
