@@ -123,30 +123,30 @@ PostgreSQL에서 데이터를 가져온느데 성공했다면, 이제 가져온 
 먼저 Service Account를 만들어서 API가 사용할 수 있는 계정을 만듭니다. <br>
 IAM -> Service accounts 에서 만듭니다.
 
-<img src="{{ page.asset_path }}embulk-service-account.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}embulk-service-account.png" class="img-responsive img-rounded" style="width:100%">
 
 Service account name, Role을 설정합니다.<br>
 이때 Role은 BigQuery Admin으로 설정을 하며, 이유는 기존에 없는 테이블을 생성하기위한 권한이 BigQuery Admin입니다.<br>
 이하의 권한을 갖게 되면, 기존의 테이블을 수정, 읽기, 쓰기는 가능하지만, 없는 테이블 생성에 대한 권한은 없습니다.
 
-<img src="{{ page.asset_path }}embulk-service-account-02.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}embulk-service-account-02.png" class="img-responsive img-rounded" style="width:100%">
 
 Create Key를 눌러서 Key ID를 만듭니다.<br>
 JSON파일 또는 P12를 사용해서 만들수 있으며, 구글에서는 JSON을 추천하고, P12는 호환성때문에 지원하는 듯 합니다.<br>
 만들어진후 **Service Account ID가 중요**합니다. 나중에 Embulk 설정시 `service_account_email` 에 넣어야 합니다.
 
-<img src="{{ page.asset_path }}embulk-create-key.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}embulk-create-key.png" class="img-responsive img-rounded" style="width:100%">
 
 ### BigQuery 설정하기
 
 BigQuery -> Create new dataset 을 통해서 dataset을 생성합니다.
 
-<img src="{{ page.asset_path }}embulk-bigquery-01.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}embulk-bigquery-01.png" class="img-responsive img-rounded" style="width:100%">
 
 Dataset ID를 설정하고, Location은 US또는 EU인데 설정을 안하면 일반적으로 US가 선택이 됩니다. <br>
 Data expiration을 통해서 자동으로 지워지게 할 수 있습니다. 캡쳐화면에서는 하루가 지나면 지워지도록 설정해놨습니다.
 
-<img src="{{ page.asset_path }}embulk-bigquery-create-dataset.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}embulk-bigquery-create-dataset.png" class="img-responsive img-rounded" style="width:100%">
 
 ### seed.yml 수정하기
 

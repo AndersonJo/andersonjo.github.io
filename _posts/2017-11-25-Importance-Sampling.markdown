@@ -110,7 +110,7 @@ Constant function으로 만든다는 뜻은 variance은 0으로 만들며 approx
 $$ f(2)=0.5 $$ 일때 $$ \frac{f(2)}{0.5} = 1 $$ 이 되게 됩니다.
 
 
-<img src="{{ page.asset_path }}impsam_divided_by_self.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}impsam_divided_by_self.png" class="img-responsive img-rounded"  style="width:100%">
 
 General Monte Carlo integration $$ \langle F^N \rangle = \frac{1}{N} \sum^{N-1}_{i=0} \frac{f(x_i)}{pdf(x_i)} $$ 에서 $$ pdf(x_i) $$ 부분을 $$ pdf(x_i) = cf(x_i) $$ 바꿔서줄 수 있습니다. <br>
 (이때 조건은 가장 이상적인 상황으로서 $$ pdf(x_i) $$ 는 integral과 정확히 또는 매우 유사하게 비례한다고 가정한다. <br>
