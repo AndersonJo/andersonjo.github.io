@@ -66,7 +66,8 @@ Latent space $$ z $$ 는 smooth transition을 갖습니다.. <br>
 
 > [UNSUPERVISED REPRESENTATION LEARNING WITH DCGAN](https://arxiv.org/pdf/1511.06434.pdf) 를 참고합니다.
 
-<!--<img src="images/anogan_smooth_transition.png" class="img-responsive img-rounded" style="max-width:600px">-->
+
+<img src="{{ page.asset_path }}anogan_smooth_transition.png" class="img-responsive img-rounded">
 
 AnoGAN은 query image $$ \mathbf{x} $$ 가 주어졌을때, 해당 이미지 $$ \mathbf{x} $$ 와 가장 유사한 이미지 $$ G(\mathbf{z}) $$ 를 생성하는 $$ \mathbf{z} $$ 를 찾아냅니다.<br>
 가장 최적화된 $$ \mathbf{z} $$ 를 찾기 위해서 다음과 같이 합니다.
