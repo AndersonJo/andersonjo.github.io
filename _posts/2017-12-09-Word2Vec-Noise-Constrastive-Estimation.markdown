@@ -234,8 +234,11 @@ v \frac{1}{T_n} \sum^{T_n}_{t=1} \ln \big[ 1 - h(\mathbf{y}_t; \mathbf{\theta}) 
 
 # References
 
-* http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf
-* http://www.1-4-5.net/~dmm/ml/nce.pdf
-* https://staff.fnwi.uva.nl/m.k.tran/notes/nce.pdf
-* https://www2.warwick.ac.uk/fac/sci/statistics/crism/workshops/estimatingconstants/gutmann.pdf
-* https://kth.diva-portal.org/smash/get/diva2:1139156/FULLTEXT01.pdf
+* [Noise-contrastive estimation](http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf)
+* [Notes on Noise Contrastive Estimation (NCE)](http://www.1-4-5.net/~dmm/ml/nce.pdf)
+* [Noise Constrastive Estimation](https://staff.fnwi.uva.nl/m.k.tran/notes/nce.pdf)
+* [Noise-Contrastive Estimation and its
+Generalizations](https://www2.warwick.ac.uk/fac/sci/statistics/crism/workshops/estimatingconstants/gutmann.pdf)
+* [Conditional
+Noise-Contrastive
+Estimation](https://kth.diva-portal.org/smash/get/diva2:1139156/FULLTEXT01.pdf)

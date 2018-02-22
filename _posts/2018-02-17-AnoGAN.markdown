@@ -18,7 +18,7 @@ Anomaly Detection GAN은 Discriminator를 통해서 의학 이미지 상에서 �
 기본적인 구조는 아래와 같으며, Deep Convolutional Generative Adversarial Network (DCGAN)을 사용했으며, <br>
 오른쪽 그림은 t-SNE embedding으로 파란색은 정상, 빨간색은 비정상(anomalous images) 를 나타냅니다.
 
-<img src="{{ page.asset_path }}anogan.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}anogan.png" class="img-responsive img-rounded" style="width:100%">
 
 
 * Medical Images: $$ \mathbf{I}_m $$ 으로서 $$ m = 1,2,..., M $$ 이며, 모두 정상적인 상태의 (질병이 없는) 이미지, $$ \mathbf{I}_m  \in \mathbb{R}^{a*b} $$ 입니다.
@@ -67,7 +67,7 @@ Latent space $$ z $$ 는 smooth transition을 갖습니다.. <br>
 > [UNSUPERVISED REPRESENTATION LEARNING WITH DCGAN](https://arxiv.org/pdf/1511.06434.pdf) 를 참고합니다.
 
 
-<img src="{{ page.asset_path }}anogan_smooth_transition.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}anogan_smooth_transition.png" class="img-responsive img-rounded" style="width:100%">
 
 AnoGAN은 query image $$ \mathbf{x} $$ 가 주어졌을때, 해당 이미지 $$ \mathbf{x} $$ 와 가장 유사한 이미지 $$ G(\mathbf{z}) $$ 를 생성하는 $$ \mathbf{z} $$ 를 찾아냅니다.<br>
 가장 최적화된 $$ \mathbf{z} $$ 를 찾기 위해서 다음과 같이 합니다.

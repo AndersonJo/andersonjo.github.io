@@ -109,7 +109,7 @@ $$ F = \int^b_a f(x)\ dx $$
 하지만 만약 $$ x_1 $$ 을 선택하게 된다면 면적을 너무 좁게 볼 것이고, $$ x_2 $$ 로 잡으면 면적을 너무 크게 잡게 될 것입니다.<br>
 
 
-<img src="{{ page.asset_path }}monte_integrate_fx2.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}monte_integrate_fx2.png" class="img-responsive img-rounded" style="width:100%">
 
 한번에 정확한 면적을 구할수는 없지만, 여러번의 random points를 잡아서 계속해서 직사각형의 면적을 구하고, 평균을 구하면 실제 curve아래의 면적과 유사해질것입니다. 포인트는 samples의 갯수가 늘어날수록 좀 더 정확한 approximation 을 할 수 있게 됩니다.
 
