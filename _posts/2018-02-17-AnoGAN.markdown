@@ -107,9 +107,6 @@ AnoGAN에서 새로 제안하는 Improved Discriminator Loss 는 다음과 같�
 
 $$ L_D(\mathbf{z}_\gamma) = \sum \big\| \mathbf{f}(\mathbf{x}) - \mathbf{f}(G(\mathbf{z}_\gamma)) \big\| $$
 
-Latent space에 매핑하기 위한 loss function은 residual loss와 improved discriminator 두가지를 weighted sum한 것과 같습니다.
-
-$$ L(\mathbf{z}_\gamma) = (1-\lambda) \cdot L_R(\mathbf{z}_\gamma) + \lambda \cdot L_D (\mathbf{z}_\gamma) $$
 
 * 마찬가지로 Discrimination loss이지만, discriminator를 업데이트하는게 아니라 $$ \mathbf{z}_\gamma $$ 를 gradient descent방식으로 업데이트 합니다.
 * $$ \mathbf{f} $$ : feature mapping에서 나온 개념으로 discriminator의 중간층에 있는 activations들을 가르킵니다.
@@ -123,6 +120,10 @@ $$ L(\mathbf{z}_\gamma) = (1-\lambda) \cdot L_R(\mathbf{z}_\gamma) + \lambda \cd
 
 [Semantic Image Inpainting with GAN](https://arxiv.org/pdf/1607.07539.pdf) 논문을 보면 복원할 이미지와 가장 유사한 이미지를 generate하기위해서, backpropagation 방식으로 $$ \mathbf{z}_\gamma $$ 를 업데이트 시킵니다.<br>
 참고로.. 유사하게 input값을 업데이트 시키는 방식은 Style Transfer 그리고 Deep Dream 등등이 있습니다.
+
+Latent space에 매핑하기 위한 loss function은 residual loss와 improved discriminator 두가지를 weighted sum한 것과 같습니다.
+
+$$ L(\mathbf{z}_\gamma) = (1-\lambda) \cdot L_R(\mathbf{z}_\gamma) + \lambda \cdot L_D (\mathbf{z}_\gamma) $$
 
 
 ### Feature Matching
