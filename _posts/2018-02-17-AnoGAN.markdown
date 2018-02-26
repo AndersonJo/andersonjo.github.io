@@ -2,7 +2,7 @@
 layout: post
 title:  "Anomaly Detection with GAN"
 date:   2018-02-17 01:00:00
-categories: "etl"
+categories: "deep-learning"
 asset_path: /assets/images/
 tags: ['google', 'gcm', 'BigQuery']
 ---
