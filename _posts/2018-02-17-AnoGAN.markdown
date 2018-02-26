@@ -8,6 +8,7 @@ tags: ['google', 'gcm', 'BigQuery']
 ---
 
 
+
 # 기본적인 구조
 
 의학 이미지안에서 질병등을 발견하는 것은 매우 중요합니다. <br>
@@ -85,7 +86,12 @@ Residual loss는 query image $$ \mathbf{x} $$ 와 생성된 이미지 $$ G(\math
 
 $$ L_R \left(\mathbf{z}_{\gamma} \right) = \sum \big|\ \mathbf{x} - G(\mathbf{z}_\gamma) \ \big| $$
 
+코드는 다음과 같습니다.
 
+{% highlight python %}
+def residual_loss(real_y, generated_y):
+    return torch.sum(torch.abs(real_y - generated_y))
+{% endhighlight %}
 
 ## Discrimination Loss
 
@@ -126,6 +132,15 @@ Latent space에 매핑하기 위한 loss function은 residual loss와 improved d
 $$ L(\mathbf{z}_\gamma) = (1-\lambda) \cdot L_R(\mathbf{z}_\gamma) + \lambda \cdot L_D (\mathbf{z}_\gamma) $$
 
 
+코드..
+
+{% highlight python %}
+def anomaly_loss(residual_loss, d_loss, l=0.5):
+    return (1 - l) * residual_loss + l * d_loss
+{% endhighlight %}
+
+
+
 ### Feature Matching
 
 [Improved GAN](https://arxiv.org/abs/1606.03498)페이퍼에 따르면, Feature Matching기법은 GAN이 불안정성(instability)를 해결하기 위해서 사용되며, <br>Discriminator 중간층에 있는 activations들을 사용하여 Generator를 학습시키는데 사용이 됩니다.<br>
@@ -138,12 +153,23 @@ $$ L(\mathbf{z}_\gamma) = (1-\lambda) \cdot L_R(\mathbf{z}_\gamma) + \lambda \cd
 실제 이미지의 패턴과 얼마나 유사하냐? 를 물음으로서 좀 더 Generator가 실제 이미지의 패턴과 유사해지도록 만들게 됩니다.
 
 
-### 의문점
+Feature Mapping의 코드는 다음과 같습니다.
 
-**Q**. Feature matching만 사용하는 건지, classifier에서 나오는 discriminator loss도 사용하는건지?<br>
-**A**. Feature Matching만 사용한다.
+{% highlight python %}
+def feature_mapping(G, D, real, fake):
+    _, real_fs = D.forward(real, _return_activations=True)
+    _, fake_fs = D.forward(fake, _return_activations=True)
+    real = real_fs
+    fake = fake_fs
 
-> "our approach utilizes the trained discriminator not as classifier but as a feature extractor."
+    diffs = []
+    for real, fake in zip(real_fs, fake_fs):
+        diff = torch.mean(torch.pow(real - fake, 2))
+        diffs.append(diff)
+
+    output = torch.mean(torch.stack(diffs))
+    return output
+{% endhighlight %}
 
 
 
@@ -165,3 +191,47 @@ A(\mathbf{x}) &= (1-\lambda) \cdot R(\mathbf{x}) + \lambda \cdot D(\mathbf{x})  
 * $$ D(\mathbf{x}) $$ : Discriminator Score $$ L_D(\mathbf{z}_\Gamma) $$ 와 동일하다
 * $$ \Gamma $$ : 마지막번째의 update iteration을 가르킨다.
 
+
+
+# 결과
+
+### 비정상적인 이미지를 이용하여 비정상 탐지
+
+<img src="{{ page.asset_path }}ano_abnormal1.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_abnormal2.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_abnormal3.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_abnormal4.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_abnormal5.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_abnormal6.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_abnormal7.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_abnormal8.png" class="img-responsive img-rounded" style="width:100%">
+
+
+### 정상적인 이미지를 이용하여 비정상 탐지
+
+<img src="{{ page.asset_path }}ano_normal1.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_normal2.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_normal3.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_normal4.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_normal5.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_normal6.png" class="img-responsive img-rounded" style="width:100%">
+
+<img src="{{ page.asset_path }}ano_normal7.png" class="img-responsive img-rounded" style="width:100%">
+
+# 코드
+
+아래의 주소에 있습니다.
+
+[https://github.com/AndersonJo/gan-yhat](https://github.com/AndersonJo/gan-yhat)
