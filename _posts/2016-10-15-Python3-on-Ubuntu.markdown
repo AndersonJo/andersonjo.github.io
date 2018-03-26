@@ -52,6 +52,7 @@ sudo make altinstall
 {% highlight python %}
 sudo mkdir /usr/include/python3.6
 sudo cp Include/* /usr/include/python3.6/
+sudo cp PC/* /usr/include/python3.6/
 {% endhighlight %}
 
 
