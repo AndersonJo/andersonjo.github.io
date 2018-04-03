@@ -9,6 +9,6 @@ tags: ['hadoop']
 ---
 
 <div>
-    <img src="{{ page.asset_path }}lan.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}lan.jpg" class="img-responsive img-rounded img-fluid">
 </div>
 

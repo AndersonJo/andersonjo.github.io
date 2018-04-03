@@ -9,7 +9,7 @@ tags: ['DQN']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}flappy-bird.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}flappy-bird.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>어렵지 않아요~
     </small>
@@ -66,7 +66,7 @@ ylabel('gamma value')
 grid()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}dqn-gamma-value.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}dqn-gamma-value.png" class="img-responsive img-rounded img-fluid">
 
 
 ## Optimal action-value Function and Bellman Equation
@@ -231,7 +231,7 @@ data = pd.DataFrame(data, index=x)
 data.plot()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}dqn-huber.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}dqn-huber.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -255,7 +255,7 @@ $$ L_i(\theta_i) = \mathbb{E}_{s, a, r, s^{\prime} \sim U(D)}  \left[ \left( r +
 
 ## Deep Q-Learning with Experience Replay Algorithm
 
-<img src="{{ page.asset_path }}dqn-algorithm.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}dqn-algorithm.png" class="img-responsive img-rounded img-fluid">
 
 
 

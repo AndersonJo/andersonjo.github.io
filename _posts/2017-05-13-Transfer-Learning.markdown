@@ -9,7 +9,7 @@ tags: ['Pytorch']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}transfer_learning.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}transfer_learning.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>어렵지 않아요~
     </small>
@@ -116,7 +116,7 @@ def sample_show():
 sample_show()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}transfer_learning_data.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}transfer_learning_data.png" class="img-responsive img-rounded img-fluid">
 
 
 ### ConvNet as fixed feature extractor

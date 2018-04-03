@@ -8,7 +8,7 @@ tags: ['python', 'data analytics', 'jupyter', 'ipython', 'notebook']
 ---
 
 <header>
-<img src="{{ page.static }}analytics.jpg" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.static }}analytics.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Installation
@@ -17,7 +17,7 @@ tags: ['python', 'data analytics', 'jupyter', 'ipython', 'notebook']
 
 예제는 Python Matplotlib의 plot을 보는 예제
 
-<img src="{{ page.static }}pylab.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}pylab.png" class="img-responsive img-rounded img-fluid">
 
 ### Installing Jupyter
 
@@ -68,7 +68,7 @@ div.cell.selected {
 
 ### Training Machine Learning Algorithms
 
-<img src="{{ page.static }}perceptron.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}perceptron.png" class="img-responsive img-rounded img-fluid">
 
 Perceptron을 이용해서 Binary Classification을 할 수 있습니다.
 (0 과 1처럼 2개의 분류로 나뉘는 것)
@@ -196,7 +196,7 @@ plt.show()
 {% endhighlight %}
 
 
-<img src="{{ page.static }}setosa_versicolor.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}setosa_versicolor.png" class="img-responsive img-rounded img-fluid">
 
 
 # to Python
@@ -273,7 +273,7 @@ plt.show()
 Perceptron Machine Learning 을 이용해서 기계에 학습을 시킨후 에러률을 출력해봤습니다.<br>
 처음에 에러가 2~3개정도씩 나오다가.. 대략 7번이후부터는 정확하게 Classification을 하는 것을 볼수 있습니다.
 
-<img src="{{ page.static }}errors.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}errors.png" class="img-responsive img-rounded img-fluid">
 
 
 [iris-data]: https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data

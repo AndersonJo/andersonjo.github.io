@@ -9,7 +9,7 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 ---
 
 <header>
-<img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Install CUDA
@@ -266,7 +266,7 @@ print(sess.run(a + b)) # 42
 
 # TensorFlow 101
 
-<img src="{{ page.static }}tensorflow-logo.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}tensorflow-logo.jpg" class="img-responsive img-rounded img-fluid">
 
 ### Building Graph and Operations + Choosing GPU Device
 

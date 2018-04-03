@@ -32,7 +32,7 @@ $$ -\frac{(x-\mu)^2}{2 \sigma^2} $$ 이 부분이 quadratic function (2차함수
 
 
 
-<img src="{{ page.asset_path }}multi_gaussian_downward_parabola.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}multi_gaussian_downward_parabola.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Code Example
@@ -60,7 +60,7 @@ example_normal_distributions(mean=15)
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}multi_gaussian_example1.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}multi_gaussian_example1.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -133,7 +133,7 @@ MSE Standard Normal Distribution: 0.0
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}multi_gaussian_example2.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}multi_gaussian_example2.png" class="img-responsive img-rounded img-fluid">
 
 
 ### [NOTE] Sampling Distribution of the Mean
@@ -158,7 +158,7 @@ plt.hist(sample_means, bins=100)
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}multi_gaussian_example3.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}multi_gaussian_example3.png" class="img-responsive img-rounded img-fluid">
 
 
 # Multivariate Normal Distribution
@@ -213,7 +213,7 @@ example_multivariate_normal_distribution2()
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}multi_gaussian_visual_example.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}multi_gaussian_visual_example.png" class="img-responsive img-rounded img-fluid">
 
 ### 남자 여자의 키 분포 예제
 
@@ -270,5 +270,5 @@ ax.set_zlabel('PDF')
 mean: [ 69.02634591  63.7087736 ]
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}multi_gaussian_example4.png" class="img-responsive img-rounded">
-<img src="{{ page.asset_path }}multi_gaussian_example5.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}multi_gaussian_example4.png" class="img-responsive img-rounded img-fluid">
+<img src="{{ page.asset_path }}multi_gaussian_example5.png" class="img-responsive img-rounded img-fluid">

@@ -7,7 +7,7 @@ asset_path: /assets/posts/MariaDB-Galera-Cluster/
 tags: ["docker", "wsrep"]
 ---
 <header>
-    <img src="{{ page.asset_path }}sea-lions-playing.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}sea-lions-playing.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Intro

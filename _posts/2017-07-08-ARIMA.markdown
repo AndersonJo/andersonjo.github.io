@@ -10,7 +10,7 @@ tags: ['lag', 'autocorrelation', 'trend', 'statsmodel', 'temperature', 'stationa
 
 
 <header>
-    <img src="{{ page.asset_path }}arima.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}arima.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;">
     <small><a href="https://unsplash.com/?photo=LjtWRSV3CoE">Geetanjal Khanna의 사진</a>
     </small>
@@ -82,7 +82,7 @@ train, test = data_adjusted[:-TEST_SIZE], data_adjusted[-TEST_SIZE:]
 
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_passenger_data.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_passenger_data.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -117,7 +117,7 @@ lag_plot(dataframe, lag=1)
 title('lag plot')
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_lagplot.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_lagplot.png" class="img-responsive img-rounded img-fluid">
 
 만약 step t 와 step t-1 의 관계가 전혀 없는 random한 상황속에서는 다음과 같이 그래프가 그려집니다.
 
@@ -127,7 +127,7 @@ lag_plot(series)
 title('random variable lag plot')
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_lagplot_random.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_lagplot_random.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Pearson Correlation Coefficient
@@ -148,7 +148,7 @@ data2.columns = ['t-2', 't-1', 't']
 data2.corr()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_pearson_correlation.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_pearson_correlation.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Autocorrelation Plot
@@ -159,7 +159,7 @@ data2.corr()
 autocorrelation_plot(data)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_autocorrelation.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_autocorrelation.png" class="img-responsive img-rounded img-fluid">
 
 statsmodel 라이브러리에서 제공하는 plot_acf를 사용할수도 있습니다.
 
@@ -170,7 +170,7 @@ plot_acf(data, lags=50)
 print(end='')
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_autocorrelation_statsmodel.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_autocorrelation_statsmodel.png" class="img-responsive img-rounded img-fluid">
 
 Random variable의 경우에는 다음과 같이 전혀 맞지 않게 나옵니다.
 
@@ -179,7 +179,7 @@ series = pd.Series([np.random.randint(0, 1000) for _ in range(1000)])
 plot_acf(series, title='random variable autocorrelation')
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_autocorrelation_random.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_autocorrelation_random.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -316,7 +316,7 @@ pred_test = model_ar.predict(start=len(train), end=len(train)+len(test)-1)
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}arima_ar_statsmodels.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_ar_statsmodels.png" class="img-responsive img-rounded img-fluid">
 
 
 ### [Code] Using Oridinary Least Square Estimation
@@ -345,9 +345,9 @@ test_pred = predict_with_ols(ols, ts_train[-1], length=len(test))
 show_result(train, test, train_pred, test_pred, lag=LAG)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_ols_summary.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_ols_summary.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.asset_path }}arima_ols_result.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_ols_result.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -381,7 +381,7 @@ test_pred = poly_pred(poly, train[-LAG:], lag=LAG, length=len(test)) # np.polyva
 show_result(train, test, train_pred, test_pred, lag=LAG)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}arima_ar_poly.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}arima_ar_poly.png" class="img-responsive img-rounded img-fluid">
 
 
 

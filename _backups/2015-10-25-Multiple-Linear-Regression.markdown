@@ -10,7 +10,7 @@ tags: ['Medical Expenses', 'Matrix Inverse']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}medical-expenses.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}medical-expenses.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 
@@ -32,7 +32,7 @@ $$ \beta_{1} $$,  $$ \beta_{2} $$  처럼 Coefficients들이 각각의 features�
 
 $$ y = \beta_{0}x_{0} + \beta_{1}x_{1} + \beta_{2}x_{2} + \ ... \ + + \beta_{i}x_{i} + \epsilon $$
 
-<img src="{{ page.asset_path }}regression.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}regression.png" class="img-responsive img-rounded img-fluid">
 
 궁극적인 목표는 Sum of the squared errors를 구했을때 error가 가장적은 $$ \beta $$ (The vector of regression coefficients)값을 찾는 것입니다.
 
@@ -121,7 +121,7 @@ from pandas.tools.plotting import scatter_matrix
 scatter_matrix(data, figsize=(10, 10))
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cor_matrix_pandas.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cor_matrix_pandas.png" class="img-responsive img-rounded img-fluid">
 
 * age ~ bmi: 0.109341 => Weak Positive Correlation을 갖고 있다.<br>즉 age가 들수록 body mess 또한 **조금씩 조금씩** 증가한다.
 * age ~ expenses: 0.299008 그리고 bmi ~ expenses: 0.198576<br>즉 age, bmi등이 높아질수록, 의료 비용이 많이 들어감을 알 수 있다.

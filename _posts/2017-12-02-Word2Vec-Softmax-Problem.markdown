@@ -50,7 +50,7 @@ J_{\theta} = \frac{1}{T} \sum^T_{t=1} \sum_{-c\ \le\ j\ \le\ c, \ j \ne 0} \log 
 
 
 
-<img src="{{ page.asset_path }}word2vec_skipgram2.png" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.asset_path }}word2vec_skipgram2.png" class="img-responsive img-rounded img-fluid">
 
 
 예를 들어서 `커피` 라는 단어가 주어졌을때, `얼음` 이라는 단어가 나올 확률은.. P("얼음" | "커피") 을 알아보도록 하겠습니다. <br>
@@ -221,7 +221,7 @@ $$ h_i = -log_2 p_i $$
 확률 $$ p_i = 1 $$ 이라면 $$ h_i = 0 $$ 일것이고, $$ p_i $$ 가 0에 가까워질수록 $$ h_i $$ 는 무한에 가까워질 것입니다.
 
 
-<img src="{{ page.asset_path }}word2vec_surprisal.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}word2vec_surprisal.png" class="img-responsive img-rounded img-fluid">
 
 ## Entropy (Uncertainty Measure)
 

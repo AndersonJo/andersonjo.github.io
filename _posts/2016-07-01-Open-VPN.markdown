@@ -9,7 +9,7 @@ tags: []
 ---
 
 <header>
-    <img src="{{ page.asset_path }}vpn.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}vpn.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Installation
@@ -244,23 +244,23 @@ sudo apt-get install network-manager-openvpn-gnome
 
 VPN Connections -> Configure VPN... 선택
 
-<img src="{{ page.asset_path }}vpn01.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}vpn01.png" class="img-responsive img-rounded img-fluid">
 
 Add -> OpenVPN 선택
 
-<img src="{{ page.asset_path }}vpn02.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}vpn02.png" class="img-responsive img-rounded img-fluid">
 
 Client Certificate, CA, Private Key를 등록시켜줍니다. 
 
-<img src="{{ page.asset_path }}vpn03.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}vpn03.png" class="img-responsive img-rounded img-fluid">
 
 TCP, LZO Compression, TUN등등.. 설정을 해줍니다.
 
-<img src="{{ page.asset_path }}vpn04.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}vpn04.png" class="img-responsive img-rounded img-fluid">
 
 접속후 성공 화면. 
 
-<img src="{{ page.asset_path }}success.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}success.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Open Internet Access
@@ -268,7 +268,7 @@ TCP, LZO Compression, TUN등등.. 설정을 해줍니다.
 클라이언트에서 인터넷을 접속하되, VPN에 있는 resources에 접속하려면 다음과 같이 설정합니다. <br>
 IPv4 Settings -> Routes -> Use this connection only for resources on its network 를 체크해주셔야 합니다.
 
-<img src="{{ page.asset_path }}internet.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}internet.png" class="img-responsive img-rounded img-fluid">
 
 ### Routing 
 
@@ -295,4 +295,4 @@ link-local      *               255.255.0.0     U     1000   0        0 enp0s31f
 ifconfig tun0 쳤을때 P-t-P:10.8.0.5 라고 나온 부분이 바로 Gateway입니다.<br>
 route를 쳤을때 접속하려는 주소 10.10.30.125관련된 route정보가 안나온다면.. **VPN설정 -> IPv4 Settings -> Routes** 에서 다음과 같이 설정합니다.
 
-<img src="{{ page.asset_path }}route.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}route.png" class="img-responsive img-rounded img-fluid">

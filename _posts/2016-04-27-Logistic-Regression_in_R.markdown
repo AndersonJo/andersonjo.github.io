@@ -9,7 +9,7 @@ tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio', 'max
 ---
 
 <header>
-    <img src="{{ page.asset_path }}study.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}study.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 
@@ -40,7 +40,7 @@ library(Amelia)
 missmap(train.data.raw, main='Missing Values vs observed')
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}missing_values.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}missing_values.png" class="img-responsive img-rounded img-fluid">
 
 
 {% highlight r %}
@@ -186,7 +186,7 @@ The difference between the null deviance and the residual deviance shows how our
 
 # Odds & Odds Ratio
 
-<img src="{{ page.asset_path }}odds.jpg" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}odds.jpg" class="img-responsive img-rounded img-fluid">
 
 ### Basic Probability
 
@@ -241,14 +241,14 @@ The difference between the null deviance and the residual deviance shows how our
 * p값이 1이 되면 denominator가 0값이 되기 때문에, 0으로 나누는 꼴이 됨으로 1도 안됩니다.
 * p값이 0.5일때 y값은 0이 됩니다.
 
-<img src="{{ page.asset_path }}logit.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}logit.png" class="img-responsive img-rounded img-fluid">
 
 Logit Function을 사용하는 이윤는 2개의 claases를 갖은 Binary Classification에서 Linear Regression을 만들기 위해서 입니다.
 즉 $$  \begin{align} \ln{\frac{p}{1-p}} = y \end{align} $$ 처럼 단순히 y값이 아니라
 $$  \begin{align} \ln{\frac{p}{1-p}} = \beta + \beta x \end{align} $$ 같은 Linear regression을 찾기 위함입니다.
 아래의 그림처럼 2개의 클래스의 상관관계가 Linear Regression 으로 표현이 되었습니다.
 
-<img src="{{ page.asset_path }}binary-graph.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}binary-graph.png" class="img-responsive img-rounded img-fluid">
 
 
 #### <span style="color:red"> $$ logit(p(y=1|x)) = w_{0}x_{0} + w_{1}x_{1} + ... + w_{m}x_{m} = \sum_{i=0} w_{m}x_{m} = w^Tx $$ </span>
@@ -266,13 +266,13 @@ odds_data = p/(1-p)
 logit_data = np.log(odds_data)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}odds_logit.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}odds_logit.png" class="img-responsive img-rounded img-fluid">
 
 이렇게 변환하는 이유는 확률자체가 갖고 있는 restricted range (0~1)의 범위로는 어떠한 Model을 찾기가 매우 어렵기 때문입니다.
 확률은 0~1사이의 제한된 범위를 갖고, odds는 0~infinite 의 범위를 갖지만 음수의 범위가 없습니다. 
 logit을 하면 그래프에 보이듯이 -infinite ~ infinite 사이의 범위를 갖기 때문에 모델링 하기가 쉬워 집니다.
 
-<img src="{{ page.asset_path }}estimated_regression.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}estimated_regression.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -281,7 +281,7 @@ logit을 하면 그래프에 보이듯이 -infinite ~ infinite 사이의 범위�
 Logistic Function은 S자 형태라서 **Sigmoid Function**으로도 불리며, logit function의 **inverse function** 입니다.
 
 
-<img src="{{ page.asset_path }}logistic.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}logistic.png" class="img-responsive img-rounded img-fluid">
 
 Logistic Function의 정의는 다음과 같습니다.
 
@@ -316,7 +316,7 @@ Cost function을 미분 (derivative) 하는 방법을 설명하려면 먼저 Lik
 
 $$ L(w) = P(y | x;w) = \prod^{n}{ P(y^{i} | x^{i}; w) } = \prod^{n} (\phi(z^{i}))^{y^{i}} (1 - \phi(z^{i}))^{1 - y^{i}} $$
 
-<img src="{{ page.asset_path }}maximum_likelihood.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}maximum_likelihood.png" class="img-responsive img-rounded img-fluid">
 
 
 # Partial Derivative

@@ -13,7 +13,7 @@ tags: ['API Gateway', 'Lambda']
 ### Custom Authorizer Architecture
 
 <header>
-<img src="{{ page.static }}custom-auth-workflow.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}custom-auth-workflow.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 OAuth, SAML 등 다양한 authentication 방법들을 API Gateway의 custom authorization을 통해서 컨트롤 할 수 있습니다.
@@ -89,9 +89,9 @@ Customer authorizer's Lambda function은 반드시 principal identifier 그리�
 
 #### Create a Custom Authorization for API Methods
 
-<img src="{{ page.static }}gateway_authorizer.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}gateway_authorizer.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}custom-auth-set-authorizer-on-method.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}custom-auth-set-authorizer-on-method.png" class="img-responsive img-rounded img-fluid">
 
 
 # Mapping Templates

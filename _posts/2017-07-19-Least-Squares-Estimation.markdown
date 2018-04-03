@@ -10,7 +10,7 @@ tags: ['regression', 'ols', 'ordinary-least-squares']
 
 
 <header>
-    <img src="{{ page.asset_path }}ls_wallpaper.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}ls_wallpaper.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;">
     <small><a href="https://unsplash.com/?photo=vmlJcey6HEU">Vladimir Kudinov의 사진</a>
     <br> 기본으로 돌아가서.. 천천히..
@@ -78,7 +78,7 @@ scaler = StandardScaler()
 data = scaler.fit_transform(data)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}ls_data.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ls_data.png" class="img-responsive img-rounded img-fluid">
 
 ### Numpy로 구현
 
@@ -110,7 +110,7 @@ plot(data[:, 0], y_pred, color='red')
 bias: 8.46098609281e-16<br>
 beta: 0.837873232526
 
-<img src="{{ page.asset_path }}ls_result01.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ls_result01.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Numpy with Matrix 구현
@@ -141,7 +141,7 @@ w = least_square_estimate(data[:, 0], data[:, 1])
 bias: 8.46098609281e-16<br>
 beta: 0.837873232526
 
-<img src="{{ page.asset_path }}ls_result02.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ls_result02.png" class="img-responsive img-rounded img-fluid">
 
 ### Numpy with Linalg 구현
 
@@ -155,7 +155,7 @@ visualize(w, data[:, 0], data[:, 1], y_pred)
 bias: 8.46098609281e-16 <br>
 beta: 0.837873232526
 
-<img src="{{ page.asset_path }}ls_result03.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ls_result03.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Statsmodels OLS
@@ -166,7 +166,7 @@ ols = ols.fit()
 display(ols.summary())
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}ls_ols_summary.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ls_ols_summary.png" class="img-responsive img-rounded img-fluid">
 
 {% highlight python %}
 y_pred = ols.predict(sm.add_constant(data[:, 0]))
@@ -176,7 +176,7 @@ visualize(ols.params, data[:, 0], data[:, 1], y_pred)
 bias: 3.05311331772e-16 <br>
 beta: 0.837873232526
 
-<img src="{{ page.asset_path }}ls_ols.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ls_ols.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -307,7 +307,7 @@ print('train:', data_x.shape)
 print('test:', data_y.shape)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}ls_m_data.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ls_m_data.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Numpy 구현
@@ -350,7 +350,7 @@ res = ols.fit(method='pinv')
 res.summary()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}ls_m_ols_summary.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ls_m_ols_summary.png" class="img-responsive img-rounded img-fluid">
 
 {% highlight python %}
 y_pred = res.predict(sm.add_constant(data_x))

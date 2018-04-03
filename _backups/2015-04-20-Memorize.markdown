@@ -9,7 +9,7 @@ tags: []
 ---
 
 <header>
-<img src="{{ page.static }}notebook.jpeg" class="img-responsive img-rounded">
+<img src="{{ page.static }}notebook.jpeg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Matrix

@@ -8,7 +8,7 @@ tags: ['facebook', 'chatting', 'bot', 'hubot', 'node.js', 'express', 'ejs']
 ---
 
 <header>
-<img src="{{ page.static }}facebook-messenger-800.jpg" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.static }}facebook-messenger-800.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Setting Node.js & Express
@@ -72,7 +72,7 @@ Messenger -> Setup Webhooks 를 눌러서 설정을 해줍니다.
 
 이때 Callback URL은 **HTTPS**만 사용가능합니다.
 
-<img src="{{ page.static }}messenger-webhook.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}messenger-webhook.png" class="img-responsive img-rounded img-fluid">
 
 https://domain.co.kr/webhook/ 같은 주소를 사용하고<br>
 Token은 "anderson_jo_validation_token" 처럼 맘대로 넣으면 됩니다.<br>
@@ -121,18 +121,18 @@ router.get('/webhook/', function(req, res){
 
 정확하게 webhook을 걸고, Verification까지 완성되면 다음과 같이 됩니다.
 
-<img src="{{ page.static }}webhook_complete.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}webhook_complete.png" class="img-responsive img-rounded img-fluid">
 
 ### Subscribe the app to the page
 
 다음으로 페이스북 페이지를 만들어줍니다. (네.. 못생긴거 압니다.. 죄송합니다.) <br>
 [FB Create Page][FB Create Page]
 
-<img src="{{ page.static }}anderson_page.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}anderson_page.png" class="img-responsive img-rounded img-fluid">
 
 FB 콘솔안의 Token Generation에서 만들어준 Page를 설정해줍니다.
 
-<img src="{{ page.static }}page_conf.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}page_conf.png" class="img-responsive img-rounded img-fluid">
 
 curl을 통해서 해당 Page를 App이 subscribe하도록 설정해줍니다.
 
@@ -160,7 +160,7 @@ router.post('/webhook/', function (req, res) {
 
 페이스북 페이지에 들어가서 메세지를 열고 메세지를 보냅니다. 
 
-<img src="{{ page.static }}send_msg.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}send_msg.png" class="img-responsive img-rounded img-fluid">
 
 req.body는 다음과 같이 생겼습니다.
 
@@ -258,13 +258,13 @@ function sendGenericMessage(sender) {
 
 ### Final Results
 
-<img src="{{ page.static }}capture1.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}capture1.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}capture2.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}capture2.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}capture3.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}capture3.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}capture4.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}capture4.png" class="img-responsive img-rounded img-fluid">
 
 
 

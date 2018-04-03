@@ -7,7 +7,7 @@ asset_path: /assets/posts/Naive-Bayes/
 tags: ['Email Spam Filtering', 'Text Mining']
 ---
 <header>
-    <img src="{{ page.asset_path }}email.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}email.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 Bayes 공식이나 이론은 이미 [Monty Hall][bayes] 문제를 풀면서 설명을 했습니다.
@@ -17,7 +17,7 @@ Bayes 공식이나 이론은 이미 [Monty Hall][bayes] 문제를 풀면서 설�
 
 일단 Naive Bayes의 공식은 다음과 같습니다.
 
-<img src="{{page.asset_path}}naive-bayes-formula.gif" class="img-responsive img-rounded">
+<img src="{{page.asset_path}}naive-bayes-formula.gif" class="img-responsive img-rounded img-fluid">
 
 1. C<sub>L</sub> 은 클래스 또는 분류를 나타냅니다.
 2. F 는 features
@@ -32,7 +32,7 @@ Bayes 공식이나 이론은 이미 [Monty Hall][bayes] 문제를 풀면서 설�
 
 
 
-<img src="{{page.asset_path}}what-the-fuck.jpg" class="img-responsive img-rounded">
+<img src="{{page.asset_path}}what-the-fuck.jpg" class="img-responsive img-rounded img-fluid">
 
 대체 뭔 소리여 ㅋㅋㅋ<br> 
 그냥 예제하나 풀면 다 이해됩니다.
@@ -129,10 +129,10 @@ wordcloud(subset(sms, type=='ham')$text, min.freq = 40, random.order = F)
 
 
 <div style="text-align:center; font-size:2em;">Spam</div>
-<img src="{{page.asset_path}}spam.png" class="img-responsive img-rounded">
+<img src="{{page.asset_path}}spam.png" class="img-responsive img-rounded img-fluid">
 
 <div style="text-align:center; font-size:2em;">Ham</div>
-<img src="{{page.asset_path}}ham.png" class="img-responsive img-rounded">
+<img src="{{page.asset_path}}ham.png" class="img-responsive img-rounded img-fluid">
 
 DocumentTermMatrix는 각각의 문자들 마다 전체 단어중 몇개가 들어 있는지를 나타냅니다.<br>
 예를 들어서. ... 다음과 같이 나올수 있습니다. 

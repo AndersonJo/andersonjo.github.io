@@ -35,7 +35,7 @@ x 데이터를 input으로 받아서 y 데이터를 예측합니다.
 > 해당 현상을 없애는 방법은 delayed recurrent neural network를 구현하거나, 간단하게 Bi-direction으로 해결할 수 있습니다. <br>
 > 해당 문서에서는 가장 간단한 RNN을 구현하기 때문에 해당 이슈는 인지하고 그냥 넘어가겠습니다.
 
-<img src="{{ page.asset_path }}rnn_sin_data.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}rnn_sin_data.png" class="img-responsive img-rounded img-fluid">
 
 ## Tensorflow Session Initialization
 
@@ -165,4 +165,4 @@ for i, p in enumerate(plots):
 초기 부분이 안맞는 이유는 데이터 부분에서 언급하였듯이 sync rnn에서 forecasting 시 일어나는 현상이고, <br>
 이는 delayed rnn 또는 bi-direction으로 해결됩니다.
 
-<img src="{{ page.asset_path }}rnn_sin_result.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}rnn_sin_result.png" class="img-responsive img-rounded img-fluid">

@@ -8,7 +8,7 @@ tags: ['Celery', 'RabbitMQ', 'GCM']
 ---
 
 <header>
-<img src="{{ page.asset_path }}domino.jpg" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.asset_path }}domino.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Tutorial via Docker

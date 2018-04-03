@@ -7,7 +7,7 @@ static: /assets/posts/Systemd/
 tags: ['/etc/init.d', 'ubuntu', 'service']
 ---
 <header>
-<img src="{{ page.static }}logo.png" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.static }}logo.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Overview

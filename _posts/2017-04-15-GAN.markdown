@@ -9,7 +9,7 @@ tags: ['GAN', 'Pytorch', 'cross-entropy']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}boxing.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}boxing.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>2개의 뉴럴넷을 서로 맞짱뜨게 만들자!
     </small>
@@ -40,7 +40,7 @@ GAN의 아이디어는 기본적으로 2개의 모델이 서로 경쟁하듯 학
 Optimization문제의 해결책은 cost값의 (local) minimum을 찾는 것입니다.<br>
 Game에서의 해결책은 Nash equilibrium입니다. (Local diffenrential Nash equilibria)
 
-<img src="{{ page.asset_path }}gan.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}gan.png" class="img-responsive img-rounded img-fluid">
 
 * $$ D(x) $$ 의 목표는 input으로 받은 데이터가 real인지에 대한 (fake가 아니라) 확률값을 output으로 내놓으며 1값으로 만드는게 목표
 * $$ x $$ 의 절반은 data samples(real)이고, 절반은 generator가 생성산 samples(fake)입니다.
@@ -58,7 +58,7 @@ minibatch of $$ x $$는 dataset으로 부터 sampled되며, minibatch of $$ z $$
 하나는 $$ \theta^{(D)} $$를 업데이트하면서 $$ J^{(D)} $$를 줄입니다.<br>
 다른 하나는 $$ \theta^{(G)} $$를 업데이트하면서 $$ J^{(G)} $$의 loss를 줄입니다.
 
-<img src="{{ page.asset_path }}gan_distribution.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}gan_distribution.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -146,7 +146,7 @@ Heuristic, non-saturating game에서는 더이상 zero-sum게임이 아니게 �
 Minimax사용하여 구현하였으며, 실제 구현시 G의 update부분은 heuristic으로 변경하는게 좋습니다.
 
 
-<img src="{{ page.asset_path }}gan_algorithm.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}gan_algorithm.png" class="img-responsive img-rounded img-fluid">
 
 
 # Global Optimality of $$ P_g = P_{\text{data}} $$
@@ -427,7 +427,7 @@ legend()
 {% endhighlight %}
 
 <div style="text-align:center;">
-<img src="{{ page.asset_path }}gan_loss.png" class="img-responsive img-rounded" style="margin: 0 auto;">
+<img src="{{ page.asset_path }}gan_loss.png" class="img-responsive img-rounded img-fluid" style="margin: 0 auto;">
 </div>
 
 ### Evaluate
@@ -451,10 +451,10 @@ for _subs in subplots:
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}gan_eva1.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}gan_eva1.png" class="img-responsive img-rounded img-fluid">
 
 <div style="text-align:center;">
-<img src="{{ page.asset_path }}gan_eva2.png" class="img-responsive img-rounded" style="margin: 0 auto;">
+<img src="{{ page.asset_path }}gan_eva2.png" class="img-responsive img-rounded img-fluid" style="margin: 0 auto;">
 </div>
 
 

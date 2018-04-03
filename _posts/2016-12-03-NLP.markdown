@@ -9,7 +9,7 @@ tags: ['KoNLPy']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}hangul.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}hangul.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>
     </small>
@@ -524,12 +524,12 @@ git clone https://github.com/twitter/twitter-korean-text.git
 
 IntelliJ Idea를 열고 위의 프로젝트를 엽니다.
 
-<img src="{{ page.asset_path }}twitter-open.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}twitter-open.png" class="img-responsive img-rounded  img-fluid">
 
 twitter-korean-text/src/main/resources/com/twitter/penguin/korean/util 위치에 보면 다양한 사전이 txt파일 형식으로 저장이 되어 있습니다.
 
 
-<img src="{{ page.asset_path }}twitter_dict_dir.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}twitter_dict_dir.png" class="img-responsive img-rounded  img-fluid">
 
 비교를 하기 위해서 먼저 테스트 케이스를 만듭니다.<br>
 /src/test/scala/com/twitter/penguin/korean/MarvelTest.scala 에 다음과 같은 코드를 넣습니다.
@@ -554,12 +554,12 @@ List(앤더슨(ProperNoun: 0, 3), 조(Suffix: 3, 1), 는(Josa: 4, 1),  (Space: 5
 
 사전에 "앤더슨조", "헐크버스터", "자이언트루퍼"를 추가시키겠습니다.
 
-<img src="{{ page.asset_path }}twitter_add_dict.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}twitter_add_dict.png" class="img-responsive img-rounded  img-fluid">
 
 twitter-korean-text/src/main/scala/com/twitter/penguin/korean/tools/DeduplicateAndSortDictionaries.scala 파일을 열고, <br>
 DeduplicateAndSortDictionaries 를 실행해서 사전을 업데이터 해줍니다.
 
-<img src="{{ page.asset_path }}twitter_sort_dict.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}twitter_sort_dict.png" class="img-responsive img-rounded  img-fluid">
 
 다시한번 MarvelTest 실행시켜서 테스트 합니다.<br>
 이번에는 "앤더슨조", "헐크버스터", 그리고, "자이언트루퍼"를 하나의 대명사로 인식을 하였습니다.
@@ -570,7 +570,7 @@ List(앤더슨조(ProperNoun: 0, 4), 는(Josa: 4, 1),  (Space: 5, 1), 무적(Nou
 
 Maven Project에서 package를 실행합니다.
 
-<img src="{{ page.asset_path }}twitter_package.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}twitter_package.png" class="img-responsive img-rounded  img-fluid">
 
 만들어진 jar 파일을 konlpy로 옮겨줍니다.
 

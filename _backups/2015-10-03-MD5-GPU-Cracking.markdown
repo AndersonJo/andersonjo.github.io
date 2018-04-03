@@ -8,7 +8,7 @@ tags: ['nvcc', 'Nsight', 'makefile', 'Python Wrapper', 'ssl']
 
 ---
 <header>
-    <img src="{{ page.asset_path }}password.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}password.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 ## MD5
@@ -111,7 +111,7 @@ Command Line Option File (-optf)의 위치를 적어주면 됩니다.
 
 **중요한점은 shared일 경우에는 (.so파일) -c 옵션을 빼야한다.** 
 
-<img src="{{ page.asset_path }}nsight_opt.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}nsight_opt.png" class="img-responsive img-rounded img-fluid">
 
 
 ## Python Wrapper 2.7

@@ -7,7 +7,7 @@ asset_path: /assets/posts/ETC/
 tags: ['Linux', 'time', 'Cacti', 'Xenserver', 'Oracle', 'Git', 'SSH', 'Sencha', 'Ext.JS']
 ---
 <header>
-    <img src="{{ page.asset_path }}rainbox.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}rainbox.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 

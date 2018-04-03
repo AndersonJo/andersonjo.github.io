@@ -9,7 +9,7 @@ tags: []
 ---
 
 <header>
-<img src="{{ page.static }}gradle.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}gradle.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 
@@ -117,7 +117,7 @@ Gradle버젼 추후 변경시, gralde wrapper를 다시 실행할 필요 없이 
 
 # JVM Projects
 
-<img src="{{ page.static }}coffee.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}coffee.jpg" class="img-responsive img-rounded img-fluid">
 
 
 ### Maven Naming
@@ -162,7 +162,7 @@ dependencies {
 
 # Maven
 
-<img src="{{ page.static }}maven.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}maven.png" class="img-responsive img-rounded img-fluid">
 
 Maven은 Project Object Model (POM)에 기초한 프로젝트 관리툴입니다. 
 
@@ -199,14 +199,14 @@ groupId, artifactId, version 이렇게 3개가 repository안에서 다른 프로
 
 Build Lifecycle 은 다음과 같은 절차(sequence)를 밟게 됩니다.
 
-<img src="{{ page.static }}maven-phase.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}maven-phase.png" class="img-responsive img-rounded img-fluid">
 
 
 
 
 # JUnit
 
-<img src="{{ page.static }}tested.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}tested.png" class="img-responsive img-rounded img-fluid">
 
 ### Configuration
 

@@ -9,7 +9,7 @@ tags: ['CNN', 'Pytorch', 'Convolution', 'Convnet', 'TensorFlow', 'Numpy', 'Cross
 ---
 
 <header>
-    <!-- <img src="{{ page.asset_path }}R6S_Screenshot_shield.jpg" class="img-responsive img-rounded" style="width:100%"> -->
+    <!-- <img src="{{ page.asset_path }}R6S_Screenshot_shield.jpg" class="img-responsive img-rounded img-fluid"> -->
     <div style="text-align:right;">
     <small>좀 더 자세하게..
     </small>
@@ -43,7 +43,7 @@ $$ H[i, j] = \sum^k_{u=-k} \sum^k_{v=-k} F[u, v] I[i+u, j+v] $$
 
 예를들면 다음과 같습니다.
 <div style="text-align:center;">
-<img src="{{ page.asset_path }}convolution_example.png" class="img-responsive img-rounded" style="margin: 0 auto;">
+<img src="{{ page.asset_path }}convolution_example.png" class="img-responsive img-rounded img-fluid" style="margin: 0 auto;">
 </div>
 
 $$ H[3, 2] $$ 일때의 연산이며, 왼쪽테이블은 Image의 위치, 중간은 이미지 값, 오른쪽은 filter/kernel값입니다.<br>
@@ -92,19 +92,19 @@ scipy_convolve(pic, f_blur, mode='same', title='Blur')
 scipy_convolve(pic, f_sharpen, mode='same', title='Sharpen')
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}car1.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}car1.png" class="img-responsive img-rounded img-fluid">
 [원본 이미지] pic size: (225, 400)
 
 
-<img src="{{ page.asset_path }}car2.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}car2.png" class="img-responsive img-rounded img-fluid">
 [Edge Detection] pic size:(225, 400)
 
 
-<img src="{{ page.asset_path }}car3.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}car3.png" class="img-responsive img-rounded img-fluid">
 [Blur] pic size:(225, 400)
 
 
-<img src="{{ page.asset_path }}car4.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}car4.png" class="img-responsive img-rounded img-fluid">
 [Sharpen] pic size:(225, 400)
 
 
@@ -173,7 +173,7 @@ plot(_r.reshape(-1), label='convolved feature')
 legend()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}signal_convolved.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}signal_convolved.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -188,7 +188,7 @@ Convolution과 cross correlation은 서로 동일하게 element-wise multiplicat
 Cross correlation은 뒤집는 것없이 바로 element-wise multiplication을 한 후 합을 구합니다.
 
 <div style="text-align:center;">
-<img src="{{ page.asset_path }}conv_2d_example.gif" class="img-responsive img-rounded" style="margin: 0 auto;">
+<img src="{{ page.asset_path }}conv_2d_example.gif" class="img-responsive img-rounded img-fluid" style="margin: 0 auto;">
 </div>
 
 #### [Scipy]
@@ -295,7 +295,7 @@ Subsampling 또는 Downsampling이라고도 하며, 가장 중요한 정보는 �
 Max, Average, Sum등이 사용 될 수 있습니다.
 
 <div style="text-align:center;">
-<img src="{{ page.asset_path }}maxpool.jpeg" class="img-responsive img-rounded" style="margin: 0 auto;">
+<img src="{{ page.asset_path }}maxpool.jpeg" class="img-responsive img-rounded img-fluid" style="margin: 0 auto;">
 </div>
 
 위의 예에서는 2x2 filter 싸이즈, stride는 2값으로 max pooling을 했을때의 결과입니다.

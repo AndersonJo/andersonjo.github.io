@@ -7,7 +7,7 @@ asset_path: /assets/posts/SSL/
 tags: ['rsa', 'nginx', '.crt']
 ---
 <header>
-    <img src="{{ page.asset_path }}logo.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}logo.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 
@@ -26,7 +26,7 @@ DN에는 Common Name(CN) 이 들어가야 하는데 이것은 Fully Qualified Do
 [https://www.digicert.com/easy-csr/openssl.htm][https://www.digicert.com/easy-csr/openssl.htm]에 들어가시면 
 쉽게 CSR을 만들수 있습니다.
 
-<img src="{{ page.asset_path }}capture01.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}capture01.png" class="img-responsive img-rounded img-fluid">
 
 {% highlight bash %}
 openssl req -new -newkey rsa:2048 -nodes -out star_andersonjo_com.csr -keyout star_andersonjo_com.key -subj "/C=KR/ST=Seoul/L=Seoul/O=Anderson/OU=Development/CN=*.andersonjo.com"

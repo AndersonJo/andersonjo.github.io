@@ -7,7 +7,7 @@ tags: ['RMS Error', "Hebb's Rule", "아버지 아들 키"]
 asset_path: /assets/posts/Feedforward-Neural-Network/
 ---
 <header>
-    <img src="{{ page.asset_path }}chappie.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}chappie.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 Feedforward는 뉴론간의 연결이 서로 전방향으로만 연결된것을 말합니다.<br>
@@ -22,7 +22,7 @@ Feedforward는 뉴론간의 연결이 서로 전방향으로만 연결된것을 
 
 RMS Method는 예측에 대한 에러률을 알아냅니다.
 
-<img src="{{ page.asset_path }}rms.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}rms.png" class="img-responsive img-rounded img-fluid">
 
 예를 들어서.. 아버지키와 아들키에 대한 데이터가 있습니다.
 
@@ -52,7 +52,7 @@ Coefficients:
 [1] 2.434295
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}father-son.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}father-son.png" class="img-responsive img-rounded img-fluid">
 
 눈으로 봐도 아버지키와 아들키사이에는 상관관계가 있음을 알수 있습니다.<br>
 중요한것은 이렇게 Linear Regression을 만들었는데 오차가 얼마나 나는가를 측정하는 것입니다.<br>
@@ -76,23 +76,23 @@ RMS의 경우는 Supervised Learning이었습니다. 즉 예상수치가 있고,
 #### **Formula** ####
 
 **input**값으로 x vector가 있습니다.
-<img src="{{ page.asset_path }}Hebb1.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}Hebb1.png" class="img-responsive img-rounded img-fluid">
 
 **weight**값으로 -1~1사이의 random 값이 들어가 있는 vector가 있습니다. 
-<img src="{{ page.asset_path }}Hebb2.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}Hebb2.png" class="img-responsive img-rounded img-fluid">
 
 **output**은 다음과 같이 나옵니다.
-<img src="{{ page.asset_path }}Hebb3.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}Hebb3.png" class="img-responsive img-rounded img-fluid">
 
 **Delta**값은 다음과 같이 나옵니다.(η은 Learning Rate입니다.)
-<img src="{{ page.asset_path }}Hebb4.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}Hebb4.png" class="img-responsive img-rounded img-fluid">
 
 예제에서는 단순히 delta값을 weight 값에 더하였습니다.<br>
 이렇게하면 weight 값은 점점 극명하게 커지거나 작아지거나 하게 됩니다.<br>
 Limit을 두기 위해서는 다음과 같은 Normalization을 할 수 있습니다.
 
 
-<img src="{{ page.asset_path }}Hebb5.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}Hebb5.png" class="img-responsive img-rounded img-fluid">
 
 {% highlight python %}
 class Hebb(object):

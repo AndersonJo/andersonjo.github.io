@@ -9,7 +9,7 @@ tags: ['Pytorch']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}logo.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}logo.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>Keras로 GAN만들다가 trainable = False 로 (Layer까지 다 줬음)해도 training 되서 **개빡치고** Pytorch시작함.<br>
     Keras에서는 compile전에 trainable먹히고, compile이후에는 dynamic하게 바뀌지 않음.  18

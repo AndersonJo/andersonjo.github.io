@@ -7,7 +7,7 @@ asset_path: /assets/posts2/Elasticsearch/
 tags: ['LIRE']
 ---
 <header>
-    <img src="{{ page.asset_path }}tokyo-street-after-work-wallpaper.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}tokyo-street-after-work-wallpaper.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 LIRE (Lucene Image REtrieval)은 content based retrieval로서 index에서 유사한 이미지를 가져올수 있도록 도와주는 Elasticsearch의 플러그인입니다.

@@ -10,7 +10,7 @@ tags: ['resnet', 'densenet']
 
 
 <header>
-    <img src="{{ page.asset_path }}densenet_wallpaper.png" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}densenet_wallpaper.png" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;">
     </div>
 </header>
@@ -58,13 +58,13 @@ $$ \mathbf{y}_{\mathscr{l}} = H_{\mathscr{l}} \left( \mathbf{y}_{\mathscr{l} - 1
 ### Residual block architecture
 
 
-<img src="{{ page.asset_path }}densenet_resnets_modelvariants.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}densenet_resnets_modelvariants.png" class="img-responsive img-rounded img-fluid">
 
 ### Classification Error Result
 
 결론적으로 ReLU를 제거하고, Batch Normalization은 Addition을 하기 전에 해주는 것이 좋습니다.
 
-<img src="{{ page.asset_path }}densenet_resnets_archtesterror.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}densenet_resnets_archtesterror.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -148,7 +148,7 @@ Dense Connectivity에 있는 공식에서 **concatenation operation**이 사용�
 DenseNet에서는 feature-maps의 크기가 달라지는 pooling layer부분을 해결하기 위해서 network를 multiple densely connected <span style="color:red"> **dense blocks** </span> 으로 나누었습니다.
 
 
-<img src="{{ page.asset_path }}densenet_denseblock.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}densenet_denseblock.png" class="img-responsive img-rounded img-fluid">
 
 block 사이에 있는 layers들을 <span style="color:red">**transition layers**</span> 라고 하며, convolution 그리고 pooling을 가르킵니다.<br>
 논문에서는 transition layers를 다음과 같이 구성하였습니다.
@@ -204,7 +204,7 @@ ax.grid()
 ax.legend()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}densenet_k.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}densenet_k.png" class="img-responsive img-rounded img-fluid">
 
 Network가 지나치게 커지는 것을 막기 위해서 k의 값은 대략 작은 값으로 제한합니다. (예.. $$ k = 12 $$)<br>
 여기서 k의 값은 hyper-parameter로 두며 논문에서는 작은값.. (12, 24, 40) 등으로도 충분한 결과를 내놓고 있다고 합니다.
@@ -212,7 +212,7 @@ Network가 지나치게 커지는 것을 막기 위해서 k의 값은 대략 작
 
 ## DenseNet Architecture for ImageNet
 
-<img src="{{ page.asset_path }}densenet_architecture_for_imagenet.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}densenet_architecture_for_imagenet.png" class="img-responsive img-rounded img-fluid">
 
 * 3개의 dense blocks을 갖고 있으며, 각각의 dense blocks은 모두 동일한 갯수의 레이어를 갖고 있음
 * Input image는 먼저 convolution을 태워서 16 또는 growth rate의 2배값이 되는 output channels을 내놓음

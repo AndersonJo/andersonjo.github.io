@@ -9,7 +9,7 @@ tags: ['Python', 'NLU', 'NLP']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}syntaxnet-long.png" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}syntaxnet-long.png" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>
        저에게는 꿈이 있습니다. 그리고 그 꿈은 TensorFlow덕분에 그 꿈을 해내는데 한 걸음 더 나아갈수 있을거 같습니다.<br>

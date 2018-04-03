@@ -8,7 +8,7 @@ tags: ['hadoop', '하둡', 'kafka', '카프카']
 ---
 
 <header>
-<img src="{{ page.static }}tree.jpg" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.static }}tree.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # What is Flume?

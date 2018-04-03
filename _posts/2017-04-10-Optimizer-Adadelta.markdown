@@ -9,7 +9,7 @@ tags: ['Loss', 'Cost', 'Objective', 'Numpy', 'Scipy']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}adadelta.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}adadelta.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>아직 자전거 수준
     </small>
@@ -191,7 +191,7 @@ grid()
 legend()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}iris.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}iris.png" class="img-responsive img-rounded img-fluid">
 
 
 

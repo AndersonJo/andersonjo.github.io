@@ -9,13 +9,13 @@ tags: []
 ---
 
 <header>
-    <img src="{{ page.asset_path }}kafka.png" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}kafka.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 
 # Fundamentals
 
-<img src="{{ page.asset_path }}fundamentals.jpg" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}fundamentals.jpg" class="img-responsive img-rounded img-fluid">
 
 | Name | Description |
 |:-----|:------------|

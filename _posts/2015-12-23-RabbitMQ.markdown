@@ -7,7 +7,7 @@ asset_path: /assets/posts/RabbitMQ/
 tags: ['Celery']
 ---
 <header>
-    <img src="{{ page.asset_path }}bunny.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}bunny.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 
@@ -63,7 +63,7 @@ guest유저는 오직! localhost에서 접속할때만 사용되므로, 다른 m
 
 # Hello World
 
-<img src="{{ page.asset_path }}hello.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}hello.png" class="img-responsive img-rounded img-fluid">
 
 * <a href="{{ page.asset_path }}hello_world.py">hello_world.py</a>
 
@@ -143,7 +143,7 @@ channel.start_consuming()
 
 # Work Queue
 
-<img src="{{ page.asset_path }}python-two.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}python-two.png" class="img-responsive img-rounded img-fluid">
 
 * <a href="{{ page.asset_path }}hello_world.py">new_task.py</a>
 * <a href="{{ page.asset_path }}hello_world.py">worker.py</a>
@@ -225,7 +225,7 @@ re-enqueue의 경우는 오직 worker가 죽었을때만이고, 테스크처리�
 
 # Publish / Subscribe
 
-<img src="{{ page.asset_path }}exchanges.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}exchanges.png" class="img-responsive img-rounded img-fluid">
 
 * <a href="{{ page.asset_path }}e_consumer.py">e_consumer.py</a>
 * <a href="{{ page.asset_path }}e_producer.py">e_producer.py</a>
@@ -292,7 +292,7 @@ channel.queue_bind(queue=queue_name, exchange='logs')
 
 # Routing
 
-<img src="{{ page.asset_path }}python-four.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}python-four.png" class="img-responsive img-rounded img-fluid">
 
 * <a href="{{ page.asset_path }}direct_consumer.py">direct_consumer.py</a>
 * <a href="{{ page.asset_path }}direct_producer.py">direct_producer.py</a>
@@ -334,7 +334,7 @@ channel.queue_bind(exchange='direct_logs', queue=queue_name, routing_key=routing
 
 # Topics
 
-<img src="{{ page.asset_path }}python-five.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}python-five.png" class="img-responsive img-rounded img-fluid">
 
 * <a href="{{ page.asset_path }}topic_consumer.py">topic_consumer.py</a>
 * <a href="{{ page.asset_path }}topic_producer.py">topic_producer.py</a>

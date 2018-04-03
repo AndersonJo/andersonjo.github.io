@@ -9,7 +9,7 @@ tags: ['node.js', 'jsx']
 ---
 
 <header>
-<img src="{{ page.static }}react-native-logo.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}react-native-logo.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Atom or Nuclide
@@ -90,7 +90,7 @@ react-native start
 | IOS | react-native run-ios | |
 | Android | react-native run-android | 핸드폰 흔들고 -> Dev Settings ->  Host, Port를 변경 <br>(이때 http://는 붙이지 않습니다.)|
 
-<img src="{{ page.static }}first_capture.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}first_capture.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Tutorial 
@@ -99,7 +99,7 @@ react-native start
 
 [react-tutorial-git-repository][react-tutorial-git-repository]
 
-<img src="{{ page.static }}capture2.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}capture2.png" class="img-responsive img-rounded img-fluid">
 
 
 [react-tutorial-git-repository]: https://github.com/AndersonJo/react-tutorial

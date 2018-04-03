@@ -8,7 +8,7 @@ tags: ['amanda', '아만다']
 ---
 
 <header>
-<img src="{{ page.static }}amanda01.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}amanda01.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # What is this?
@@ -17,30 +17,30 @@ tags: ['amanda', '아만다']
 현재 (글쓰는 기준) 밴드, 카카오톡, 카카오택시 보다 더 많은 popular를 나타내고 있습니다. <br>
 또한 매출부분에서 하스스톤, 붐비치보다 더 많은 매출을 올리고 있습니다. (IOS기준)
 
-<img src="{{ page.static }}top15.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}top15.jpg" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}popular11.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}popular11.jpg" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}profit21.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}profit21.jpg" class="img-responsive img-rounded img-fluid">
 
 
 # Legendary Works
 
 ### Database Tuning
 
-<img src="{{ page.static }}newrelic01.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}newrelic01.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}db_cpu.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}db_cpu.png" class="img-responsive img-rounded img-fluid">
 
 # Architecture
 
 ### DBs & Redis Architecture
 
-<img src="{{ page.static }}fission.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}fission.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}celery.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}celery.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}hadoop.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}hadoop.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.static }}amanda.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}amanda.png" class="img-responsive img-rounded img-fluid">
 

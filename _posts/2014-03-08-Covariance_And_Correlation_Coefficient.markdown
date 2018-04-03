@@ -66,7 +66,7 @@ colorbar(cax)
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}cov_colorbar.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cov_colorbar.png" class="img-responsive img-rounded img-fluid">
 
 
 ## Problems with Interpretation

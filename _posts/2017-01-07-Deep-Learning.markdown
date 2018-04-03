@@ -9,7 +9,7 @@ tags: ['Artificial-Intelligence']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}neural-network.png" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}neural-network.png" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>Deep Learning 에 대해서 알아보자
     </small>

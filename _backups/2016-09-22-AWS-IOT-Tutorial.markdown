@@ -9,7 +9,7 @@ tags: ['MQTT', 'Socket']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}awsiot-how-it-works_HowITWorks_1-26.png" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}awsiot-how-it-works_HowITWorks_1-26.png" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>빅데이터 + IOT + 인공지능 = AWESOME        
     </small>
@@ -23,7 +23,7 @@ tags: ['MQTT', 'Socket']
 먼저 **Create a certificate** 버튼을 눌러서 certificate을 만듭니다. AWS IOT에서는 반드시(must) secure network만으로 통신을 해야 합니다.<br>
 아래의 public key, private key, certificate, 그리고 root CA를 다운로드 받습니다. 
 
-<img src="{{ page.asset_path }}iot-create-certificate.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}iot-create-certificate.png" class="img-responsive img-rounded img-fluid">
 
 ### Create a rule
 
@@ -33,7 +33,7 @@ clientId부분에서 AWS Account (현재 내가 쓰는 계정안에서) unique�
 이상태에서 다른 동일한 clientId를 갖은 thing 이 접속하려하면, 기존에 접속해 있던  thing 은 terminate되게 됩니다.
 (서로 접속하고 떨어지고 접속하고 떨어지고 반복하게 됨)
 
-<img src="{{ page.asset_path }}iot-create-rule.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}iot-create-rule.png" class="img-responsive img-rounded img-fluid">
 
 ### Device Example in Node.js
 

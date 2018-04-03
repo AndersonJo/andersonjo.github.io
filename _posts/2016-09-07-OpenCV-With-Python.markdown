@@ -9,7 +9,7 @@ tags: ['Python', 'SIFT', 'LSH', 'Locality Sensitivity Hashing']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}walle.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}walle.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>
        몇년전 FFMPEG으로 Transcoding할때 OpenCV를 사용하게 되었습니다. 그때 Face Detection을 했었는데 (정말 기초부분이죠..) 그거 하고나서 와~ 하는 감탄사가 ㅋ <br>

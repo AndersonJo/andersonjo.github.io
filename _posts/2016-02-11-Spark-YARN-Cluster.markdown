@@ -9,7 +9,7 @@ tags: ['SBT', 'Scala', 'PySpark']
 ---
 
 <header>
-<img src="{{ page.static }}spark.jpg" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.static }}spark.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 
@@ -205,7 +205,7 @@ http://localhost:8080/ 에 들어가서 master Web UI를 확인해볼수 있습�
 |-d DIR, --work-dir DIR | Directory to use for scratch space and job output logs <br>(default: SPARK_HOME/work); only on worker |
 |--properties-file FILE | Path to a custom Spark properties file to load (default: conf/spark-defaults.conf) |
 
-<img src="{{ page.static }}spark_web.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}spark_web.png" class="img-responsive img-rounded img-fluid">
 
 
 # Spark Yarn Mode
@@ -286,7 +286,7 @@ sudo apt-get install sbt
 Project생성시에는 Scalar -> SBT 를 선택합니다. <br>
 Project Structure -> Modules -> Dependencies -> + 추가 -> $SPARK_HOME/lib 를 추가<br>
 
-<img src="{{ page.static }}intellij_project_structure.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}intellij_project_structure.png" class="img-responsive img-rounded img-fluid">
 
 
 #### <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> build.sbt
@@ -433,7 +433,7 @@ import pyspark
 
 Project Structure에서 PySpark가 있는 위치를 Add Content Root를 눌러서 추가시켜줍니다.
 
-<img src="{{ page.static }}pycharm.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}pycharm.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -781,7 +781,7 @@ print df2.collect()
 YARN에서는 각각의 application instance는 ApplicationMaster를 갖고 있습니다.
 AM은 ResourceManager로부터  resource를 요청하며, 자원이 할당되면, NodeManager에게 containers를 할당된 자원으로 실행시킬것을 요청합니다.
 
-<img src="{{ page.static }}cluster_deployment_mode.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}cluster_deployment_mode.png" class="img-responsive img-rounded img-fluid">
 
 Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**이 됩니다.
 해당 AM은 application실행과, 자원요청을 담당하게 됩니다.
@@ -805,7 +805,7 @@ Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**
 - JobTracker (a single master process) 가 모든 jobs들을 관리(coordinate)합니다.
 - TaskTrackers (a number of subordinate processes)는 주어진 task를 실행시키며, 주기적으로 JobTracker에 프로그래스를 보고합니다.
 
-<img src="{{ page.static }}mr1.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}mr1.png" class="img-responsive img-rounded img-fluid">
 
 즉 대규모 cluster에서 나타날수 있는 문제점은 단 하나의 Job Tracker가 모든 jobs들을 관리하기 때문에 bottleneck이 생길수 있습니다.
 야후에 따르면 5000개의 nodes 그리고 40,000개의 tasks들을 동시(concurrently)처리가 한계점이라고 합니다.
@@ -815,7 +815,7 @@ Spark Cluster mode에서는, **Spark drive는 ApplictionMaster안에서 실행**
 
 ### Addressing the scalability issue
 
-<img src="{{ page.static }}busy-jobtracker.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}busy-jobtracker.png" class="img-responsive img-rounded img-fluid">
 
 위와같이 JobTracker혼자서 computational resources과리및, 모든 태스크들의 coordination을 하기 때문에 제약이 생길수 밖에 없는 구조입니다. 
 
@@ -835,7 +835,7 @@ JobTracker는 cluster resource management (aka **Global ResourceManager**) 그�
 | TaskTracker | NodeManager |
 | MapReduce Job | A distributed application |
 
-<img src="{{ page.static }}yarn.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}yarn.png" class="img-responsive img-rounded img-fluid">
 
 
 **ResourceManager**
@@ -865,7 +865,7 @@ JobTracker는 cluster resource management (aka **Global ResourceManager**) 그�
  
 ### Application Submission in YARN
 
-<img src="{{ page.static }}yarn-app-submission.png" class="img-responsive img-rounded">
+<img src="{{ page.static }}yarn-app-submission.png" class="img-responsive img-rounded img-fluid">
  
 사용자가 application을 ResourceManager로 hadoop jar 명령어 쳐서 (MRv1 처럼)보내면 다음과 같은 일이 발생하게 됩니다.
 

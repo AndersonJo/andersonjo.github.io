@@ -22,7 +22,7 @@ Event C는 2 이벤트의 합집합(union)이다.
 
 $$ P(C) = P(A \cup B) $$
 
-<img src="{{ page.asset_path }}bayes_union.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}bayes_union.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Intersection Events
@@ -35,7 +35,7 @@ $$ P(C) = P(A \cup B) $$
 
 $$ P(C) = P(A \cap B) $$
 
-<img src="{{ page.asset_path }}bayes_intersection.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}bayes_intersection.png" class="img-responsive img-rounded img-fluid">
 
 
 

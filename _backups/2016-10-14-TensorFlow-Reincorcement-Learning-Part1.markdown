@@ -9,7 +9,7 @@ tags: ['game', 'deep Q-network']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}google-breakout.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}google-breakout.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>구글 이미지에서 Atari breakout이라고 치면 게임이 나옴. ㅎㄷㄷㄷㄷ        
     </small>
@@ -18,7 +18,7 @@ tags: ['game', 'deep Q-network']
 
 # Reinforcement Learning 
 
-<img src="{{ page.asset_path }}atari-breakout-deepmind.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}atari-breakout-deepmind.png" class="img-responsive img-rounded img-fluid">
 
 ### Introduction
 
@@ -43,7 +43,7 @@ Reinforcement Learning에서는 **Sparse and Time-delayed labels**를 갖고 있
 
 # Markov Decision Process
 
-<img src="{{ page.asset_path }}drl-agent-environment.jpg" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}drl-agent-environment.jpg" class="img-responsive img-rounded img-fluid">
 
 게임을 하는 사람을 **Agent**라고 하고, 게임을 **environment** (Breakout)라고 생각하면 됩니다.
 Agent는 어떤 주어진 상태 **state** (paddle의 위치, 공의 위치와 방향, 모든 벽돌의 위치)안에서 
@@ -54,7 +54,7 @@ actions은 **reward**로 이어지기도 합니다. Actions은 environment를 �
 Environment는 일반적으로 **stochastic**입니다. 즉 다음 state는 random하게 변화될수 있다는 뜻입니다.
  
 
-<img src="{{ page.asset_path }}mdp-illustrated.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}mdp-illustrated.png" class="img-responsive img-rounded img-fluid">
 
 MDP는 간단하게 다음과 같이 쓸수 있습니다.
 
@@ -116,7 +116,7 @@ $$ r_t + \gamma R_{t+1} $$ 이말은.. 현재의 reward + 그 다음에 올 모�
 
 ## Real Life of Developer
 
-<img src="{{ page.asset_path }}real-life-of-developer.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}real-life-of-developer.png" class="img-responsive img-rounded img-fluid">
 
 아마 현실세계에서는 좀 더 복잡할 것입니다. 다음과 같이 정의 해보겠습니다.
 
@@ -133,12 +133,12 @@ $$ r_t + \gamma R_{t+1} $$ 이말은.. 현재의 reward + 그 다음에 올 모�
 예를 통해서 Q-Learning을 배워보도록 하겠습니다. 먼저 **Q matrix 를 0값으로 initialize**해줍니다. (보통 일반적으로 0으로 초기화 해줍니다.)<br>
 **Gamma 값은 0.8**로 잡겠습니다.
 
-<img src="{{ page.asset_path }}Q-Learning-Example_clip_image004.gif" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}Q-Learning-Example_clip_image004.gif" class="img-responsive img-rounded img-fluid">
 
 Reward Matrix **R**의 State B를 보면 2개의 possible actions이 있습니다. 하나는 state D로 가는 것이고, 다른 하나는 state F로 가는 것입니다. 
 Random Selection에 따라, state F를 따라갑니다. state F에는 3개의 possible actions이 있습니다. B E 또는 F
  
- <img src="{{ page.asset_path }}Q-Learning-Example_clip_image006.gif" class="img-responsive img-rounded">
+ <img src="{{ page.asset_path }}Q-Learning-Example_clip_image006.gif" class="img-responsive img-rounded img-fluid">
 
 <div class="thumbnail" style="padding:0px 10px 0 10px;">
 $$ \mathbf{Q}(state, action) = \mathbf{R}(state, action) + \gamma \cdot \mathbf{Max}[\mathbf{Q}(next \ state, all \ actions)] $$
@@ -152,7 +152,7 @@ instant reward 때문에, $$ \mathbf{Q}(B, F) $$ 의 결과값은 100입니다.
 자! 이제 F가 현재의 state가 되었습니다. F가 최종 목표 state이기 때문에 여기에서 1 episode를 마칩니다. <br>
 마쳐진이후, Agent의 brain는 (matrix Q) 다음과 같이 업데이트 됩니다.
  
-<img src="{{ page.asset_path }}Q-Learning-Example_clip_image014.gif" class="img-responsive img-rounded"> 
+<img src="{{ page.asset_path }}Q-Learning-Example_clip_image014.gif" class="img-responsive img-rounded img-fluid">
 
 그 다음 episode로, 이번에는 state D에서 시작을 합니다. B, C, E로 갈수 있는데 모두 동일한 0값을 갖고 있고, random selection에 의해서 B로 갑니다.
 B로 가게 되면 2 possible actions이 있고, D 또는 F로 갈 수 있습니다. 
@@ -165,11 +165,11 @@ $$ \mathbf{Q}(D, B) = \mathbf{R}(D, B) + 0.8 \cdot \mathbf{Max} \{ \mathbf{Q}(B,
 
 Q matrix는 다음과 같이 업데이트 됩니다.
 
-<img src="{{ page.asset_path }}Q-Learning-Example_clip_image024.gif" class="img-responsive img-rounded"> 
+<img src="{{ page.asset_path }}Q-Learning-Example_clip_image024.gif" class="img-responsive img-rounded img-fluid">
 
 이런 식으로 계속 반복해서 훈련을 시키다 보면 다음과 같은 Q matrix가 만들어집니다.
  
-<img src="{{ page.asset_path }}Q-Learning-Example_clip_image030.gif" class="img-responsive img-rounded"> 
+<img src="{{ page.asset_path }}Q-Learning-Example_clip_image030.gif" class="img-responsive img-rounded img-fluid">
  
 수학적으로 정리하면 다음과 같이 될 수 있습니다.
 
@@ -191,11 +191,11 @@ DeepMind paper에 따르면 게임 스크린 자체의 픽셀들을 state로 사
 Q-function 자체를 neural network로 만들면 문제가 해결될 수 있습니다. 즉 states는 4장의 게임 화면으로, actions은 동일하게 가져가고, output으로는 Q-value를 내놓습니다.
 다른 방법으로는, 4장의 게임 화면만 input으로 받고, output으로 각각의 action에 따른 Q-value를 내놓게 할 수 도 있습니다. 
 
-<img src="{{ page.asset_path }}deep-q-learning-001.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}deep-q-learning-001.png" class="img-responsive img-rounded img-fluid">
 
 DeepMind에서 사용한 network architecture는 다음과 같습니다.
 
-<img src="{{ page.asset_path }}deep-q-learning-used-by-deepmind.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}deep-q-learning-used-by-deepmind.png" class="img-responsive img-rounded img-fluid">
 
 3개의 convolutional layers를 갖고 있는 일반적인 convolutional neural network입니다. 재미있는건 pooling layers가 없습니다. 
 pooling layers 사용시, object의 위치가 불명확해집니다. 이런 경우 ImageNet같은 classification task에는 맞습니다. 

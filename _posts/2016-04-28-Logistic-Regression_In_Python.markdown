@@ -9,7 +9,7 @@ tags: ['Logistic', 'Sigmoid', 'binary', 'partial derivative', 'odds ratio', 'max
 ---
 
 <header>
-    <img src="{{ page.asset_path }}logistic_wallpaper.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}logistic_wallpaper.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 
@@ -206,7 +206,7 @@ likelihood의 경우는 numeric underflow가 심하게 나타납니다.<br>
 likelihood:	0.0<br>
 log-likelihood:	-1151.46028642<br>
 
-<img src="{{ page.asset_path }}before.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}before.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Calculate cost
@@ -237,7 +237,7 @@ plot(_Z, y_equal_1(_Z), color='#008379', label='y=1')
 legend()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cost.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Run Logistic Regression
@@ -272,11 +272,11 @@ axarr[1].grid()
 # Evaluate: 0.964028776978
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}history.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}history.png" class="img-responsive img-rounded img-fluid">
 
 {% highlight python %}
 yhat = lr.predict(data)
 plot_result(yhat, target)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}predict.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}predict.png" class="img-responsive img-rounded img-fluid">

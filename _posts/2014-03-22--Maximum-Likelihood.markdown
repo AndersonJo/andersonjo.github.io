@@ -70,7 +70,7 @@ def bernoulli_likelihood(theta):
     return theta**7 * (1-theta)**3
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}mlh_bernoulli.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}mlh_bernoulli.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -201,4 +201,4 @@ print('Maximum likelihood estimate: ', maximum_likelihood)
 
 Maximum likelihood estimate:  0.7
 
-<img src="{{ page.asset_path }}mle_maximum_estimate.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}mle_maximum_estimate.png" class="img-responsive img-rounded img-fluid">

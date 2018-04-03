@@ -136,7 +136,7 @@ np.sum(np.logical_and(data >= m - 2*s, data <= m + 2*s))
 # Probability
 
 
-<img src="{{ page.asset_path }}probability.jpg" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}probability.jpg" class="img-responsive img-rounded img-fluid">
 
 | Term | Definition | Example |
 |:-----|:-----------|:--------|

@@ -7,7 +7,7 @@ asset_path: /assets/posts/Jenkins-101/
 tags: ['Continous Integration']
 ---
 <header>
-    <img src="{{ page.asset_path }}logo-title.png" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}logo-title.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Installation

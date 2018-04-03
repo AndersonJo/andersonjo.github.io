@@ -9,7 +9,7 @@ tags: ['objective-function']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}sea.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}sea.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>그냥 바다고 보고 싶었음.
     </small>
@@ -48,7 +48,7 @@ grid()
 legend()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cost_data.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_data.png" class="img-responsive img-rounded  img-fluid">
 
 # Mean Squared Error (MSE)
 
@@ -120,7 +120,7 @@ normal_a, exponent	: 5.89498613265
 normal_a, uniform 	: 7.26803261167
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cost_mse.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_mse.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -166,7 +166,7 @@ normal_a, exponent	: 2.13340783974
 normal_a, uniform 	: 2.48578624644
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cost_mae.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_mae.png" class="img-responsive img-rounded img-fluid">
 
 
 # Root Mean Squared Logarithmic Error (RMSLE)
@@ -204,7 +204,7 @@ normal_a, uniform 	: 1.02307079398
 
 0~1사이의 확률 값이 들어가야 하는데, -2 또는 2같은 값이 들어가면서 그래프가 좀 이상하게 보입니다.
 
-<img src="{{ page.asset_path }}cost_rmsle.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_rmsle.png" class="img-responsive img-rounded img-fluid">
 
 
 # Binary Cross Entropy (a.k.a Logarithmic Loss)
@@ -254,7 +254,7 @@ array([ 0.22590298])
 그래프에서 -2 그리고 2까지 전체 x값이 안나온 이유는 NaN으로 바껴서 해당부분은 안나오는 것입니다.<br>
 $$ p $$ 값은 확률 0~1사이의 값으로 쓰여야 합니다.
 
-<img src="{{ page.asset_path }}cost_bce.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_bce.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -350,7 +350,7 @@ array([ 0.51082557], dtype=float32)
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}cost_ce.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_ce.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -385,7 +385,7 @@ $$ J(\theta) = max(0,\ 1 - y * f(x)) $$
 0.98999999836087227
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cost_hinge.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_hinge.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -415,7 +415,7 @@ normal_a, exponent	: 4806.30679955
 normal_a, uniform 	: 6476.72186957
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cost_kld.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_kld.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -452,7 +452,7 @@ normal_a, exponent	: 0.331605768793
 normal_a, uniform 	: 0.188153360738
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cost_cos_proxy.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_cos_proxy.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -477,4 +477,4 @@ normal_a, uniform 	: 0.188153360738
 0.33216509
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cost_poisson.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cost_poisson.png" class="img-responsive img-rounded img-fluid">

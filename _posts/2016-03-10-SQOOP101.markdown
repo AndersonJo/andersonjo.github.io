@@ -8,14 +8,14 @@ tags: ['Sqoop', 'hadoop', 'hive']
 ---
 
 <header>
-<img src="{{ page.static }}train.jpg" class="img-responsive img-rounded" style="width:100%">
+<img src="{{ page.static }}train.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Introduction
 
 스쿱은 RDBMS의 데이터를 HDFS로 옮겨주는 툴입니다.
 
-<img src="{{ page.static }}sqoop_work.jpg" class="img-responsive img-rounded">
+<img src="{{ page.static }}sqoop_work.jpg" class="img-responsive img-rounded img-fluid">
 
 # Installation
 

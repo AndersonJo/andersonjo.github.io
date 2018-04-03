@@ -7,7 +7,7 @@ asset_path: /assets/posts/Chef-101/
 tags: ['docker']
 ---
 <header>
-    <img src="{{ page.asset_path }}chef_logo.png" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}chef_logo.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Installation
@@ -131,7 +131,7 @@ action [:enable, :start] 이 경우도 enable되고 start가 됩니다. (enable�
 
 # Build a continous delivery pipeline
 
-<img src="{{ page.asset_path }}delivery-scenario.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}delivery-scenario.png" class="img-responsive img-rounded img-fluid">
 
 #### Delivery Cluster
 Chef Delivery installation을 구성하는 machines 들입니다.

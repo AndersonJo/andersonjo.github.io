@@ -7,7 +7,7 @@ asset_path: /assets/posts/UFW/
 tags: ['iptables', 'firewall']
 ---
 <header>
-    <img src="{{ page.asset_path }}security.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}security.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # UFW 101 

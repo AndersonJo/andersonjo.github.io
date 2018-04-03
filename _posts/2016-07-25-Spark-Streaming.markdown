@@ -9,7 +9,7 @@ tags: ['hadoop', 'kafka']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}speed.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}speed.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Introduction
@@ -17,13 +17,13 @@ tags: ['hadoop', 'kafka']
 Spark Streaming은 Core Spark의 extension으로서, 여러 sources로 부터 데이터를 받아서 처리할 수 있도록 도와줍니다.
 Kafka, Flume, Twitter, ZeroMQ, Kinesis, 또는 TCP Sockets 등등으로 부터 받을 수 있습니다.
 
-<img src="{{ page.asset_path }}streaming-arch.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}streaming-arch.png" class="img-responsive img-rounded img-fluid">
 
 내부적으로는 다음과 같이 데이터를 받아서 처리하게 됩니다.<br>
 Spark Streaming은 데이터 스트림을 받은후, 데이터를 Batches로 나누게 됩니다.<br>
 이후 Spark Engine은 배치를 처리하게 됩니다.
 
-<img src="{{ page.asset_path }}streaming-flow.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}streaming-flow.png" class="img-responsive img-rounded img-fluid">
 
 ### Installing SBT
 

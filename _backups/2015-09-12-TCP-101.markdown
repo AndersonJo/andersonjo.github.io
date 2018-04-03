@@ -7,7 +7,7 @@ tags: ["Nagle", "Slow Start", "Fast Retransmit", "socket"]
 asset_path: /assets/posts/TCP-101/
 ---
 <header>
-    <img src="{{ page.asset_path }}internet-cables.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}internet-cables.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 TCP는 기본적으로 서버 개발자가 알아야할 내용중의 하나입니다.<br>
@@ -45,7 +45,7 @@ Congestion window는 destination까지 가는 도중의 라우터에서 congesti
 계속 늘리다가 data loss가 일어나게 된다면 congestion window값을 반으로 (half) 줄여버립니다.
 이는 어딘가에서 buffer overflow가 일어나게 됐다고 가정하는 것이고 일반적으로 그럴 가능성이 대부분 맞습니다.
 
-<img src="{{ page.asset_path }}tcp-com.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}tcp-com.png" class="img-responsive img-rounded img-fluid">
 
 TCP는 UDP나 다른 통신에 비해서 꽤 무거운? 편입니다. <br>
 먼저 TCP Connection 을 establish하기 위해서는 3개의 packets 필요합니다. (SYN, SYN-ACK, ACK)<br>
@@ -116,7 +116,7 @@ Slow Start 알고리듬은 Exponentially increase시킵니다. 만약 Linear하�
 하지만 packet이 lost됐는지 알기위해서 RTO시간이 지나길 기다리는 것은 효율적이지 못하기 때문에, Fast Retransmit 알고리듬을 사용하게 됩니다.
 Fast Retransmit 알고리듬은 duplicate acknowledgement를 통해서 재전송을 할지 결정을 하게 됩니다.
 
-<img src="{{ page.asset_path }}fast-retransmit-1.gif" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}fast-retransmit-1.gif" class="img-responsive img-rounded img-fluid">
 
 위의 예제에서 3, 4 packets을 정상적으로 보냈지만, 5번 packet에서 loss가 일어났습니다.
 (참고로 TCP는 반드시 ACK를 받아야지 다음 패킷을 넘기는 lock-step방식이 아니라 일단 window 싸이즈가 허용하는한 여러 packets들을 한꺼번에 보내는 방식입니다.)

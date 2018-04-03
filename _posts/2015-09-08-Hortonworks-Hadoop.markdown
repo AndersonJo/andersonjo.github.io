@@ -8,7 +8,7 @@ tags: ['HDP']
 
 ---
 <header>
-    <img src="{{ page.asset_path }}HWX-RGB-full-tagline.png" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}HWX-RGB-full-tagline.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 Ubuntu 14.10 (trusty version) 에 Hortonworks Hadoop with Ambari를 설치하는 방법입니다.
@@ -332,7 +332,7 @@ $ sudo ambari-server start
 
 [1] Cluster Name을 설정합니다.
 
-<img src="{{ page.asset_path }}ambari_install_localhost01.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ambari_install_localhost01.png" class="img-responsive img-rounded img-fluid">
 
 [2] Hostname과 SSH Private Key를 등록시킵니다.
 
@@ -351,9 +351,9 @@ $ sudo su
 $ cat ~/.ssh/id_rsa
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}ambari_install_localhost02.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ambari_install_localhost02.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.asset_path }}ambari_install_localhost03.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ambari_install_localhost03.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Installing HDP on AWS
@@ -364,7 +364,7 @@ $ cat ~/.ssh/id_rsa
   ex)ip-172-31-8-106.ap-northeast-1.compute.internal<br>
   또한 SSH Private Key에다가는 .pem파일을 업로드 하고, SSH User는 ubuntu로 변경해줍니다.
  
-<img src="{{ page.asset_path }}install-options.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}install-options.png" class="img-responsive img-rounded img-fluid">
 
 
 # Installing Services
@@ -391,7 +391,7 @@ Hive Database를 existing MySQL/ MariaDB Database 로 변경합니다.
 # Finish
 
 
-<img src="{{ page.asset_path }}ambari.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}ambari.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -437,7 +437,7 @@ unset JAVA_TOOL_OPTIONS
 
 hbase-site.xml -> hbase.master.hostname (0.0.0.0) 추가
 
-<img src="{{ page.asset_path }}hbase-master-address.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}hbase-master-address.png" class="img-responsive img-rounded img-fluid">
 
 /etc/hbase/conf/regionservers 에서 regionserver의 hostname을 변경합니다.  
 
@@ -466,7 +466,7 @@ embedded의 경우는 Hbase를 집접 하나 띄워서 (기존의 Hbase말고.. 
 | hbase.regionserver.hostname | 0.0.0.0 |
 
 
-<img src="{{ page.asset_path }}custom-ams-hbase-site.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}custom-ams-hbase-site.png" class="img-responsive img-rounded img-fluid">
 
 
 만약 Zookeeper안에 /ams-hbase-unsecure 라는 znode가 없으면 만들어 줍니다.
@@ -656,7 +656,7 @@ core-size.xml을 열은 이후 다음과 같이 변경합니다.
 
 Oozie를 restart시키기 이전에 먼저,  HDFS먼저 restart시킵니다.
 
-<img src="{{ page.asset_path }}oozie_proxy.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}oozie_proxy.png" class="img-responsive img-rounded img-fluid">
 
 ### Namenode: BindException
 

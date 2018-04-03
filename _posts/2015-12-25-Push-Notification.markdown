@@ -10,9 +10,9 @@ tags: ['Celery', 'RabbitMQ', 'GCM', 'APNS', 'IOS']
 
 Google API Console -> GCM -> Create Credentials
 
-<img src="{{ page.asset_path }}google01.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+<img src="{{ page.asset_path }}google01.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
 
-<img src="{{ page.asset_path }}google02.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+<img src="{{ page.asset_path }}google02.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
 
 
 
@@ -52,7 +52,7 @@ gcm.send_topic_message(topic=topic, data=data)
 따로 OpenSSL 작업할 필요 없이.. SNS에서 다 해줍니다. <br>
 필요한 것은 p12 파일을 Apple에서 받은 다음에 올려주면은 자동으로 Certificate 하고 Private Key를 웹상에서 생성해줍니다.
 
-<img src="{{ page.asset_path }}apns.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+<img src="{{ page.asset_path }}apns.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
 
 
 
@@ -147,18 +147,18 @@ for endpoint in platform_app.endpoints.all():
 
 예를 들어서 Android Token을 등록하고 싶다면, Google GCM으로 Application을 만듭니다.
 
-<img src="{{ page.asset_path }}aws01.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+<img src="{{ page.asset_path }}aws01.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
 
 Token은 Android Device에서 GCM으로부터 받은 Token값을 넣어주면 Endpoint ARN은 자동으로 생성됩니다.<br>
 여기서 나온 ARN은 카피하고.. Topics로 가서 새로운 Topic을 만듭니다.
 
-<img src="{{ page.asset_path }}aws02.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+<img src="{{ page.asset_path }}aws02.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
 
 새로운 Topic에서 create subscription버튼을 누릅니다.
 
 Protocol은 Application으로 하고, Endpoint에는 카피한 ARN을 넣습니다.
 
-<img src="{{ page.asset_path }}aws03.png" class="img-responsive img-rounded" style="border:1px solid #aaa;">
+<img src="{{ page.asset_path }}aws03.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
 
 즉..  Topic subscription --> Application ARN --> Device Token 이런 식으로 서로 참조를 하는 구조입니다.
 

@@ -9,14 +9,14 @@ tags: ['CNN', 'Gimp', 'Nvidia', 'GPU Memory', 'ReLU', 'kernel', 'stride', 'Pooli
 ---
 
 <header>
-    <img src="{{ page.asset_path }}R6S_Screenshot_shield.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}R6S_Screenshot_shield.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Convolutional Neural Networks
 
 ### What is Convolution?
 
-<img src="{{ page.asset_path }}Convolution_schematic.gif" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}Convolution_schematic.gif" class="img-responsive img-rounded img-fluid">
 
 왼족의 matrix를 흑백을 나타내는 이미지라고 합니다. (0은 검정색, 1은 흰색) <br>
 3 by 3으로 움직이는 **sliding window**는 **kernel, filter** 또는 **feature detector** 등으로 불립니다. <br>
@@ -26,7 +26,7 @@ tags: ['CNN', 'Gimp', 'Nvidia', 'GPU Memory', 'ReLU', 'kernel', 'stride', 'Pooli
 직관적으로 이해하기 위해서는 Ubuntu의 Gimp를 사용해서 알아볼수 있습니다. <br>
 **(Gimp -> Filters -> Generic -> Convolution Matrix)** 
 
-<img src="{{ page.asset_path }}rainbowsix_siege_convolutioned.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}rainbowsix_siege_convolutioned.png" class="img-responsive img-rounded img-fluid">
 
 간단히 말해서 이미지의 한 부분이 서로 비슷비슷한 색상을 갖고 있으면 서로 상쇄를 시켜줘서 0값이 되지만, 
 갑작이 sharp-edge 부분을 만나게 되면은 색상차이가 갑자기 커져서 해당 부분의 convolution값이 높아지게 됩니다.
@@ -47,14 +47,14 @@ CNN은 기본적으로 several layers of convolutions이 결과값에 ReLU, Tanh
 마지막 layer에서는 더 높은 차원의 특징들을 뽑아내 classification을 하게 됩니다.
 
 
-<img src="{{ page.asset_path }}cnn_architecture.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cnn_architecture.png" class="img-responsive img-rounded img-fluid">
 
 ### The LeNet Architecture (1990s)
 
 최초의 CNN중의 하나인 [LeNet5](http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf)이 나온 이후 많은 improvements가 나왔습니다. <br>
 하지만 모두 핵심적인 아키텍쳐는 동일하며 최초의 LeNet을 이해하면 파생된 알고리즘을 이해하는 것도 어렵지 않습니다.
 
-<img src="{{ page.asset_path }}lenet5_basic_architecture.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}lenet5_basic_architecture.png" class="img-responsive img-rounded img-fluid">
 
 위의 이미지는 ConvNet으로서 원래의 LeNet과 많이 유사하며, 4개의 카테고리 (dog, cat, boat, bird)로 분류합니다.<br>
 ConvNet에는 주요 4가지 operations이 있습니다.
@@ -66,7 +66,7 @@ ConvNet에는 주요 4가지 operations이 있습니다.
 
 ### Filter (Sliding Window, Kernel) -> Feature Map (convolved feature, activation map) 
 
-<img src="{{ page.asset_path }}cnn_filter.gif" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cnn_filter.gif" class="img-responsive img-rounded img-fluid">
 
 빨간색 Filter 그리고 녹색 Filter 는 서로 다른 feature maps을 내놓습니다.<br>
 CNN에서는 Training Process를 통해서 해당 filter들의 값을 학습합니다. <br>
@@ -76,7 +76,7 @@ CNN에서는 Training Process를 통해서 해당 filter들의 값을 학습합�
 
 1. **Depth** <br>
 Depth는 filter의 갯수와 일치합니다. 아래 이미지의 경우 3개의 filter가 존재하고, 즉 3개의 전혀다른 feature maps을 만들어냅니다. 
-<img src="{{ page.asset_path }}feature_depth.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}feature_depth.png" class="img-responsive img-rounded img-fluid">
 
 2. **Stride**<br>
 원본 이미지위에서 filter matrix가 움직이면서 feature map을 만드는데.. 이때 한번 움직일때마다 얼만큼씩 움직이는가 하는 값입니다.<br>
@@ -86,7 +86,7 @@ Stride의 값이 클수록 더 작은 feature map을 만들어냅니다.
 3. **Zero-Padding**<br>
 Input matrix에다가 zeros값의 border를 씌우면 편리한 점이 있습니다. Filter를 적용하여 feature map의 크기를 컨트롤 할 수 있습니다.<br>
 Zero padding을 적용하는 것을 **Wide Convolution** 이라고 하며, 안하는 것을 **Narrow Convolution** 이라고 합니다.
-<img src="{{ page.asset_path }}cnn_zero_padding.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cnn_zero_padding.png" class="img-responsive img-rounded img-fluid">
 
 ### Non Linearity (ReLU)
 
@@ -105,7 +105,7 @@ ReLU는 element wise operation (즉 pixel단위로 적용됨)으로서 모든 ne
 이것을 하는 이유는 ConvNet이 다루는 실질적인 데이터들 대부분이 Non-Linear이고, Convolution은 Linear Operation이기 때문에 <br> 
 ReLU같은 Non-Linear Function을 도입함으로서 Non-Linearity 로 만들어 주는 것입니다.
 
-<img src="{{ page.asset_path }}relu-applied-image.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}relu-applied-image.png" class="img-responsive img-rounded img-fluid">
 
 ReLU외에도 다른 Non-Linear Functions인 **tanh** 또는 **sigmoid**등을 사용할수 있습니다만.. 
 CNN에서는  ReLU가 performance가 가장 뛰어납니다. 
@@ -118,15 +118,15 @@ Spatial Pooling은 여러가지 타입이 있습니다. **(Max, Average, Sum, et
 예를 들어, Max Pooling의 경우 (2*2 window) 가장 큰 값을 rectified feature map으로부터 취합니다.<br>
 Average Pooling의 경우 모든 값의 합친값의 평균값을 가져옵니다.
  
-<img src="{{ page.asset_path }}max-pooling-from-rectified-feature-map.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}max-pooling-from-rectified-feature-map.png" class="img-responsive img-rounded img-fluid">
 
 아래 그림에서 보듯이, Pooling은 가각의 feature maps들에 따로따로 적용되기 때문에, 3개의 각기 다른 Pooling output maps을 갖게 됩니다.
 
-<img src="{{ page.asset_path }}pooling-applied-to-each-feature-map.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}pooling-applied-to-each-feature-map.png" class="img-responsive img-rounded img-fluid">
 
 Convolution, ReLU, 그리고 Pooling에 대해서 알아보았습니다. 실제로는 아래의 그림처럼 좀 더 복잡한 형태를 갖는 경우가 많습니다.
 
-<img src="{{ page.asset_path }}cnn-so-far.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cnn-so-far.png" class="img-responsive img-rounded img-fluid">
 
 
 ### Fully Connected Layer
@@ -134,7 +134,7 @@ Convolution, ReLU, 그리고 Pooling에 대해서 알아보았습니다. 실제�
 해당 부분은 Softmax Activation Function을 사용하는 일반적인 Multi Layer Perceptron입니다. 
 (SoftMax는 0~1사이의 값을 내보냄)
 
-<img src="{{ page.asset_path }}fully-connected-multi-layer-perceptron.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}fully-connected-multi-layer-perceptron.png" class="img-responsive img-rounded img-fluid">
 
 
 ### BackPropagation
@@ -144,7 +144,7 @@ Convolution, ReLU, 그리고 Pooling에 대해서 알아보았습니다. 실제�
 * Input Image: Boat
 * Target Vector: [0, 0, 1, 0]
 
-<img src="{{ page.asset_path }}backpropagation-boat.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}backpropagation-boat.png" class="img-responsive img-rounded img-fluid">
 
 BackPropagation을 통한 training은 다음으로 요약될수 있습니다.
 
@@ -164,7 +164,7 @@ BackPropagation을 통한 training은 다음으로 요약될수 있습니다.
 초기 layers에서는 어떤 선이나 윤곽들을 인식하지만, layer가 상위단으로 갈 수록 얼굴같은 복잡한 형태를 인식하게 됩니다.<br>
 아래 그림은 [Convolutional Deep Belief Network](http://web.eecs.umich.edu/~honglak/icml09-ConvolutionalDeepBeliefNetworks.pdf)에서 나온 이미지 입니다.
 
-<img src="{{ page.asset_path }}how-deep-conv.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}how-deep-conv.png" class="img-responsive img-rounded img-fluid">
 
 ### Ohter ConvNet Architectures
 

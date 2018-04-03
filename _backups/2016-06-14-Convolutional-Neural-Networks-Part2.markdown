@@ -9,7 +9,7 @@ tags: ['CNN', 'Memory']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}R6S_Screenshot_shield.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}R6S_Screenshot_shield.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Useful Tips
@@ -64,7 +64,7 @@ for _subs in subplots:
         idx += 1
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cifar-10-visualization.png" class="img-responsive img-rounded" >
+<img src="{{ page.asset_path }}cifar-10-visualization.png" class="img-responsive img-rounded img-fluid" >
 
 ### Data PreProcessing and Augmentation
 

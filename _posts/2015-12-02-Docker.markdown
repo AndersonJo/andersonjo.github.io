@@ -7,7 +7,7 @@ asset_path: /assets/posts/Docker-MariaDB/
 tags: ["mariadb"]
 ---
 <header>
-    <img src="{{ page.asset_path }}docker.png" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}docker.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 Installing Docker on Ubuntu <br>
@@ -359,7 +359,7 @@ docker run --net=<NETWORK>
 --net 을 통해서 해당 network를 사용하도록 할 수 있습니다.<br>
 동일한 network를 공유하는 containers들 끼리는 서로 network communication이 가능합니다.
 
-<img src="{{ page.asset_path }}bridge_network.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}bridge_network.png" class="img-responsive img-rounded img-fluid">
 
 single host안에 상대적으로 작은 network를 구성시 bridge network가 좋습니다. 
 하지만 매우 큰 networks를 구성해야 한다면 overlay를 사용하는것이 좋습니다.

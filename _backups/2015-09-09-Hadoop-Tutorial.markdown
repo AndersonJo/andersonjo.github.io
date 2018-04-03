@@ -9,7 +9,7 @@ asset_path: /assets/posts/Hadoop-Tutorial/
 
 ---
 <header>
-    <img src="{{ page.asset_path }}server.jpg" class="img-responsive img-rounded">
+    <img src="{{ page.asset_path }}server.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 하둡 설치방법은 [Installing Hadoop on Ubuntu][installing-hadoop]을 참고 해주시기 바랍니다.
@@ -360,18 +360,18 @@ File -> Project Structure -> Modules -> Dependencies -> 추가 버튼 -> Jars or
 * /usr/local/hadoop-2.7.2/share/hadoop/common
 * /usr/local/hadoop-2.7.2/share/hadoop/common/lib
 
-<img src="{{ page.asset_path }}project-structure.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}project-structure.png" class="img-responsive img-rounded img-fluid">
 
 Run하기 전에 Edit Configuratinons를 선택합니다.<br>
 Applications안에서 Program arguments부분에서 input output 을 설정합니다.
 
-<img src="{{ page.asset_path }}edit-conf.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}edit-conf.png" class="img-responsive img-rounded img-fluid">
 
-<img src="{{ page.asset_path }}edit-conf2.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}edit-conf2.png" class="img-responsive img-rounded img-fluid">
 
 실행하면 다음과 같이 output 디렉토리가 만들어집니다.
 
-<img src="{{ page.asset_path }}intellij-output.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}intellij-output.png" class="img-responsive img-rounded img-fluid">
 
 
 [hdfs-commands]: http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html

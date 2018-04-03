@@ -10,7 +10,7 @@ tags: ['keras', 'early-stopping', 'callback']
 
 
 <header>
-    <img src="{{ page.asset_path }}stockmarket_wallpaper.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}stockmarket_wallpaper.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;">
     <small><a href="https://unsplash.com/?photo=LjtWRSV3CoE">Geetanjal Khanna의 사진</a>
     </small>
@@ -32,12 +32,12 @@ tags: ['keras', 'early-stopping', 'callback']
 
 전체 데이터는 다음과 같은 그래프를 그립니다.
 
-<img src="{{ page.asset_path }}stockmarket_data_graph.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}stockmarket_data_graph.png" class="img-responsive img-rounded img-fluid">
 
 
 아래 그래프와 같이 과거 38일의 데이터를 본후(파란색선), 다음날의 종가 (빨간점)을 예측합니다.
 
-<img src="{{ page.asset_path }}stockmarket_training_data.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}stockmarket_training_data.png" class="img-responsive img-rounded img-fluid">
 
 
 ## Model 그리고 Training
@@ -135,7 +135,7 @@ TEST  MSE score: 0.0120543421595
 
 파란선은 training 데이터로부터 예측할 결과물이고, 빨간색선은 test데이터로부터 예측된 결과값입니다.
 
-<img src="{{ page.asset_path }}stockmarket_result.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}stockmarket_result.png" class="img-responsive img-rounded img-fluid">
 
 ## References
 

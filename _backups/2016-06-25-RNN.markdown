@@ -9,7 +9,7 @@ tags: ['LSTM', 'tanh', 'hyperbolic tangent', 'cross-entropy loss', 'softmax', 'c
 ---
 
 <header>
-    <img src="{{ page.asset_path }}brain.png" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}brain.png" class="img-responsive img-rounded img-fluid">
 </header>
 
 # Language Modeling
@@ -46,7 +46,7 @@ $$ P( \text{everything} \ | \ \text{In Japan}) $$ 이렇게 계속 반복..
 
 # RNN 101
 
-<img src="{{ page.asset_path }}rnn.jpg" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}rnn.jpg" class="img-responsive img-rounded img-fluid">
 
 
 #### $$ x_t $$는 a vector이고, $$ x $$ 는 matrix가 됩니다.
@@ -146,7 +146,7 @@ o, s = model.forward_propagation(x_train[9])
 | s[t - 1] | (100, )    | t-1 즉 -1부터 시작하게 되는데, state의 마지막부분에서 시작한다. | 
 | U[:, x[t] | (100, ) | U에서 특정단어(apple같은..)의 hidden(100)에 속한 모든 확률을 가져옴 |
 
-<img src="{{ page.asset_path }}forward_propagation.jpg" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}forward_propagation.jpg" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -255,7 +255,7 @@ Predicted Output: [.00009  .0001  .00009  .0001  .00009  .00009  .00009  .0001]
 cross entropy: 9.21043965588  # 아직 학습이 안되서 매우 높은 상태 :)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}cross_entropy.jpg" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}cross_entropy.jpg" class="img-responsive img-rounded img-fluid">
 
 ### Training the RNN with SGD and Backpropagation Through Time (BPTT)
  
@@ -348,7 +348,7 @@ data = np.arange(-3, 3, 0.1)
 plot(data, np.apply_along_axis(np.tanh, axis=0, arr=data))
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}tanh.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}tanh.png" class="img-responsive img-rounded img-fluid">
 
 
 {% highlight python %}
@@ -420,7 +420,7 @@ plot(data, softmax(data))
    8.61852557e-02   9.52494382e-02]
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}softmax.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}softmax.png" class="img-responsive img-rounded img-fluid">
 
 {% highlight python %}
 data = np.arange(0, 100, 1)
@@ -429,7 +429,7 @@ scatter(data, softmax(data))
 
 그래프에서 보이듯이, 0.1이하로 대부분이 있고, 상위 일부만이 0.1을 넘어서 1에 가까워지는 형태.. 
 
-<img src="{{ page.asset_path }}softmax_scatter.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}softmax_scatter.png" class="img-responsive img-rounded img-fluid">
 
 
 

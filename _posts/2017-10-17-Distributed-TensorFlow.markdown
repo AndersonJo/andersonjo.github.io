@@ -9,7 +9,7 @@ tags: ['remote']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}distributed_tf_wallpaper.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}distributed_tf_wallpaper.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;">
     <small>
     </small>
@@ -24,7 +24,7 @@ Remote server에 있는 GPU를 활용하고자 할 경우, Tensorflow에서 지�
 
 기본적으로 다음과 같은 구조를 갖고 있습니다.
 
-<img src="{{ page.asset_path }}distributed_tf_architecture.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}distributed_tf_architecture.png" class="img-responsive img-rounded img-fluid">
 
 다양한 방법으로 구성을 할 수 있지만 가장 기본적인 방법은 host 그리고 worker로 나누어서 사용하는 방법입니다.<br>
 worker 는 각각의 remote server이며, 여기서는 가각 tensorflow server가 실행되면서 grpc를 통해서 host로 부터 처리할 데이터를 받습니다.<br>

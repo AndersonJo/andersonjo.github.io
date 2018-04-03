@@ -9,7 +9,7 @@ tags: []
 ---
 
 <header>
-    <img src="{{ page.asset_path }}elephant.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}elephant.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
 

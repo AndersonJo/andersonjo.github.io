@@ -9,7 +9,7 @@ tags: ['OpenAI', 'Neon', 'format']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}google-breakout.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}google-breakout.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>구글 이미지에서 Atari breakout이라고 치면 게임이 나옴. ㅎㄷㄷㄷㄷ        
     </small>

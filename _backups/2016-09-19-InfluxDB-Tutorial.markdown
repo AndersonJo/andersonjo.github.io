@@ -9,7 +9,7 @@ tags: ['time-series', ]
 ---
 
 <header>
-    <img src="{{ page.asset_path }}grafana-iot.png" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}grafana-iot.png" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>
         SQLdmf asdfadfmasdfsdfi

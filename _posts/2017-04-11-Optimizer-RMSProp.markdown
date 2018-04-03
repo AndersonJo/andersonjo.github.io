@@ -9,7 +9,7 @@ tags: ['Loss', 'Cost', 'Objective', 'Numpy', 'Scipy']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}rmsprop.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}rmsprop.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;">
     <small><a href="https://unsplash.com/?photo=iPum7Ket2jo">Matt Palmer의 사진</a>
     </small>
@@ -85,7 +85,7 @@ grid()
 legend()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}iris.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}iris.png" class="img-responsive img-rounded img-fluid">
 
 
 

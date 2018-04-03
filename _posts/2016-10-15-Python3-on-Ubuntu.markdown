@@ -9,7 +9,7 @@ tags: ['format', 'Jupyter', 'Scipy', 'Numpy']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}labtop.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}labtop.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>제 노트북입니다.. ㅎㅎ 많은 스티커들 가운데.. Python 그리고 MSI GPU 스티커를 가장 좋아합니다.
     </small>

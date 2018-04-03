@@ -9,7 +9,7 @@ tags: ['Loss', 'Cost', 'Objective', 'Numpy', 'Scipy', 'Pytorch']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}sgd_skiing.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}sgd_skiing.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>검도학원 다닐때 목검으로 내리치는 것만 수천번 하더군요. 그것도 한 자세로만요. <br>
     마찬가지로 cost functions도 머리속에서 공식이 바로 그려지고 특성까지 파악될 정도로 연습을 해야 한다고 생각합니다.
@@ -66,7 +66,7 @@ ylabel('Profit in $10,000s')
 grid()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}sgd_population_city.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}sgd_population_city.png" class="img-responsive img-rounded img-fluid">
 
 
 # Batch Gradient Descent (Vanilla Gradient Descent)
@@ -138,7 +138,7 @@ Mean Squared Error (less is good): 0.725250038743<br>
 Mean Squared Error (less is good): 0.686136644177<br>
 Mean Squared Error (less is good): 0.637070721578<br>
 
-<img src="{{ page.asset_path }}sgd_batch_result.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}sgd_batch_result.png" class="img-responsive img-rounded img-fluid">
 
 
 
@@ -198,7 +198,7 @@ Mean Squared Error (less is good): 0.725250038743<br>
 Mean Squared Error (less is good): 0.686136644177<br>
 
 
-<img src="{{ page.asset_path }}sgd_result.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}sgd_result.png" class="img-responsive img-rounded img-fluid">
 
 # References
 

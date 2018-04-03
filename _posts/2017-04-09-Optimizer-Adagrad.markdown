@@ -9,7 +9,7 @@ tags: ['Loss', 'Cost', 'Objective', 'Numpy', 'Scipy']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}adagrad.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}adagrad.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>Hyperparameter 설정은 어려워~ 그래서!
     </small>
@@ -112,7 +112,7 @@ grid()
 legend()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}iris.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}iris.png" class="img-responsive img-rounded img-fluid">
 
 
 ## Stochastic Gradient Descent with AdaGrad Optimizer

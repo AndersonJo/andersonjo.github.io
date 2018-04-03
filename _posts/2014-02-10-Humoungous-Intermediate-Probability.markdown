@@ -52,7 +52,7 @@ Q. 동전을 6번 던져을때의 평균, Variance, Standard Deviation 을 구�
 * 특정 시간,범위,거리 동안에 (interval) 어떤 이벤트가 몇 번 일어날지 예측한다.
  
  
-<img src="{{ page.asset_path }}poisson.gif" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}poisson.gif" class="img-responsive img-rounded img-fluid">
 
 $$ P(x) = \frac{\lambda^{x}e^{-\lambda} }{x!} = \frac{평균횟수^{횟수} e^{-평균횟수}}{횟수!}$$
 
@@ -87,7 +87,7 @@ Q. 시간당 7명의 손님이 오는 가게의, 평균, Variance, STD를 구하
 * Bell Curve라고도 불린다. 
 
  
-<img src="{{ page.asset_path }}normal-distrubution-large.gif" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}normal-distrubution-large.gif" class="img-responsive img-rounded img-fluid">
  
 | Mean | 값이 높으면 그래프를 우측으로, 낮으면 좌측으로 움직이다. | |
 | STD | 값이 눂을수록 더 넓게 분산된다. 작으면 좁은 bell-shaped 커브를 그린다. | |
@@ -105,7 +105,7 @@ pdf = stats.norm.pdf(data, data.mean(), data.std())
 plt.plot(data, pdf)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}normal_distribution.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}normal_distribution.png" class="img-responsive img-rounded img-fluid">
 
 <div class="bg-primary" style="padding:15px; border-radius:5px;">
 Q. 자동차가 체크포인트를 지나가는 시점이 normally distributed라고 가정하고, 평균 시간당 61 miles, 그리고 std는 시간당 4일때, 그 다음 자동차가 시간당 65마일 이하로 지나갈 확률은?

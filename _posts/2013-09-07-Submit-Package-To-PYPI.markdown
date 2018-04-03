@@ -9,7 +9,7 @@ tags: ['setup.py']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}pypi_wallpaper.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}pypi_wallpaper.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;">
     <small><a href="https://unsplash.com/search/work?photo=DWui9DmfCXA">rawpixel.com의 사진</a>
     </small><br>

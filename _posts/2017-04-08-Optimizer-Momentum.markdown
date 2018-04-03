@@ -9,7 +9,7 @@ tags: ['Loss', 'Cost', 'Objective', 'Numpy', 'Scipy', 'Pytorch']
 ---
 
 <header>
-    <img src="{{ page.asset_path }}momentum.jpg" class="img-responsive img-rounded" style="width:100%">
+    <img src="{{ page.asset_path }}momentum.jpg" class="img-responsive img-rounded img-fluid">
     <div style="text-align:right;"> 
     <small>물리학과 인공지능이 만나면..
     </small>
@@ -42,7 +42,7 @@ ylabel('Profit in $10,000s')
 grid()
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}sgd_population_city.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}sgd_population_city.png" class="img-responsive img-rounded img-fluid">
 
 ## Momentum Update
 
@@ -117,5 +117,5 @@ Mean Squared Error (less is good): 0.651252102667<br>
 Mean Squared Error (less is good): 0.651252102667<br>
 Mean Squared Error (less is good): 0.657019385081<br>
 
-<img src="{{ page.asset_path }}momentum_result.png" class="img-responsive img-rounded">
+<img src="{{ page.asset_path }}momentum_result.png" class="img-responsive img-rounded img-fluid">
 
