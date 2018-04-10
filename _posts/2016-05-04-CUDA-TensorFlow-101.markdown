@@ -196,7 +196,7 @@ cd tensorflow
 
 | Question | Answer | ETC |
 |:---------|:-------|-----|
-| Please specify the location of python. [Default is /usr/bin/python]: | /usr/local/bin/python3.6 | |
+| Please specify the location of python. [Default is /usr/bin/python]: | /usr/bin/python3.5 | |
 | Do you wish to use jemalloc as the malloc implementation? [Y/n] | y | |
 | Do you wish to build TensorFlow with Google Cloud Platform support? | y | |
 | Do you wish to build TensorFlow with Hadoop File System support? | y | |
