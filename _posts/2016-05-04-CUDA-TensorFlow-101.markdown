@@ -263,6 +263,17 @@ b = tf.constant(32)
 print(sess.run(a + b)) # 42
 {% endhighlight %}
 
+TensorFlow 1.7 이상이라면 Dynamic graph또한 지원합니다.
+Pytorch에서 영감을 받은듯 합니다.
+
+{% highlight python %}
+import tensorflow as tf
+import numpy as np
+tf.enable_eager_execution()
+x = np.array([[2., 4.]])
+print(tf.matmul(x, x.T))
+{% endhighlight %}
+
 
 # TensorFlow 101
 
