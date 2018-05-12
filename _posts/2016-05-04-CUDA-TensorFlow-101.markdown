@@ -29,14 +29,10 @@ sudo apt-get install linux-headers-generic
 
 ### Install CUDA Toolkit
 
-Cuda Toolkit은 **/usr/local/cuda**안에 설치가 되어 있어야 합니다.<br>
-[Download CUDA Toolkit][Download CUDA Toolkit]
-
 다음의 Dependencies를 설치해줍니다.
 
 {% highlight bash %}
-sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc-4.9 g++-4.9
-# sudo apt-get install clang-3.9
+sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc
 {% endhighlight %}
 
 CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>

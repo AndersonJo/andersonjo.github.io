@@ -2,7 +2,7 @@
 layout: post
 title:  "Google BigQuery + Embulk"
 date:   2018-01-20 01:00:00
-categories: "etl"
+categories: "gcp"
 asset_path: /assets/images/
 tags: ['google', 'gcm', 'BigQuery']
 ---
