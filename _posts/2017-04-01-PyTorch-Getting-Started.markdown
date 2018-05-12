@@ -36,7 +36,7 @@ git clone https://github.com/pytorch/pytorch.git
 cd pytorch
 
 git tag  # 버젼 확인
-git checkout v0.3.0  # 최신 버젼으로 변경
+git checkout v0.4.0  # 최신 버젼으로 변경
 git submodule update --init
 sudo python3.6 setup.py install
 {% endhighlight %}
@@ -49,23 +49,6 @@ cd vision
 sudo python3.6 setup.py install
 {% endhighlight %}
 
-### [Error] unsupported GNU version! gcc versions later than 5 are not supported!
-
-TensorFlow도 동일한 증상이 날 수 있음.. 해결책음 동일합니다.
-
-{% highlight bash %}
-sudo apt-get install python-software-properties
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-sudo apt-get update
-sudo apt-get install gcc-4.9
-sudo apt-get install g++-4.9
-
-sudo rm /usr/bin/g++
-sudo ln -s /usr/bin/g++-4.9 /usr/bin/g++
-
-sudo rm /usr/bin/gcc
-sudo ln -s /usr/bin/gcc-4.9 /usr/bin/gcc
-{% endhighlight %}
 
 # Useful Tips
 
