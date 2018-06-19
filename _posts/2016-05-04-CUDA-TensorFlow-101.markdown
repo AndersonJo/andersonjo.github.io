@@ -61,7 +61,7 @@ $ cuda_7.5.18_linux.run --override compiler
 
 # CUDA & CUDNN
 export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib:/usr/local/cuda/extras/CUPTI/lib64/
 {% endhighlight %}
 
 설치가 잘되었는지 확인은 다음과 같이 합니다.
