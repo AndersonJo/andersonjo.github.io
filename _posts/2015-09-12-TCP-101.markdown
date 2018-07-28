@@ -18,10 +18,10 @@ TCP는 기본적으로 서버 개발자가 알아야할 내용중의 하나입�
 
 **다운로드 받기**
 
-* [tutorial01_httplib.py][tutorial01_httplib.py]
-* [tutorial02_socket.py][tutorial02_socket.py]
-* [tutorial03_udp.py][tutorial03_udp.py]
-* [tutorial04_tcp.py][tutorial04_tcp.py]
+* [tutorial01_httplib.py]({{ page.asset_path }}tutorial01_httplib.py)
+* [tutorial02_socket.py]({{ page.asset_path }}tutorial02_socket.py)
+* [tutorial03_udp.py]({{ page.asset_path }}tutorial03_udp.py)
+* [tutorial04_tcp.py]({{ page.asset_path }}tutorial04_tcp.py)
 
 *기본적인 통신방법들 http, socket, udp 등등은 어렵지 않기 때문에  그냥 예제로만 올려놨습니다. <br>
 TCP의 좀더 자세한 내용은 다음번 아티클에서 다루고, 여기에서는 기본적인 내용을 다루도록 하겠습니다.
