@@ -88,8 +88,8 @@ $$ \text{True Positive Rate} = \frac{FP}{FP + TN} = \frac{FP}{\text{Actual No}} 
 ## Specificity
 
 * 실제 아닌데, 예측도 아니라고 한 비율
-* 암이라고 판단했는데.. 실제로 맞은 비율
-* 유죄라고 판단했는데.. 실제로 맞은 비율
+* 실제 암이 없는 정상인 중에, 예측도 암이 없다고 판단한 비율
+* 실제 무죄인 사람들 중에, 예측도 무죄라고 판단한 비율
 * 값이 높을수록 좋다
 * 1 - False Positive Rate
 
