@@ -103,6 +103,65 @@ $$ \text{Specificity} = \frac{TN}{TN + FP} =  \frac{TN}{\text{Actual No}} = \fra
 
 $$ \text{Precision} = \frac{TP}{TP + FP} = \frac{TP}{\text{Predicted Yes}} =  \frac{100}{100 + 10} = 0.91 $$
 
+
+## F1 Score (F-measure)
+
+F1 Score는 precision과 recall의 조합으로 하나의 수치로 나타냅니다.<br>
+
+예를 들어서 다음과 같은 암을 진단하려는 사람들이 있습니다.
+
+$$ \text{실제 암환자} = \{ A, B, C \} $$
+
+$$ \text{실제 정상인} = \{ D, E, F \} $$
+
+### Precision의 문제점
+
+Precision의 문제는 만약 예측한 값들중 (pred_y) 그중 맞은 갯수이기 때문에..<br>
+만약 A 한명만 암이 있다고 진단하고 나머지는 정산으로 예측한다면 precision은 1값으로 나옵니다.
+
+$$ \text{Precision} = \frac{TP}{TP + FP} = \frac{1}{1 + 0} = 1 $$
+
+> FN에 B, C 가 존재하지만, Precision은 FN을 사용하지 않기 때문에 이렇게 나옵니다.
+
+
+### Recall의 문제점
+
+만약 모든 사람 A, B, C, D, E, F 를 모두 암환자로 예측했다면.. Recall의 공식은 다음과 같아집니다.
+
+$$ \text{Recall} = \frac{TP}{TP + FN} = \frac{3}{3 + 0} = 1 $$
+
+분명히 정상인 환자를 암이 있는 환자로 분류했는데도 불구하고 수치는 매우 높게 나옵니다.
+
+> FP 에 D, E, F가 존재하지만 Recall은 FP를 사용하지 않죠.
+
+### Precision + Recall = F1 Score
+
+따라서 Precision과 Recall을 서로 조합하여 단점을 보완하고 하나의 수치로 만든것이 F1 Score입니다.<br>
+Harmonic Mean을 사용한 F1 Score의 공식은 다음과 같습니다.
+
+$$ \text{F1 Score} = 2 \cdot
+\frac{\text{precision} \times \text{recall}}{\text{precision} + \text{recall}} $$
+
+
+여기서 Harmonic Meam (조화 평균)은 일반적으로 사용하는 arithmetic mean (산술 평균)과는 의미가 다릅니다.<br>
+Harmonic mean은 reciprocal을 사용합니다.
+
+$$ \begin{align}
+\text{Arithmetic Mean}  &= \frac{1}{n} \sum^n_{i=1} x_i = \frac{x_1 + x_2 + ... + x_n}{n} \\
+\text{Harmonic Mean} &= \left( \frac{1}{n} \sum^n_{i=1} x_i^{-1} \right)^{-1}
+= \frac{n}{\frac{1}{x_1} +  \frac{1}{x_2} + ... + \frac{1}{x_n}}
+\end{align} $$
+
+
+F1 score는 harmonic mean을 사용하는데 이때 elements가 precision 그리고 recall 2개 이기 때문에 공식은 다음과 같습니다.<br>
+x1 = precision, x2 = recall, n=2 로 가정
+
+$$ \text{F1 Score} = \frac{2}{\frac{1}{x_1} + \frac{1}{x_2}}
+= 2 \cdot \frac{x_1 \times x_2}{x_1 + x_2}
+= 2 \cdot \frac{\text{precision} \times \text{recall}}{\text{precision} + \text{recall}}$$
+
+
+
 #  ROC (Receiver Operating Characteristics)
 
 이름이 참 이상합니다. Receiver Operating Characteristics 라니.. (직역하면.. 수신기 작동 특성?) <br>
