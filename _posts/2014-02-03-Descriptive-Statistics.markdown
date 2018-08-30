@@ -194,7 +194,7 @@ $$ P = \frac{9!}{(9-5)!} = \frac{9 * 8 * 7 * 6 * 5 * 4!}{4!} = 9 * 8 * 7 * 6 * 5
 
 Permutation과는 반대로 순서가 중요하지 않습니다.
 
-$$ C = \frac{n!}{(n-r)!r!} $$
+$$ C = \begin{pmatrix} n  \\ r \end{pmatrix} = \frac{n!}{(n-r)!r!} $$
 
 >4개의 blue구슬, 6개의 red구슬이 있는데, 3개를 꺼낼때 정확하게 2개의 blue구슬만 꺼낼 확률은? 
 
