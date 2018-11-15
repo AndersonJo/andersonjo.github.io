@@ -6,7 +6,7 @@ encoding: utf-8
 
 baseurl: ""
 url: "http://incredible.ai"
-exclude: ["_backups"]
+exclude: ["_backups", "_site", ".git", ".idea"]
 
 
 # twitter_username:
