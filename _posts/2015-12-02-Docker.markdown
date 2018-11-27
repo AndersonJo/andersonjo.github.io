@@ -23,6 +23,12 @@ Installing Docker on Ubuntu <br>
 sudo apt-get remove docker docker-engine docker.io
 {% endhighlight %}
 
+HTTPS를 통해 repository를 다운받을수 있도록 관련 패키지를 설치합니다. 
+
+{% highlight bash %}
+sudo apt-get install  apt-transport-https ca-certificates curl software-properties-common
+{% endhighlight %}
+
 gpg 키를 등록시킵니다.
 {% highlight bash %}
 sudo apt-get update
