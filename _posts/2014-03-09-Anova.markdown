@@ -170,7 +170,7 @@ $$ F = \frac{MS_{between}}{MS_{within}} $$
 표본평균들간의 차이를 나타낸 것을 **F-Ratio** 라고 합니다. <br>
 <span style="color:red">
 <span style="color:red">
-**F-Ratio의 값이 1또는 그이하라면, 표본평균들은 서로 유사하다고 볼수 있으며,<br>
+**F-Ratio의 값이 1 또는 그 이하라면, 표본평균들은 서로 유사하다고 볼수 있으며,<br>
     표본평균들이 모두 모평균과 동일하다는 귀무가설이 맞게 됩니다..**<br>
 **만약 F-Ratio의 값이 매우 높다면, 귀무가설은 기각이 됩니다.**
     </span>
