@@ -64,7 +64,7 @@ Calculus에서 변화량은 derivative를 가르키며 **순간적인 속력(Ins
 
 $$ v = \lim_{\Delta t \rightarrow 0} \frac{\Delta s}{\Delta t} = \frac{ds}{dt} $$
 
-즉 정말로 우리가 구하고자 하는 **평균속력 $$ \bar{v} $$ **가 아닌 **속력 $$ v $$ **의 값을 얻을 수 있습니다. <br>
+즉 정말로 우리가 구하고자 하는 **평균속력 $$ \bar{v} $$** 가 아닌 **속력 $$ v $$** 의 값을 얻을 수 있습니다. <br>
 **속력** 는 Calculus에서는 **first derivative of distance with respect to time** 으로 봅니다.<br>
 뭐 하지만 여기서 평균속력이나 순간적인 속력이나 결과는 동일합니다.
 
