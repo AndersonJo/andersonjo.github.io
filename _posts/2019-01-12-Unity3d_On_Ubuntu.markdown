@@ -16,7 +16,9 @@ tags: ['Mono']
 
 {% highlight bash %}
 sudo apt install libgtk2.0-0 libsoup2.4-1 libarchive13 libpng16-16 libgconf-2-4 lib32stdc++6 libcanberra-gtk-module
+sudo apt-get install mono-devel
 {% endhighlight %}
+
 
 ## Install Unity3D
 
@@ -48,31 +50,5 @@ License 선택시 personal로 합니다.  (Plus 또는 Pro 선택시 돈 나감.
 
 <img src="{{ page.asset_path }}unity3d-03.png" class="img-responsive img-rounded img-fluid">
 
-설치 완료후 Unity Hub을 
-
-## Install MONO
-
-{% highlight bash %}
-sudo apt-get install mono-devel
-{% endhighlight %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+설치 완료후 Unity Hub를 실행시킵니다.
 
