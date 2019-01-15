@@ -52,3 +52,6 @@ License 선택시 personal로 합니다.  (Plus 또는 Pro 선택시 돈 나감.
 
 설치 완료후 Unity Hub를 실행시킵니다.
 
+아래의 이미지는 설치 완료후 Unity3D에서 제공하는 튜토리얼을 실행시킨 모습입니다.
+
+<img src="{{ page.asset_path }}unity3d-04.png" class="img-responsive img-rounded img-fluid">
