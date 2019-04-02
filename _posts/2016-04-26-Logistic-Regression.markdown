@@ -219,3 +219,43 @@ legend()
 {% endhighlight %}
 
 ![Linear Regression vs Logistic Regression]({{ page.asset_path }}logistic_regression_04.png)
+
+
+## Derivative of sigmoid function
+
+아래는 sigmoid (또는 logistic) function의 공식입니다.
+
+$$ \phi(z) = \frac{1}{1 + e^{-z}} $$
+
+derivative of sigmoid function은 다음과 같습니다.
+
+
+
+$$ \begin{align}
+\dfrac{d}{dx} \phi(x) &= \dfrac{d}{dx} \left[ \dfrac{1}{1 + e^{-x}} \right] \\
+\\
+&= \dfrac{d}{dx} \left( 1 + \mathrm{e}^{-x} \right)^{-1} \\
+\\
+&= -(1 + e^{-x})^{-2} \frac{d}{dx}(1 + e^{-x}) \\
+\\
+&= -(1 + e^{-x})^{-2}(-e^{-x}) \\
+\\
+&= \dfrac{e^{-x}}{\left(1 + e^{-x}\right)^2} \\
+\\
+&= \dfrac{1}{1 + e^{-x}\ } \cdot \dfrac{e^{-x}}{1 + e^{-x}}  \\
+\\
+&= \dfrac{1}{1 + e^{-x}\ } \cdot \dfrac{(1 + e^{-x}) - 1}{1 + e^{-x}}  \\
+\\
+&= \dfrac{1}{1 + e^{-x}\ } \cdot \left( 1 - \dfrac{1}{1 + e^{-x}} \right) \\
+\\
+&= \phi(x) \cdot (1 - \phi(x))
+\end{align} $$
+
+
+참고로..... 외울것
+
+$$ \frac{d}{dx} e^{f(x)} = e^{f(x)} \cdot f^{\prime}(x) $$
+
+$$ \frac{d}{dx} a^{f(x)} = a^{f(x)} \cdot f^{\prime}(x) \cdot ln(a) $$
+
+$$ \frac{d}{dx} e^{-x} =  e^{-x} \cdot  \frac{d}{dx} \left[ -x \right] = -1 \cdot e^{-x} = - e^{-x}   $$
