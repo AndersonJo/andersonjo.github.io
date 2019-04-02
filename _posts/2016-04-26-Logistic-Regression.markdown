@@ -193,7 +193,7 @@ P(x) &= \frac{e^{\theta}}{1 + e^{\theta}} = \frac{1}{1 + e^{-\theta}}
 
 결론적으로 다음과 같은 **최종** 공식이 도출이 됩니다.
 
-$$ P(Y=1\ |\ \mathbf{x}) = \frac{1}{1 + e^{\mathbf{w^Tx} + b}}$$
+$$ P(Y=1\ |\ \mathbf{x}) = \frac{1}{1 + e^{-(\mathbf{w^Tx} + b)}}$$
 
 확률로 표현된 최종 도출된 공식은 logistic function 이라고 하며, 딥러닝 분야에서는 sigmoid function 이라고 합니다.<br>
 Logistic function은 어떤 값이든 0~1사이의 값으로 출력이 됨으로 확률적 계산을 할 수 있게 됩니다.
