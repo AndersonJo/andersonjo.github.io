@@ -106,7 +106,7 @@ misc-mobdata-ml-server-deploy-6b5748b65c-9wpbk   0/1     Pending   0          33
 정확하게  app을 지정해서 볼 수 도 있습니다. 
 
 {% highlight bash %}
-$ kubectl get pod -n ml-server -l app=app-name
+$ kubectl get pod -n ml-server -l app=ml-app
 {% endhighlight %}
 
 Pod에 대한 정보는 다음의 명령어로 알 수 있습니다.
@@ -199,7 +199,7 @@ Handling connection for 5000
 **ReplicaSet**도 상태를 확인합니다.
 
 {% highlight bash %}
-$ kubectl get rs -n alpha -l app=ml-server
+$ kubectl get rs -n alpha -l app=ml-app
 NAME                          DESIRED   CURRENT   READY   AGE
 ml-server-deploy-6cd9bdc5d4   1         1         1       1h
 {% endhighlight %}
@@ -220,7 +220,7 @@ Handling connection for 5000
 **서비스**를 확인합니다.
 
 {% highlight bash %}
-$ kubectl get svc  -n alpha -l app=ml-server
+$ kubectl get svc  -n alpha -l app=ml-app
 NAME            TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
 ml-server-svc   NodePort   10.231.46.95   <none>        80:30021/TCP   3d
 {% endhighlight %}
