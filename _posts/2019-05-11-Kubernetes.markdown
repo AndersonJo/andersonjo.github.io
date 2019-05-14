@@ -85,34 +85,34 @@ default           Active   8d
 kube-node-lease   Active   8d
 kube-public       Active   8d
 kube-system       Active   8d
-ml-server         Active   2s
+tutorial-ns       Active   2s
 {% endhighlight %}
 
 Namespace 생성은 다음과 같이 합니다 .
 
 {% highlight bash %}
-$ kubectl create namespace ml-server
-namespace/ml-server created
+$ kubectl create namespace tutorial-ns
+namespace/tutorial-ns created
 {% endhighlight %}
 
 ## Pods
 
 {% highlight bash %}
-$ kubectl get pod -n ml-server
-NAME                                             READY   STATUS    RESTARTS   AGE
-misc-mobdata-ml-server-deploy-6b5748b65c-9wpbk   0/1     Pending   0          33s
+$ kubectl get pod -n tutorial-ns
+NAME                                      READY   STATUS    RESTARTS   AGE
+tutorial-server-deploy-6b5748b65c-9wpbk   0/1     Pending   0          33s
 {% endhighlight %}
 
 정확하게  app을 지정해서 볼 수 도 있습니다. 
 
 {% highlight bash %}
-$ kubectl get pod -n ml-server -l app=ml-app
+$ kubectl get pod -n tutorial-ns -l app=ml-app
 {% endhighlight %}
 
 Pod에 대한 정보는 다음의 명령어로 알 수 있습니다.
 
 {% highlight bash %}
-$ kubectl describe pod misc-mobdata-ml-server-deploy-6b5748b65c-9wpbk -n ml-server
+$ kubectl describe pod tutorial-server-deploy-6b5748b65c-9wpbk -n tutorial-ns
 {% endhighlight %}
 
 
@@ -131,11 +131,11 @@ $ kubectl apply -f deploy.yaml
 **Port를 확인**합니다.
 
 {% highlight bash %}
-$ kubectl get pods ml-server-deploy-6b4b98486-k4srw -n alpha 
-NAME                               READY   STATUS    RESTARTS   AGE
-ml-server-deploy-6b4b98486-k4srw   1/1     Running   0          59m
+$ kubectl get pods tutorial-server-deploy-6b4b98486-k4srw -n tutorial-ns 
+NAME                                     READY   STATUS    RESTARTS   AGE
+tutorial-server-deploy-6b4b98486-k4srw   1/1     Running   0          59m
 
-$ kubectl get pods ml-server-deploy-6b4b98486-k4srw -n alpha --template='{{(index (index .spec.containers 0).ports 0).containerPort}}{{"\n"}}'
+$ kubectl get pods tutorial-server-deploy-6b4b98486-k4srw -n tutorial-ns --template='{{(index (index .spec.containers 0).ports 0).containerPort}}{{"\n"}}'
 80
 {% endhighlight %}
 
@@ -153,14 +153,14 @@ resource name을 지정할수 있는데 deployment, service , pod 등을 선택�
 
 {% highlight bash %}
 $ kubectl get pods  -n alpha -l app=ml-app
-NAME                               READY   STATUS    RESTARTS   AGE
-ml-server-deploy-6b4b98486-k4srw   1/1     Running   0          56m
+NAME                                     READY   STATUS    RESTARTS   AGE
+tutorial-server-deploy-6b4b98486-k4srw   1/1     Running   0          56m
 {% endhighlight %}
 
 **Pods으로 접속**
 
 {% highlight bash %}
-$ kubectl port-forward ml-server-deploy-6b4b98486-k4srw -n alpha 5000:80
+$ kubectl port-forward tutorial-server-deploy-6b4b98486-k4srw -n tutorial-ns 5000:80
 Forwarding from 127.0.0.1:5000 -> 80
 Forwarding from [::1]:5000 -> 80
 {% endhighlight %}
@@ -168,7 +168,7 @@ Forwarding from [::1]:5000 -> 80
 **pods/ 를 추가**해도 됨
 
 {% highlight bash %}
-$ kubectl port-forward pods/ml-server-deploy-6b4b98486-k4srw -n alpha 5000:80
+$ kubectl port-forward pods/tutorial-server-deploy-6b4b98486-k4srw -n tutorial-ns 5000:80
 Forwarding from 127.0.0.1:5000 -> 80
 Forwarding from [::1]:5000 -> 80
 {% endhighlight %}
@@ -178,15 +178,15 @@ Forwarding from [::1]:5000 -> 80
 **Deployments 상태**도 확인을 합니다.
 
 {% highlight bash %}
-$ kubectl get deployment -n alpha -l app=ml-app
-NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-ml-server-deploy   1         1         1            1           7h
+$ kubectl get deployment -n tutorial-ns -l app=ml-app
+NAME                     DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+tutorial-server-deploy   1         1         1            1           7h
 {% endhighlight %}
 
 **deployment/** 를 붙여서 접속
 
 {% highlight bash %}
-$ kubectl port-forward deployment/ml-server-deploy -n alpha 5000:80
+$ kubectl port-forward deployment/tutorial-server-deploy -n tutorial-ns 5000:80
 Forwarding from 127.0.0.1:5000 -> 80
 Forwarding from [::1]:5000 -> 80
 Handling connection for 5000
@@ -199,15 +199,15 @@ Handling connection for 5000
 **ReplicaSet**도 상태를 확인합니다.
 
 {% highlight bash %}
-$ kubectl get rs -n alpha -l app=ml-app
-NAME                          DESIRED   CURRENT   READY   AGE
-ml-server-deploy-6cd9bdc5d4   1         1         1       1h
+$ kubectl get rs -n tutorial-ns -l app=ml-app
+NAME                                DESIRED   CURRENT   READY   AGE
+tutorial-server-deploy-6cd9bdc5d4   1         1         1       1h
 {% endhighlight %}
 
 **ReplicaSet으로 접속**합니다. 
 
 {% highlight bash %}
-$ kubectl port-forward rs/ml-server-deploy-6cd9bdc5d4 -n alpha 5000:80
+$ kubectl port-forward rs/tutorial-server-deploy-6cd9bdc5d4 -n tutorial-ns 5000:80
 Forwarding from 127.0.0.1:5000 -> 80
 Forwarding from [::1]:5000 -> 80
 Handling connection for 5000
@@ -220,15 +220,15 @@ Handling connection for 5000
 **서비스**를 확인합니다.
 
 {% highlight bash %}
-$ kubectl get svc  -n alpha -l app=ml-app
-NAME            TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
-ml-server-svc   NodePort   10.231.46.95   <none>        80:30021/TCP   3d
+$ kubectl get svc  -n tutorial-ns -l app=ml-app
+NAME                  TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+tutorial-server-svc   NodePort   10.231.46.95   <none>        80:30021/TCP   3d
 {% endhighlight %}
 
 서비스로 접속을 합니다.
 
 {% highlight bash %}
-$ kubectl port-forward svc/ml-server-svc -n alpha 5000:80
+$ kubectl port-forward svc/tutorial-server-svc -n tutorial-ns 5000:80
 Forwarding from 127.0.0.1:5000 -> 80
 Forwarding from [::1]:5000 -> 80
 Handling connection for 5000
