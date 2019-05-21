@@ -27,7 +27,7 @@ lspci -vnn | grep -i VGA -A 12
 sudo apt-get install linux-headers-generic
 {% endhighlight %}
 
-### Install CUDA Toolkit
+### Install CUDA 10.0
 
 다음의 Dependencies를 설치해줍니다.
 
@@ -35,9 +35,45 @@ sudo apt-get install linux-headers-generic
 sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc
 {% endhighlight %}
 
-CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
-아래의 주소에서 RUN파일을 다운로드 받습니다.<br>
-[CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
+이전에 설치되어있는 CUDA를 제거합니다.
+
+{% highlight bash %}
+sudo apt-get purge cuda
+{% endhighlight %}
+
+아래의 주소에서 CUDA 10.0 을 다운로드 받습니다. 
+[Download CUDA 10.0](https://developer.nvidia.com/cuda-10.0-download-archive)
+
+{% highlight bash %}
+sudo dpkg -i cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb
+sudo apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub
+sudo apt-get update
+sudo apt-get install cuda
+{% endhighlight %}
+
+그 다음으로 .bashrc에 다음을 추가해줍니다.
+
+{% highlight bash %}
+# CUDA & CUDNN
+export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib:/usr/local/cuda/extras/CUPTI/lib64/
+{% endhighlight %}
+
+
+설치된 버젼을 확인합니다. 
+
+{% highlight bash %}
+$ nvcc -V
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2018 NVIDIA Corporation
+Built on Sat_Aug_25_21:08:01_CDT_2018
+Cuda compilation tools, release 10.0, V10.0.130
+{% endhighlight %}
+
+
+
+
+## Source로 설치하기
 
 1. 다운받은 폴더로 들어갑니다.
 2. chmod로 실행파일로 바꿔줍니다.
@@ -53,25 +89,6 @@ CUDA Toolkit설치시 GPU Drive, CUDA, Nsight 등이 전부다 깔림니다.<br>
 
 {% highlight bash %}
 $ cuda_7.5.18_linux.run --override compiler
-{% endhighlight %}
-
-그 다음으로 .bashrc에 다음을 추가해줍니다.
-
-{% highlight bash %}
-
-# CUDA & CUDNN
-export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib:/usr/local/cuda/extras/CUPTI/lib64/
-{% endhighlight %}
-
-설치가 잘되었는지 확인은 다음과 같이 합니다.
-
-{% highlight bash %}
-$ nvcc --version
-nvcc: NVIDIA (R) Cuda compiler driver
-Copyright (c) 2005-2015 NVIDIA Corporation
-Built on Tue_Aug_11_14:27:32_CDT_2015
-Cuda compilation tools, release 7.5, V7.5.17
 {% endhighlight %}
 
 
