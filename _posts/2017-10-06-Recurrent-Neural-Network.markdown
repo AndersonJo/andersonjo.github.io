@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "RNN without Library (집접구현하는 RNN)"
+title:  "RNN without Library (직접구현하는 RNN)"
 date:   2017-09-16 01:00:00
 categories: "tensorflow"
 asset_path: /assets/images/
@@ -12,7 +12,7 @@ tags: ['RNN', 'Tensorflow']
 
 보통 Tensorflow, Keras, Pytorch를 사용하게 되면 이미 다른 유저들에 의해서 만들어져 있는 Layer를 불러와서 사용하게 됩니다. <br>
 실질적으로 Keras의 경우에는 1~2줄이면 RNN Layer를 구성할수 있습니다. <br>
-해당 notebook에서는 집접 RNN을 모두 구현해보았습니다.
+해당 notebook에서는 직접 RNN을 모두 구현해보았습니다.
 
 RNN은 기존 일반적인 neural network와 달리 input으로만 받는것이 아니라, 이전 시간 포인트의 hidden units 을 tensor로 받습니다.<br>
 hidden units을 계산하는 공식은 다음과 같습니다.

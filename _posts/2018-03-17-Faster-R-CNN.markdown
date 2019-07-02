@@ -105,7 +105,7 @@ Sliding window를 통해서 나온 feature map의 depth는 더 낮은 차원이 
 
 ### Classifier of Background and Foreground
 
-**Classifier**를 학습시키기 위한 training data는 바로 위의 **RPN으로 부터 얻은 anchors** 와 **ground-truth boxes** (실제 사람이 집접 박스 처리한 데이터) 입니다.
+**Classifier**를 학습시키기 위한 training data는 바로 위의 **RPN으로 부터 얻은 anchors** 와 **ground-truth boxes** (실제 사람이 직접 박스 처리한 데이터) 입니다.
 
 모든 anchors를 foreground 이냐 또는 background이냐로 분류를 해야 합니다.
 분류를 하는 기준은 어떤 anchor가 ground-truth box와 오버랩 (중복되는 면적)되는 부분이 크면 foreground이고, 적으면 background입니다.

@@ -31,7 +31,7 @@ MD5는 128 bits long 이고.. 즉.. 2^128개의 해쉬가 존재한다고 볼 �
 물론 MD5를 실무에서 패스워드로 사용하는 경우는 매우 드뭅니다. 하지만 MD5나 SHA나 다른 해쉬 펑션들도 같은 방법으로 크래킹이 가능하기 때문에, 
 MD5로 예를 들어보겠습니다.
 
-위의 [Git Repository for MD5 GPU Cracker][git-gpu-cracker] 링크는 제가 집접 만든 Python + CUDA C 언어로 만든 
+위의 [Git Repository for MD5 GPU Cracker][git-gpu-cracker] 링크는 제가 직접 만든 Python + CUDA C 언어로 만든 
 크래킹 툴입니다.
 
 먼저 파이썬으로 MD5 해쉬키를 만들겠습니다. 

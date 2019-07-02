@@ -107,8 +107,7 @@ correlation을 통해서 얼마만큼의 lag variables을 사용해야될지 알
 
 ### Lag Plot
 
-빠르게 correlation이 존재하는지 확인하는 방법은 step t 와 t-1 을 scatter plot으로 그래서 확인하는 방법입니다.<br>
-집접 데이터를 가공해서 만들수도 있지만, Pandas에서는 lag_plot이라는 함수를 통해서 쉽게 lag plot을 그려볼 수 있습니다.
+빠르게 correlation이 존재하는지 확인하는 방법은 step t 와 t-1 을 scatter plot으로 그래서 확인하는 방법입니다.<br>직접 데이터를 가공해서 만들수도 있지만, Pandas에서는 lag_plot이라는 함수를 통해서 쉽게 lag plot을 그려볼 수 있습니다.
 
 {% highlight python %}
 from pandas.plotting import lag_plot
@@ -370,7 +369,7 @@ def poly_pred(poly, x, lag, length):
     for _ in range(math.ceil(length/lag)):
         h = np.polyval(poly, h)
         result += h.reshape(-1).tolist()
-
+    
     result = np.array(result[:length])
     return result
 

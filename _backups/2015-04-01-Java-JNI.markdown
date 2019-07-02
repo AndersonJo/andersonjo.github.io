@@ -234,7 +234,7 @@ Hello World!
 # Spark 
 
 binaryFiles 그리고 toArray를 이용해서 Binary Data 를 SPark로 불러 올수 있습니다. 
-이때 중요한점은 IOUtils이나 따로 집접 불러낼경우, Concurrency Error를 일으키거나, 데이터가 gabbled 될 수 있습니다.
+이때 중요한점은 IOUtils이나 따로 직접 불러낼경우, Concurrency Error를 일으키거나, 데이터가 gabbled 될 수 있습니다.
 
 {% highlight scala %}
 val sPath = cl.getResource("wsq/r/").getPath

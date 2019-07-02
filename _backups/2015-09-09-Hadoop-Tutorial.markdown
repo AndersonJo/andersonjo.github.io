@@ -18,7 +18,7 @@ asset_path: /assets/posts/Hadoop-Tutorial/
 
 ## Starting HDFS
 
-start-dfs.sh 로 실행시켜주면 되지만, 만약 에러또는 디버깅이 필요할경우 Daemon으로 띄우지 말고, 집접 실행시키는 방법도 있습니다.
+start-dfs.sh 로 실행시켜주면 되지만, 만약 에러또는 디버깅이 필요할경우 Daemon으로 띄우지 말고, 직접 실행시키는 방법도 있습니다.
 
 {% highlight bash %}
 hdfs namenode

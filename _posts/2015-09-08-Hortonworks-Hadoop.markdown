@@ -455,7 +455,7 @@ sudo -u hbase hbase regionserver
 ### Ambari Matrix Collector
 
 일단 Ambari Matrix Collector는 2가지 모드가 있습니다. (embedded, distributed)
-embedded의 경우는 Hbase를 집접 하나 띄워서 (기존의 Hbase말고.. Ambari Matrix Collector 가 사용할 Hbase) 
+embedded의 경우는 Hbase를 직접 하나 띄워서 (기존의 Hbase말고.. Ambari Matrix Collector 가 사용할 Hbase) 
 여기에 저장시키고, distributed는 HDFS에다가 저장을 합니다.
 
 **Ambari -> Ambari Metrics -> Custom ams-hbase-site** 에서 다음을 추가시켜줍니다.

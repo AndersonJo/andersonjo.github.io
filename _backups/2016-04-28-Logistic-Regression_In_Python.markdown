@@ -54,7 +54,7 @@ Gradient Descent는 2가지 방법으로 process될 수 있습니다. <br>
 아래는 $$ w_j $$ weight의 partial derivative를 구하는 것입니다.<br>
 즉 전체 weights값이 아니기 때문에 $$ \sum $$ 같은것이 빠져있습니다.
 
-<i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#777;"> 아래의 공식은 실제 집접 구한 공식이기 때문에 틀린부분이 있을수도 있습니다.</i>
+<i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#777;"> 아래의 공식은 실제 직접 구한 공식이기 때문에 틀린부분이 있을수도 있습니다.</i>
 
 <span class="fa fa-exclamation-circle" aria-hidden="true" style="color:#777;"></span> $$ \frac{d}{dx} \ln x = \frac{1}{x}$$
 

@@ -303,7 +303,7 @@ hadoop-daemon.sh stop tasktracker
 {% endhighlight %}
 
 
-여기서 문제는 DataNode가 보이지가 않는데 이 경우 집접 DataNode를 실행시켜서 문제를 확인해볼수 있습니다.
+여기서 문제는 DataNode가 보이지가 않는데 이 경우 직접 DataNode를 실행시켜서 문제를 확인해볼수 있습니다.
 
 {% highlight bash %}
 $ hdfs datanode
@@ -365,7 +365,7 @@ start-yarn.sh
 1. [Microsoft Windows SDK v7.1][Microsoft Windows SDK v7.1]을 다운받고 설치합니다. (MS Prompt제거했음. Visuall Studio 10이하버젼으로 설치해야함)
 2. Visual Studio 2010을 토렌트로 다운받고 ㅡㅡ;; 설치합니다. (Prompt때문에..)
 3. [Maven][Maven]을 다운받고 설치합니다. (Binary로 C:\apache-maven에 설치후 PATH 지정해주면 됩니다.)
-4. [CMAKE][CMAKE] (cygwin에 있는 cmake말고..) CMake를 집접 설치 합니다.
+4. [CMAKE][CMAKE] (cygwin에 있는 cmake말고..) CMake를 직접 설치 합니다.
 4. [Cygwin][Cygwin]을 다운받고 설치합니다. (64bit  setup-x86_64.exe 파일로 설치합니다.)
 5. [Protobuf Releases][Protobuf Releases]에 들어가서 2.5를 다운받습니다. (바로 다운로드 받기 -> [Protobuf v2.5 Windows 32][Protobuf v2.5 Windows 32])
 6. [findbugs-sourceforge][findbugs-sourceforge] source를 설치합니다. (FINDBUGS_HOME을 설정)

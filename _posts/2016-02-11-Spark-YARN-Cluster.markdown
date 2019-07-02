@@ -17,7 +17,7 @@ tags: ['SBT', 'Scala', 'PySpark']
 
 ### conf/spark-env.sh
 
-vi로 집접 입력시, Ambari에서 Spark Roboot시킬때 마다, 초기화가 됩니다. 
+vi로 직접 입력시, Ambari에서 Spark Roboot시킬때 마다, 초기화가 됩니다. 
 
 {% highlight bash %}
 sudo -u spark vi /usr/hdp/current/spark-client/conf/spark-env.sh
@@ -171,7 +171,7 @@ object SparkPi {
 
 **IntelliJ**
 
-IntelliJ에서 집접 실행시킬수 있는데, java.lang.ClassNotFoundException: spark.pi.SparkPi$$anonfun$1 에러가 발생하면 다음의 코드르 넣어서 jar파일을 추가합니다.
+IntelliJ에서 직접 실행시킬수 있는데, java.lang.ClassNotFoundException: spark.pi.SparkPi$$anonfun$1 에러가 발생하면 다음의 코드르 넣어서 jar파일을 추가합니다.
 
 {% highlight scala %}
 spark.addJar("target/scala-2.11/scalatutorial_2.11-1.0.jar")

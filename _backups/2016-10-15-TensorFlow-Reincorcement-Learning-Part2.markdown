@@ -21,7 +21,7 @@ Part 2 에서는 DeepMind 팀에서 내놓은 Playing Atari with Deep Reinforcem
 ### 1. Introduction
 
 이미지 또는 음성등에서 바로 Agent를 학습시키는 것은 RL (Reinforcement Learning)에서 오래된 챌린지중의 하나입니다.<br>
-이전의 RL방식들은 손으로 집접 만든 features들이나 policy등을 통해서 성공할수 있었지만 이 경우 특정 문제를 해결하는데만 최적화가 되어 있어 <br>
+이전의 RL방식들은 손으로 직접 만든 features들이나 policy등을 통해서 성공할수 있었지만 이 경우 특정 문제를 해결하는데만 최적화가 되어 있어 <br>
 같은 방식으로 다른 문제들을 해결하기에는 어려운 점들이 많습니다.
 
 최근 Deep Learning의 발전들은 raw sensory data (이미지등)에서 high-level features들을 뽑아내는게 가능하게 만들었고,<br>
