@@ -458,4 +458,6 @@ folium.PolyLine([a, c], color='red').add_to(m)
 m
 {% endhighlight %}
 
+Angle: 53.38
+
 <img src="{{ page.asset_path }}geohash-cosine.png" class="img-responsive img-rounded img-fluid">
