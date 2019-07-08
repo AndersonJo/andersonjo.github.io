@@ -332,20 +332,23 @@ m
 
 ## Adding m meters to latitude and longitude 
 
+Latitude 그리고 Longitude에 더하고 빼기는 다음과 같이 합니다.
+
 {% highlight python %}
-def location_addition(lat, lng, meter):
-    new_lat = lat + (meter/1000/6359.0899) * (180/np.pi)
-    new_lng = lng + (meter/1000/6386) * (180/np.pi) / np.cos(lat * np.pi/180)
+def add_meter(lat, lng, lat_meter, lng_meter):
+    new_lat = lat + (lat_meter/1000/6359.0899) * (180/np.pi)
+    new_lng = lng + (lng_meter/1000/6386) * (180/np.pi) / np.cos(lat * np.pi/180)
     return new_lat, new_lng
 {% endhighlight %}   
  
  
  {% highlight python %}
- m = folium.Map(location=(lat, lng), zoom_start=12)
+
+m = folium.Map(location=(lat, lng), zoom_start=12)
 lat, lng = 37.499402, 127.054207
 
 folium.Marker((lat, lng), popup='<b>A</b>').add_to(m)
-new_lat, new_lng = location_addition(lat, lng, 500)
+new_lat, new_lng = add_meter(lat, lng, 500, 500)
 folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
 
 print('500m addition')
@@ -353,7 +356,7 @@ print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
 print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
 print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
 
-new_lat, new_lng = location_addition(lat, lng, 1000)
+new_lat, new_lng = add_meter(lat, lng, 1000, 1000)
 folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
 print('1000m addition')
 print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
@@ -361,7 +364,7 @@ print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
 print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
 print()
 
-new_lat, new_lng = location_addition(lat, lng, 5000)
+new_lat, new_lng = add_meter(lat, lng, 5000, 5000)
 folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
 print('5000m addition')
 print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
@@ -369,7 +372,7 @@ print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
 print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
 print()
 
-new_lat, new_lng = location_addition(lat, lng, 10000)
+new_lat, new_lng = add_meter(lat, lng, 10000, 10000)
 folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
 print('10000m addition')
 print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
@@ -378,13 +381,16 @@ print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
 print()
 
 
-new_lat, new_lng = location_addition(lat, lng, 50000)
+new_lat, new_lng = add_meter(lat, lng, 50000, 50000)
 folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
 print('50000m addition')
 print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
 print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
 print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
 print()
+
+# Visualization
+m
 {% endhighlight %}
  
  
@@ -415,3 +421,41 @@ Both      Addition: 70605.6694353784
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}geohash-adding-lat-lng.png" class="img-responsive img-rounded img-fluid">
+
+
+# Law of Cosine
+
+{% highlight python %}
+def calculate_angle(root, b, c):
+    ab = root - b
+    ac = root - c
+    angle = np.arccos(np.dot(ab, ac) / (np.linalg.norm(ab) * np.linalg.norm(ac)))
+    angle = np.nan_to_num(angle)
+    return np.degrees(angle)
+    
+a = np.array([0, 0])
+b = np.array([3, 0])
+c = np.array([0, 3])
+
+calculate_angle(a, b, c)  # 90.0
+{% endhighlight %}
+
+{% highlight python %}
+a = np.array([37.388641, 127.092138])  # Current location
+b = np.array([37.393937, 127.112294])  # Location
+c = np.array([37.364100, 127.122811])  # Call
+
+angle = calculate_angle(a, b, c)
+
+print('Angle:', round(angle, 2))
+
+m = folium.Map(location=a, zoom_start=13)
+folium.Marker(a, popup='<b>A Current Location</b>', icon=folium.Icon(color='black')).add_to(m)
+folium.Marker(b, popup='<b>B Favorite Off Location</b>', icon=folium.Icon(color='green')).add_to(m)
+folium.Marker(c, popup=f'<b>C Call {int(angle)} degree</b>', icon=folium.Icon(color='red')).add_to(m)
+folium.PolyLine([a, b], color='green').add_to(m)
+folium.PolyLine([a, c], color='red').add_to(m)
+m
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}geohash-cosine.png" class="img-responsive img-rounded img-fluid">
