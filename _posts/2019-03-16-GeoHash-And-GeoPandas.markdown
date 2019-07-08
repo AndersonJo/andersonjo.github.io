@@ -426,12 +426,26 @@ Both      Addition: 70605.6694353784
 # Law of Cosine
 
 {% highlight python %}
-def calculate_angle(root, b, c):
-    ab = root - b
-    ac = root - c
-    angle = np.arccos(np.dot(ab, ac) / (np.linalg.norm(ab) * np.linalg.norm(ac)))
+def calculate_angle(cur_location: np.ndarray, p1: np.ndarray, p2: np.ndarray) -> float:
+    """
+    :param cur_location: the current location of the latitude and the longitude.
+    :param p1: (latitude, longitude)
+    :param p2: (latitude, longitude)
+    :return: float
+    """
+    ab = cur_location - p1
+    ac = cur_location - p2
+
+    _norm = np.linalg.norm(ab) * np.linalg.norm(ac)
+    if _norm == 0:
+        return 0
+
+    _direction = np.dot(ab, ac) / _norm
+    _direction = min(max(_direction, -1), 1)
+    angle = np.arccos(_direction)
+    angle = np.degrees(angle)
     angle = np.nan_to_num(angle)
-    return np.degrees(angle)
+    return round(float(angle), 4)
     
 a = np.array([0, 0])
 b = np.array([3, 0])
