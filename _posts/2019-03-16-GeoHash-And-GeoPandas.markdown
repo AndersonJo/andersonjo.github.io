@@ -328,3 +328,90 @@ m
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}geohash-tiles.png" class="img-responsive img-rounded img-fluid">
+
+
+## Adding m meters to latitude and longitude 
+
+{% highlight python %}
+def location_addition(lat, lng, meter):
+    new_lat = lat + (meter/1000/6359.0899) * (180/np.pi)
+    new_lng = lng + (meter/1000/6386) * (180/np.pi) / np.cos(lat * np.pi/180)
+    return new_lat, new_lng
+{% endhighlight %}   
+ 
+ 
+ {% highlight python %}
+ m = folium.Map(location=(lat, lng), zoom_start=12)
+lat, lng = 37.499402, 127.054207
+
+folium.Marker((lat, lng), popup='<b>A</b>').add_to(m)
+new_lat, new_lng = location_addition(lat, lng, 500)
+folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
+
+print('500m addition')
+print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
+print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
+print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
+
+new_lat, new_lng = location_addition(lat, lng, 1000)
+folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
+print('1000m addition')
+print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
+print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
+print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
+print()
+
+new_lat, new_lng = location_addition(lat, lng, 5000)
+folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
+print('5000m addition')
+print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
+print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
+print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
+print()
+
+new_lat, new_lng = location_addition(lat, lng, 10000)
+folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
+print('10000m addition')
+print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
+print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
+print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
+print()
+
+
+new_lat, new_lng = location_addition(lat, lng, 50000)
+folium.Marker((new_lat, new_lng), popup='<b>500m</b>').add_to(m)
+print('50000m addition')
+print('Latitude  Addition:', distance((lat, lng), (new_lat, lng)).m)
+print('Longitude Addition:', distance((lat, lng), (lat, new_lng)).m)
+print('Both      Addition:', distance((lat, lng), (new_lat, new_lng)).m)
+print()
+{% endhighlight %}
+ 
+ 
+{% highlight python %}
+500m addition
+Latitude  Addition: 500.00005283004964
+Longitude Addition: 500.0049490970048
+Both      Addition: 707.0996972853251
+1000m addition
+Latitude  Addition: 1000.0004879418325
+Longitude Addition: 1000.0098977428217
+Both      Addition: 1414.178421176091
+
+5000m addition
+Latitude  Addition: 5000.017733038395
+Longitude Addition: 5000.049416527164
+Both      Addition: 7070.052813071016
+
+10000m addition
+Latitude  Addition: 10000.073709301136
+Longitude Addition: 10000.098381885806
+Both      Addition: 14138.005608237756
+
+50000m addition
+Latitude  Addition: 50001.900230356274
+Longitude Addition: 50000.41972205647
+Both      Addition: 70605.6694353784
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}geohash-adding-lat-lng.png" class="img-responsive img-rounded img-fluid">
