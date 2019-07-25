@@ -423,7 +423,7 @@ Both      Addition: 70605.6694353784
 <img src="{{ page.asset_path }}geohash-adding-lat-lng.png" class="img-responsive img-rounded img-fluid">
 
 
-# Law of Cosine
+# Angle Calculation
 
 {% highlight python %}
 def calculate_angle(cur_location: np.ndarray, p1: np.ndarray, p2: np.ndarray) -> float:
