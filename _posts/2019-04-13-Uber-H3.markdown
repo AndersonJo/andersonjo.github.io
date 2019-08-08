@@ -398,3 +398,35 @@ m
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}h3-06.png" class="img-responsive img-rounded img-fluid">
+
+
+## Tooltip
+
+`tootip = folium.GeoJsonTooltip(fields=['h3'])` 사용해서 tooltip을 만들수 있습니다.<br>
+Tooltip은 mouseover 시에 나타납니다. 
+
+{% highlight python %}
+gangnam = [37.508811, 127.040978]
+gangnam_h3 = h3.geo_to_h3(gangnam[0], gangnam[1], res=7)
+neighbors = h3.k_ring(gangnam_h3, ring_size=2)
+display(neighbors)
+{% endhighlight %}
+
+{% highlight python %}
+def to_polygon(l):
+    return Polygon(h3.h3_to_geo_boundary(l, geo_json=True))
+
+n = len(neighbors)
+df = gpd.GeoDataFrame({'h3': list(neighbors), 
+                       'value': np.random.randint(0, n, size=n)})
+df['geometry'] = df['h3'].apply(to_polygon)
+df.crs = {'init': 'epsg:4326'}
+display(df.head())
+
+m = folium.Map(gangnam, zoom_start=12)
+tootip = folium.GeoJsonTooltip(fields=['h3'])
+folium.GeoJson(df, tooltip=tootip).add_to(m)
+m
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}h3-07.png" class="img-responsive img-rounded img-fluid">
