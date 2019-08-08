@@ -4,7 +4,7 @@ title:  "N-Step Advantage Actor Critic Model"
 date:   2019-07-20 01:00:00
 categories: "reinforcement-learning"
 asset_path: /assets/images/
-tags: ['q-value', 'dqn', 'policy', 'value', 'A2C', 'A3C', 'N-Step']
+tags: ['q-value', 'dqn', 'policy', 'value', 'A2C', 'A3C', 'N-Step', 'Generalized']
 ---
 
 
@@ -322,6 +322,9 @@ $$ \begin{align}  R_{t+1} + \gamma (R_{t+2} + \gamma (R_{t+3} + \gamma (R_{t+4} 
 * $$ \gamma $$ : 0~1 사이의 값 (보통 0.99)
 
 
+# Generalized Advantage Estimation (GAE)
+
+
 
 ## Infinite Geometric Series Formula
 
@@ -341,3 +344,71 @@ S_{\infty} &= \frac{\alpha}{1-r}
 이경우 아래와 같이 모두 합한 값이 1이 되게 만들려고 하는 의도 입니다.
 
 $$ (1-r) \cdot \frac{\alpha}{1-r} = \alpha $$
+
+
+{% highlight python %}
+lambda_ = 0.95
+
+print('sum method   :', sum([lambda_**i for i in range(1000)]))
+print('approximation:', 1 / (1-lambda_))
+{% endhighlight %}
+
+{% highlight bash %}
+sum method   : 19.999999999999982
+approximation: 19.999999999999982
+{% endhighlight %}
+
+
+
+## Generalized Advantage Estimation ( $$ \lambda - \text{return} $$ )
+
+https://arxiv.org/pdf/1506.02438.pdf
+
+Monte carlo의 경우 episode가 끝날때까지 기다려야 하기 때문에 학습 속도에 있어서 문제가 있으며, <br>
+1-step temporal difference learning의 경우 속도는 빠르지만 bias한 것이 문제가 될 수 있습니다.<br>
+그래서 N-Step Learning이 나오게 되었지만, 역시 여전히 최적의 n값을 지정하는 것은 다시 문제가 될 수 있습니다. 
+
+$$ TD(\lambda) $$ 는 이러한 문제를 해결하기 위해서 나온 알고리즘입니다. <br>
+기본적인 아이디어는 단 하나의 최적의 n값을 사용하는것이 아니라 모든 가능한 n-step TD의 weighted sum을 적용하는 것입니다. 
+
+먼저 advantage function을 정의하면 다음과 같습니다. <br>
+
+$$ \text{advantage function} = A(s_t, a_t) = r_t + \gamma V(s_{t+1}) - V(s_t)  $$
+
+
+n-step에 따라서 advantage function의 모습은 다음과 같이 변합니다.
+
+
+$$ \begin{align} 
+& A^{(1)}_t = \delta_t &  &= r_t + \gamma V(s_{t+1}) - V(s_t) \\
+& A^{(2)}_t = \delta_t + \gamma \delta_{t+1} &  &= r_t + \gamma r_{t+1} + \gamma^2 V(s_{t+2}) - V(s_t) \\
+& A^{(3)}_t = \delta_t + \gamma \delta_{t+1} + \gamma ^2 \delta_{t+2} &  &= r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \gamma^3 V(s_{t+3}) - V(s_t)
+\end{align} $$
+
+
+최종적으로 Generalized Advantage Estimation (GAE) 는 exponentially-weighted average of n-step estimators 로 정의가 될 수 있습니다. <br>
+
+
+$$
+\begin{align}
+A_t^{GAE(\gamma,\lambda)} &= (1-\lambda)\Big(A_{t}^{(1)} + \lambda A_{t}^{(2)} + \lambda^2 A_{t}^{(3)} + \cdots \Big) \\
+&= (1-\lambda)\Big(\delta_t^V + \lambda(\delta_t^V + \gamma \delta_{t+1}^V) + \lambda^2(\delta_t^V + \gamma \delta_{t+1}^V + \gamma^2 \delta_{t+2}^V)+ \cdots \Big)  \\
+&= (1-\lambda)\Big( \delta_t^V(1+\lambda+\lambda^2+\cdots) + \gamma\delta_{t+1}^V(\lambda+\lambda^2+\cdots) + \cdots \Big) \\
+&= (1-\lambda)\left(\delta_t^V \frac{1}{1-\lambda} + \gamma \delta_{t+1}^V\frac{\lambda}{1-\lambda} + \cdots\right) \\
+&= \sum_{l=0}^\infty (\gamma \lambda)^l \delta_{t+l}^{V}
+\end{align} $$
+
+
+맨 아래쪽 공식  $$ \sum_{l=0}^\infty (\gamma \lambda)^l \delta_{t+l}^{V} $$ 을 보면 최종적으로 매우 간결한 공식이 나온것을 알 수 있습니다.<br>
+정말 아름답습니다. <br>
+저 위의 복잡한 공식이 이렇게 간결하게 효율적으로 씌여질수 있다는게 놀라울 정도 입니다.
+
+
+* $$ \lambda $$ : 0 ~ 1 사이의 값
+* $$ \delta_{t+l} $$ : 해당 시점의 advantage function $$ r_{t+l} + \gamma V(s_{t+l+1}) - V(s_{t+l}) $$ 입니다.
+* $$ GAE(\gamma, 0) $$ : $$ A_t = \delta_t = r_t + \gamma V(s_{t+1}) - V(s_t) $$
+* $$ GAE(\gamma, 1) $$ : $$ A_t = \sum^\infty_{j=0} \gamma^j r_{t+j} - V(s_t) $$ 
+
+즉 $$ \lambda $$ 값을  0로 맞추면 1-step TD가 되고, 1로 맞추면 Monte Carlo가 되며, <br>
+이 두가지를 서로 섞었다고 볼 수 있습니다.
+
