@@ -1,0 +1,62 @@
+---
+layout: post
+title:  "Kepler.gl in Jupyter"
+date:   2019-07-20 01:00:00
+categories: "reinforcement-learning"
+asset_path: /assets/images/
+tags: ['folium', 'kepler', 'python', 'h3']
+---
+
+
+# Installation
+
+{% highlight bash %}
+sudo pip3 install keplergl
+{% endhighlight %}
+
+
+# Tutorial
+
+## Kepler 실행하기 
+
+add_data(pandas-dataframe) 을 사용하여 데이터를 입력할 수 있습니다. 
+
+{% highlight python %}
+from keplergl import KeplerGl 
+m = KeplerGl(height=500)
+m.add_data(dataframe)
+m
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}kepler-01.png" class="img-responsive img-rounded img-fluid">
+
+크롬에 새창을 띄워서 볼 수도 있습니다.
+
+## 크롬 띄우기
+
+{% highlight python %}
+m.save_to_html(file_name='tutorial.html')
+!google-chrome tutorial.html
+{% endhighlight %}
+
+## H3 시각화
+
+{% highlight python %}
+def to_polygon(l):
+    return Polygon(h3.h3_to_geo_boundary(l, geo_json=True))
+
+vis_df = service_df.iloc[:100000]
+vis_df = gpd.GeoDataFrame(vis_df)
+vis_df['geometry'] = vis_df['origin_h3'].apply(to_polygon)
+vis_df.crs = {'init': 'epsg:4326'}
+{% endhighlight %}
+
+
+{% highlight python %}
+from keplergl import KeplerGl 
+m = KeplerGl(height=600)
+m.add_data(vis_df)
+m
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}kepler-02.png" class="img-responsive img-rounded img-fluid">
