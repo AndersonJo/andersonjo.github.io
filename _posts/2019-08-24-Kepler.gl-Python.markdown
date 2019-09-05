@@ -2,7 +2,7 @@
 layout: post
 title:  "Kepler.gl in Jupyter"
 date:   2019-07-20 01:00:00
-categories: "reinforcement-learning"
+categories: "code-snippet"
 asset_path: /assets/images/
 tags: ['folium', 'kepler', 'python', 'h3']
 ---

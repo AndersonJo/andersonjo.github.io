@@ -2,7 +2,7 @@
 layout: post
 title:  "A/B Testing, Confidence Interval, P-Value"
 date:   2019-05-25 01:00:00
-categories: "reinforcement-learning"
+categories: "statistics"
 asset_path: /assets/images/
 tags: ['confidence-interval', 'confidence-level', 'p-value', 'ab-testing', 'standard-error']
 ---

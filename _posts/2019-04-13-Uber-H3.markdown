@@ -357,7 +357,7 @@ h3.h3_to_geo_boundary(gangnam_h3)
 gangnam = [37.508811, 127.040978]
 gangnam_h3 = h3.geo_to_h3(gangnam[0], gangnam[1], res=7)
 neighbors = h3.k_ring(gangnam_h3, ring_size=2)
-display(neighbors)
+display(neighbors)reinforcement-learning
 {% endhighlight %}
 
 {% highlight bash %}
