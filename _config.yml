@@ -17,3 +17,6 @@ github_username:  AndersonJo
 rouge: pygments
 markdown: kramdown
 permalink: pretty
+
+gems:
+  - jekyll-numbered-headings
