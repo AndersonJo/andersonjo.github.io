@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Sentiment Analysis for extracting the cause for ratings"
-date:   2019-09-07 01:00:00
+date:   2019-10-22 01:00:00
 categories: "nlp"
 asset_path: /assets/images/
 tags: ['naive-bayes', 'natural-language-processing']
