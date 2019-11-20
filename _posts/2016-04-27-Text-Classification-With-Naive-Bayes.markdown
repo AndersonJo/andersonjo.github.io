@@ -90,11 +90,19 @@ Naive Bayes는 이러한 현실적인 가정을 무시하고 모든 단어(또�
 
 Naive Bayes의 공식은 다음과 같습니다.
 
-$$ P(C_L | F_1, ..., F_n) = \frac{1}{Z} P(C_L) \prod^n_{i=1} P(F_i | C_L) $$
+$$ P(Y_L | x_1, ..., x_n) = \frac{1}{Z} P(Y_L) \prod^n_{i=1} P(x_i | Y_L) $$
 
-- $$ C_L $$ : 클래스를 타나내며 예제에서는 Spam 또는 Ham
-- $$ F $$ : features들로서 예제에서는 각각의 단어를 가르킴
+- $$ Y_L $$ : 클래스를 타나내며 예제에서는 Spam 또는 Ham
+- $$ X = (x_1, x_2, x_3, ..., x_n) $$ : features들로서 예제에서는 각각의 단어를 가르킴
 - $$ \frac{1}{Z} $$ : scaling factor로서 계산된 결과값을 확률로 변형시켜줍니다.
+
+
+하지만 위의 공식의 문제점은 $$ \prod^n_{i=1} P(x_i \| Y_L) $$ 입니다.<br>
+연속적인 확률들을 모두 곱하게 되면, 값은 점점 작아지면서 underflow가 발생하게 되고 그냥 0값이 됩니다.<br>
+Machine learning에서 이 문제는 흔하고, 항상 거의 동일한 방법으로 문제를 해결합니다.<br>
+바로 log likelihood를 사용하면 됩니다.
+
+$$ \frac{1}{Z} \log P(Y_L) \sum^n_{i=1} \log P(x_i | Y_L) $$
 
 
 ## Example
