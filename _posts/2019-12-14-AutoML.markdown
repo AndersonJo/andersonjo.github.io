@@ -258,7 +258,23 @@ RMSE: 51.39984733897281
 R^2 : 0.7327162464614351
 {% endhighlight %}
 
+
+직접 모델을 불러와서 하는 것은 다음과 같이 합니다. 
+
+{% highlight python %}
+y_preds = []
+for weight, model in automl.get_models_with_weights():
+    y_pred = model.predict(x_test)
+    y_preds.append(y_pred * weight)
+    
+y_pred = np.sum(y_preds, axis=0)
+visualize_regression(y_test, y_pred)
+{% endhighlight %}
+
+
+
 <img src="{{ page.asset_path }}automl-auto-sklearn.png" class="img-responsive img-rounded img-fluid">
+
 
 
 
