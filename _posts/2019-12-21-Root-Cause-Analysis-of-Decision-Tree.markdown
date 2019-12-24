@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Cause Analysis of Decision Tree"
+title:  "Root Cause Analysis of Decision Tree"
 date:   2019-12-14 01:00:00
 categories: "machine-learning"
 asset_path: /assets/images/
