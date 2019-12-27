@@ -167,7 +167,7 @@ Feature Importance를 봐도 어떤것을 중요하게 봐야 할지 알 수 있
 
 {% highlight python %}
 columns = x_train.columns
-iters = zip(clf.feature_importances_, columns[feature_importances])
+iters = zip(clf.feature_importances_, columns[np.argsort(clf.feature_importances_)[::-1]])
 df = pd.DataFrame([[c, sum(features == c), fi] for fi, c in iters], 
              columns=['feature', 'n_use', 'importance'])
 df.sort_values('importance', ascending=False, inplace=True)
