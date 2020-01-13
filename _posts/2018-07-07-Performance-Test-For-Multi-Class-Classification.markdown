@@ -119,7 +119,12 @@ print(f'Recall (macro)   : {recall_macro:.2}')
 print(f'Recall (weighted): {recall_weighted:.2}')
 {% endhighlight %}
 
-
+{% highlight text %}
+Recalls          : [0.5 0.4 1.  0. ]
+Recall (micro)   : 0.5
+Recall (macro)   : 0.47
+Recall (weighted): 0.5
+{% endhighlight %}
 
 ## Precision
 
