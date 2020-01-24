@@ -12,280 +12,213 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 <img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded img-fluid">
 </header>
 
-# Install CUDA
+**2020년 1월 기준으로 업데이트 했습니다.**
 
-### Current Nvidia Card
+
+# Install Nvidia Driver and CUDA for TensorFlow
+
+## Ubuntu 18.04 NVIDIA Driver 
+
+### Check devices
 
 현재 그래픽 카드 모델을 알고 싶을때는...
 {% highlight bash %}
 lspci -vnn | grep -i VGA -A 12
 {% endhighlight %}
 
-### Install Linux Kernel & Headers
+어떤 드라이버를 설치해야 되는지는 다음의 명령어로 알수 있습니다. 
 
 {% highlight bash %}
-sudo apt-get install linux-headers-generic
+$ ubuntu-drivers devices
+vendor   : NVIDIA Corporation
+model    : GP104 [GeForce GTX 1070]
+driver   : nvidia-driver-435 - distro non-free
+driver   : nvidia-driver-410 - third-party free
+driver   : nvidia-driver-415 - third-party free
+driver   : nvidia-driver-430 - third-party free
+driver   : nvidia-driver-440 - third-party free recommended
+driver   : nvidia-driver-390 - third-party free
+driver   : xserver-xorg-video-nouveau - distro free builtin
 {% endhighlight %}
 
-### Install CUDA 10.0
+위에서 보면, `nvidia-driver-440`을 추천하고 있습니다. <br>
+apt로 설치하면 됩니다. 
 
-다음의 Dependencies를 설치해줍니다.
+만약 위의 명령어를 실행할수 없지만, Nvidia graph card의 제품명을 알고 있다면 [Download NVIDIA Driver](https://www.nvidia.com/Download/driverResults.aspx/156086/en-us)
+에 들어가서 **다운받지 말고** 버젼만 확인할수 있습니다. <br>
+예를 들어 GTX-1070 의 경우 2020년 1월 25일 기준으로 440.44 가 가장 최신입니다. (다운받지 마세요. 우리는 apt로 해결할겁니다.)
 
-{% highlight bash %}
-sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc
-{% endhighlight %}
-
-이전에 설치되어있는 CUDA를 제거합니다.
-
-{% highlight bash %}
-sudo apt-get purge cuda
-{% endhighlight %}
-
-아래의 주소에서 CUDA 10.0 을 다운로드 받습니다. 
-[Download CUDA 10.0](https://developer.nvidia.com/cuda-10.0-download-archive)
-
-{% highlight bash %}
-sudo dpkg -i cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb
-sudo apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub
-sudo apt-get update
-sudo apt-get install cuda
-{% endhighlight %}
-
-그 다음으로 .bashrc에 다음을 추가해줍니다.
-
-{% highlight bash %}
-# CUDA & CUDNN
-export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib:/usr/local/lib:/usr/local/cuda/extras/CUPTI/lib64/
-{% endhighlight %}
-
-
-설치된 버젼을 확인합니다. 
-
-{% highlight bash %}
-$ nvcc -V
-nvcc: NVIDIA (R) Cuda compiler driver
-Copyright (c) 2005-2018 NVIDIA Corporation
-Built on Sat_Aug_25_21:08:01_CDT_2018
-Cuda compilation tools, release 10.0, V10.0.130
-{% endhighlight %}
-
-
-
-
-## Source로 설치하기
-
-1. 다운받은 폴더로 들어갑니다.
-2. chmod로 실행파일로 바꿔줍니다.
-3. CTRL + ALT + F3 또는 CTRL + ALT + F1 또는 Ubuntu Recovery Mode -> Command Shell
-4. 로그인
-5. init 3
-6. sudo service lightdm stop
-7. sudo su
-8. ./NVIDIA*.run 파일 실행
-9. reboot
-
-만약 Unsupported Compiler 에러가 나면은, --override compiler 옵션을 붙여줍니다. 
-
-{% highlight bash %}
-$ cuda_7.5.18_linux.run --override compiler
-{% endhighlight %}
-
-
-
-### Install CuDNN
-
-또한 cuDNN v4가 설치되어 있어야 합니다. v5설치시 TensorFlow는 source로 빌드되어야 합니다.<br>
-[Download cuDNN][Download cuDNN]
-
-*현재 TensorFlow가 cuDNN 4.0을 지원하고 있기 때문에 5.0대신에 4.0을 받습니다.<br>
-다운을 받고 압축을 풀면 다음과 같은 구조로 되어 있습니다.
-
-{% highlight bash %}
-├── include
-│   └── cudnn.h
-└── lib64
-    ├── libcudnn.so -> libcudnn.so.4
-    ├── libcudnn.so.4 -> libcudnn.so.4.0.7
-    ├── libcudnn.so.4.0.7
-    └── libcudnn_static.a
-{% endhighlight %}
-
-안에 들어 있는 파일들을 CUDA Toolkit이 설치된 /usr/local/cuda 에 카피해주면됩니다.
-
-{% highlight bash %}
-tar xvzf cudnn-7.5-linux-x64-v4.tgz
-chmod 644 cuda/include/*
-sudo cp -r ./cuda/* /usr/local/cuda/
-{% endhighlight %}
-
-
-
-
-
-
-
-
-
-
-
-
-# Install TensorFlow from Source
-
-TensorFlow build버젼은 기본적으로 CUDA Toolkit 7.5 그리고 cuDNN v5 와 작동하지만,<br> 
-그 이상의 버젼에서 돌리기 위해서는 반드시 source에서 설치해야 합니다.
-
-<bold style="color:red; font-weight:bold;">Pascal Architecture는 CUDA 8.0부터 지원됩니다. 즉 GTX1080, GTX1070 사용지 반드시 source로 install해야 합니다.</bold>
 
 ### Install Dependencies
 
 {% highlight bash %}
-sudo apt-get install libcurl3-dev
+sudo apt-get install linux-headers-generic
+sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc build-essential
 {% endhighlight %}
 
 
-### Install Python Wheel
+### Install Nvidia Driver
+
+먼저 graphic-driver PPA를 추가합니다.
 
 {% highlight bash %}
-# For Python 2.7:
-$ sudo pip install wheel
-
-# For Python 3.x:
-$ sudo pip3 install wheel
+sudo add-apt-repository ppa:graphics-drivers
+sudo apt update
 {% endhighlight %}
 
-
-### Install Bazel
-
-반드시 0.4 이상의 버젼 (0.3은 안됨)을 설치해야 합니다. 
+아래의 명령어로 Nvidia driver를 자동으로 설치합니다.
 
 {% highlight bash %}
-$ echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-$ curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+sudo ubuntu-drivers autoinstall
 {% endhighlight %}
 
-Update and Install Bazel
+만약 수동으로 설치를 하고자 한다면, 위에서 확인한 Nvidia driver version을 사용해서 설치를 할 수도 있습니다.<br>
+(아래의 xxx부분을 확인된 버젼으로 변경해줘야 합니다. xxx그대로 사용하지 마세요. <br>
+현재 글쓰는 시점에서 GTX-1070의 가장 최신 버젼은 440이네요. 즉 `sudo apt install nvidia-driver-440` )
 
 {% highlight bash %}
-sudo apt-get install pkg-config zip g++ zlib1g-dev unzip
-sudo apt-get update
-sudo apt-get install bazel
-sudo apt-get upgrade bazel
+sudo apt install nvidia-driver-xxx
 {% endhighlight %}
 
-0.4 이상의 버젼인지 확인합니다.
-{% highlight bash %}
-$ bazel version
-Build label: 0.4.3
-{% endhighlight %}
+### Disable Nouveau 
 
-
-
-**Check CUDA Version**
+기존 우분투에서 지원하는 그래픽 드라이버를 제거합니다.<br>
+Nvidia 그래픽 드라이버와 서로 충돌이 나면서 이후 문제가 생기는 것을 방지 합니다.
 
 {% highlight bash %}
-$ nvcc --version
-nvcc: NVIDIA (R) Cuda compiler driver
-Copyright (c) 2005-2015 NVIDIA Corporation
-Built on Tue_Aug_11_14:27:32_CDT_2015
-Cuda compilation tools, release 7.5, V7.5.17
+sudo vi  /etc/modprobe.d/nouveau-blacklist.conf 
 {% endhighlight %}
 
-
-
-### Install TensorFlow from source
+`/etc/modprobe.d/nouveau-blacklist.conf` 에 아래의 내용을 넣습니다. 
 
 {% highlight bash %}
-git clone https://github.com/tensorflow/tensorflow
+blacklist nouveau
+blacklist lbm-nouveau
+options nouveau modeset=0
+alias nouveau off
+alias lbm-nouveau off
+{% endhighlight %}
+
+이후 다음의 명령어로 부팅을 업데이트 해줍니다.
+
+{% highlight bash %}
+sudo update-initramfs -u
+{% endhighlight %}
+
+이후 reboot 시킵니다.
+
+### Verify Nvidia Driver Installation
+
+가장 쉬운 방법은 nvidia-smi로 체크하는 것입니다.
+
+{% highlight bash %}
+$ nvidia-smi
+
+Fri Jan 24 23:20:34 2020       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 440.48.02    Driver Version: 440.48.02    CUDA Version: 10.2     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  GeForce GTX 1070    Off  | 00000000:01:00.0  On |                  N/A |
+|  0%   56C    P8    14W / 230W |    834MiB /  8118MiB |      1%      Default |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
+|    0      1263      G   /usr/lib/xorg/Xorg                            40MiB |
+|    0      1310      G   /usr/bin/gnome-shell                          51MiB |
+|    0      1567      G   /usr/lib/xorg/Xorg                           374MiB |
+|    0      1696      G   /usr/bin/gnome-shell                         189MiB |
+|    0      2082      G   ...rson/apps/pycharm-2019.3.2/jbr/bin/java    14MiB |
+|    0      2343      G   ...uest-channel-token=16905822469259145173   158MiB |
++-----------------------------------------------------------------------------+
+{% endhighlight %}
+
+
+
+## Install CUDA Toolkit & CUDA
+
+### Install CUDA Toolkit
+
+[Tensorflow GPU Support](https://www.tensorflow.org/install/gpu) 에 들어가서 먼저, TensorFlow 가 지원하는 CUDA버젼을 알아야 합니다.<br>
+현재 2020년 1월의 기준으로 CUDA 10.1 을 요구하고 있습니다.  
+
+[Download CUDA](https://developer.nvidia.com/cuda-downloads) 에서 맞는 CUDA 버젼을 다운로드 받습니다.
+참고로 10.1의 경우 [legacy releases](https://developer.nvidia.com/cuda-10.1-download-archive-update2)에 들어가서 다운로드 받아야 합니다.
+
+문서상에 따르면 10.1의 경우 다음과 같이 설치합니다. (2020년 1월 기준)<br>
+이때 우리는 이미 `sudo apt install nvidia-driver-xxx` 명령어로 driver를 최신으로 설치한 상태이기 때문에, <br>
+Drvier는 따로 설치할 필요 없습니다. 따라서 Nvidia drvier는 최신으로 사용하고, CUDA Toolkit은 TensorFlow에 맞춰서 <br>
+legacy 를 사용하는 케이스가 생길수 있습니다.  
+
+{% highlight bash %}
+wget http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run
+sudo sh cuda_10.1.243_418.87.00_linux.run
+{% endhighlight %}
+
+이후 .bashrc에 다음을 설정합니다. 
+
+{% highlight bash %}
+# CUDA & CUDNN
+export CUDAHOME=/usr/local/cuda
+export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDAHOME/lib64:$CUDAHOME/lib:/usr/local/lib:$CUDAHOME/extras/CUPTI/lib64/
+{% endhighlight %}
+
+
+### Install cuDNN
+
+[cuDNN 다운로드](https://developer.nvidia.com/cudnn) 에서 동일한 버젼의 (현재 문서에서는 10.1) cuDNN을 찾아서 다운로드 합니다.
+
+다운로드 받은 cuDNN의 구조는 다음과 같습니다. 
+
+{% highlight bash %}
+cuda
+├── include
+│   └── cudnn.h
+├── lib64
+│   ├── libcudnn.so -> libcudnn.so.7
+│   ├── libcudnn.so.7 -> libcudnn.so.7.6.5
+│   ├── libcudnn.so.7.6.5
+│   └── libcudnn_static.a
+└── NVIDIA_SLA_cuDNN_Support.txt
 {% endhighlight %}
 
 {% highlight bash %}
-cd tensorflow
-./configure
+tar xvzf cudnn-7.5-linux-x64-v4.tgz
+chmod 644 cuda/include/*
+sudo cp -P ./cuda/lib64/* /usr/local/cuda/lib64/
+sudo cp ./cuda/include/cudnn.h /usr/local/cuda/include/
 {% endhighlight %}
 
 
-아래는 예제 입니다.
 
-| Question | Answer | ETC |
-|:---------|:-------|-----|
-| Please specify the location of python. [Default is /usr/bin/python]: | /usr/bin/python3.5 | |
-| Do you wish to use jemalloc as the malloc implementation? [Y/n] | y | |
-| Do you wish to build TensorFlow with Google Cloud Platform support? | y | |
-| Do you wish to build TensorFlow with Hadoop File System support? | y | |
-| Do you wish to build TensorFlow with the XLA just-in-time compiler (experimental)? | y | |
-| Do you wish to build TensorFlow with OpenCL support? | n | SYCL 1.2 is needed |
-| Do you wish to build TensorFlow with CUDA support? | y | |
-| Do you want to use clang as CUDA compiler? | n | NVCC사용시 no |
-| Please specify which gcc should be used by nvcc as the host compiler. [Default is /usr/bin/gcc]: | /usr/bin/gcc-4.9 | gcc 5 이상쓰면 안됨 |
-| Please specify the CUDA SDK version you want to use, e.g. 7.0. | 8.0 | nvcc --version 으로 알 수 있음 |
-| Please note that each additional compute capability <br>significantly increases your build time and binary size.<br>[Default is: "3.5,5.2"]: | 6.1 | 아래 compute capability 참고 |
+## TensorFlow
 
-
-configure시에 [Cuda Compute Capabilities][Cuda Compute Capabilities] 를 참고<br>
-설치는 먼저 pip package를 만들고 그것을 설치합니다.
-
-| GPU | Compute Capability |
-|:----|:-------------------|
-| GeForce GTX Titan X | 6.1 |
-| GeForce GTX 1080	| 6.1  |
-| GeForce GTX 1070	| 6.1  |
-| GeForce GTX 980	| 5.2  |
-| GeForce GTX 970	| 5.2  |
-| GeForce GTX 960	| 5.2  |
-
-
-
-
+매우 쉽습니다.
 
 {% highlight bash %}
-$ bazel clean
-$ bazel build --copt=-march=native --action_env="LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mfpmath=both -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_package --verbose_failures
-$ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-$ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
+sudo pip3 install tensorflow-gpu keras
 {% endhighlight %}
 
-| Option | Description | me |
-|:-------|:------------|:---|
-| mavx  | Advanced Vector Extensions - [특정 프로세서](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#CPUs_with_AVX) 에서만 지원 (2008년 이후 Intel CPU에서 지원) | X |
-| mavx2  | Advanced Vector Extensions 2 - [특정 프로세서](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#CPUs_with_AVX2) 에서만 지원 (2008년 이후 Intel CPU에서 지원) | X |
-| fma    | FMA instruction set - 2013년 이후 Intel CPU에서 지원 | X |
-| -march=native | GCC Compilation 옵션 - 그냥 사용하면 됨 | | 
-
-에러가 나면 bazel build시에 copt를 삭제 해보는것도 방법입니다.
-
-{% highlight bash %}
-$ bazel build --copt=-march=native -c opt --config=cuda --action_env="LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" //tensorflow/tools/pip_package:build_pip_package  --verbose_failures
-$ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-$ sudo pip install /tmp/tensorflow_pkg/tensorflow-*.whl
-{% endhighlight %}
-
-
-### 설치 확인 
-
-설치 확인 방법은 ipython후 다음과 같이 합니다.
+설치 확인은 다음과 같이 합니다.
 
 {% highlight python %}
 import tensorflow as tf
-hello = tf.constant('Hello, TensorFlow!')
-sess =tf.Session() # 이때 GPU Device를 찾고 결과를 보여줍니다.
-print(sess.run(hello)) # Hello, TensorFlow!
+tf.config.list_physical_devices('GPU')
 
-a = tf.constant(10)
-b = tf.constant(32)
-print(sess.run(a + b)) # 42
+#  [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
 {% endhighlight %}
 
-TensorFlow 1.7 이상이라면 Dynamic graph또한 지원합니다.
-Pytorch에서 영감을 받은듯 합니다.
 
-{% highlight python %}
-import tensorflow as tf
-import numpy as np
-tf.enable_eager_execution()
-x = np.array([[2., 4.]])
-print(tf.matmul(x, x.T))
-{% endhighlight %}
+
+
+
+
 
 
 # TensorFlow 101
