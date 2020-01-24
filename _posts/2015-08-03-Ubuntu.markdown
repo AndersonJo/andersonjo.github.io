@@ -43,16 +43,18 @@ sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 lib32z1
 ### Oracle Java 
 
 {% highlight bash%}
-sudo add-apt-repository ppa:webupd8team/java
+sudo add-apt-repository ppa:linuxuprising/java
 sudo apt-get update
-sudo apt-get install oracle-java8-installer
+sudo apt-get install oracle-java13-installer
 {% endhighlight %}
 
 
 ### 벼루 (Optional)
 
+한글 104키로 해야 함
+
 {% highlight bash%}
-sudo apt-get install uim uim-byeoru
+sudo apt-get install uim
 uim-pref-gtk
 {% endhighlight %}
 
@@ -89,12 +91,6 @@ sudo add-apt-repository ppa:freyja-dev/unity-tweak-tool-daily
 sudo apt-get update
 sudo apt-get install unity-tweak-tool
 unity-tweak-tool
-{% endhighlight %}
-
-### Awesome Tools (Optional)
-
-{% highlight bash %}
-sudo apt-get install vim gthumb smplayer
 {% endhighlight %}
 
 
@@ -164,96 +160,9 @@ fs.inotify.max_user_watches = 524288
 sudo sysctl -p
 {% endhighlight %}
 
-### Ipython Custom Configuration
-
-**custom.css**
-
-{% highlight bash %}
-~/.ipython/custom/custom.css
-{% endhighlight %}
-
-{% highlight css %}
-table {float: left};
-{% endhighlight %}
 
 
 
-
-
-
-### Atom or Nuclide
-
-{% highlight bash %}
-sudo add-apt-repository ppa:webupd8team/atom
-sudo apt-get update
-sudo apt-get install atom
-{% endhighlight %}
-
-
-Atom 설치이후에 apm을 통해서 react plugin 을 설치합니다.
-
-{% highlight bash %}
-apm install react
-apm install atom-react-native-css
-apm install goto
-apm install autocomplete-plus
-{% endhighlight %}
-
-React를 전문적으로 개발하기 위해서는 Nuclide를 설치합니다.<br>
-
-**keymap.cson** 에서 키맵을 재 설정합니다.
-
-{% highlight bash %}
-'atom-text-editor':
-  'shift-space': 'autocomplete-plus:activate'
-  'ctrl-shift-f': 'editor:auto-indent'
-  'unset!': 'find-and-replace:find-next'
-
-'.platform-linux atom-workspace atom-text-editor':
-  'f3': 'goto:declaration'
-
-'atom-workspace atom-text-editor:not([mini])':
-  'alt-down': 'editor:move-line-down'
-  'alt-up': 'editor:move-line-up'
-
-'.platform-win32, .platform-linux':
-  'ctrl-h': 'project-find:show'
-
-'.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
-  'unset!': 'find-and-replace:find-next'
-{% endhighlight %}
-
-
-
-
-
-
-### Sublime (Optional)
-
-**GCC Configuration**
-
-~/.config/sublime-text-3/Packages/User 에다가 넣으면 됩니다.
-
-[c.sublime-build][c.sublime]
-
-{% highlight json %}
-{
-	"cmd" : ["gcc ${file_name} -o ${file_base_name} && ${file_path}/${file_base_name}"],
-	"shell" : true,
-	"selector" : "source.c",
-	"working_dir" : "$file_path",
-}
-{% endhighlight %}
-
-**Package Controller**
-
-Ctrl + ` 후 다음을 붙여넣기 합니다.
-
-{% highlight python %}
-import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)
-{% endhighlight %}
-
-Ctrl + Shift + p 누른 후 Package control: Install Package 명령어로 Package 설치
 
 
 ### Ruby IRC (Optional)
