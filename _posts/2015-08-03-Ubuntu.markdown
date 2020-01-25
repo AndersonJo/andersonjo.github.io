@@ -160,6 +160,20 @@ fs.inotify.max_user_watches = 524288
 sudo sysctl -p
 {% endhighlight %}
 
+## 개발자 폰트 설치
+
+나눔고딕 그리고 D2Coding 을 설치합니다. 
+
+{% highlight bash %}
+wget http://cdn.naver.com/naver/NanumFont/fontfiles/NanumFont_TTF_ALL.zip
+unzip NanumFont_TTF_ALL.zip
+
+wget https://github.com/naver/d2codingfont/releases/download/VER1.3.2/D2Coding-Ver1.3.2-20180524.zip
+unzip D2Coding-Ver1.3.2-20180524.zip
+{% endhighlight %}
+
+
+
 ### Zapret 
 
 {% highlight bash %}
