@@ -9,6 +9,11 @@ url: "http://incredible.ai"
 exclude: ["_backups", "_site", ".git", ".idea"]
 
 
+# Build settings
+theme: minima
+plugins:
+  - jekyll-feed
+
 # twitter_username:
 github_username:  AndersonJo
 

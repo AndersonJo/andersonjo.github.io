@@ -160,9 +160,15 @@ fs.inotify.max_user_watches = 524288
 sudo sysctl -p
 {% endhighlight %}
 
+### Zapret 
 
+{% highlight bash %}
+git clone https://github.com/bol-van/zapret.git
+cd zapret
+sh ./install_easy.sh
 
-
+sudo service zapret start
+{% endhighlight %}
 
 
 ### Ruby IRC (Optional)
