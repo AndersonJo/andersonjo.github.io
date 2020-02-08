@@ -143,14 +143,13 @@ sudo apt-get install automake
 MeCAB-KO-DIC을 설치합니다.
 
 {% highlight bash %}
-wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.0.1-20150920.tar.gz
-tar -zxvf mecab-ko-dic-2.0.1-20150920.tar.gz
-cd mecab-ko-dic-2.0.1-20150920/
+wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.1.1-20180720.tar.gz
+tar -zxvf mecab-ko-dic-2.1.1-20180720.tar.gz 
+cd mecab-ko-dic-2.1.1-20180720
 ./autogen.sh
 ./configure
 make
 sudo make install
-
 {% endhighlight %}
 
 
