@@ -37,6 +37,8 @@ a:visited {
     color: #205caa;
 }
 
+
+
 /* Fade In */
 @keyframes fadein {
     from { opacity: 0; }
@@ -68,6 +70,11 @@ a:visited {
 }
 
 /* Utility */
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .wrap:before,
 .wrap:after {
@@ -718,6 +725,8 @@ a:visited {
 .highlight .il {
     color: #009999
 }
+
+
 
 /* Literal.Number.Integer.Long */
 
