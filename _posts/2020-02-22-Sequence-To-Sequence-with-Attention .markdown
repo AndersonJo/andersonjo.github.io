@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Sequence to Sequence with Attention"
-date:   2019-12-14 01:00:00
+date:   2020-02-20 01:00:00
 categories: "nlp"
 asset_path: /assets/images/
 tags: ['attention', 'translation', 'alignment']
