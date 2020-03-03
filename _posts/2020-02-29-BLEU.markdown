@@ -1,0 +1,346 @@
+---
+layout: post
+title:  "BLEU"
+date:   2020-02-29 01:00:00
+categories: "nlp"
+asset_path: /assets/images/
+tags: ['modified precision', 'geometric mean', 'brevity penalty', 'n-gram', 'ngram', 'unigram', 'candidate', 'reference']
+---
+
+# Introduction
+
+BLEU (Bilingual Evaluation Understudy)는 translation scoring을 하는데 주로 사용이 됩니다.<br> 
+모델이 번역한 문장이 여러 번역가가 실제 번역한 글들과의 상관성을 측정한 것이라고 생각하면 아주 쉽습니다.<br>
+
+1. 번역가1 (reference): 어제 아내와 같이 먹은 떡뽁이는 정말 최고였어!
+2. 번역가2 (reference): 어제 아내하고 같이 떡뽁이 먹었는데, 개쩔었음
+3. 번역가3 (reference): 어제 떡뽁이 아내하고 먹었는데 정말 맛있었어!
+
+위의 문장들이 번역가가 번역한 reference 문장들이고, <br>
+기계가 번역한 것은 `"어제 아내하고 떡뽁이 먹었고, 정말 맛있었어!"` 라는 문장이 **모두 같은 뜻**이라고 판단하는 기준은 무었일까? <br>
+그 기준을 대한 평가를 하는 지표라고 생각하면 쉽습니다
+
+
+# BLEU Explained
+
+아래와 같이 사람이 직접 번역한 문장 reference가 있고, 기계 번역을 통해서 번역된 candidate이 존재 합니다. 
+
+ - reference: "the cat is on the mat"
+ - candidate: "the cat the cat is on the mat"
+ 
+
+
+## The Problem of Unigram Precision
+
+일단 Precision을 계산해야 합니다. <br>
+Classification에서 사용되는 $$ \text{Precision} = \frac{TP}{TP + FP} = \frac{TP}{\text{Predicted Yes}} $$ 공식과는 다른 precision을 사용합니다. <br>
+해당 classification precision의 문제는 일부 TP만 맞추고, 그외 모든것을 negative로 예측한다면 precision은 1이 되는 문제를 갖고 있습니다. <br>
+유사하게, BLEU에서 사용되는 precision에서 문제가 있습니다.
+
+$$ \text{unigram precision} =  \frac{\text{reference에 존재하는 candidate의 단어 갯수}}{\text{candidate 단어 총갯수}} $$
+
+예를 들어서 다음과 같은 문장이 있습니다.
+
+| Key         | Sentence                               | Description               |
+|:------------|:---------------------------------------|:------------------------- |
+| Refenrece   | the cat is on the mat                  | 사람이 번역한 문장            |
+| Candidate 1 | the cat **the cat** is on the mat      | 기계번역 1                  |  
+| Candidate 2 | the **the the the the the the the**    | 기계번역 2                  |
+
+Count를 세보면 다음과 같습니다.
+
+| Key         | word   |   max_ref_cnt |   cand_cnt |
+|:------------|:-------|--------------:|-----------:|
+| candidate 1 | the    |             2 |          3 |
+|             | cat    |             1 |          2 |
+|             | is     |             1 |          1 |
+|             | on     |             1 |          1 |
+|             | mat    |             1 |          1 |
+| candidate 2 | the    |             2 |          8 |
+
+* ref_cnt: Reference에서 나온 단어의 횟수
+* cand_cnt: 해당 단어가 reference에 존재하지 않으면 0, 존재한다면 candidate안에서의 횟수
+
+따라서 **precision** 은 다음과 같습니다.
+
+$$ \begin{align} 
+\text{precision(candidate1)} &= \frac{3+2+1+1+1}{8} = 1 \\
+\text{precision(candidate2)} &= \frac{8}{8} = 1 
+\end{align} $$
+
+즉 기계 번역 모두 잘못된 번역을 하였는데, precision의 경우 모두 1로 계산을 했습니다.
+
+
+
+## Modified Precision
+
+위의 문제를 해결하기 위해서 clipped count 를 사용합니다.<br>
+clipped coun는 reference count의 그 이상으로 넘지를 못하도록 clip시켜줍니다. <br>
+
+$$ Count_{clip} = \min(\text{Count_Candidate}, \text{Max_Ref_Count}) $$
+
+* **Max_Ref_count**: 각 reference에서 가장 많이 나온 n-gram갯수를 사용
+* **Count_Candidate** : candidate에서 해당 n-gram의 갯수
+
+
+| Key         | word   |   max_ref_cnt |   cand_cnt |   clipped_cnt |
+|:------------|:-------|--------------:|-----------:|--------------:|
+| candidate 1 | the    |             2 |          3 |             2 |
+|             | cat    |             1 |          2 |             1 |
+|             | is     |             1 |          1 |             1 |
+|             | on     |             1 |          1 |             1 |
+|             | mat    |             1 |          1 |             1 |
+| candidate 2 | the    |             2 |          8 |             2 |
+
+clipped count를 사용한 modified precision 은 다음과 같습니다.
+
+$$ \begin{align} 
+\text{precision(candidate1)} &= \frac{2+1+1+1+1}{8} = 0.75 \\
+\text{precision(candidate2)} &= \frac{2}{8} = 0.25
+\end{align} $$
+
+
+## BLEU 
+
+BLEU 알고리즘은 여러개의 ngram modified precisions을 사용해서 계산을 합니다.
+
+$$ \text{BLEU} = \text{BP} \cdot \exp \bigg( \sum_{n=1}^{N} w_n \log p_n \bigg) $$
+
+* $$ N $$ : 일반적으로 1-gram 부터 4-gram 까지 사용하며, 따라서 N=4 를 사용
+* $$ p_n $$ : modified precision for ngram (보통 4-gram 사용)
+* $$ log $$ : 일반적으로 base는 $$ e $$ 를 사용
+* $$ w_n $$ : 0~1 사이의 weight 값이며, $$ \sum^N_{n=1} w_n = 1 $$ 
+* $$ \text{BP} $$ : Brevity Penalty 로서 reference의 길이보다 짧거나, 길지 않도록 penalty를 줍니다.
+
+**Brevity Penalty 공식**은 아래와 같습니다.
+
+$$ 
+\text{BP} = 
+\begin{cases} 
+    1 & \text{if } c > r \\
+    \exp \big(1-\frac{r}{c}\big) & \text{if } c \leq r
+\end{cases}  $$
+
+* $$ c $$ : **candidate sentence의 길이** (like `len(candidate)`)
+* $$ r $$ : 해당 candidate sentence와 **길이가 가장 근접한 reference sentence의 길이**
+
+예를 들어서 기계번역한 candidate sentence의 길이가 15이고, <br>
+reference sentences는 7, 16, 20 이 있을때.. 길이가 가장 가까운 순으로 따지면 16길이를 갖은 reference sentence 사용합니다.
+
+
+추가적으로  BLEU는 항상 0\~1사이의 값을 갖습니다. <br>
+이유는 $$ \text{BP} $$, $$ w_n $$, $$ p_n $$ 모두 0\~1사이를 갖으며 수식으로 다음과 같습니다.
+
+$$ 
+\begin{align}
+\exp \bigg( \sum_{n=1}^{N} w_n \log p_n \bigg) &= \prod_{n=1}^{N} \exp \big( w_n \log p_n \big) \\
+&= \prod_{n=1}^{N} \Big[ \exp \big( \log p_n \big) \Big]^{w_n} \\
+&= \prod_{n=1}^{N} {p_n}^{w_n} \\
+&\in [0,1]
+\end{align} $$
+
+
+
+# Hot to Calculate BLEU score in Python
+
+## Sentence BLEU Score
+
+NLTK에서는 `sentence_bleu` 함수를 제공하며, candidate sentence를 하나 또는 다수의 reference sentences에 평가를 하게 합니다.
+
+
+### English
+
+{% highlight python %}
+from nltk.translate.bleu_score import sentence_bleu
+
+reference = [['this', 'is', 'a', 'test'], ['this', 'is', 'test']]
+candidate = ['this', 'is', 'a', 'test']
+bleu = sentence_bleu(reference, candidate)
+
+print(f'reference: {reference}')
+print(f'candidate: {candidate}')
+print('BLEU:', bleu)
+{% endhighlight %}
+
+{% highlight text %}
+reference: [['this', 'is', 'a', 'test'], ['this', 'is', 'test']]
+candidate: ['this', 'is', 'a', 'test']
+BLEU: 1.0
+{% endhighlight %}
+
+
+### Korean
+
+{% highlight python %}
+from konlpy.tag import Mecab
+from nltk.translate.bleu_score import sentence_bleu
+
+mecab = Mecab()
+
+reference = ['어제 스테이크를 먹었다', '스테이크 어제 먹었다']
+reference = [mecab.morphs(s) for s in reference]
+candidate = mecab.morphs('어제 스테이크를 먹었다')
+
+print(f'reference: {reference}', )
+print('candidate:', candidate)
+print('BLEU:', sentence_bleu(reference, candidate))
+{% endhighlight %}
+
+{% highlight python %}
+reference: [['어제', '스테이크', '를', '먹', '었', '다'], 
+            ['스테이크', '어제', '먹', '었', '다']]
+candidate: ['어제', '스테이크', '를', '먹', '었', '다']
+BLEU: 1.0
+{% endhighlight %}
+
+
+## Corpus BLEU Score
+
+NLTK에서는 `corpus_bleu`함수를 통해서 다수의 sentences (such as, a paragraph, or a document) 도 지원을 합니다.
+
+### English
+
+{% highlight python %}
+from nltk.translate.bleu_score import corpus_bleu
+
+reference = [[['this', 'is', 'a', 'test'], ['this', 'is', 'test']]]
+candidate = [['this', 'is', 'a', 'test']]
+bleu = corpus_bleu(reference, candidate)
+
+print(f'reference: {reference}')
+print(f'candidate: {candidate}')
+print('BLEU:', bleu)
+{% endhighlight %}
+
+{% highlight python %}
+reference: [[['this', 'is', 'a', 'test'], ['this', 'is', 'test']]]
+candidate: [['this', 'is', 'a', 'test']]
+BLEU: 1.0
+{% endhighlight %}
+
+
+### Korean
+
+{% highlight python %}
+from konlpy.tag import Mecab
+from nltk.translate.bleu_score import corpus_bleu
+
+mecab = Mecab()
+
+reference = ['어제 스테이크를 먹었다', '어제 스테이크 먹었다']
+reference = [[mecab.morphs(s) for s in reference]]
+candidate = [mecab.morphs('어제 스테이크를 먹었다')]
+
+print(f'reference: {reference}')
+print('candidate:', candidate)
+print('BLEU:', corpus_bleu(reference, candidate))
+{% endhighlight %}
+
+{% highlight python %}
+reference: [[['어제', '스테이크', '를', '먹', '었', '다'], 
+             ['어제', '스테이크', '먹', '었', '다']]]
+candidate: [['어제', '스테이크', '를', '먹', '었', '다']]
+BLEU: 1.0
+{% endhighlight %}
+
+
+## N-Gram BLEU Score
+
+### Individual N-Gram Scores
+
+특정 n-gram에 대해서 weights값의 조정을 통해서 계산을 할 수 있습니다.<br>
+위에서 본, sentence_bleu, corpus_bleu 모두 지원이 됩니다.
+
+**각각의 n-gram에 대해서 계산**을 하고 싶을때는 다음과 같이 합니다.
+
+ - 1-gram BLEU : `weights=(1, 0, 0, 0)`
+ - 2-gram BLEU : `weights=(0, 1, 0, 0)`
+ - 3-gram BLEU : `weights=(0, 0, 1, 0)`
+ - 4-gram BLEU : `weights=(0, 0, 0, 1)`
+ 
+{% highlight python %} 
+from nltk.translate.bleu_score import corpus_bleu
+
+reference = ['i took a hard test yesterday', 'yesterday i took a trcky test']
+reference = [s.split(' ') for s in reference]
+candidate = 'i took a difficult test yesterday'.split(' ')
+
+bleu_1gram = sentence_bleu(reference, candidate, weights=(1, 0, 0, 0))
+bleu_2gram = sentence_bleu(reference, candidate, weights=(0, 1, 0, 0))
+bleu_3gram = sentence_bleu(reference, candidate, weights=(0, 0, 1, 0))
+bleu_4gram = sentence_bleu(reference, candidate, weights=(0, 0, 0, 1))
+
+print(f'reference: {reference}')
+print(f'candidate: {candidate}')
+print(f'1-Gram BLEU: {bleu_1gram:.2f}')
+print(f'2-Gram BLEU: {bleu_2gram:.2f}')
+print(f'3-Gram BLEU: {bleu_3gram:.2f}')
+print(f'4-Gram BLEU: {bleu_4gram:.2f}')
+{% endhighlight %}
+
+{% highlight python %} 
+reference: [['i', 'took', 'a', 'hard', 'test', 'yesterday'], 
+            ['yesterday', 'i', 'took', 'a', 'trcky', 'test']]
+candidate: ['i', 'took', 'a', 'difficult', 'test', 'yesterday']
+1-Gram BLEU: 0.83
+2-Gram BLEU: 0.60
+3-Gram BLEU: 0.25
+4-Gram BLEU: 0.00
+{% endhighlight %}
+
+
+
+
+### Geometric Mean N-Gram Score (Cumulative Score)
+
+**Cumulative score**을 구하려면 아래와 같이 합니다. <br>
+cumulative score는 각각의 n-gram을 계산한 이후 wegithed geometric mean 으로 계산을 합니다.<br>
+Scipy에서 scipy.stats.gmean 함수를 통해서 geometric mean을 계산할 수 있습니다.
+
+ - 1-gram cumulative BLEU: `weights=(1, 0, 0, 0)`
+ - 2-gram cumulative BLEU: `weights=(0.5, 0.5, 0, 0)`
+ - 3-gram cumulative BLEU: `weights=(0.33, 0.33, 0.33, 0)`
+ - 4-gram cumulative BLEU: `weights=(0.25, 0.25, 0.25, 0.25)`
+ 
+ 
+**Geometric Mean** 의 공식은 아래와 같으며, 일반적으로 사용되는 arithmetic mean과 비교해서, <br>
+보통 상관관계를 따질때 사용되며, outlier에 강합니다. <br>
+즉 해당 cumulative BLEU score를 계산할때도, 상관관계성을 따지는 것이기 때문에 <br>
+수치적 평균을 구하는 arithmetic mean보다는 geometric mean이 더 맞습니다.
+
+$$ \text{geometric mean} = \left( \prod^n_{i=1} x_i \right)^{1/n} = \sqrt[\leftroot{0}\uproot{1}n]{x_1 x_2 ... x_3} $$
+
+> <span style="color:#555555">
+아래 예제에서 4-gram 을 제외시켰는데. 이유는 4-gram이 0값이고, <br>
+모두 곱하는 geometric mean 특성상 0이 나와서 4-gram은 제외 시켰습니다.
+</span>
+
+{% highlight python %}
+import numpy as np
+from nltk.translate.bleu_score import corpus_bleu
+from scipy.stats import gmean
+
+reference = ['i took a hard test yesterday', 'yesterday i took a trcky test']
+reference = [s.split(' ') for s in reference]
+candidate = 'i took a difficult test yesterday'.split(' ')
+
+bleu_cum1 = sentence_bleu(reference, candidate, weights=(0.33, 0.33, 0.33, 0))
+bleu_cum2 = gmean([bleu_1gram, bleu_2gram, bleu_3gram])
+bleu_cum3 = (bleu_1gram * bleu_2gram * bleu_3gram)**(1/3)
+
+
+print(f'reference: {reference}')
+print(f'candidate: {candidate}')
+print(f'3-Gram Cumulative BLEU (nltk) : {bleu_cum1:.2f}')
+print(f'3-Gram Cumulative BLEU (scipy): {bleu_cum2:.2f}')
+print(f'3-Gram Cumulative BLEU (hand) : {bleu_cum3:.2f}')
+{% endhighlight %}
+
+{% highlight python %}
+reference: [['i', 'took', 'a', 'hard', 'test', 'yesterday'], 
+            ['yesterday', 'i', 'took', 'a', 'trcky', 'test']]
+candidate: ['i', 'took', 'a', 'difficult', 'test', 'yesterday']
+3-Gram Cumulative BLEU (nltk) : 0.50
+3-Gram Cumulative BLEU (scipy): 0.50
+3-Gram Cumulative BLEU (hand) : 0.50
+{% endhighlight %}
