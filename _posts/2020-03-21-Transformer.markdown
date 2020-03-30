@@ -656,7 +656,7 @@ grid()
 
 Cross Entropy를 사용하며, 실제 구현에서 재미있는건.. <br>
 y_pred는 vector형태로 주고, y_true는 index값으로 주었을때.. <br>
-이게 알아서 계산을 잘 해줌 
+이게 알아서 계산을 잘 해주며, 또한 y_pred, y_true 순서가 변경이 되면 안된다
 
 {% highlight python %}
 import torch.nn.functional as F
@@ -668,6 +668,9 @@ print('correct  :', F.cross_entropy(y_pred, y_true, reduction='sum')) # 잘맞�
 
 y_true = torch.LongTensor([0, 2, 2])
 print('incorrect:', F.cross_entropy(y_pred, y_true, reduction='sum')) # 안맞는 경우 49.1042
+
+y_true = torch.LongTensor([2, 0, 2])
+print('half correct:', F.cross_entropy(y_pred, y_true, reduction='sum')) # 2개만 맞는 경우 9.9042
 {% endhighlight %}
 
 # 4 Pytorch Tutorial
