@@ -372,7 +372,7 @@ encoder와 마찬가지로 Q, K, V모두 복사 붙여넣기로 동일한 값이
 
 예를 들어서 Q (256, 33, 512), K (256, 33, 512), V (256, 33, 512) 이렇게 embedding vectors가 있을때, <br>
 33은 33개의 단어가 있다는 뜻이고, 단어 하나당 512개의 dense vector로 표현이 됩니다. <br>
-이때 512에 해당되는 부분에 대해서, single attention을 하는 것이 아니라, 512이 부분을 $ h $ 개로 쪼개서 multi-head attention을 합니다.
+이때 512에 해당되는 부분에 대해서, single attention을 하는 것이 아니라, 512이 부분을 $$ h $$ 개로 쪼개서 multi-head attention을 합니다.
 
 예를 들어서 512를 8개로 나누면 8 * 64 형태로 나눌수 있습니다.
 
@@ -612,9 +612,50 @@ class PositionWiseFeedForward(nn.Module):
 {% endhighlight %}
 
 
-# 3 Pytorch Tutorial
+# 3 Training 
 
-## 3.1 torch.triu
+## 3.1 Optimizer and Learning Rate
+
+## Optimizer & Scheduled Learning Rate
+
+Attention is All You Need 논문에서는 다음과 같이 optimizer를 사용했습니다. 
+
+- Adam Optimizer 사용 
+- :: $$ \beta_1 = 0.9 $$ 
+- :: $$ \beta_2 = 0.98 $$ .
+- :: $$ \epsilon = 10^{-9} $$ .
+
+또한 learning rate는 training 도중에, 다음의 공식대로 변경되도록 하였습니다. 
+
+$$ lr = d_{model}^{-0.5} \cdot \min \left( \text{step_num}^{-0.5}, \text{step_num} \cdot \text{warmup_steps}^{-1.5} \right) $$
+
+예를 들어서 warumup step=200 일 경우 다음과 같은 그래프가 그려지게 됩니다.<br>
+즉.. warmup_steps 까지는 learning rate는 linear하게 증가하게 됩니다. <br>
+하지만 step의 inverse square root 에 따라서 감소하게 됩니다.
+
+{% highlight python %}
+d_model = 512
+warmup_step = 200
+
+lrs = []
+for step in range(1, 1001):
+    lr = d_model**-0.5 * min(step**-0.5, step * warmup_step**-1.5)
+    lrs.append(lr)
+
+# Visualization
+subplots(1, figsize=(15, 5))
+ax = sns.lineplot(range(1, 1001), lrs)
+ax.set_xticks(range(0, 1000, 100))
+ax.set_xlabel('steps')
+ax.set_ylabel('learning rate')
+grid()
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}transformer-learning-rate.png" class="img-responsive img-rounded img-fluid center">
+
+# 4 Pytorch Tutorial
+
+## 4.1 torch.triu
 
 정사각형의 n by n 매트릭스가 있을때, 위쪽 삼각부분만 리턴시킨다.
 
@@ -651,7 +692,7 @@ tensor([[1., 1., 1., 1., 1.],
 {% endhighlight %}
 
 
-## 3.2 torch.narrow (narrow dimension)
+## 4.2 torch.narrow (narrow dimension)
 
 Returns a new tensor that is a narrowed version of :attr:`input` tensor. <br>
 The dimension :attr:`dim` is input from :attr:`start` to :attr:`start + length`. <br>
@@ -684,7 +725,7 @@ tensor([[1, 2],
         [7, 8]])
 {% endhighlight %}
 
-## 3.3 nn.Linear
+## 4.3 nn.Linear
 
 {% highlight python %}
 linear = nn.Linear(512, 32, bias=False)
@@ -701,9 +742,9 @@ linear(x)     : torch.Size([256, 38, 32])
 same?         : tensor(True)
 {% endhighlight %}
 
-## 3.4 Normal Layer
+## 4.4 Normal Layer
 
-### 3.4.1 Pytorch Builtin Normal Layer
+### 4.4.1 Pytorch Builtin Normal Layer
 
 {% highlight python %}
 # Pytorch Builtin LayerNorm
@@ -719,7 +760,7 @@ nn.LayerNorm | mean: -0.00 | var: 1.00 | std: 1.00 | weight: 1.00 (512,) | bias:
 {% endhighlight %}
 
 
-### 3.4.2 My Normal Layer
+### 4.4.2 My Normal Layer
 
 {% highlight python %}
 import numbers
