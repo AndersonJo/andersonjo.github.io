@@ -616,8 +616,6 @@ class PositionWiseFeedForward(nn.Module):
 
 ## 3.1 Optimizer and Learning Rate
 
-## Optimizer & Scheduled Learning Rate
-
 Attention is All You Need 논문에서는 다음과 같이 optimizer를 사용했습니다. 
 
 - Adam Optimizer 사용 
