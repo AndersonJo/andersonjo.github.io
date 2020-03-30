@@ -135,7 +135,7 @@ $ kubectl get pods tutorial-server-deploy-6b4b98486-k4srw -n tutorial-ns
 NAME                                     READY   STATUS    RESTARTS   AGE
 tutorial-server-deploy-6b4b98486-k4srw   1/1     Running   0          59m
 
-$ kubectl get pods tutorial-server-deploy-6b4b98486-k4srw -n tutorial-ns --template='{{(index (index .spec.containers 0).ports 0).containerPort}}{{"\n"}}'
+$ kubectl get pods tutorial-server-deploy-6b4b98486-k4srw -n tutorial-ns'
 80
 {% endhighlight %}
 

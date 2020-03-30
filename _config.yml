@@ -23,5 +23,5 @@ rouge: pygments
 markdown: kramdown
 permalink: pretty
 
-gems:
+plugins:
   - jekyll-numbered-headings
