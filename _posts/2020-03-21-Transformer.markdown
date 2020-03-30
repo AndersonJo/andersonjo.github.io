@@ -619,9 +619,9 @@ class PositionWiseFeedForward(nn.Module):
 Attention is All You Need 논문에서는 다음과 같이 optimizer를 사용했습니다. 
 
 - Adam Optimizer 사용 
-- :: $$ \beta_1 = 0.9 $$ 
-- :: $$ \beta_2 = 0.98 $$ .
-- :: $$ \epsilon = 10^{-9} $$ .
+-  $$ \beta_1 = 0.9 $$ . 
+-  $$ \beta_2 = 0.98 $$ .
+-  $$ \epsilon = 10^{-9} $$ .
 
 또한 learning rate는 training 도중에, 다음의 공식대로 변경되도록 하였습니다. 
 
@@ -650,6 +650,25 @@ grid()
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}transformer-learning-rate.png" class="img-responsive img-rounded img-fluid center">
+
+
+## 3.2 Loss Function
+
+Cross Entropy를 사용하며, 실제 구현에서 재미있는건.. <br>
+y_pred는 vector형태로 주고, y_true는 index값으로 주었을때.. <br>
+이게 알아서 계산을 잘 해줌 
+
+{% highlight python %}
+import torch.nn.functional as F
+
+y_pred = torch.FloatTensor([[0.1, 0.3, 7.3], [33, 5, 1], [4, 10, 0.1]])
+
+y_true = torch.LongTensor([2, 0, 1])
+print('correct  :', F.cross_entropy(y_pred, y_true, reduction='sum')) # 잘맞는 경우 0.0042
+
+y_true = torch.LongTensor([0, 2, 2])
+print('incorrect:', F.cross_entropy(y_pred, y_true, reduction='sum')) # 안맞는 경우 49.1042
+{% endhighlight %}
 
 # 4 Pytorch Tutorial
 
