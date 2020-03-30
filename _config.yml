@@ -13,7 +13,6 @@ exclude: ["_backups", "_site", ".git", ".idea"]
 theme: minima
 plugins:
   - jekyll-feed
-  - jekyll-numbered-headings
 
 # twitter_username:
 github_username:  AndersonJo
