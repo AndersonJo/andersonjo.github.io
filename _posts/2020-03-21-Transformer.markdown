@@ -4,7 +4,7 @@ title:  "Transformer"
 date:   2020-02-29 01:00:00
 categories: "nlp"
 asset_path: /assets/images/
-tags: ['multi head self attention', 'attention', 'attention is all you need', 'head']
+tags: ['multi head self attention', 'attention', 'attention is all you need', 'head', 'softmax', 'cross-entropy', 'entropy', 'trig']
 ---
 
 <header>
@@ -654,24 +654,63 @@ grid()
 
 ## 3.2 Loss Function
 
-Cross Entropy를 사용하며, 실제 구현에서 재미있는건.. <br>
-y_pred는 vector형태로 주고, y_true는 index값으로 주었을때.. <br>
-이게 알아서 계산을 잘 해주며, 또한 y_pred, y_true 순서가 변경이 되면 안된다
+### 3.2.1 Y_true and Y_pred
+
+- y_pred: (batch * seq_len, trg_vocab_size)
+- y_true: (batch * seq_len)
+
+Loss는 cross entropy를 사용하며 내부적으로 log-softmax 를 사용합니다.<br>
+중요한점은 padding값은 loss 계산에서 빠져야 합니다.
+
+Pytorch에서는 F.cross_entropy를 사용할수 있으며 ignore_index=trg_pad_idx 를 사용해서<br>
+padding값에 대해서는 무시하도록 만들수 있습니다. (개편하네)
+
+
+### 3.2.2 Cross Entropy Pytorch Version
 
 {% highlight python %}
 import torch.nn.functional as F
 
-y_pred = torch.FloatTensor([[0.1, 0.3, 7.3], [33, 5, 1], [4, 10, 0.1]])
+y_pred = torch.FloatTensor([[1, 3, 7], [33, 5, 1], [4, 10, 0.1], [5, 2, 0]])
 
-y_true = torch.LongTensor([2, 0, 1])
-print('correct  :', F.cross_entropy(y_pred, y_true, reduction='sum')) # 잘맞는 경우 0.0042
+y_true = torch.LongTensor([2, 0, 1, 0])
+print('correct     :', F.cross_entropy(y_pred, y_true, reduction='sum')) # 잘맞는 경우 0.0781
 
-y_true = torch.LongTensor([0, 2, 2])
-print('incorrect:', F.cross_entropy(y_pred, y_true, reduction='sum')) # 안맞는 경우 49.1042
+y_true = torch.LongTensor([0, 2, 2, 2])
+print('incorrect   :', F.cross_entropy(y_pred, y_true, reduction='sum')) # 안맞는 경우 52.9781
 
-y_true = torch.LongTensor([2, 0, 2])
-print('half correct:', F.cross_entropy(y_pred, y_true, reduction='sum')) # 2개만 맞는 경우 9.9042
+y_true = torch.LongTensor([2, 0, 2, 2])
+print('half correct:', F.cross_entropy(y_pred, y_true, reduction='sum')) # 2개만 맞는 경우 14.9781
 {% endhighlight %}
+
+### 3.2.3 Cross Entropy Numpy Version
+
+{% highlight python %}
+def my_softmax(x, axis=None):
+    exp_x = np.exp(x)
+    return exp_x/exp_x.sum(axis=axis).reshape(-1, 1)
+
+def my_cross_entropy(y_pred, y_true, axis=None):
+    one_hot = np.zeros_like(y_pred)
+    one_hot[np.arange(y_true.shape[0]), y_true] = 1
+    
+    _softmax = my_softmax(y_pred, axis=axis)
+    return np.sum(-one_hot * np.log(_softmax)).round(4)
+    
+y_pred = np.array([[1, 3, 7], [33, 5, 1], [4, 10, 0.1], [5, 2, 0]])
+
+y_true = np.array([2, 0, 1, 0])
+print('correct     :', my_cross_entropy(y_pred, y_true, axis=1)) # 잘맞는 경우 0.0781
+
+y_true = torch.LongTensor([0, 2, 2, 2])
+print('incorrect   :', my_cross_entropy(y_pred, y_true, axis=1)) # 안맞는 경우 52.9781
+
+y_true = torch.LongTensor([2, 0, 2, 2])
+print('half correct:', my_cross_entropy(y_pred, y_true, axis=1)) # 안맞는 경우 14.9781
+{% endhighlight %}
+
+
+
 
 # 4 Pytorch Tutorial
 
