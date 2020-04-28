@@ -295,7 +295,7 @@ channel의 위치를 변화시키는 방법은 2가지가 있습니다.
 
  - permute: 한번에 여러 dimension의 순서를 변경시킬 수 있습니다.
  - transpose: 한번에 2개의 dimension의 순서를 변경시킵니다.
- 
+ - ToTensor() 함수 사용해도 됩니다.
  
 {% highlight python %}
 data = cifar10.data
@@ -307,4 +307,24 @@ print('transpose :', data.transpose(1, 3).shape)
 data shape: torch.Size([50000, 32, 32, 3])
 permute   : torch.Size([50000, 3, 32, 32])
 transpose : torch.Size([50000, 3, 32, 32])
+{% endhighlight %}
+
+
+### ToTensor
+
+ToTensor를 하면 channel의 위치가 바뀝니다.<br>
+물론 Pytorch Tensor로 변형도 됩니다.
+
+- (h, w, c) -> (c, h, w)
+
+
+{% highlight python %}
+img = cifar10.data[0]
+aug_f = transforms.ToTensor()
+
+print('image shape          :', img.shape)
+print('augmented image shape:', aug_f(img).shape)
+
+image shape          : (32, 32, 3)
+augmented image shape: torch.Size([3, 32, 32])
 {% endhighlight %}
