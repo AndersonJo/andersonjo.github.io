@@ -36,6 +36,12 @@ Pytorch transforms을 사용하면서 많이 사용하는 함수라서 같이 �
 
 $$ \text{normalization} = \frac{(\text{image} - \mu)}{\sigma} $$ 
 
+중요하게 볼 점이 또하나 있는데, channel의 위치가 변경되었습니다. <br>
+이는 ToTensor() 함수를 실행하면 channel의 위치가 바뀝니다.<br>
+Normalize 함수는 ToTensor 함수에 의해서 변경된 channel (c, h, w) 위치를 사용해서 normalization을 합니다.<br>
+만약 Normalize 함수에 (h, w, c) 형태로 image가 제공시 에러가 납니다.<br>
+따라서 Normalize 함수를 호출전 반드시 ToTensor 함수를 호출해야 합니다.
+
 
 {% highlight python %}
 _mean = cifar10.data.mean(axis=(0, 1, 2)) / 255
@@ -49,16 +55,19 @@ aug_f = transforms.Compose([transforms.ToTensor(),
                             transforms.Normalize(_mean, _std)])
 img = aug_f(cifar10.data[0])
 
-print('augmented img mean:', img.mean(axis=(1, 2)))
-print('augmented img std :', img.std(axis=(1, 2)))
+print('augmented img shape:', img.shape)
+print('augmented img mean :', img.mean(axis=(1, 2)))
+print('augmented img std  :', img.std(axis=(1, 2)))
 {% endhighlight %}
 
 {% highlight python %}
 shape   : (32, 32, 3)
 RGB mean: [0.49139968 0.48215841 0.44653091]
 RGB std : [0.24703223 0.24348513 0.26158784]
-augmented img mean: tensor([ 0.2524, -0.2875, -0.7470])
-augmented img std : tensor([0.6458, 0.6837, 0.6127])
+
+augmented img shape: torch.Size([3, 32, 32])
+augmented img mean : tensor([ 0.2524, -0.2875, -0.7470])
+augmented img std  : tensor([0.6458, 0.6837, 0.6127])
 {% endhighlight %}
 
 
