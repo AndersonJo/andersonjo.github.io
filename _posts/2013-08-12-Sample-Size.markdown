@@ -62,7 +62,7 @@ $$  Z = \frac{x-\mu}{\sigma} $$
 
 Z-score는 단순히 평균으로부터 표준편차의 몇배 정도 떨어져 있는지 이며, 그 x축의 값입니다.
 
-이게 중요한게 아니라, 우리가 구하고자 하는것은 표준정규분포 ( $ \mu=0, \sigma=1 $ ) 를 따른다고 가정할때,<br>
+이게 중요한게 아니라, 우리가 구하고자 하는것은 표준정규분포 ( $$ \mu=0, \sigma=1 $$ ) 를 따른다고 가정할때,<br>
 **confidence level (신뢰구간. 0.9, 0.95, 0.99 같은 값들) 값으로 Z-Score 를 역으로 알아내는 것 입니다.**<br>
 [Z-Table](https://www.sjsu.edu/faculty/gerstman/StatPrimer/z-two-tails.pdf) 에서 Z-score를 알면 P-value를 알아낼수 있는데.. 그의 역이라고 할까.. 
 
