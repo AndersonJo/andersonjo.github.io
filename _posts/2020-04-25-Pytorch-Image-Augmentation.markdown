@@ -277,6 +277,18 @@ display_augmented_images(aug_f)
 <img src="{{ page.asset_path }}pytorch-aug-14.png" class="img-responsive img-rounded img-fluid center">
 
 
+### Color Jitter (ALL)
+
+{% highlight python %}
+aug_f = transforms.ColorJitter(brightness=(0.2, 2), 
+                               contrast=(0.3, 2), 
+                               saturation=(0.2, 2), 
+                               hue=(-0.3, 0.3))
+display_augmented_images(aug_f)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}pytorch-aug-20.png" class="img-responsive img-rounded img-fluid center">
+
 ### Resize
 
 augmented image 그림의 좌표를 보면 크게 늘어난것을 알 수 있습니다.
