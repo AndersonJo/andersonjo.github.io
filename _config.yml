@@ -2,7 +2,7 @@
 title: "Incredible.AI"
 email: "a141890@gmail.com"
 description: "Artificial Intelligence and BigData"
-encoding: utf-8
+encoding: "utf-8"
 
 baseurl: ""
 url: "http://incredible.ai"
@@ -11,7 +11,8 @@ exclude: ["_backups", "_site", ".git", ".idea"]
 
 # Build settings
 theme: minima
-plugins: ["jekyll-feed"]
+plugins:
+  - jekyll-feed
 
 # twitter_username:
 github_username:  AndersonJo
