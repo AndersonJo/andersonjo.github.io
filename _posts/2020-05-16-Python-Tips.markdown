@@ -58,3 +58,22 @@ window_hello = normalize('NFC', mac_hello)
 print([c for c in window_hello])                                                                                                          
 ['안', '녕', '하', '세', '요']
 {% endhighlight %} 
+
+
+## 2.2 PIP mirror 를 카카오 저장소로 변경하기
+
+pytorch 다운로드하는데 4시간 뜨길래.. 바꿈. <br>
+카카오로 변경하면 pytorch 다운로드가 1분이면 끝남
+
+{% highlight bash %}
+mkdir ~/.pip
+vi ~/.pip/pip.conf
+{% endhighlight %}
+
+pip.conf 에는 아래의 내용을 넣는다
+
+{% highlight bash %}
+[global]
+index-url=http://ftp.daumkakao.com/pypi/simple
+trusted-host=ftp.daumkakao.com
+{% endhighlight %}
