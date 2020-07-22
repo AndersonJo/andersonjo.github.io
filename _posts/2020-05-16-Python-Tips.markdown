@@ -79,7 +79,7 @@ trusted-host=ftp.daumkakao.com
 {% endhighlight %}
 
 
-## Numpy Precision 시각화
+## 2.3 Numpy Precision 시각화
 
 Precision의 시각화를 변경시킵니다. 
 
