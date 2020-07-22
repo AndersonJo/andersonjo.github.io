@@ -77,3 +77,24 @@ pip.conf 에는 아래의 내용을 넣는다
 index-url=http://ftp.daumkakao.com/pypi/simple
 trusted-host=ftp.daumkakao.com
 {% endhighlight %}
+
+
+## Numpy Precision 시각화
+
+Precision의 시각화를 변경시킵니다. 
+
+{% highlight bash %}
+data = (np.random.rand(4, 4) * 0.0001).astype(np.float32)                                                                                  
+array([[1.70037983e-05, 1.24925400e-05, 1.05073095e-05, 8.56156257e-05],
+       [8.56784827e-05, 6.01017491e-05, 1.74893994e-05, 7.26617436e-05],
+       [6.08324372e-05, 7.23426347e-05, 3.67687244e-05, 4.75522647e-05],
+       [2.31287959e-05, 7.36061265e-05, 8.91206510e-05, 2.37407185e-05]],
+      dtype=float32)
+
+np.set_printoptions(formatter={'float_kind':'{:f}'.format}
+
+array([[0.000182, 0.000602, 0.000214, 0.000582],
+       [0.000020, 0.000617, 0.000936, 0.000013],
+       [0.000513, 0.000052, 0.000895, 0.000348],
+       [0.000484, 0.000960, 0.000140, 0.000403]], dtype=float32)
+{% endhighlight %}
