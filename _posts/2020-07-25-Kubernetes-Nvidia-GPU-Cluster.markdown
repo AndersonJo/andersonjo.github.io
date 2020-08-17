@@ -104,7 +104,7 @@ virt-host-validate
 {% endhighlight %}
 
 
-## 1.2 KVM2 (Minikube에서 Nvidia 지원 - Optional)
+## 1.3 KVM2 (Minikube에서 Nvidia 지원 - Optional)
 
 [KVM](https://help.ubuntu.com/community/KVM/Installation) (Kernel-based Virtual Machine) 은 Linux에서 사용할수 있는 가상화 솔루션입니다. <br>
 만약 Minikube로 Nvidia GPU사용하려고 한다면.. KVM2를 설치해야 합니다.<br> 
@@ -132,7 +132,7 @@ virt-host-validate # 테스트: 최종 잘되는지..
 {% endhighlight %}
 
 
-## 1.3 Minikube Installation
+## 1.4 Minikube Installation
 
 Minikube는 single-node Kuebernetes cluster이며 VM위에서 돌아가며, local 개발시에 편리하게 사용할 수 있습니다.<br>
 그냥 한마디로 공부할때 node하나만 띄워놓고 여러가지 실험해볼수 있다는 뜻입니다. 
@@ -148,7 +148,7 @@ Minikube는 single-node Kuebernetes cluster이며 VM위에서 돌아가며, loca
 minikube version
 {% endhighlight %}
 
-## 1.4 Minikube 실행
+## 1.5 Minikube 실행
 
 클러스터 실행은 `--driver=kvm2 --kvm-gpu`로 해줘야 합니다. (Nvidia GPU사용하려면..) <br>
 Nvidia GPU필요없으면 드라이버 옵션 없이 `minikube start` 해주면 됩니다.
@@ -197,7 +197,7 @@ kubectl version
 {% endhighlight %}
 
 
-## 1.5 .bash 설정
+## 1.6 .bash 설정
 
 `~/.bashrc` 에 다음을 추가합니다.  <br>
 이후부터는 `kubectl` 명령어가 아니라 그냥 `k` 로도 됩니다. 
