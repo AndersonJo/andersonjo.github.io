@@ -75,10 +75,15 @@ docker run --gpus '"device=UUID-ABCDEF,1"' nvidia/cuda:10.0-base nvidia-smi
 docker run --gpus all,capabilities=utility nvidia/cuda:10.0-base nvidia-smi
 {% endhighlight %}
 
-## 1.2 IOMMU 
+## 1.2 IOMMU (Input-Output Memory Management Unit)
 
 IOMMU는 가상화 시스템에 올려진 OS에서 하드웨어를 직접 제어하기 위해서 나온 기술입니다. <br>
 문제는 하드웨어가 virtualization 그리고 IOMMU 기술을 제공해야 합니다. <br>
+
+먼저 BIOS 에 들어가서 다음의 Enable시켜야 합니다.
+
+ - Intel: VT-d 
+ - AMD: IOMMU
 
 먼저 다음을 설치 합니다.
 
@@ -96,13 +101,35 @@ GRUB_CMDLINE_LINUX="intel_iommu=on"
 GRUB_CMDLINE_LINUX="amd_iommu=on iommu=pt"
 {% endhighlight %}
 
-이후 grub을 업데이트 해주고, 테스트 합니다.
+이후 grub을 업데이트 해줍니다.
 
 {% highlight bash %}
 sudo update-grub
 virt-host-validate
 {% endhighlight %}
 
+
+그 다음으로 GPU하드웨어 주소를 커널 모듈에 설정해줘야 합니다. <br>
+먼저 GPU의 주소를 알아냅니다. <br>
+아래의 예제에서는  `10de:1b81` 그리고 `10de:10f0` 입니다. 
+
+{% highlight bash %}
+$ sudo lspci -nn | grep -i nvidia
+01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP104 [GeForce GTX 1070] [10de:1b81] (rev a1)
+01:00.1 Audio device [0403]: NVIDIA Corporation GP104 High Definition Audio Controller [10de:10f0] (rev a1)
+{% endhighlight %}
+
+`sudo vi /etc/modprobe.d/vfio.conf` 에 다음을 추가합니다. 
+
+{% highlight bash %}
+options vfio-pci ids=10de:1b81,10de:10f0
+{% endhighlight %}
+
+업데이트해주고 reboot합니다.
+
+{% highlight bash %}
+sudo update-initramfs -u
+{% endhighlight %}
 
 ## 1.3 KVM2 (Minikube에서 Nvidia 지원 - Optional)
 
@@ -380,5 +407,3 @@ spec:
 | 삭제        | `kubectl delete -f [파일이름]`    |                                      |
 
 
-
-https://m.blog.naver.com/PostView.nhn?blogId=alice_k106&logNo=221654023573&proxyReferer=https:%2F%2Fwww.google.com%2F
