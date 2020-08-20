@@ -114,9 +114,9 @@ virt-host-validate
 {% endhighlight %}
 
 
-그 다음으로 GPU하드웨어 주소를 커널 모듈에 설정해줘야 합니다. <br>
-먼저 GPU의 주소를 알아냅니다. <br>
-아래의 예제에서는  `10de:1b81` 그리고 `10de:10f0` 입니다. 
+~~그 다음으로 GPU하드웨어 주소를 커널 모듈에 설정해줘야 합니다.~~ <br>
+~~먼저 GPU의 주소를 알아냅니다.~~ <br>
+~~아래의 예제에서는  `10de:1b81` 그리고 `10de:10f0` 입니다.~~ 
 
 {% highlight bash %}
 $ sudo lspci -nn | grep -i nvidia
@@ -124,7 +124,7 @@ $ sudo lspci -nn | grep -i nvidia
 01:00.1 Audio device [0403]: NVIDIA Corporation GP104 High Definition Audio Controller [10de:10f0] (rev a1)
 {% endhighlight %}
 
-`sudo vi /etc/modprobe.d/vfio.conf` 에 다음을 추가합니다. 
+~~`sudo vi /etc/modprobe.d/vfio.conf` 에 다음을 추가합니다.~~ 
 
 {% highlight bash %}
 options vfio-pci ids=10de:1b81,10de:10f0
@@ -164,7 +164,9 @@ virt-host-validate # 테스트: 최종 잘되는지..
 {% endhighlight %}
 
 
-## 1.4 Minikube Installation
+## 1.4 Kubernetes Installation
+
+### 1.4.1 Minikube Installation
 
 Minikube는 single-node Kuebernetes cluster이며 VM위에서 돌아가며, local 개발시에 편리하게 사용할 수 있습니다.<br>
 그냥 한마디로 공부할때 node하나만 띄워놓고 여러가지 실험해볼수 있다는 뜻입니다. 
@@ -180,7 +182,82 @@ Minikube는 single-node Kuebernetes cluster이며 VM위에서 돌아가며, loca
 minikube version
 {% endhighlight %}
 
-## 1.5 Minikube 실행
+
+### 1.4.2 Kubernetes 
+
+ - [Install kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+
+다음의 패키지를 설치해야 합니다. <br>
+kubeadm을 설치할때 자동으로 버젼이 호환되는 kubelet 또는 kubectl을 설치하지 않습니다. <br> 
+버젼이 맞지 않을경우 버그가 발생할수 있습니다. 
+
+ - **kubeadm**: 클러스터를 생성함
+ - **kubelet**: 클러스터안의 모든 머신위에서 돌아가며, Pod 그리고 containers등을 시작합니다. 
+ - **kubectl**: 클라이언트 패키지
+ 
+{% highlight bash %}
+sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+{% endhighlight %}
+
+
+## 1.5 k8s-device-plugin
+
+여기까지 했다면 다음이 설치가 되어 있어야 합니다. 
+
+ - Nvidia Driver 
+ - [nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
+ - Kubernetes 
+ 
+k8s-device-plugin 은 다음을 지원합니다.
+
+ - 각 노드안에 있는 GPUs 갯수를 설정해줍니다. 
+ - GPUs의 heath를 추적합니다. 
+ - GPU 컨테이너를 실행하도록 도와줍니다. 
+ 
+**아래는 모든 GPU Nodes에서 실행이 되야 합니다.**
+
+{% highlight bash %}
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+sudo apt update
+sudo apt install -y nvidia-docker2
+sudo systemctl restart docker 
+{% endhighlight %}
+
+`sudo vi /etc/docker/daemon.json` 에서는 nvidia runtime을 default runtime으로 설정해야 됩니다. 
+
+{% highlight bash %}
+{
+    "default-runtime": "nvidia",
+    "runtimes": {
+        "nvidia": {
+            "path": "/usr/bin/nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    }
+}
+{% endhighlight %}
+
+모든 GPU nodes에서 위에 있는 내용을 실행시켰다면.. 다음의 Daemonset을 실행시켜서 GPU 서포트를 실행합니다. 
+
+{% highlight bash %}
+kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.6.0/nvidia-device-plugin.yml
+{% endhighlight %}
+
+
+
+## 1.6 Minikube 실행
 
 클러스터 실행은 `--driver=kvm2 --kvm-gpu`로 해줘야 합니다. (Nvidia GPU사용하려면..) <br>
 Nvidia GPU필요없으면 드라이버 옵션 없이 `minikube start` 해주면 됩니다.
@@ -229,7 +306,7 @@ kubectl version
 {% endhighlight %}
 
 
-## 1.6 .bash 설정
+## 1.7 .bash 설정
 
 `~/.bashrc` 에 다음을 추가합니다.  <br>
 이후부터는 `kubectl` 명령어가 아니라 그냥 `k` 로도 됩니다. 
