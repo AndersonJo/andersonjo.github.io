@@ -27,6 +27,11 @@ Kubernetes GPU-Cluster 를 정리를 하였습니다.<br>
 
 # 1. Installation and Configuration
 
+## Prerequisites 
+
+먼저 아래의 소프트웨어가 설치되어 있어야 합니다.
+
+ - [Docker](http://incredible.ai/docker/2015/12/02/Docker/)
 
 ## 1.1 Nvidia-Docker Installation
 
@@ -50,7 +55,7 @@ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
 curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
 sudo apt-get update 
-sudo apt-get install -y nvidia-container-toolkit
+sudo apt-get install -y nvidia-container-toolkit nvidia-container-runtime 
 sudo systemctl restart docker
 {% endhighlight %}
 
