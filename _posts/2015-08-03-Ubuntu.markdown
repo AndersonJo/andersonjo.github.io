@@ -54,10 +54,10 @@ sudo apt-get install oracle-java13-installer
 한글 104키로 해야 함
 
 {% highlight bash%}
-sudo apt-get install uim
+sudo apt-get install uim uim-byeoru`
 uim-pref-gtk
 {% endhighlight %}
-
+sni
 Alt키 에러시 다음과 같이 합니다.
 
 {% highlight bash %}
