@@ -14,16 +14,6 @@ tags: []
     </div>
 </header>
 
-최근 정부 AI데이터 센터 설립과 관련하여 기술 강의/컨설팅을 하게 되었습니다. <br>
-결국 핵심은 GPU라는 자원을 얼마나 효율적으로 제공하고, 국가의 발전?에 이바지? 하는가가 될것이라 생각했고, <br> 
-Kubernetes GPU-Cluster 를 정리를 하였습니다.<br> 
-
- - [관련기사 - 광주에 세계 톱10 AI데이터센터](https://www.hankyung.com/society/article/2020061030981)
-
-
-> 실제 제가 컨설팅 한 내용과 매우 차이가 있습니다. <br>
-> 여기에 있는 내용은 공개 가능한 그리고 Minikube + Ubuntu 기반으로한 GPU Virtualization에 대해서 설명하고 있습니다.<br>
-> 실제 AI데이터센터의 기술 스택과는 좀 차이가 있지만.. 대략 이런 방식이라는 점에서 일맥상통합니다. 
 
 # 1. Installation and Configuration
 

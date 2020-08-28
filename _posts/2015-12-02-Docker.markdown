@@ -13,9 +13,9 @@ tags: ["mariadb"]
 Installing Docker on Ubuntu <br>
 [https://docs.docker.com/engine/install/ubuntu/][https://docs.docker.com/engine/install/ubuntu/]
 
-# Install Docker
+# 1. Install Docker
 
-#### Installing Docker Community Edition on Ubuntu 16.04
+## 1.1 Installing Docker Community Edition on Ubuntu 
 
 이전 버전의 docker를 지워줍니다.
 
@@ -44,9 +44,9 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 {% endhighlight %}
 
-# Docker Configuration
+## 1.2 Docker Configuration
 
-#### docker group 
+### 1.2.1 docker group 
 
 기본적으로 Docker Deamon은 TCP Port대신에 Unix Socket으로 연결이 됩니다. Unix Socket은 root에 소유된 것이므로, 
 Docker를 실행하기 위해서는 항상 반드시 sudo로 해주어야 합니다.
@@ -65,7 +65,7 @@ sudo usermod -aG docker $USER
 docker run hello-world
 {% endhighlight %}
 
-#### Purge AppArmor 
+### 1.2.2 Purge AppArmor 
 
 container를 삭제하려고 할때 permission denied 에러가 나올수 있는데, 이 경우 AppArmor 를 삭제해주면 됩니다. 
 
@@ -83,7 +83,7 @@ sudo service apparmor teardown
 sudo aa-status
 {% endhighlight %}
 
-#### iptables option
+### 1.2.3 iptables option
 
 docker run -p port:port 또는 -P 옵션을 할때 docker는 iptables에서 해당 포트를 public으로 만듭니다.<br>
 이는 심지어 ufw default deny incoming 을 해도 ufw는 막지를 못합니다. <br>
@@ -108,7 +108,7 @@ sudo iptables -D DOCKER 1
 
 -D <체인이름> <헤더번호>
 
-#### Enable UFW forwarding
+### 1.2.4 Enable UFW forwarding
 
 Docker 는 기본적으로 container networking을 하기 위해서 bridge를 사용합니다.<br>
 문제는 ufw 는 모든 forwarding traffic을 drop시켜버립니다. 따라서 ufw의 forwarding policy를 설정해주어야 합니다.
@@ -131,14 +131,16 @@ sudo ufw reload
 sudo ufw allow 2375/tcp
 {% endhighlight %}
 
-#### Configure Docker to start on boot
+### 1.2.5 Configure Docker to start on boot
 
 {% highlight bash %}
 sudo systemctl enable docker
 {% endhighlight %}
 
 
-#### Install Ubuntu Libraries
+### 1.2.6 Install Ubuntu Libraries
+
+Docker 내부에서.. 
 
 {% highlight bash %}
 apt-get update 
@@ -163,9 +165,9 @@ service ssh restart
 
 
 
-# Docker 101
+# 2. Docker 101
 
-#### Quick Start
+## 2.1 Getting Started
 
 {% highlight bash %}
 docker info
@@ -196,34 +198,31 @@ $ docker rm 8142605eda66
 {% endhighlight %}
 
 
-Host File <--> Docker Container 복사하기
-{% highlight bash %}
-docker cp foo.txt mycontainer:/foo.txt
-docker cp mycontainer:/foo.txt foo.txt
-{% endhighlight %}
+## 2.2 Interactive Mode
 
-#### Interactive Mode
+ - `--name [컨테이너 이름]` 
+ - `-i`, `--interactive` 
+ - `--user [유저이름]`
 
-root로 로그인
+기본적으로 root 계정으로 로그인한다
 
 {% highlight bash %}
-docker run --name dev -it ubuntu:15.10 /bin/bash
-{% endhighlight %}
-
-ubuntu유저로 로그인
-
-{% highlight bash %}
-docker --user ubuntu --name dev -it ubuntu:15.10 /bin/bash
-{% endhighlight %}
-
-Advanced 로그인
-
-{% highlight bash %}
-docker run -d -P --user ubuntu --name dev -h docker -t andersonjo/ubuntu bash
+docker run --name dev -it ubuntu:20.04 /bin/bash
 {% endhighlight %}
 
 
-#### VIM Ansi Mode
+실행중인 container에 접속은 다음과 같이 합니다.
+
+{% highlight bash %}
+# 먼저 daemon으로 계속 실행하는 container를 생성
+docker run -d --name daemon_ubuntu -t ubuntu:20.04 /bin/bash
+
+# 실행중인 container에서 명령어 실행
+docker exec -it daemon_ubuntu /bin/bash
+{% endhighlight %}
+
+
+## 2.3 VIM Ansi Mode
 
 Docker 에서 vi를 실행시킬때 이상현상이 일어난다면 다음과 vim에서 다음과 같은 명령어를 쳐줍니다.<br>
 또는 .vimrc 파일안에 넣어도 됩니다.
@@ -240,103 +239,118 @@ Docker 에서 vi를 실행시킬때 이상현상이 일어난다면 다음과 vi
 
 
 
-#### Delete all containers
+## 2.4 Delete all containers
 
 {% highlight bash %}
 docker rm $(docker ps -a -q)
+
+# 또는 
+docker container prune
 {% endhighlight %}
 
-#### Delete all images
+## 2.5 Delete all images
 
 {% highlight bash %}
 docker rmi $(docker images -q)
 {% endhighlight %}
 
-#### Commit 
+
+## 2.6 Copy
+
+Host File <--> Docker Container 복사하기
+{% highlight bash %}
+echo "Hello Anderson" > foo.txt
+docker run -d --name mycontainer -t ubuntu:20.04 /bin/bash
+
+docker cp foo.txt mycontainer:/foo.txt
+docker exec -it mycontainer /bin/bash  # 들어가서 ls, cat으로 확인
+
+docker cp mycontainer:/foo.txt foo.txt
+{% endhighlight %}
+
+## 2.7 Commit 
 
 docker run을 하게 되면 실제로는 새로운 container를 생성하게 됩니다.
 
 {% highlight bash %}
-docker ps -a
-
-CONTAINER ID        IMAGE               COMMAND             CREATED
-58920ce9c7b3        ubuntu:15.10        "bash"              3 minutes ago
+$ docker run -d --name test_commit -t ubuntu:20.04 /bin/bash
+$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+e69589e2c14e        ubuntu:20.04        "/bin/bash"         27 seconds ago      Up 26 seconds                           test_commit
 {% endhighlight %}
 
 여기에서 CONTAINER ID를 잡아서 commit 시킵니다
 
 {% highlight bash %}
-docker commit 58920ce9c7b3 andersonjo/ubuntu
+docker commit test_commit andersonjo/test
 {% endhighlight %}
 
-#### Push
+## 2.8 Push
 
 {% highlight bash %}
-docker push andersonjo/ubuntu
+docker push andersonjo/test
 {% endhighlight %}
 
+만약 접속이 안되면 `docker login` 으로 해결.<br>
+잘됐으면 hub.docker.com 으로 들어가서 삭제 필요합니다. 
 
-#### Attach
+ - [Docker Hub 접속](https://hub.docker.com/)
+ - 내 아이디: [andersonjo](https://hub.docker.com/u/andersonjo)
+
+
+## 2.9 Attach
+
+Local standard input, output, error streams 를 running container에 붙입니다. <br>
+즉 실행중인 docker container의 로그를 볼 수 있습니다.
+
 
 {% highlight bash %}
-docker run -d -p --user ubuntu --name dev -t andersonjo/ubuntu bash
-docker attach dev
+docker run -d --name topdemo ubuntu /usr/bin/top -b
+docker attach topdemo
 {% endhighlight %}
 
-Background에서 돌아가고 있는 running container에 접속하기 위해서는 다음과 같이 합니다.
-
-{% highlight bash %}
-docker exec -it <CONTAINER ID or NAME> bash
-{% endhighlight %}
-
-#### IP Address
+## 2.10 Inspect & IP Address
 
 {% highlight bash %}
 docker inspect <CONTAINER NAME>  | grep IPAddress
 {% endhighlight %}
 
 
-#### Export and Import 
+# 3. Dockerfile
 
-여러번  commit을 시키게 되면은 history가 남게 되는데.. 이런 history를 지우는 방법이 있습니다.<br>
-export 는 history를 남기지 않은채 tar파일로 저장하는 명령어 입니다.
+## 3.1 Basic
 
-{% highlight bash %}
-docker export dev | docker import - andersonjo/ubuntu
-{% endhighlight %}
-
-# Dockerfile
-
-#### Basic
-
-Dockerfile 은 우선 FROM <이미지> 명령어부터 시작을 합니다.
+Dockerfile 은 우선 FROM <이미지> 명령어부터 시작을 합니다.<br>
+`vi Dockerfile` 로 다음을 입력합니다.
 
 {% highlight bash %}
-FROM andersonjo/ubuntu
+FROM ubuntu:20.04
 MAINTAINER Anderson Jo
-USER ubuntu
+USER root
 WORKDIR ~/
 
-RUN apt-get update
-RUN echo "Hello World!"
-EXPOSE 22
+RUN apt update
+RUN apt install -y nginx
+RUN echo "Hello Anderson!"
+EXPOSE 22 80
+CMD ["echo", "Hello! This is ANDERSON!"]
 {% endhighlight %}
 
-build -t를 하면 새로운 이미지가 생성이 됩니다.
+`docker build -t [이미지 이름]`를 하면 새로운 이미지가 생성이 됩니다.
 
 {% highlight bash %}
-sudo docker build -t [이미지 이름]
+docker build -t myubuntu .
 {% endhighlight %}
 
-#### CMD
+이후에 `docker run myubuntu` 로 "Hello! This is ANDERSON!" 확인합니다.<br>
+`docker run -p 9876:80 -d -it myubuntu nginx -g "daemon off;"` 이것로 daemon 띄워놓고 크롬에서 확인합니다. <br>
+`-g "daemon off;"` 옵션은 nginx만 실행하면.. daemon으로 실행되는게 이것을 막기 위함입니다.
 
-RUN은 이미지를 만들때 사용이 되고, CMD는 이미지가 만들어진후 docker run을 통해서 이미지로 부터  instantiated 될때 
-실행되는 명령어 입니다.
 
 
-# Networks
+# 4. Networks
 
-#### Basic Networks
+## 4.1 Basic Networks
 
 {% highlight bash %}
 docker network ls
@@ -371,12 +385,12 @@ inspect를 통해서 자세한 정보를 얻을수 있습니다.
 docker network inspect bridge
 {% endhighlight %}
 
-# User defined networks
+# 5. User defined networks
 
 새로운 bridge network 또는 overlay network를 만들어서 containers를 isolate하는데 사용할수 있습니다.
 또한 network plugin 그리고  remote network를 만들수도 있습니다.
 
-#### Bridge Network
+## 5.1 Bridge Network
 
 {% highlight bash %}
 docker network create --driver bridge isolated_nw
@@ -454,9 +468,9 @@ docker restart mariadb
 mysql -h 172.17.0.2 -u root -p
 {% endhighlight %}
 
-# UFW Port Forward
+# 6. UFW Port Forward
 
-#### Check Port Forwarding
+## 6.1 Check Port Forwarding
 
 {% highlight bash %}
 sudo vi /etc/default/ufw
@@ -470,7 +484,7 @@ net/ipv6/conf/default/forwarding=1
 net/ipv6/conf/all/forwarding=1
 {% endhighlight %}
 
-#### NAT
+## 6.2 NAT
 
 NAT를 ufw의 configuration에 넣어줍니다.<br>
 filter rules 전에 다음의 설정을 넣어줍니다.
@@ -494,7 +508,7 @@ COMMIT
 sudo ufw disable && sudo ufw enable
 {% endhighlight %}
 
-#### Port Forwarding
+## 6.3 Port Forwarding
 
 {% highlight bash %}
 # NAT table rules
