@@ -1,0 +1,189 @@
+---
+layout: post
+title:  "Kubeflow"
+date:   2020-08-01 01:00:00
+categories: "ml-ops"
+asset_path: /assets/images/
+tags: []
+---
+
+작성중인 문서입니다. 
+
+틀린부분 많아요. 
+
+
+
+# 1. Installation
+
+## 1.2 Docker Installation
+
+먼저 이전에 설치된 docker를 삭제합니다.
+
+{% highlight bash %}
+sudo apt-get remove docker docker-ce docker-engine docker.io containerd runc
+sudo apt-get purge docker docker-ce docker-engine docker.io containerd runc
+sudo apt autoremove
+{% endhighlight %}
+
+이후에 docker를 설치하며 아래는 알고 있어야 하는 주요사항입니다.
+
+- supported storage drivers: `overlay2`, `aufs`, `btrfs` 를 지원하며 기본값으로 `overlay2` 사용
+
+{% highlight bash %}
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs)    stable"
+
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+sudo usermod -aG docker anderson
+
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+sudo systemctl enable docker
+{% endhighlight %}
+
+
+
+## 1.2 Kubectl & Kubelet Installation
+
+### 1.2.1 설치
+
+{% highlight bash %}
+sudo apt-get update 
+sudo apt-get install -y apt-transport-https curl
+
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+{% endhighlight %}
+
+
+
+### 1.2.2 그외 설정
+
+Swap설정을  꺼줍니다.<br>
+부팅후에도 swap이 꺼질수 있도록 `/etc/fstab ` 에 swap설정된 부분도 comment out 시킵니다. 
+
+{% highlight bash %}
+sudo swapoff -a
+sudo vi /etc/fstab 
+{% endhighlight %}
+
+kubeadm 초기화를 시켜줍니다.<br>
+`/var/lib/kubelet/config.yaml` 파일을 초기화 시켜주며 kubelet이 실행되도록 해줍니다.
+
+{% highlight bash %}
+sudo kubeadm init
+{% endhighlight %}
+
+또한 custom cluster를 실행시키기 위해서는 일반적은 user권한으로 실행이 되야 합니다. <br>
+따라서 다음과 같이 admin.conf를 user권한으로 변경해줍니다.
+
+{% highlight bash %}
+sudo cp /etc/kubernetes/admin.conf $HOME/.kube/
+sudo chown $(id -u):$(id -g) $HOME/.kube/admin.conf
+export KUBECONFIG=$HOME/.kube/admin.conf
+{% endhighlight %}
+
+`vi ~/.bashrc` 에도 넣어습니다. 
+
+{% highlight bash %}
+#Kubernetes
+export KUBECONFIG=$HOME/.kube/admin.conf
+export PATH=$PATH:$KUBECONFIG
+{% endhighlight %} 
+
+
+
+### 1.2.3 실행
+
+Kubelet 서비스를 실행시켜 줍니다. 
+
+{% highlight bash %}
+sudo service kubelet start
+sudo service kubelet status
+{% endhighlight %}
+
+설치가 잘 되었는지 확인해 봅니다.
+
+{% highlight bash %}
+kubectl cluster-info
+kubeadm version
+kubectl version
+{% endhighlight %}
+
+## 1.3 Start Minikube & Kubelet
+
+이후 Minikube를 실행시킵니다.
+
+{% highlight bash %}
+minikube stop
+minikube delete
+
+minikube start --cpus 6 --memory 12288 --disk-size=120g 
+{% endhighlight %}
+
+
+
+## 1.4 Kubeflow Installation
+
+- [kubeflow minikube linux](https://www.kubeflow.org/docs/started/workstation/minikube-linux/) 문서를 참고 했습니다.
+
+{% highlight bash %}
+wget https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
+tar -zxvf kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
+chmod +x ./kubectl
+sudo mv ./kfctl /usr/local/bin/
+
+export KF_DIR=~/apps/kubeflow/v1.1
+export CONFIG_URI="https://raw.githubusercontent.com/kubeflow/manifests/v1.1-branch/kfdef/kfctl_k8s_istio.v1.1.0.yaml" 
+
+mkdir -p $KF_DIR
+cd $KF_DIR
+kfctl apply -V -f $CONFIG_URI
+kubectl version --client
+{% endhighlight %}
+
+
+
+## 1.5 Remove Kubernetes 
+
+혹시 설치중 잘못된 설정으로 인해 재설치하고자 할때, 다음의 명령어들을 사용해서 삭제를 할수 있습니다.
+
+{% highlight bash %}
+sudo kubeadm reset
+rm -rf /etc/cni/net.d
+sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*
+sudo apt-get autoremove
+sudo rm -rf ~/.kube /etc/kubernetes /var/lib/kubelet
+
+sudo iptables -F && sudo iptables -X
+sudo iptables -t nat -F && sudo iptables -t nat -X
+sudo iptables -t raw -F && sudo iptables -t raw -X
+sudo iptables -t mangle -F && sudo iptables -t mangle -X
+{% endhighlight %}
+
+## 1.6 Trouble Shooting
+
+설치 잘되었는지 확인 방법
+
+{% highlight bash %}
+kubectl cluster-info  # Kubernetes master 그리고 KubeDNS 어디에서 돌고 있는지 나와야 함
+systemctl status kubelet  # active (running) 중이어야함
+{% endhighlight %}
+
+Kubelet 로그 확인
+
+{% highlight bash %}
+journalctl -xeu kubelet
+{% endhighlight %}
