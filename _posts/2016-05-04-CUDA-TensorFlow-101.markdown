@@ -11,8 +11,7 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 <header>
 <img src="{{ page.static }}tensorflow.jpg" class="img-responsive img-rounded img-fluid">
 </header>
-
-**2020년 1월 기준으로 업데이트 했습니다.**
+**2020년 1월 기준으로 업데이트 했습니다.** 
 
 
 # Install Nvidia Driver and CUDA for TensorFlow
@@ -142,42 +141,33 @@ Fri Jan 24 23:20:34 2020
 
 ## Install CUDA Toolkit & CUDA
 
+
 ### Install CUDA Toolkit
 
-[Tensorflow GPU Support](https://www.tensorflow.org/install/gpu) 에 들어가서 먼저, TensorFlow 가 지원하는 CUDA버젼을 알아야 합니다.<br>
-현재 2020년 1월의 기준으로 CUDA 10.1 을 요구하고 있습니다.  
-
-[Download CUDA](https://developer.nvidia.com/cuda-downloads) 에서 맞는 CUDA 버젼을 다운로드 받습니다.
-참고로 10.1의 경우 [legacy releases](https://developer.nvidia.com/cuda-10.1-download-archive-update2)에 들어가서 다운로드 받아야 합니다.
-
-문서상에 따르면 10.1의 경우 다음과 같이 설치합니다. (2020년 1월 기준)<br>
-이때 우리는 이미 `sudo apt install nvidia-driver-xxx` 명령어로 driver를 최신으로 설치한 상태이기 때문에, <br>
-Drvier는 따로 설치할 필요 없습니다. 따라서 Nvidia drvier는 최신으로 사용하고, CUDA Toolkit은 TensorFlow에 맞춰서 <br>
-legacy 를 사용하는 케이스가 생길수 있습니다.  
-
 {% highlight bash %}
-wget http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run
-sudo sh cuda_10.1.243_418.87.00_linux.run
+sudo apt install nvidia-cuda-toolkit
 {% endhighlight %}
 
-이후 .bashrc에 다음을 설정합니다. 
+확인은 nvcc를 사용합니다.
 
 {% highlight bash %}
-# CUDA & CUDNN
-export CUDAHOME=/usr/local/cuda
-export PATH=$PATH:/usr/local/cuda/bin:/usr/local/cuda/include
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDAHOME/lib64:$CUDAHOME/lib:/usr/local/lib:$CUDAHOME/extras/CUPTI/lib64/
+nvcc -V
 {% endhighlight %}
 
 
 ### Install cuDNN
 
-[cuDNN 다운로드](https://developer.nvidia.com/cudnn) 에서 동일한 버젼의 (현재 문서에서는 10.1) cuDNN을 찾아서 다운로드 합니다.
+[Tensorflow GPU Support](https://www.tensorflow.org/install/gpu) 에 들어가서 먼저, TensorFlow 가 지원하는 CUDA버젼을 확인합니다.<br>
+확인후 [CuDNN Download Page](https://developer.nvidia.com/rdp/cudnn-download) 로 들어가서 `cuDNN Library for Linux` 를 다운받습니다.
+
+2020년 9월 기준으로 CUDA 10.0 (418.x 또는 더 높은 버젼)을 요구하고, cnDNN SDK는 7.6 을 요구하고 있습니다. <br>
+즉 cuDNN은 7.6을 다운받아야 되며, CuDNN Download Page에서는 archived 페이지에서 다운로드 받습니다.
+
 
 다운로드 받은 cuDNN의 구조는 다음과 같습니다. 
 
 {% highlight bash %}
-cuda
+./cuda/
 ├── include
 │   └── cudnn.h
 ├── lib64
@@ -189,12 +179,24 @@ cuda
 {% endhighlight %}
 
 {% highlight bash %}
-tar xvzf cudnn-7.5-linux-x64-v4.tgz
+tar zxvf cudnn-10.1-linux-x64-v7.6.5.32.tgz
 chmod 644 cuda/include/*
-sudo cp -P ./cuda/lib64/* /usr/local/cuda/lib64/
-sudo cp ./cuda/include/cudnn.h /usr/local/cuda/include/
+sudo cp -P ./cuda/lib64/* /usr/lib/cuda/lib64/
+sudo cp ./cuda/include/cudnn.h /usr/lib/cuda/include/
 {% endhighlight %}
 
+### .bashrc 설정
+
+이후 .bashrc에 다음을 설정합니다. 
+
+{% highlight bash %}
+# CUDA & CUDNN
+export CUDAHOME=/usr/lib/cuda
+export PATH=$PATH:/usr/lib/cuda/bin:/usr/lib/cuda/include
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDAHOME/lib64:$CUDAHOME/lib:/usr/local/lib
+{% endhighlight %}
+
+설정뒤 한번은 `sudo ldconfig` 를 해줍니다.
 
 
 ## TensorFlow
@@ -232,9 +234,9 @@ tf.config.list_physical_devices('GPU')
 
 Operations 들은 op 또는 ops로 쓸수 있으며, 하나의 수학적 공식이라고 생각하면 됩니다. 
 즉 여러개의 수학적 공식들 (Operations)들이 모여서 하나의 그래프를 이루게 됩니다.
- 
+
 아래의 예제에서는 default graph가 3개의 nodes을 갖고 있습니다.
- 
+
 * 2개의 constants ops (matrix1, matrix2)
 * 1개의 matmul() op 
 
@@ -268,7 +270,7 @@ with tf.device("/gpu:1"):
 * **/gpu:1**: The second GPU of your machine, etc.
 
 ### Launching the graph in a distributed session
-  
+
 먼저 TensorFlow Server를 각각의 Cluster machines들에서 띄워놓습니다.
 
 {% highlight python %}
@@ -300,7 +302,7 @@ with tf.Session() as sess:
     for i in range(3):
         sess.run(update)
         print(sess.run(state))
-        
+
 # output
 0
 1
