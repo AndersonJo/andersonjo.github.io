@@ -2,9 +2,9 @@
 layout: post
 title:  "Amazon Elastic Kubernetes Service (EKS) - Installation Part"
 date:   2020-09-26 01:00:00
-categories: "aws"
+categories: "kubernetes"
 asset_path: /assets/images/
-tags: ['mfa', 'otp', 'authentication', 'eks', 'kubeflow', 'dashboard']
+tags: ['aws', 'mfa', 'otp', 'authentication', 'eks', 'kubeflow', 'dashboard']
 ---
 
 # 1. Introduction
