@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Amazon Elastic Kubernetes Service (EKS) - Installation Part"
+title:  "Amazon Elastic Kubernetes Service (EKS) - Installation"
 date:   2020-09-26 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
@@ -46,8 +46,18 @@ $ aws configure
  - **ap-northeast-3**: Asia Pacific (Osaka-Local)
  - **ap-southeast-1**: Asia Pacific (Singapore)
  - **ap-southeast-2**: Asia Pacific (Sydney)
- 
-## 2.2 AWS MFA 
+
+## 2.2 aws-iam-authenticator 
+
+자세한 내용은 [aws-iam-authenticator 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-aws-iam-authenticator.html) 문서를 참조 합니다. <br>
+
+{% highlight bash %}
+$ curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/aws-iam-authenticator
+$ chmod +x ./aws-iam-authenticator
+$ sudo cp ./aws-iam-authenticator /usr/local/bin/
+{% endhighlight %}
+
+## 2.3 AWS MFA 
 
 만약 사내에서 Multi-Factor Authentication (MFA)를 사용중이라면, MFA인증이 필요합니다. <br>
 MFA는 그냥 쉽게 말하면, 핸드폰에 Google OTP 앱으로 인증하는 것이라고 생각하면 됩니다. 
@@ -70,7 +80,7 @@ INFO - Success! Your credentials will expire in 43200 seconds at: 2020-09-26 22:
 
 
  
-## 2.3 EKSCTL
+## 2.4 EKSCTL
 
 EKSCTL은 Amazon EKS의 공식 CLI툴입니다. 
 
@@ -81,7 +91,7 @@ $ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest
 $ sudo mv /tmp/eksctl /usr/local/bin
 {% endhighlight %}
 
-## 2.4 Kubectl
+## 2.5 Kubectl
 
 * Kubectl 1.17 버젼이 필요합니다.  
 
@@ -118,6 +128,8 @@ complete -F __start_kubectl k
 3. 서비스 리스트 중에서 EKS 선택 -> EKS 관련 Permission 선택
 4. Role name은 eksRole, eksServiceRole 등등 적합한 단어로 생성
 
+<img src="{{ page.asset_path }}eks-iam-eks-cluster-review.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+
 ## 3.2 Create Cluster VPC with Cloud Formation 
 
  * Cluster생성시에 VPC subnets을 지정해야 하며, EKS는 최소 2 availability zones을 선택해야 합니다. 
@@ -132,9 +144,32 @@ complete -F __start_kubectl k
  - [Trhee public subnets](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#vpc-public-only2)
  - [Three private subnets](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#vpc-private-only2)
  
-기본적으로 Cloud Formation에서 VPC생성후 -> EKS Cluster를 생성할때 Cloud Formation으로 만들어 놓은 VPC ID, SecurityGroup, Subnet IDs 을 가져다 사용하는 것 입니다. 
+기본적으로 Cloud Formation에서 VPC생성후 -> EKS Cluster를 생성할때 Cloud Formation으로 만들어 놓은 VPC ID, SecurityGroup, Subnet IDs 을 가져다 사용하는 것 입니다. <br>
+본문에서는 Two public subnets 그리고 two private subnets 생성과 관련을 설명하겠습니다. 
 
-## 3.3 Create Kubeconfig (Cluster 로그인) 
+1. 먼저 [CloudFormation](https://console.aws.amazon.com/cloudformation/)으로 접속 -> Create Stack -> With new resources(standard) 선택
+2. 다음과 같이 선택하고 S3 URL을 넣습니다. <br>
+   ```
+   https://amazon-eks.s3.us-west-2.amazonaws.com/cloudformation/2020-08-12/amazon-eks-vpc-private-subnets.yaml
+   ```
+   <img src="{{ page.asset_path }}eks-cloudformation-select-s3-template.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+3. 나머지는 Subnets CIDR정도만 수정하고, 리뷰하고 생성 
+4. 중요한점은 모두 생성되고나서, Outputs를 보고 SecurityGroups, SubnetIds, VpcId 을 따로 기록해둡니다. (Kubernetes생성시 사용) <br><br>
+   <img src="{{ page.asset_path }}eks-cloudformation-outputs.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+
+* **SecurityGroups**: 추후 nodes를 cluster에 추가시킬때, 반드시 해당 SecurityGroup을 명시해야 합니다. 이를 통해서 EKS control plane과 nodes와 통신이 가능합니다. 
+* **VpcId**: node group template 사용시 필요합니다. 
+* **SubnetIds**: nodes를 cluster에 추가시에, 어떤 subnets으로 생성시킬지 명시해야 합니다.
+
+## 3.3 Create Amazon EKS Cluster  
+
+1. [Amazon EKS Console](https://console.aws.amazon.com/eks/home#/clusters) 을 열고 -> Create cluster 버튼을 누릅니다.
+2. 적당히 이름넣고, Cluster Service Role은 이전에 만들었던 IAM Role을 넣습니다.<br><br>
+   <img src="{{ page.asset_path }}eks-create-cluster-configuration.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+3. Networking은 Cloud Formation에서 생성한 VPC, Subnets, Security Groups을 선택합니다. 
+4. 그외 로그 옵션 잘 선택하고 만들면 끝
+
+## 3.4 Create Kubeconfig (Cluster 로그인) 
 
 kubectl 명령어로 Cluster에 붙어서 명령을 내리려면 kubeconfig파일 설정이 되어 있어야 합니다. <br>
 `~/.kube/admin.conf` 또는 `~/.kube/config` 파일을 생성해야 하는데 다음과 같은 명령어로 생성 가능합니다.
@@ -156,7 +191,7 @@ kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   74m
 - Trouble Shooting: [Unauthorized or access denied Error (kubectl)](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html#unauthorized) 
  
 
-## Test Installation
+## 3.5 Test Installation
 
 {% highlight bash %}
 $ kubectl create deployment test-deployment --image=gcr.io/google-samples/kubernetes-bootcamp:v1
@@ -170,14 +205,13 @@ $ kubectl port-forward deployments/test-deployment 8080:8080
 $ kubectl delete deployment/test-deployment
 {% endhighlight %}
 
-## 3.5 EKS Cluster Endpoint Access Control 
+## 3.6 EKS Cluster Endpoint Access Control 
 
 Cluster를 생성시 Amazon EKS는 kubectl같은 툴로 커뮤니케이션 할 수 있도록 Kubernetes API Server의 endpoint를 생성합니다. <br>
 기본값으로 해당 endpoint는 internet에 public으로 열려 있으며, 해당 접근은 IAM 또는 Kubernetes의 Role Based Access Control (RBAC)로 관리가 됩니다.
 
- - EKS -> Clusters -> 특정 Cluster 선택 -> Networking -> Manage Networking 버튼 선택
-
-<img src="{{ page.asset_path }}eks-manage-networking.png" class="img-responsive img-rounded img-fluid center">
+ - EKS -> Clusters -> 특정 Cluster 선택 -> Networking -> Manage Networking 버튼 선택<br><br>
+   <img src="{{ page.asset_path }}eks-manage-networking.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
 
 
 | Mode               | Public Access | Private Access | Description                 |
@@ -209,11 +243,14 @@ Cluster를 생성시 Amazon EKS는 kubectl같은 툴로 커뮤니케이션 할 �
 
 1. [IAM Console](https://console.aws.amazon.com/iam/) 접속 -> Create Role 
 2. Common use cases 에서 EC2 선택하고 바로 Next:Permission 버튼 클릭
-3. `AmazonEKSWorkerNodePolicy` 로 filter policies를 한후 -> `AmazonEKSWorkerNodePolicy` 체크 박스 선택
-4. `AmazonEKS_CNI_Policy` 로 filter policies를 한후 -> `AmazonEKS_CNI_Policy` 체크 박스 선택 
-5. `AmazonEC2ContainerRegistryReadOnly` 로 filter policies를 한후 -> `AmazonEC2ContainerRegistryReadOnly` 체크 박스 선택
+3. Permissions 은 다음을 선택합니다. 
+   - `AmazonEKSWorkerNodePolicy`
+   - `AmazonEKS_CNI_Policy` 
+   - `AmazonEC2ContainerRegistryReadOnly` 
 6. Next: Tags 클릭
-7. Role Name: `EKSNodeInstanceRole` 등의 유니크한 이름 생성
+7. Role Name: `EKSNodeInstanceRole` 등의 유니크한 이름 생성 <br><br>
+   <img src="{{ page.asset_path }}eks-managed-node-iam-role.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+
 
 그 다음으로 managed node group을 생성합니다. 
 
@@ -222,8 +259,10 @@ Cluster를 생성시 Amazon EKS는 kubectl같은 툴로 커뮤니케이션 할 �
    - subnets: Cloud Formation으로 생성한 subnets을 선택
    - Allow remote access to nodes: 생성후에 enable 시킬수 없고, SSH 접속이 안되니, 이건 거의 반드시 enable 시키고 시작함
    - SSH Key Pair 선택 (없으면 생성하면 됨)
+3. 리뷰 예제는 다음과 같습니다. <br><br>
+   <img src="{{ page.asset_path }}eks-node-creation-review.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
 
-만약 GPU nodes의 경우 [Nvidia device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin) 를 선택해야 합니다. <br>
+만약 GPU nodes의 경우 [Nvidia device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin) 를 Cluster의 DaemonSet 으로 적용해야 합니다. <br>
 
 {% highlight bash %}
 kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.6.0/nvidia-device-plugin.yml
@@ -304,7 +343,7 @@ $ kubectl proxy
 
 [http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#!/login](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#!/login) 로 접속합니다.
 
-<img src="{{ page.asset_path }}eks-dashboard-token-auth.png" class="img-responsive img-rounded img-fluid center">
+<img src="{{ page.asset_path }}eks-dashboard-token-auth.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
 ## 5.3 External Access to Dashboard 
