@@ -140,6 +140,52 @@ kfctl_aws.yaml 수정도 완료되었다면, deploy시키고 이후 확인까지
 $ kfctl apply -V -f kfctl_aws.yaml
 $ kubectl -n kubeflow get all
 $ kubectl -n kubeflow get pods
+NAME                                                     READY   STATUS    RESTARTS   AGE
+admission-webhook-bootstrap-stateful-set-0               1/1     Running   2          20m
+admission-webhook-deployment-5bc5f97cfd-p9vlp            1/1     Running   3          18m
+alb-ingress-controller-5b777c5cc7-gdsth                  1/1     Running   0          18m
+application-controller-stateful-set-0                    1/1     Running   0          22m
+argo-ui-669bcd8bfc-vv562                                 1/1     Running   0          18m
+cache-deployer-deployment-b75f5c5f6-2wz84                2/2     Running   1          18m
+cache-server-85bccd99bd-x2f5c                            2/2     Running   0          18m
+centraldashboard-68965b5d89-qmccs                        1/1     Running   0          18m
+jupyter-web-app-deployment-5b96b8c459-kmnhv              1/1     Running   0          18m
+katib-controller-76b78f5db-hh4t4                         1/1     Running   1          18m
+katib-db-manager-67c9554b6d-g5ll5                        1/1     Running   1          18m
+katib-mysql-5754b5dd66-f8nrz                             1/1     Running   0          18m
+katib-ui-844b4fc655-566bn                                1/1     Running   0          18m
+kfserving-controller-manager-0                           2/2     Running   0          16m
+kubeflow-pipelines-profile-controller-65b65d97bb-9xk4p   1/1     Running   0          18m
+metacontroller-0                                         1/1     Running   0          20m
+metadata-db-695fb6f55-7bpqk                              1/1     Running   0          18m
+metadata-deployment-7d77b884b6-kmx58                     1/1     Running   1          18m
+metadata-envoy-deployment-c5985d64b-95gc5                1/1     Running   0          18m
+metadata-grpc-deployment-9fdb476-jz8mx                   1/1     Running   4          18m
+metadata-ui-cf67fdb48-gnpt6                              1/1     Running   0          18m
+metadata-writer-59d755696c-766h8                         2/2     Running   0          18m
+minio-6647564c5c-qbd8v                                   1/1     Running   0          18m
+ml-pipeline-6bc56cd86d-gnb74                             2/2     Running   3          18m
+ml-pipeline-persistenceagent-6f99b56974-tx4gn            2/2     Running   0          18m
+ml-pipeline-scheduledworkflow-d596b8bd-6lk56             2/2     Running   0          18m
+ml-pipeline-ui-8695cc6b46-bptd9                          2/2     Running   0          18m
+ml-pipeline-viewer-crd-5998ff7f56-h8pwq                  2/2     Running   2          18m
+ml-pipeline-visualizationserver-cbbb5b5b-hktzs           2/2     Running   0          18m
+mpi-operator-c747f5bf6-rnnqt                             1/1     Running   0          18m
+mxnet-operator-7cd59d475-mmkrc                           1/1     Running   0          18m
+mysql-76597cf5b5-b2qv7                                   2/2     Running   0          18m
+notebook-controller-deployment-756587d86-bxrqf           1/1     Running   0          18m
+nvidia-device-plugin-daemonset-9x2c2                     2/2     Running   0          17m
+nvidia-device-plugin-daemonset-bwltc                     2/2     Running   0          17m
+nvidia-device-plugin-daemonset-llpm9                     2/2     Running   0          12m
+nvidia-device-plugin-daemonset-vrhhh                     2/2     Running   0          17m
+profiles-deployment-65fcc9c97-d7j8x                      2/2     Running   0          18m
+pytorch-operator-5db58565b-zkrbl                         1/1     Running   0          18m
+seldon-controller-manager-6ddf664d54-vkq86               1/1     Running   0          18m
+spark-operatorsparkoperator-85bbf89886-qm297             1/1     Running   0          20m
+spartakus-volunteer-7566cfd658-phbrm                     1/1     Running   0          16m
+tensorboard-79bdbb4866-gkk6w                             1/1     Running   0          16m
+tf-job-operator-5bf84768bf-q67t2                         1/1     Running   0          18m
+workflow-controller-54dccb7dc4-pjgkl                     1/1     Running   0          18m
 {% endhighlight %}
 
 ## 1.5 Kubeflow Dashboard 
