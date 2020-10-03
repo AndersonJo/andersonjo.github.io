@@ -123,7 +123,7 @@ plugins:
 
 확인은 IAM -> Roles 그리고 kubectl 명령어로 확인 가능합니다.
 
-<img src="{{ page.asset_path }}eks-kf-roles.png" class="img-responsive img-rounded img-fluid">
+<img src="{{ page.asset_path }}eks-kf-roles.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
 
 {% highlight bash %}
 $ kubectl get serviceaccounts -n kubeflow | grep ^kf
@@ -198,7 +198,7 @@ istio-ingress   *       d87f7e0c-istiosystem-istio-2af2-1299484680.us-east-2.elb
 
 위의 ADDRESS 주소를 chrome에서 확인합니다
 
-<img src="{{ page.asset_path }}eks-kubeflow-dashboard-login.png" class="img-responsive img-rounded img-fluid">
+<img src="{{ page.asset_path }}eks-kubeflow-dashboard-login.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
 
 
 만약 basic authentication을 사용했고 유저를 추가하고자 한다면 Dex ConfigMap 을 수정하면 됩니다.
