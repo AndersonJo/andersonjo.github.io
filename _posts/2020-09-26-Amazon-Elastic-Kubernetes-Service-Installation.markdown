@@ -4,7 +4,7 @@ title:  "Amazon Elastic Kubernetes Service (EKS) - Installation"
 date:   2020-09-26 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
-tags: ['aws', 'mfa', 'otp', 'authentication', 'eks', 'kubeflow', 'dashboard']
+tags: ['aws', 'mfa', 'otp', 'authentication', 'eks', 'kubeflow', 'dashboard', 'login', '로그인']
 ---
 
 # 1. Introduction
