@@ -82,14 +82,34 @@ vi kfctl_aws.yaml
 IAM Role for Service Account를 사용하기 위해서는 kfctl_aws.yaml 파일을 변경해야 합니다.<br>
  - `enablePodIamPolicy`: `true` 로 설정해야 합니다.
  - `region`: cluster 위치의 region 설정
+ - `auth.basicAuth.username`: 접속할 유저 이메일
+ - `auth.basicAuth.password`: 암호
+ - `roles`
+    - 만약 eksctl를 통해서 cluster를 생성했다면 다음의 명령어로 node group role에 대한 IAM Role을 찾을 수 있습니다.
+      ```
+aws iam list-roles \
+  | jq -r ".Roles[] \
+  | select(.RoleName \
+  | startswith(\"eksctl-$AWS_CLUSTER_NAME\") and contains(\"NodeInstanceRole\")) \
+  .RoleName"
+      ```
+    - eksctl말고 다른 방법으로 cluster를 생성시켰다면 node group 생성시 사용한 IAM Role을 적용하면 됩니다. <br> 본문에서는 `AI-EKS-Node` 를 사용했습니다.
+    
+ 
 {% highlight yaml %}
 plugins:
   - kind: KfAwsPlugin
     metadata:
       name: aws
     spec:
+      auth:
+        basicAuth:
+          password: 1234
+          username: a141890@gmail.co
       enablePodIamPolicy: true
-      region: us-west-2
+      region: us-east-2
+      roles:
+      - AI-EKS-Node
 {% endhighlight %}
 
 아래 Deploy 이후, 다음 2개의 roles 그리고 service accounts를 생성합니다.

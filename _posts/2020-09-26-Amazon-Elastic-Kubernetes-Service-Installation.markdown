@@ -126,6 +126,7 @@ complete -F __start_kubectl k
 1. [IAM Console](https://console.aws.amazon.com/iam/) 로 접속합니다.
 2. Roles -> Create Role 
 3. 서비스 리스트 중에서 EKS 선택 -> EKS 관련 Permission 선택
+   - [`AmazonEKSClusterPolicy`](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy%24jsonEditor) 는 반드시 선택
 4. Role name은 eksRole, eksServiceRole 등등 적합한 단어로 생성
 
 <img src="{{ page.asset_path }}eks-iam-eks-cluster-review.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
@@ -190,6 +191,28 @@ kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   74m
 
 - Trouble Shooting: [Unauthorized or access denied Error (kubectl)](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html#unauthorized) 
  
+## 3.5 Upgrade amazon-vpc-cni-k8s (to 1.7)
+
+- [cni upgrade 하는 방법 AWS 문서](https://docs.aws.amazon.com/eks/latest/userguide/cni-upgrades.html)
+- [Github amazon-vpc-cni-k8s](https://github.com/aws/amazon-vpc-cni-k8s) 
+
+먼저 현재의 버젼을 확인합니다.
+
+{% highlight bash %}
+$ kubectl describe daemonset aws-node --namespace kube-system | grep Image | cut -d "/" -f 2
+amazon-k8s-cni:v1.6.3-eksbuild.1
+{% endhighlight %}
+
+[버젼별 yaml](https://github.com/aws/amazon-vpc-cni-k8s/tree/master/config) 에 들어가서 최신 버젼을 확인합니다.<br>
+이후 지역에 따라서 업그레이드 방법이 다릅니다. <br>
+아래의 코드는 지역 상관없이 1.7을 설치하는 예제 입니다. 
+
+{% highlight bash %}
+$ curl -o aws-k8s-cni.yaml https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/master/config/v1.7/aws-k8s-cni.yaml
+$ sed -i -e 's/us-west-2/<region-code>/' aws-k8s-cni.yaml
+$ kubectl apply -f aws-k8s-cni.yaml
+{% endhighlight %}
+
 
 ## 3.5 Test Installation
 
