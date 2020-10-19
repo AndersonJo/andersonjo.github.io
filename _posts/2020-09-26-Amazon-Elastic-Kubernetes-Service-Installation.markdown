@@ -49,7 +49,9 @@ $ aws configure
 
 ## 2.2 aws-iam-authenticator 
 
+Amazon EKS는 IAM을 사용해서 EKS Cluter에 대한 authentication을 [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator)를 통해서 제공 합니다. <br>
 자세한 내용은 [aws-iam-authenticator 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-aws-iam-authenticator.html) 문서를 참조 합니다. <br>
+
 
 {% highlight bash %}
 $ curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/aws-iam-authenticator
@@ -93,10 +95,9 @@ $ sudo mv /tmp/eksctl /usr/local/bin
 
 ## 2.5 Kubectl
 
-* Kubectl 1.17 버젼이 필요합니다.  
-
 {% highlight bash %}
-$ curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/kubectl
+$ curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+$ # curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/kubectl
 $ chmod +x ./kubectl
 $ sudo mv ./kubectl /usr/local/bin
 {% endhighlight %}
@@ -104,7 +105,9 @@ $ sudo mv ./kubectl /usr/local/bin
 설치 확인은 버젼 체크로 할 수 있습니다.
 
 {% highlight bash %}
-kubectl version --short --client
+$ kubectl version --short
+Client Version: v1.19.3
+Server Version: v1.17.9-eks-4c6976
 {% endhighlight %}
 
 .bashrc 에 다음의 넣습니다.
@@ -173,10 +176,18 @@ complete -F __start_kubectl k
 ## 3.4 Create Kubeconfig (Cluster 로그인) 
 
 kubectl 명령어로 Cluster에 붙어서 명령을 내리려면 kubeconfig파일 설정이 되어 있어야 합니다. <br>
-`~/.kube/admin.conf` 또는 `~/.kube/config` 파일을 생성해야 하는데 다음과 같은 명령어로 생성 가능합니다.
+여기안에는 여러 정보가 있지만, 일단 Cluster에 접속해서 authentication을 하려면 Token을 얻어야 합니다.<br>
+Token은 다음의 명령어로 얻을 수 있습니다. 
+
+{% highlight bash %}
+$ aws eks get-token --cluster-name AI-EKS-D | jq .status.token
+{% endhighlight %}
+
+물론 위의 명령어를 사용해서 [kubeconfig 파일은 manual](https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html)로 만들어 줄 수도 있습니다.<br>
+`~/.kube/admin.conf` 또는 `~/.kube/config` 파일을 자동으로 생성하기 위해서는 아래의 명령어를 사용합니다.
 
 - `--role-arn <IAM role ARN>` : 해당 option을 추가해서 authentication을 사용할 수 있습니다.
-
+jo
 {% highlight bash %}
 $ aws eks --region <us-west-2> update-kubeconfig --name <cluster_name>
 {% endhighlight %}
@@ -214,21 +225,7 @@ $ kubectl apply -f aws-k8s-cni.yaml
 {% endhighlight %}
 
 
-## 3.5 Test Installation
-
-{% highlight bash %}
-$ kubectl create deployment test-deployment --image=gcr.io/google-samples/kubernetes-bootcamp:v1
-$ kubectl port-forward deployments/test-deployment 8080:8080
-{% endhighlight %}
-
-[http://localhost:8080](http://localhost:8080) 에서 확인합니다. <br>
-이후 삭제 합니다.
-
-{% highlight bash %}
-$ kubectl delete deployment/test-deployment
-{% endhighlight %}
-
-## 3.6 EKS Cluster Endpoint Access Control 
+## 3.7 EKS Cluster Endpoint Access Control 
 
 Cluster를 생성시 Amazon EKS는 kubectl같은 툴로 커뮤니케이션 할 수 있도록 Kubernetes API Server의 endpoint를 생성합니다. <br>
 기본값으로 해당 endpoint는 internet에 public으로 열려 있으며, 해당 접근은 IAM 또는 Kubernetes의 Role Based Access Control (RBAC)로 관리가 됩니다.
@@ -298,9 +295,26 @@ kubectl get nodes --watch
 {% endhighlight %}
 
 
-# 5. Dashboard 
 
-## 5.1 Install Dashboard 
+# 5. Test Installation
+
+{% highlight bash %}
+$ kubectl create deployment test-deployment --image=gcr.io/google-samples/kubernetes-bootcamp:v1
+$ kubectl port-forward deployments/test-deployment 8080:8080
+{% endhighlight %}
+
+[http://localhost:8080](http://localhost:8080) 에서 확인합니다. <br>
+이후 삭제 합니다.
+
+{% highlight bash %}
+$ kubectl delete deployment/test-deployment
+{% endhighlight %}
+
+
+
+# 6. Dashboard 
+
+## 6.1 Install Dashboard 
 
 먼저 Kubernetes Metrics Server를 설치해야 합니다. <br>
 Metrics Server는 CPU, Memory같은 metrics 데이터를 수집하는 서버이며, EKS설치시 기본 서버에 설치되어 있지 않습니다. 
@@ -325,7 +339,7 @@ eks-admin service account 그리고 cluster role binding을 생성함으로서 D
 아래의 manifest는 `cluster-admin`(superuser) 권한을 갖고 있습니다. (그외 `amdin`, `edit`, `view` 등이 있음)<br>
 자세한 내용은 [RBAC authorization](https://kubernetes.io/docs/admin/authorization/rbac/)을 참고합니다.
 
-eks-admin-service-account.yaml 파일을 생성합니다. 
+`vi eks-admin-service-account.yaml` 파일을 생성합니다. 
 
 {% highlight yaml %}
 apiVersion: v1
@@ -355,7 +369,7 @@ $ kubectl apply -f eks-admin-service-account.yaml
 $ kubectl get serviceaccounts eks-admin -n kube-system
 {% endhighlight %}
 
-## 5.2 Access to Dashboard
+## 6.2 Access to Dashboard
 
 **Dashboard 에 접속** 하기 위해서는 먼저 eks-admin service account에 대한 authentication token을 얻어야 합니다. 
 
@@ -369,7 +383,7 @@ $ kubectl proxy
 <img src="{{ page.asset_path }}eks-dashboard-token-auth.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
-## 5.3 External Access to Dashboard 
+## 6.3 External Access to Dashboard 
 
 **외부접속**을 하게 하려면 service "type"을 ClusterIP에서 NodePort로 변경하면 됩니다. 
 
@@ -407,3 +421,13 @@ $ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | g
 
 이후 https://[master_node_ip]:[port] <br> 
 로 접속을 할 수 있습니다.
+
+# 7. Authentication
+
+## 7.1 kubeconfig 파일 생성  
+
+Cluster Authentication에 사용되는 Token 을 얻는 방법은 다음과 같이 합니다.
+
+{% highlight bash %}
+$ aws eks get-token --cluster-name AI-EKS-D | jq .status.token
+{% endhighlight %}

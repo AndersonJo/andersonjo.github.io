@@ -4,7 +4,7 @@ title:  "Kubeflow on Amazon Elastic Kubernetes Service (EKS)"
 date:   2020-09-28 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
-tags: ['aws', 'machine-learning', 'ml-ops']
+tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops']
 ---
 
 # 1. Installation 
@@ -23,8 +23,10 @@ $ tar -xvf kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
 $ cp ./kfctl /usr/local/bin/
 {% endhighlight %}
 
-## 1.2 Prepare Environment 
 
+## 1.2 Prepare Environment
+
+`aws configure` 를 해서 region이 설치하려는 region과 일치해야 합니다!<br>   
 kubeflow를 kubernetes에 deploy하기 위한 방법으로 2가지가 제공이 되고 있습니다. <br>
 
  - Authentication없는 버젼: `https://raw.githubusercontent.com/kubeflow/manifests/v1.1-branch/kfdef/kfctl_aws.v1.1.0.yaml` <br>auth에서 아래와 같은 코드를 갖고 있습니다
@@ -200,9 +202,156 @@ istio-ingress   *       d87f7e0c-istiosystem-istio-2af2-1299484680.us-east-2.elb
 
 <img src="{{ page.asset_path }}eks-kubeflow-dashboard-login.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
 
+## 1.6 Add Static User for Basic Authentication 
 
 만약 basic authentication을 사용했고 유저를 추가하고자 한다면 Dex ConfigMap 을 수정하면 됩니다.
 
 {% highlight bash %}
 kubectl edit configmap dex -n auth
 {% endhighlight %}
+
+자세한 내용은 [링크](https://www.kubeflow.org/docs/aws/deploy/install-kubeflow/) 참조
+
+## 1.7 EKS Security Group Configuration (Optional)
+
+ - 자세한 내용은 [Amazon EKS Security Group Consideration](https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html) 참조
+
+다음의 명령어로 cluster security group을 확인 할 수 있습니다.<br>
+또는 콘솔에서는 EKS -> Clusters -> <cluster_name> -> Networking -> Cluster security group 에서 확인 가능합니다. 
+
+<img src="{{ page.asset_path }}kubeflow-cluster-security-group.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+
+{% highlight bash %}
+$ aws eks describe-cluster --name <cluster_name> --query cluster.resourcesVpcConfig.clusterSecurityGroupId
+sg-0e06dcf009caa37bd
+{% endhighlight %}
+
+Security Group은 기본적으로 다음과 같이 설정이 되어 있습니다.
+
+<img src="{{ page.asset_path }}eks-default-cluster-security-group.png" class="img-responsive img-rounded img-fluid" >
+
+추가적으로 특정 Port만 열도록 production에서는 수정이 필요합니다. 
+
+
+## 1.8 Control Plane Security Group Configuration (Optional)
+
+Control plane security group은 Control plane 과 nodes 사이에서의 통신을 제한하는데 사용합니다.<br>
+해당 security group은 콘솔 Networking 에서 Additional security groups 이라는 이름으로 찾을 수 있습니다.<br>
+또는 아래의 명령어로 찾을 수 있습니다. 
+
+{% highlight bash %}
+$ aws eks describe-cluster --name <cluster_name> --query cluster.resourcesVpcConfig.securityGroupIds
+[
+    "sg-0c86b05959c5b4d83"
+]
+{% endhighlight %}
+
+일단 중요한 점은 해당 Security Group을 다른 Cluster와 사용하면 안됩니다.<br> 
+통신이 막힐수도 있고 장애가 발생할 수 있습니다. <br>
+반드시 Cluster마다 각각의 Security Group을 지정해 줘야 합니다.
+
+# 2. Seldon Core Installation 
+
+
+## 2.1 Seldon Core Installation 
+
+ - Seldon Core는 kubeflow를 설치하면 기본값으로 설치가 되어 있습니다.
+ - Kubernetes 는 1.17까지 지원함으로, 1.18사용하면 설치 안됨 (Kubeflow 설치할때부터 에러남)
+ - 자세한 설치 방법은 [Kubeflow Tools for Serving - Seldon Core](https://www.kubeflow.org/docs/components/serving/seldon/) 를 참조
+
+Namespace를 Serving으로 사용하기 위해서는 label을 `serving.kubeflow.org/inferenceservice=enabled` 으로 설정합니다. <br>
+예를 들어서 seldom 네임스페이스에 다음과 같이 합니다. <br>
+(이때 반드시 namespace가 seldom일 필요는 없습니다. asdf 도 가능함)
+
+{% highlight bash %}
+$ kubectl create namespace seldon
+$ kubectl label namespace seldon serving.kubeflow.org/inferenceservice=enabled
+{% endhighlight %}
+
+Istio Gateway로 Seldon Core는 기본값으로 `kubeflow-gateway`를 사용합니다.<br>
+
+{% highlight bash %}
+$ kubectl get gateway -n kubeflow
+NAME               AGE
+kubeflow-gateway   34m
+{% endhighlight %}
+
+Seldon Core는 기본값으로 kubeflow-gateway를 kubeflow 네임스페이스에서 사용하며, <br>
+새로 만든 네임스페이스에서 inference를 하기 위해서는 새롭게 Istio Gateway를 생성해야 합니다.<br>
+`vi seldon-gateway.yaml` 파일을 만들고 생성합니다.
+
+{% highlight yaml %}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: kubeflow-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - '*'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+{% endhighlight %}
+
+{% highlight bash %}
+$ kubectl create -n seldon -f seldon-gateway.yaml 
+gateway.networking.istio.io/kubeflow-gateway created
+
+$ kubectl get gateway -n seldon
+NAME               AGE
+kubeflow-gateway   4s
+{% endhighlight %}
+
+
+## 2.2 Seldon Core Example 
+
+`vi SeldonExampleDeployment.yaml` 실행시켜서 다음을 넣습니다.
+
+{% highlight yaml %}
+kubectl apply -f - << END
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  name: iris-model
+  namespace: seldon
+spec:
+  name: iris
+  predictors:
+  - graph:
+      implementation: SKLEARN_SERVER
+      modelUri: gs://seldon-models/sklearn/iris
+      name: classifier
+    name: default
+    replicas: 1
+END
+{% endhighlight %}
+
+{% highlight bash %}
+$ kubectl apply -n seldon -f SeldonExampleDeployment.yaml
+$ kubectl get sdep seldon-model -n seldon -o jsonpath='{.status.state}\n'  # 배포 완료 될때까지 기다림
+{% endhighlight %}
+
+
+{% highlight bash %}
+kubectl apply -f - << END
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: iris-model
+  namespace: seldon
+spec:
+  name: iris
+  predictors:
+  - graph:
+      implementation: SKLEARN_SERVER
+      modelUri: gs://seldon-models/sklearn/iris
+      name: classifier
+    name: default
+    replicas: 1
+END
+{% endhighlight %}
+

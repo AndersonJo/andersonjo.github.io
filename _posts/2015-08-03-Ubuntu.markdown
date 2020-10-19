@@ -83,43 +83,20 @@ sudo rm -fv /var/lib/xkb/*
 sudo reboot
 {% endhighlight %}
 
-
-### Unity Tools (Optional)
-
-{% highlight bash %}
-sudo add-apt-repository ppa:freyja-dev/unity-tweak-tool-daily
-sudo apt-get update
-sudo apt-get install unity-tweak-tool
-unity-tweak-tool
-{% endhighlight %}
-
-
-### Install PIP
-
-apt-get install python-pip 하지 말것!
-
-{% highlight bash %}
-wget https://bootstrap.pypa.io/get-pip.py
-sudo python get-pip.py
-{% endhighlight %}
-
-### Pillow Ubuntu Libraries (Optional)
+### Google Libraries 
 
 {% highlight bash%}
+# Sound Equalizer
+sudo apt install pulseeffects  # Sound Equalizer for Ubuntu 20.04
+sudo apt install -y lsp-plugins
+
+# Pillow Ubuntu Libraries 
 sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
-{% endhighlight %}
 
 ### Ruby Image Libraries (Optional)
-
-{% highlight bash%}
 sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead jpegoptim
 {% endhighlight %}
 
-### Python Libraries
-
-{% highlight bash%}
-sudo pip3 install psycopg2
-{% endhighlight %}
 
 
 ### Command Prompt 설정 (Optional)
