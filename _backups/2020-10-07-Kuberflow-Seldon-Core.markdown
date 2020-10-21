@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Seldon Core Serving with Kubeflow"
-date:   2020-10-03 01:00:00
+date:   2020-10-07 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
 tags: ['kubernetes']

@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Amazon Elastic Kubernetes Service (EKS) - Installation"
-date:   2020-09-26 01:00:00
+title:  "Amazon Elastic Kubernetes Service (EKS)"
+date:   2020-09-05 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
 tags: ['aws', 'mfa', 'otp', 'authentication', 'eks', 'kubeflow', 'dashboard', 'login', '로그인']
@@ -342,6 +342,7 @@ eks-admin service account 그리고 cluster role binding을 생성함으로서 D
 `vi eks-admin-service-account.yaml` 파일을 생성합니다. 
 
 {% highlight yaml %}
+cat <<EOF > eks-admin-service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -360,6 +361,7 @@ subjects:
 - kind: ServiceAccount
   name: eks-admin
   namespace: kube-system
+EOF
 {% endhighlight %}
 
 적용하고 확인합니다.
@@ -421,13 +423,3 @@ $ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | g
 
 이후 https://[master_node_ip]:[port] <br> 
 로 접속을 할 수 있습니다.
-
-# 7. Authentication
-
-## 7.1 kubeconfig 파일 생성  
-
-Cluster Authentication에 사용되는 Token 을 얻는 방법은 다음과 같이 합니다.
-
-{% highlight bash %}
-$ aws eks get-token --cluster-name AI-EKS-D | jq .status.token
-{% endhighlight %}

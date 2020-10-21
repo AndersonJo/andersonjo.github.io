@@ -1,107 +1,94 @@
 ---
 layout: default
 ---
-<style>
-    .home-center {
-        display: inline-block;
-    }
 
-    .carousel-indicators {
-        cursor: pointer;
-    }
+<div class="home">
+    <div ng-controller="AndersonPostContoller">
+        <script>
+            var global_post_data = [{% for post in site.posts %}
+            {"date":"{{post.date}}", "categories": ["{{post.categories}}"], "url": "{{post.url}}", "title": "{{post.title}}", "tags":{{post.tags | jsonify}} }, {% endfor %}];
 
-    .carousel .carousel-caption {
-        text-shadow: 0px 0px 8px rgba(0, 0, 0, 1);
+        </script>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search" ng-model="searchText">
 
-    }
-
-
-</style>
-
-<div class="home" style="text-align:center">
-    <div class="home-center">
-        <div id="home-carousel-indicator" class="carousel slide" data-ride="carousel" data-interval="3000">
-            <ol class="carousel-indicators">
-                <li data-target="#home-carousel-indicator" data-slide-to="0" class="active"></li>
-                <li data-target="#home-carousel-indicator" data-slide-to="1"></li>
-                <li data-target="#home-carousel-indicator" data-slide-to="2"></li>
-                <li data-target="#home-carousel-indicator" data-slide-to="3"></li>
-                <li data-target="#home-carousel-indicator" data-slide-to="4"></li>
-                <li data-target="#home-carousel-indicator" data-slide-to="5"></li>
-                <li data-target="#home-carousel-indicator" data-slide-to="6"></li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="d-block w-100"
-                         src="/assets/home/incredible_carousel_lens.jpeg"
-                         alt="First slide">
-                    <div class="carousel-caption">
-                        <h4>나는 먼 미래에 다가올 일을 미리 찾아냅니다</h4>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100"
-                         src="/assets/home/incredible_carousel_fashion.jpeg"
-                         alt="Second slide">
-                    <div class="carousel-caption">
-                        <h4>나는 급변하는 패션 트렌드를 읽고 해석합니다</h4>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100"
-                         src="/assets/home/incredible_carousel_snow.jpeg"
-                         alt="Second slide">
-                    <div class="carousel-caption">
-                        <h4>나는 날씨를 읽고 사람들의 행동을 예측합니다</h4>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100"
-                         src="/assets/home/incredible_carousel_data.jpeg"
-                         alt="Second slide">
-                    <div class="carousel-caption">
-                        <h4>나는 과거의 데이터를 읽고 패턴을 찾아냅니다</h4>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100"
-                         src="/assets/home/incredible_carousel_ai.jpeg"
-                         alt="Second slide">
-                    <div class="carousel-caption">
-                        <h4>나는 AI입니다.</h4>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100"
-                         src="/assets/home/incredible_carousel_cost.jpeg"
-                         alt="Second slide">
-                    <div class="carousel-caption">
-                        <h4>나의 목표는 미래 예측을 통해 비용을 낮추며</h4>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100"
-                         src="/assets/home/incredible_carousel_chess.jpeg"
-                         alt="Second slide">
-                    <div class="carousel-caption">
-                        <h4>당신이 경쟁적 환경에서 이기도록 도와줍니다.</h4>
-                    </div>
-                </div>
-
+            <!-- 성경 구절 -->
+            <div style="font-family:'Jeju Gothic', serif;color:#D50F36; margin-top:5px; margin-bottom:10px;">
+                {(bible_statement)}
             </div>
-            <a class="carousel-control-prev" href="#home-carousel-indicator" role="button" data-slide="prev"
-               ng-non-bindable>
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#home-carousel-indicator" role="button" data-slide="next"
-               ng-non-bindable>
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-    </div>
 
+            <!-- 빠른 카테고리 -->
+            <a href="#/category/{(fast_category)}" ng-repeat="fast_category in fast_categories"
+               ng-click="change_search(fast_category)"><button type="button" class="fast_category">{(fast_category)}</button></a>
+        </div>
+
+        <h1>Posts</h1>
+        <ul class="posts" ng-cloak>
+            {{post_data}}
+            <li ng-repeat="post in posts |filter:searchText">
+                <span class="post-date">{( post.date | andersonDate )} </span> -
+                <span class="post-category" ng-repeat="category in post.categories">{(category)} </span>
+                <a class="post-comment-count" href="{( post.url )}#disqus_thread"></a>
+                <div>
+                    <a class="post-link post-tag" href="{( post.url )}" data-toggle="tooltip"
+                       title='{(post.tags | tagFilter)}'
+                       data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                        {(post.title)}
+                    </a>
+
+                </div>
+            </li>
+        </ul>
+        <!--
+        <br>
+        <h1>Libraries</h1>
+        <ul class="posts">
+            <li>
+                <a href="https://bitbucket.org/jochangmin/django-email-user" target="_library">
+                    <span class="post-link post-tag">Django Email Auth</span>
+                </a>
+            </li>
+        </ul>
+        -->
+    </div>
+    <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+    <style>
+        .posts .tooltip-inner {
+            color: #fff;
+            font-size: 1.2em;
+            background-color: #0A4183;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, .25);
+
+            -webkit-animation: fadein 0.3s; /* Safari, Chrome and Opera > 12.1 */
+            -moz-animation: fadein 0.3s; /* Firefox < 16 */
+            -ms-animation: fadein 0.3s; /* Internet Explorer */
+            -o-animation: fadein 0.3s; /* Opera < 12.1 */
+            animation: fadein 0.3s;
+        }
+
+        .fast_category {
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            margin-right: 7px;
+            margin-left:0px;
+            margin-top:0px;
+            margin-bottom:3px;
+            border: transparent;
+            border-radius: 5px;
+            background-color: #d43f3a;
+            color: #fff;
+        }
+        .fast_category:hover{
+            background-color: #c12e2a;
+        }
+
+        .posts .post-comment-count{
+            font-size: 15px;
+            color: #888;
+        }
+    </style>
 </div>
 
 

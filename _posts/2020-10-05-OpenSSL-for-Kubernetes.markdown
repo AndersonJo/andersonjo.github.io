@@ -183,21 +183,140 @@ TLS Handshake 구조를 보면 다음과 같습니다.
 ## 3.2 Generate CSR 
 
 **CSR**은 Certificate Signing Request의 약자로서 "인증서 서명 요청"이라는 뜻으로, <br> 
-SSL Certificate을 CA로부터 
+SSL Certificate을 CA로 부터 얻을때 사용합니다. 즉.. SSL Certificate 구매할때 반드시 만들어야 함. <br>
+
 
 {% highlight bash %}
-$ openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr 
+$ openssl req -new -newkey rsa:2048 -nodes -keyout private.key -out cert.csr 
 Generating a RSA private key
 .............................................+++++
 Country Name (2 letter code) [AU]:KR
 State or Province Name (full name) [Some-State]:Gyeonggi-do
 Locality Name (eg, city) []:Goyang-si
 Organization Name (eg, company) [Internet Widgits Pty Ltd]:Anderson
-Organizational Unit Name (eg, section) []:R&D     
+Organizational Unit Name (eg, section) []:R&D
 Common Name (e.g. server FQDN or YOUR name) []:incredible.ai
 Email Address []:a141890@gmail.com
 {% endhighlight %}
 
+
+**잘 생성 됐는지 확인**<br>
+cert.csr 파일안에 어떤 내용이 들어있는지 확인하기 위해서 다음의 명령어를 사용합니다.<br>
+국가, 주소, 이름, 회사, 도메인, 이메일 등등 정확하게 기입되었는지 확인합니다. 
+
+{% highlight bash %}
+$ openssl req -in cert.csr -noout -text
+{% endhighlight %}
+
+**기존 private key로 CSR생성**
+
+{% highlight bash %}
+$ openssl req -new -out cert.csr -key private.key
+{% endhighlight %}
+
+## 3.3 Generate Self-Signed Certificate 
+
+Self-signed certificate은 보통 내부망 또는 개발환경에서 테스트시에 사용이 됩니다. <br>
+다음의 명령어로 self-signed certificate을 생성할 수 있습니다. 
+
+ - `-x509`: self-signed certificate 이라고 알림
+ - `-nodes`: no des 라는 뜻으로 암호화 하지 않겠다는 것. 이거 빼면.. 생성할때 암호 쓰라고 나옴. 
+ - `-new`: 국가, 이름, 회사, 도메인, 이메일 등등의 물어보는 prompt가 나오면서 새롭게 생성하게 됨
+ - `cert.key`: Certificate
+ - `private.key`: private key
+ 
+{% highlight bash %}
+$ openssl req -x509 -newkey rsa:2048 -nodes -keyout private.key -out cert.key
+-----
+Country Name (2 letter code) [AU]:KR
+State or Province Name (full name) [Some-State]:Gyeonggi-do
+Locality Name (eg, city) []:Goyang-si
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Anderson
+Organizational Unit Name (eg, section) []:R&D
+Common Name (e.g. server FQDN or YOUR name) []:incredible.ai
+Email Address []:a141890@gmail.com
+{% endhighlight %}
+
+**기존의 private key 그리고 CSR로 부터 Self-Signed Certificate 생성**
+
+{% highlight bash %}
+$ openssl x509 -signkey private.key -in cert.key -req  -out cert.crt
+{% endhighlight %}
+
+## 3.4 Verify
+
+**CSR**
+
+{% highlight bash %}
+$ openssl req -text -noout -verify -in cert.csr
+verify OK
+{% endhighlight %}
+
+**Private Key**
+
+{% highlight bash %}
+$ openssl rsa -in private.key -check
+RSA key ok
+{% endhighlight %}
+
+**SSL Certificate**
+
+{% highlight bash %}
+$ openssl x509 -in cert.key -text -noout
+{% endhighlight %}
+
+**SSL Certificate 그리고 Private Key 가 서로 일치하는지 확인**
+
+{% highlight bash %}
+$ openssl x509 -noout -modulus -in cert.key | openssl md5
+(stdin)= d31b4f5b1a438bb878b847062abc3e26
+
+$ openssl rsa -noout -modulus -in private.key | openssl md5
+(stdin)= d31b4f5b1a438bb878b847062abc3e26
+{% endhighlight %}
+
+# 4. Self-Signed Certificate in Kubernetes 
+
+## 4.1 Generate CA 
+
+CA 생성에는 두가지 방법이 있습니다. 
+
+1. EKS에서 이미 만들어져 있는 것을 가져온다
+2. 새로 생성
+
+**EKS 에서 Private Key** 가져오는 방법은 다음과 같습니다.<br>
+먼저 EKS -> Cluster -> Certificate Authority 를 복사해서 <Certificate-Authority> 부분을 교체합니다.
+
+{% highlight bash %}
+$ echo <Certificate-Authority> | base64 -d > ca.key
+$ cat ca.key
+-----BEGIN CERTIFICATE-----
+MIICyDCCAbCgAwIBAgIBADANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwprdWJl
+cm5ldGVzMB4XDTIwMTAxNTE4MjczMFoXDTMwMTAxMzE4MjczMFowFTETMBEGA1UE
+<생략>
+3s8dl/pTqzbMwJtyRLnUHAcoYqYJiICkOWzIqSjuiNPMbSw4bWIKAc4ItQWukiGy
+BcDZMt1MvWH2csacIJHMmgyOsIRqI4XyNJRr34DwMUMkMDfTrNQ8mNUPRcY=
+-----END CERTIFICATE-----
+{% endhighlight %}
+
+
+**CA Key**를 새로 생성하는 방법은 다음과 같습니다.
+
+- MASTER_IP: EKS Cluster에서 API Server Endpoint 를 찾아서 넣습니다. 이때 https는 뺍니다.
+
+{% highlight bash %}
+$ export MASTER_IP=EAA012E181CFAF7CDEB872D695DBF864.gr7.us-east-2.eks.amazonaws.com
+$ openssl genrsa -out private.key 2048
+$ openssl req -x509 -new -nodes -key ca.key -subj "/CN=${MASTER_IP}" -days 10000 -out cert.key
+{% endhighlight %}
+
+**Server Key**를 발급합니다.
+
+{% highlight bash %}
+$ openssl genrsa -out server.key 2048
+{% endhighlight %}
+
+**CSR (Certificate Signing Request)**를 생성하기 위해서 config 파일을 생성합니다. <br>
 
 # Abbreviations 
 

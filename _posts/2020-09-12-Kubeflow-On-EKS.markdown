@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Kubeflow on Amazon Elastic Kubernetes Service (EKS)"
-date:   2020-09-28 01:00:00
+title:  "Kubeflow on EKS"
+date:   2020-09-12 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
 tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops']
@@ -190,6 +190,7 @@ tf-job-operator-5bf84768bf-q67t2                         1/1     Running   0    
 workflow-controller-54dccb7dc4-pjgkl                     1/1     Running   0          18m
 {% endhighlight %}
 
+
 ## 1.5 Kubeflow Dashboard 
 
 {% highlight bash %}
@@ -249,6 +250,7 @@ $ aws eks describe-cluster --name <cluster_name> --query cluster.resourcesVpcCon
 일단 중요한 점은 해당 Security Group을 다른 Cluster와 사용하면 안됩니다.<br> 
 통신이 막힐수도 있고 장애가 발생할 수 있습니다. <br>
 반드시 Cluster마다 각각의 Security Group을 지정해 줘야 합니다.
+
 
 # 2. Seldon Core Installation 
 
@@ -327,6 +329,9 @@ spec:
       name: classifier
     name: default
     replicas: 1
+  subjects:
+    - properties:
+        request.headers[kubeflow-userid]: admin@mathpresso.com
 END
 {% endhighlight %}
 

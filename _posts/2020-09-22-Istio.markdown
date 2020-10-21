@@ -1,0 +1,140 @@
+---
+layout: post
+title:  "Istio"
+date:   2020-09-22 01:00:00
+categories: "kubernetes"
+asset_path: /assets/images/
+tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops']
+---
+
+# 1. Installation
+
+## 1.1 Install Istio CLI
+
+설치는 다음과 같이 합니다.
+
+{% highlight bash %}
+# 최신 버전 설치
+$ curl -L https://istio.io/downloadIstio | sh -
+
+# 특정 버젼 설치
+$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
+
+# 설치
+$ cd istio-*
+$ sudo cp bin/istioctl /usr/local/bin/istioctl
+{% endhighlight %}
+
+## 1.2 Delete existing Istio 
+
+이거 하는 이유는 Kubeflow설치하고 버젼이 낮아서 올리는데 목적이 있습니다. <br>
+서비스를 하지 않는 상태에서 진행할때 쓸수 있습니다.<br>
+<span style="color:red;font-weight:bold">경고. 아래의 코드는 istio-system을 날립니다. 반드시 서비스 중이 아닌 경우에만 실행합니다.</span> 
+
+{% highlight bash %}
+$ kubectl delete namespace istio-system
+{% endhighlight %}
+
+분명히 freeze 현상이 일어나는데 (삭제되지 않고 계속 Terminating만 뜨는 상태).. <br>
+이 경우 json으로 다운 받은 다음에 finalizer 삭제해주고 replace 해주면 됨 
+
+{% highlight bash %}
+$ kubectl get namespace istio-system -o json > istio-system.json
+$ vi istio-system.json
+{% endhighlight %}
+
+`spec.finalizers` 안에 있는 kubernetes 또는 다른 내용들을 삭제 합니다. <br>
+`/api/v1/namespaces/istio-system` 를 알아낸다음에 `/finalize`를 더 붙여서 주소를 만들어내고 replace 합니다.
+
+{% highlight bash %}
+$ kubectl get namespace istio-system -o json | jq .metadata.selfLink
+"/api/v1/namespaces/knative-serving"
+
+$ kubectl replace --raw "/api/v1/namespaces/istio-system/finalize" -f ./istio-system.json
+{% endhighlight %}
+
+
+## 1.3 Install Istio on Cloud
+
+Istio를 다운로드 받고, istioctl을 설치합니다.
+
+{% highlight bash %}
+$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
+$ cd istio-*
+$ sudo cp bin/istioctl /usr/local/bin/istioctl
+
+# 버젼 확인
+$ istioctl version --remote
+client version: 1.7.3
+control plane version: root@07253e1c-4f13-11ea-97de-0e8f370df5e1-docker.io/istio-release-1.3-<생략>
+{% endhighlight %}
+
+클라우드에 있는 Kubernetes 클러스터에 Istio를 설치합니다. 
+
+{% highlight bash %}
+$ istioctl install
+This will install the default Istio profile into the cluster. Proceed? (y/N) y
+✔ Istio core installed                                                                                                                                                                                                                                                                                     
+✔ Istiod installed                                                                                                                                                                                                                                                                                         
+✔ Ingress gateways installed                                                                                                                                                                                                                                                                               
+✔ Installation complete  
+{% endhighlight %}
+
+Istio를 적용하기 위해서는 namespace에 `istio-injection=enabled` label을 추가해야 합니다.
+
+{% highlight bash %}
+$ kubectl create namespace istio-test
+$ kubectl label namespace istio-test istio-injection=enabled
+{% endhighlight %}
+
+## 1.4 Install Local Gateway  
+
+{% highlight yaml %}
+cat << EOF > ./local-cluster-gateway.yaml
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  values:
+    global:
+      proxy:
+        autoInject: enabled
+      useMCP: false
+
+  addonComponents:
+    pilot:
+      enabled: true
+    prometheus:
+      enabled: false
+
+  components:
+    ingressGateways:
+      - name: cluster-local-gateway
+        enabled: true
+        label:
+          istio: cluster-local-gateway
+          app: cluster-local-gateway
+        k8s:
+          service:
+            type: ClusterIP
+            ports:
+              - name: http
+                protocol: TCP
+                port: 80
+                targetPort: 8080
+              - name: https
+                protocol: TCP
+                port: 443
+                targetPort: 8443
+              - name: status-port
+                port: 15021
+                targetPort: 15021
+              - name: tls
+                port: 15443
+                targetPort: 15443
+EOF
+{% endhighlight %}
+
+{% highlight bash %}
+$ istioctl manifest generate -f local-cluster-gateway.yaml > manifest.yaml
+$ kubectl apply -f manifest.yaml
+{% endhighlight %}
