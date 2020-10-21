@@ -33,7 +33,13 @@ $ sudo mv kn-linux-amd64 /usr/local/bin/kn
 Istio를 다운로드 받고, istioctl을 설치합니다.
 
 {% highlight bash %}
+# 최신 버젼 설치 
+$ curl -L https://istio.io/downloadIstio | sh -
+
+# 특정 버젼 설치 
 $ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
+
+# 설치
 $ cd istio-*
 $ sudo cp bin/istioctl /usr/local/bin/istioctl
 
@@ -53,8 +59,8 @@ $ istioctl install
 Istio를 적용하기 위해서는 namespace에 `istio-injection=enabled` label을 추가해야 합니다.
 
 {% highlight bash %}
-$ kubectl create namespace istio-test
-$ kubectl label namespace istio-test istio-injection=enabled
+$ kubectl create namespace kfserving
+$ kubectl label namespace kfserving istio-injection=enabled
 {% endhighlight %}
 
 
@@ -80,6 +86,7 @@ Finelizer 부분을 설정해줘야 합니다. <br>
 
 {% highlight bash %}
 $ kubectl get namespaces knative-serving -o json > knative-serving.json
+$ vi knative-serving.json
 {% endhighlight %}
 
 안에 보면 finalizers 라고 있을겁니다. 
