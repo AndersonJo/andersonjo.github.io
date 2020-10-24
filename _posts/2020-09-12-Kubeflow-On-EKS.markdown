@@ -199,9 +199,18 @@ NAME            HOSTS   ADDRESS                                                 
 istio-ingress   *       d87f7e0c-istiosystem-istio-2af2-1299484680.us-east-2.elb.amazonaws.com   80      112m
 {% endhighlight %}
 
+만약 ADDRESS가 None일 경우 port-forward로 접속합니다.
+
+{% highlight bash %}
+$ kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80
+{% endhighlight %}
+
 위의 ADDRESS 주소를 chrome에서 확인합니다
 
 <img src="{{ page.asset_path }}eks-kubeflow-dashboard-login.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+
+
+
 
 ## 1.6 Add Static User for Basic Authentication 
 

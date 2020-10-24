@@ -32,10 +32,11 @@ $ sudo cp bin/istioctl /usr/local/bin/istioctl
 <span style="color:red;font-weight:bold">경고. 아래의 코드는 istio-system을 날립니다. 반드시 서비스 중이 아닌 경우에만 실행합니다.</span> 
 
 {% highlight bash %}
+$ kubectl get namespaces istio-system -o json | jq '.spec.finalizers'=null | kubectl apply -f -
 $ kubectl delete namespace istio-system
 {% endhighlight %}
 
-분명히 freeze 현상이 일어나는데 (삭제되지 않고 계속 Terminating만 뜨는 상태).. <br>
+만약 freeze 현상이 일어난다면 (삭제되지 않고 계속 Terminating만 뜨는 상태).. <br>
 이 경우 json으로 다운 받은 다음에 finalizer 삭제해주고 replace 해주면 됨 
 
 {% highlight bash %}
@@ -59,7 +60,13 @@ $ kubectl replace --raw "/api/v1/namespaces/istio-system/finalize" -f ./istio-sy
 Istio를 다운로드 받고, istioctl을 설치합니다.
 
 {% highlight bash %}
+# 최신 버젼
+$ curl -L https://istio.io/downloadIstio | sh - 
+
+# 특정 버젼
 $ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
+
+# 설치
 $ cd istio-*
 $ sudo cp bin/istioctl /usr/local/bin/istioctl
 
@@ -83,11 +90,13 @@ This will install the default Istio profile into the cluster. Proceed? (y/N) y
 Istio를 적용하기 위해서는 namespace에 `istio-injection=enabled` label을 추가해야 합니다.
 
 {% highlight bash %}
-$ kubectl create namespace istio-test
-$ kubectl label namespace istio-test istio-injection=enabled
+$ kubectl create namespace kfserving
+$ kubectl label namespace kfserving istio-injection=enabled
 {% endhighlight %}
 
 ## 1.4 Install Local Gateway  
+
+추후 KFServing 시에 필요한 Gateway 입니다.
 
 {% highlight yaml %}
 cat << EOF > ./local-cluster-gateway.yaml
@@ -137,4 +146,7 @@ EOF
 {% highlight bash %}
 $ istioctl manifest generate -f local-cluster-gateway.yaml > manifest.yaml
 $ kubectl apply -f manifest.yaml
+$ kubectl get svc cluster-local-gateway -n istio-system 
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                              AGE
+cluster-local-gateway   ClusterIP   10.100.243.162   <none>        80/TCP,443/TCP,15021/TCP,15443/TCP   69s
 {% endhighlight %}

@@ -7,7 +7,7 @@ asset_path: /assets/images/
 tags: ['kubeflow', 'namespace', 'hang', '멈춤', 'kubectl']
 ---
 
-# 1. Getting Started
+# 1. Installation
 
 ## 1.1 Check Version
 
@@ -28,43 +28,8 @@ $ chmod 110 kn-linux-amd64
 $ sudo mv kn-linux-amd64 /usr/local/bin/kn
 {% endhighlight %}
 
-## 1.3 Install Istio 
 
-Istio를 다운로드 받고, istioctl을 설치합니다.
-
-{% highlight bash %}
-# 최신 버젼 설치 
-$ curl -L https://istio.io/downloadIstio | sh -
-
-# 특정 버젼 설치 
-$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
-
-# 설치
-$ cd istio-*
-$ sudo cp bin/istioctl /usr/local/bin/istioctl
-
-# 버젼 확인
-$ istioctl version --remote
-client version: 1.7.3
-control plane version: root@07253e1c-4f13-11ea-97de-0e8f370df5e1-docker.io/istio-release-1.3-<생략>
-{% endhighlight %}
-
-Kubeflow의 경우에도 몇몇설치 안된부분들이 존재합니다. <br>
-따라서 is
-
-{% highlight bash %}
-$ istioctl install
-{% endhighlight %}
-
-Istio를 적용하기 위해서는 namespace에 `istio-injection=enabled` label을 추가해야 합니다.
-
-{% highlight bash %}
-$ kubectl create namespace kfserving
-$ kubectl label namespace kfserving istio-injection=enabled
-{% endhighlight %}
-
-
-## 1.4 Delete Existing Serving Component 
+## 1.3 Delete Existing Serving Component 
 
 강제로 업그레이드시 apply를 delete로 변경하고 이후 apply진행합니다. (서비스 안하고 있다는 전제)<br>
 일단 삭제이유는 kubeflow로 설치이후 버젼 업그레이드가 목적입니다. <br>
@@ -73,6 +38,7 @@ $ kubectl label namespace kfserving istio-injection=enabled
 주의하세요!!</span>
 
 {% highlight bash %}
+$ kubectl get namespaces knative-serving -o json | jq '.spec.finalizers'=null | kubectl apply -f -
 $ kubectl delete --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-crds.yaml
 $ kubectl delete --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-core.yaml
 $ kubectl get namespaces  knative-serving 
@@ -120,7 +86,7 @@ $ kubectl replace --raw "/api/v1/namespaces/knative-serving/finalize" -f ./knati
 
 이후 `kubectl get namespaces` 로 확인해보면 삭제되어 있을겁니다.
 
-## 1.5 Install Serving Component
+## 1.4 Install Serving Component
 
 {% highlight bash %}
 $ kubectl apply --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-crds.yaml
@@ -144,6 +110,21 @@ $ kubectl edit svc istio-ingressgateway  -n istio-system
 {% endhighlight %}
 
 `type: NodePort` 를 `type: LoadBalancer`로 변경해줍니다.<br>
+만약 AWS EKS를 사용시 EC2 -> Load Balancers -> 기존 사용하던 Load Balancer를 클릭 -> DNS Name 을 복사합니다. 
+
+<img src="{{ page.asset_path }}knative-ec2-loadbalancer-dns.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+아래와 같이 변경합니다.
+
+{% highlight yaml %}
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - hostname: a5af7519611fe4e7f90aa325e747cb1f-687089119.us-east-2.elb.amazonaws.com
+{% endhighlight %}
+
+
 이후 다시 service를 확인해보면 EXTERNAL-IP가 잡혀있게 됩니다. 
 
 {% highlight bash %}
@@ -165,7 +146,7 @@ networking-istio-568ffff747-fmxfk   1/1     Running   0          4m22s
 webhook-785c5879fb-kpdp6            1/1     Running   0          5m36s
 {% endhighlight %}
 
-## 1.6 Install Eventing Component 
+## 1.5 Install Eventing Component 
 
 Custom Resource Definitions (CRD) 그리고 핵심 core components를 설치 합니다. <br>
 
@@ -196,25 +177,6 @@ mt-broker-filter-6bbcc67bc5-rfssc       1/1     Running   0          35s
 mt-broker-ingress-64987f6f4-cv8qx       1/1     Running   0          33s
 {% endhighlight %}
 
-## 1.7 Create Deployment with Knative CLI
-
-{% highlight bash %}
-cat <<EOF > knative-service.yaml
-apiVersion: serving.knative.dev/v1 # Current version of Knative
-kind: Service
-metadata:
-  name: helloworld-go # The name of the app
-  namespace: default # The namespace the app will use
-spec:
-  template:
-    spec:
-      containers:
-        - image: gcr.io/knative-samples/helloworld-go # Reference to the image of the app
-          env:
-            - name: TARGET # The environment variable printed out by the sample app
-              value: "Go Sample v1"
-EOF
-{% endhighlight %}
 
 # 2. Configuration
 
@@ -260,4 +222,238 @@ data:
     selector:
       app: secret
 kind: ConfigMap
+{% endhighlight %}
+
+## 2.2 Custom Ingress Gateway
+
+- [Setting up custom ingress gateway](https://knative.dev/docs/serving/setting-up-custom-ingress-gateway/) 참조
+
+
+{% highlight yaml %}
+cat <<EOF > custom-ingressgateway.yaml
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  values:
+    global:
+      proxy:
+        autoInject: enabled
+      useMCP: false
+
+  addonComponents:
+    pilot:
+      enabled: true
+    prometheus:
+      enabled: false
+
+  components:
+    ingressGateways:
+      - name: custom-ingressgateway
+        enabled: true
+        namespace: custom-ns
+        label:
+          istio: custom-gateway
+      - name: cluster-local-gateway
+        enabled: true
+        label:
+          istio: cluster-local-gateway
+          app: cluster-local-gateway
+        k8s:
+          service:
+            type: ClusterIP
+            ports:
+            - port: 15020
+              name: status-port
+            - port: 80
+              name: http2
+            - port: 443
+              name: https
+EOF
+{% endhighlight %}
+
+
+# 3. Getting Started 
+
+## 3.1 Hello World in Python 
+
+**Python App**
+
+{% highlight python %}
+cat <<EOF > app.py
+import os
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+   target = os.environ.get('TARGET', 'World')
+   return 'Hello {}!\n'.format(target)
+
+if __name__ == "__main__":
+   app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
+EOF
+{% endhighlight %}
+
+**Dockerfile & Build**
+
+{% highlight yaml %}
+cat <<EOF > Dockerfile
+FROM python:3.7-slim
+ENV PYTHONUNBUFFERED True
+ENV APP_HOME /app
+WORKDIR /app
+COPY . ./
+RUN pip install Flask gunicorn
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+EOF
+{% endhighlight %}
+
+{% highlight bash %}
+$ docker login
+$ docker build -t andersonjo/knative-hello-world .
+$ docker push andersonjo/knative-hello-world
+{% endhighlight %}
+
+**Service & Deploy** <br>
+andersonjo 부분을 Docker Hub 아이디로 변경 필요 
+
+{% highlight yaml %}
+cat <<EOF > service.yaml
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: helloworld-python
+  namespace: default
+spec:
+  template:
+    spec:
+      selector:
+        app: istio-ingressgateway
+        istio: ingressgateway
+      containers:
+        - image: docker.io/andersonjo/knative-hello-world
+          env:
+            - name: TARGET
+              value: "Python Sample v1"
+EOF
+{% endhighlight %}
+
+{% highlight bash %}
+$ kubectl apply -f service.yaml
+$ kubectl get ksvc helloworld-python
+NAME                URL                                            LATESTCREATED             LATESTREADY               READY   REASON
+helloworld-python   http://helloworld-python.default.ai.platform   helloworld-python-69cbt   helloworld-python-69cbt   True    
+{% endhighlight %}
+
+{% highlight bash %}
+$ curl -H "Host:helloworld-python.default.ai.platform" http://a7a33739ba44140b0a39d7cce1cae118-1000758165.us-east-2.elb.amazonaws.com
+{% endhighlight %}
+
+
+
+
+
+# 3. Autoscale
+
+## 3.1 Autoscaler Types
+
+1. Knative Pod Autoscaler (KPA)
+   - Knative Serving Core의 한 부분이며, 디폴트값이 사용이다. 
+   - 트래픽이 없을경우 0으로 scale 하는 기능도 있음 (scale down) 
+   - CPU 기반의 autoscaling은 지원하지 않음
+2. Horizontal Pod Autoscaler (HPA)
+   - Knative Serving Core에서 제공되는 기능이 아니며, Knative Serving 설치이후 따로 설정해줘야 함
+   - 트래픽이 없을 경우 0으로 scale down하는 기능이 없음
+   - CPU 기반의 autoscaling 제공
+
+설정은 `class` annotation을 설정해서 타입을 설정 할 수 있습니다.
+
+ - **Global Settings Key**: `pod-autoscaler-class`
+ - **Per-revision annotation key**: `autoscaling.knative.dev/class`
+ - **Possible values**: `kpa.autoscaling.knative.dev` or `hpa.autoscaling.knative.dev`
+ - **Default**: `kpa.autoscaling.knative.dev`
+ 
+## 3.2 Configuration
+
+### 3.2.1 Per Revision Example
+
+spec.template.metadata.annotations 여기에서 `autoscaling.knative.dev/class` 설정
+ 
+
+{% highlight bash %}
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: helloworld-go
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/class: "kpa.autoscaling.knative.dev"
+    spec:
+      containers:
+        - image: gcr.io/knative-samples/helloworld-go
+{% endhighlight %}
+
+### 3.2.2 Global(ConfigMap)
+
+{% highlight bash %}
+$ kubectl edit configmap config-autoscaler -n knative-serving 
+{% endhighlight %}
+
+{% highlight yaml %}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: config-autoscaler
+ namespace: knative-serving
+data:
+ pod-autoscaler-class: "kpa.autoscaling.knative.dev"
+{% endhighlight %}
+
+### 3.2.3 Global(Operator) 
+{% highlight bash %}
+$ kubectl edit configmap config-autoscaler -n knative-serving 
+{% endhighlight %}
+
+{% highlight yaml %}
+apiVersion: operator.knative.dev/v1alpha1
+kind: KnativeServing
+metadata:
+  name: knative-serving
+spec:
+  config:
+    autoscaler:
+      pod-autoscaler-class: "kpa.autoscaling.knative.dev"
+{% endhighlight %}
+
+
+
+## 3.3 Example
+
+{% highlight yaml %}
+cat <<EOF > service.yaml
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: autoscale-go
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        # Target 10 in-flight-requests per pod.
+        autoscaling.knative.dev/target: "10"
+    spec:
+      containers:
+      - image: gcr.io/knative-samples/autoscale-go:0.1
+EOF
+{% endhighlight %}
+
+{% highlight bash %}
+$ kubectl apply -f service.yaml
+$ kubectl get ksvc autoscale-go
+NAME           URL                                       LATESTCREATED        LATESTREADY          READY   REASON
+autoscale-go   http://autoscale-go.default.ai.platform   autoscale-go-xdstf   autoscale-go-xdstf   True    
 {% endhighlight %}

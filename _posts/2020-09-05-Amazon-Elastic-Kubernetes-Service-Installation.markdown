@@ -322,7 +322,7 @@ Metrics Server는 CPU, Memory같은 metrics 데이터를 수집하는 서버이�
 **Metrics Server deployment**는 그리고 확인은 다음의 명령어로 합니다.
 
 {% highlight bash %}
-$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
 $ kubectl get deployment metrics-server -n kube-system
 {% endhighlight %}
 
