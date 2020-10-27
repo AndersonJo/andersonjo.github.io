@@ -88,6 +88,14 @@ $ kubectl replace --raw "/api/v1/namespaces/knative-serving/finalize" -f ./knati
 
 ## 1.4 Install Serving Component
 
+Knative Component를 설치합니다.
+
+{% highlight bash %}
+$ kubectl apply -f https://github.com/knative/operator/releases/download/v0.18.0/operator.yaml
+{% endhighlight %}
+
+Serving을 설치합니다.
+
 {% highlight bash %}
 $ kubectl apply --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-crds.yaml
 $ kubectl apply --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-core.yaml
@@ -136,7 +144,7 @@ istio-ingressgateway   LoadBalancer   10.100.200.170   ****.us-east-2.elb.amazon
 Knative Components 들이 모두 잘 작동하는지 점검합니다.
 
 {% highlight bash %}
-$ kubectl get pods --namespace knative-serving
+$ kubectl get pods -n knative-serving
 NAME                                READY   STATUS    RESTARTS   AGE
 activator-56cf848f9d-k79h8          1/1     Running   0          5m40s
 autoscaler-67c75d8566-4ln8c         1/1     Running   0          5m39s
@@ -144,6 +152,15 @@ controller-6568f84b8b-fqhwc         1/1     Running   0          5m37s
 istio-webhook-6594d8d54c-7mbz8      1/1     Running   0          4m22s
 networking-istio-568ffff747-fmxfk   1/1     Running   0          4m22s
 webhook-785c5879fb-kpdp6            1/1     Running   0          5m36s
+
+$ kubectl get deployments -n knative-serving
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+activator          1/1     1            1           17m
+autoscaler         1/1     1            1           17m
+controller         1/1     1            1           17m
+istio-webhook      1/1     1            1           5m6s
+networking-istio   1/1     1            1           5m6s
+webhook            1/1     1            1           17m
 {% endhighlight %}
 
 ## 1.5 Install Eventing Component 
@@ -224,53 +241,6 @@ data:
 kind: ConfigMap
 {% endhighlight %}
 
-## 2.2 Custom Ingress Gateway
-
-- [Setting up custom ingress gateway](https://knative.dev/docs/serving/setting-up-custom-ingress-gateway/) 참조
-
-
-{% highlight yaml %}
-cat <<EOF > custom-ingressgateway.yaml
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-spec:
-  values:
-    global:
-      proxy:
-        autoInject: enabled
-      useMCP: false
-
-  addonComponents:
-    pilot:
-      enabled: true
-    prometheus:
-      enabled: false
-
-  components:
-    ingressGateways:
-      - name: custom-ingressgateway
-        enabled: true
-        namespace: custom-ns
-        label:
-          istio: custom-gateway
-      - name: cluster-local-gateway
-        enabled: true
-        label:
-          istio: cluster-local-gateway
-          app: cluster-local-gateway
-        k8s:
-          service:
-            type: ClusterIP
-            ports:
-            - port: 15020
-              name: status-port
-            - port: 80
-              name: http2
-            - port: 443
-              name: https
-EOF
-{% endhighlight %}
-
 
 # 3. Getting Started 
 
@@ -286,11 +256,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-   target = os.environ.get('TARGET', 'World')
-   return 'Hello {}!\n'.format(target)
-
+    target = os.environ.get('TARGET', 'World')
+    return 'Hello {}!\n'.format(target)
 if __name__ == "__main__":
-   app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
+    app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
 EOF
 {% endhighlight %}
 
@@ -301,7 +270,7 @@ cat <<EOF > Dockerfile
 FROM python:3.7-slim
 ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
-WORKDIR /app
+WORKDIR $APP_HOME
 COPY . ./
 RUN pip install Flask gunicorn
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
@@ -327,14 +296,11 @@ metadata:
 spec:
   template:
     spec:
-      selector:
-        app: istio-ingressgateway
-        istio: ingressgateway
       containers:
-        - image: docker.io/andersonjo/knative-hello-world
-          env:
-            - name: TARGET
-              value: "Python Sample v1"
+      - image: docker.io/andersonjo/knative-hello-world 
+        env:
+        - name: TARGET
+          value: "Python Sample v1"
 EOF
 {% endhighlight %}
 
@@ -346,7 +312,8 @@ helloworld-python   http://helloworld-python.default.ai.platform   helloworld-py
 {% endhighlight %}
 
 {% highlight bash %}
-$ curl -H "Host:helloworld-python.default.ai.platform" http://a7a33739ba44140b0a39d7cce1cae118-1000758165.us-east-2.elb.amazonaws.com
+$ INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+$ curl -H "Host:helloworld-python.default.ai.platform" $INGRESS_HOST
 {% endhighlight %}
 
 

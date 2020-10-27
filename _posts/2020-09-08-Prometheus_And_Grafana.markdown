@@ -24,9 +24,6 @@ $ helm ls
 {% endhighlight%}
 
 
-`helm search repo prometheus-community` 해당 명령어로 설치할 리스트를 볼 수 있습니다.
-
-
 ## 1.2 Install Metrics Server
 
 Metrics Server를 설치 합니다. <br>
@@ -78,15 +75,25 @@ $ kubectl apply -f prometheus-storageclass.yaml
 {% endhighlight%}
 
 
-## 1.3 Deploy Prometheus
+## 1.4 Deploy Prometheus
 
 {% highlight bash %}
 $ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+$ helm repo update
+{% endhighlight%}
+
+`helm search repo prometheus-community` 해당 명령어로 설치할 리스트를 볼 수 있습니다.
+
+
+
+{% highlight bash %}
 $ kubectl create namespace prometheus
 $ helm install prometheus prometheus-community/prometheus \
     --namespace prometheus \
     --set alertmanager.persistentVolume.storageClass="gp2" \
-    --set server.persistentVolume.storageClass="gp2"
+    --set alertmanager.persistentVolume.size="512Gi" \
+    --set server.persistentVolume.storageClass="gp2" \
+    --set server.persistentVolume.size="512Gi"
 {% endhighlight%}
 
 설치가 잘 되었는지 확인해 봅니다.
@@ -104,6 +111,28 @@ prometheus-pushgateway-6dfb58d9fb-bhb5v          1/1     Running   0          8m
 prometheus-server-658677c9f5-qrcnk               2/2     Running   0          8m36s
 {% endhighlight%}
 
+PersistentVolume 도 체크 합니다.
+
+{% highlight bash %}
+$ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                STORAGECLASS   REASON   AGE
+pvc-33e9f22e-fd00-41b3-b59a-a4649922c5eb   512Gi      RWO            Delete           Bound    prometheus/prometheus-alertmanager   gp2                     23s
+pvc-e6136d3f-7c60-4918-82c5-b7b448869fcf   512Gi      RWO            Delete           Bound    prometheus/prometheus-server         gp2                     23s
+{% endhighlight%}
+
+<img src="{{ page.asset_path }}prometheus-pv.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+## 1.5 Connect Prometheus & AlertManager Server
+
+prometheus server에 다음과 같이 접속 할 수 있습니다.
+
+{% highlight bash %}
+$ kubectl get ksvc helloworld-python -o jsonpath="{.status.url}"
+$ POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+$ kubectl --namespace prometheus port-forward $POD_NAME 9090
+{% endhighlight%}
+
+다른 방법으로 prometheus server에 접속하는 방법입니다. 
 
 {% highlight bash %}
 $ kubectl --namespace=prometheus port-forward deploy/prometheus-server 9090
@@ -113,8 +142,15 @@ $ kubectl --namespace=prometheus port-forward deploy/prometheus-server 9090
 
 <img src="{{ page.asset_path }}prometheus_example.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
+AlertManager에 접속하는 방법은 다음과 같습니다.
 
-## 1.4 Deploy Grafana 
+{% highlight bash %}
+$ export POD_NAME=$(kubectl get pods --namespace prometheus -l "app=prometheus,component=alertmanager" -o jsonpath="{.items[0].metadata.name}")
+$ kubectl --namespace prometheus port-forward $POD_NAME 9093
+{% endhighlight%}
+
+
+## 1.6 Deploy Grafana 
 
 먼저 DataSource yaml파일을 생성합니다. <br>
 Grafana 가 어디에서 데이터를 가져와서 시각화해서 보여줄지 정의합니다.
@@ -142,6 +178,7 @@ $ kubectl create namespace grafana
 $ helm install grafana grafana/grafana \
     --namespace grafana \
     --set persistence.storageClassName="gp2" \
+    --set persistence.size="512Gi" \
     --set persistence.enabled=true \
     --values grafana.yaml \
     --set service.type=LoadBalancer

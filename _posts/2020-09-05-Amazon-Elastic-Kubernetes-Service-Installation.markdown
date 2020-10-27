@@ -423,3 +423,93 @@ $ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | g
 
 이후 https://[master_node_ip]:[port] <br> 
 로 접속을 할 수 있습니다.
+
+
+# 7. Configuration 
+
+## 7.1 Configure Cluster Access 
+
+ - 참고 문서: [Managing users or IAM roles for your cluster](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html)
+
+Cluster를 최초 생성할때 해당 유저는 `system:masters` 권한을 RBAC configuration에서 자동으로 부여 받습니다. <br>
+추가적으로 AWS Users 또는 Roles 에 권한을 부여하기 위해서는 `aws-auth` configuration 파일을 수정해줘야 합니다.
+
+`aws-auth` configuration은 아래의 코드로 찾을 수 있습니다.
+
+{% highlight bash %}
+$ kubectl get configmap -n kube-system 
+NAME                                           DATA   AGE
+aws-auth                                       1      13h
+<생략>
+{% endhighlight %}
+
+
+현재 유저정보와 aws-auth에 대해서 확인은 다음과 같이 합니다.
+
+{% highlight bash %}
+# 현재 로그인된 유저 정보
+$ aws sts get-caller-identity
+{
+    "UserId": "BSWGDW2ME47DCWR9KJHYT",
+    "Account": "123456789123",
+    "Arn": "arn:aws:iam::123456789123:user/anderson.jo@google.com"
+}
+{% endhighlight %}
+
+{% highlight bash %}
+# 현재 설정 확인
+$ kubectl describe configmap -n kube-system aws-auth
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       <none>
+Annotations:  <none>
+
+Data
+====
+mapRoles:
+----
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  rolearn: arn:aws:iam::123456789123:role/AI-EKS-Node
+  username: system:node:{{EC2PrivateDNSName}}
+
+Events:  <none>
+{% endhighlight %}
+
+**IAM User 또는 Role를 EKS Cluster에 추가**하기 위해서는 다음과 같이 합니다.
+
+{% highlight bash %}
+$ kubectl edit -n kube-system configmap/aws-auth
+{% endhighlight %}
+
+아래 예제처럼 추가하면 됩니다.
+
+{% highlight yaml %}
+apiVersion: v1
+data:
+  mapRoles: |
+    - rolearn: <arn:aws:iam::111122223333:role/eksctl-my-cluster-nodegroup-standard-wo-NodeInstanceRole-1WP3NUE3O6UCF>
+      username: <system:node:{{EC2PrivateDNSName}}>
+      groups:
+        - <system:bootstrappers>
+        - <system:nodes>
+  mapUsers: |
+    - userarn: <arn:aws:iam::111122223333:user/admin>
+      username: <admin>
+      groups:
+        - <system:masters>
+    - userarn: <arn:aws:iam::111122223333:user/ops-user>
+      username: <ops-user>
+      groups:
+        - <system:masters>
+{% endhighlight %}
+
+ - **IAM Role**
+   - **rolearn**: IAM Role의 ARN
+   - **username**: Kubernetes안에서 사용할 이름
+   - **groups**: 여기서 권한을 지정. 자세한 내용은 [RBAC Authorization 문서](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#default-roles-and-role-bindings) 참고
+ - **IAM User**
+   - **userarn**: IAM User의 ARN
+   - **username**: Kubernetes안에서 사용할 이름
+   - **groups**: 여기서 권한을 지정. 자세한 내용은 [RBAC Authorization 문서](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#default-roles-and-role-bindings) 참고
