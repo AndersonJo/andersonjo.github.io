@@ -23,6 +23,14 @@ tags: ['kafka', 'spark', 'realtime']
      - 만약 처리하는 데이터가 증가한다면 [Resharding](https://docs.aws.amazon.com/streams/latest/dev/kinesis-using-sdk-java-resharding.html)이 필요
  - **Put Record**: (Data, StreamName, PartitionKey) <- Producer는 PUT call을 함으로서 데이터를 올림
  - **Partition Key**: producer에 의해서 제공되며, 여러 Shards에 분배시키기 위해서 사용됨
+
+**하면서 알게된 중요 포인트**
+
+ - [**Consuming from multiple shards**](https://stackoverflow.com/questions/34503226/multiple-consumers-per-kinesis-shard#:~:text=Late%20to%20the%20party%2C%20but,the%20second%20one%20has%20permission.)
+    - 만약 Stream안에 여러개의 shards에 있을 경우 Producer는 partition key에 따라서 shard가 배정받고 들어가게 됩니다. 
+    - 즉.. producer 1개에서 -> 다수의 shards로 나뉘어 들어가게 됨. 
+    - Consumer는 이런 다수의 shards로 부터 마치 하나의 stream처럼 데이터를 다운 받을 수 있는가? -> 일단 답은 안됨
+    - shard 마다 각자 다른 consumer를 정해줘야 함
  
 ## 1.2 Two Types of Consumers 
 
@@ -125,10 +133,12 @@ def main():
     if 'AndersonStream' not in kinesis.list_streams()['StreamNames']:
         kinesis.create_stream('AndersonStream', 1)
 
-    for _ in range(50):
+    for i in range(50):
         data = generate_data(faker)
+        data['i'] = i
         res = kinesis.put_record('AndersonStream', json.dumps(data), 'partitionkey')
-        print('PUT', data)
+        print(f'{i:2}', data)
+        print('   ', res, '\n')
 {% endhighlight %}
 
 
@@ -154,3 +164,67 @@ def main():
         if not records:
             break
 {% endhighlight %}
+
+# 3. Kinesis Analytics 
+
+## 3.1 Introduction
+
+Amazon Kinesis Data Analytics 는 단순 SQL을 통해서 streaming data를 처리하고 분석하는데 사용할 수 있습니다. <br>
+마치 Kafka KSQL과 유사하며, Performance는 떨어지나, 손쉽게 쓰기에는 좋다가 제 생각입니다. 
+
+## 3.2 Examples 
+
+{% highlight sql %}
+CREATE OR REPLACE STREAM "AndersonStream" (name VARCHAR(50), age INTEGER, gender VARCHAR(4), score  INTEGER, job VARCHAR(50));
+
+CREATE OR REPLACE PUMP "STREAM_PUMP" AS INSERT INTO "AndersonStream"
+SELECT STREAM "name", "age", "gender", "score", "job"
+FROM "SOURCE_SQL_STREAM_001"
+WHERE "gender" SIMILAR TO 'M';
+{% endhighlight %}
+
+{% highlight bash %}
+-- ** Continuous Filter ** 
+-- Performs a continuous filter based on a WHERE condition.
+--          .----------.   .----------.   .----------.              
+--          |  SOURCE  |   |  INSERT  |   |  DESTIN. |              
+-- Source-->|  STREAM  |-->| & SELECT |-->|  STREAM  |-->Destination
+--          |          |   |  (PUMP)  |   |          |              
+--          '----------'   '----------'   '----------'               
+-- STREAM (in-application): a continuously updated entity that you can SELECT from and INSERT into like a TABLE
+-- PUMP: an entity used to continuously 'SELECT ... FROM' a source STREAM, and INSERT SQL results into an output STREAM
+-- Create output stream, which can be used to send to a destination
+{% endhighlight %}
+
+ 1. 먼저 "SOURCE_SQL_STREAM_001" 에서 JSON 데이터가 들어옵니다. 
+ 2. `CREATE OR REPLACE STREAM "AndersonStream" ... ` 을 통해서 테이블을 하나 만듭니다. (실시간 처리를 위한 테이블)
+ 3. `CREATE OR REPLACE PUMP "STREAM_PUMP" AS INSERT INTO "AndersonStream` 을 통해서  SOURCE_SQL_STREAM_001 에서 받은 데이터를 AndersonStream 테이블로 넣어주게 됩니다. 
+ 4. `Where` 조건문을 통해서 데이터를 발라내게 됩니다. 
+ 
+ <img src="{{ page.asset_path }}kinesis-analyrics-example-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+ 
+ 
+ **매우 중요한 내용** \<쿼리 만들때 매우 중요한 내용입니다.\> 
+ 
+  - SELECT 문 안쪽에 "name", "age", "gender", "score", "job" 모두 double quotation을 사용했습니다. <br>사용 안하면 기본값으로 대문자로 인식하게 되며 single quotation 사용하면 안됩니다. 
+  - Where절에서 'M' <-- 요 부분이 single quotation으로 사용됐는데.. 이건 또 double quotation사용하면 컬럼으로 인식해서 에러남
+  
+  
+**Lambda** 에 붙여 쓸때 다음과 같이 할 수 있습니다.<br>
+Kinesis Analytics에서 Destination을 Lambda로 잡으면 됩니다.
+
+{% highlight python %}
+import json
+import base64
+
+def lambda_handler(event, context):
+    output = []
+    for record in event['records']:
+        payload = base64.b64decode(record['data'])
+        output.append(payload)
+    
+    return {
+        'output': output
+    }
+{% endhighlight %} 
+   

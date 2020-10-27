@@ -424,3 +424,5 @@ $ kubectl get ksvc autoscale-go
 NAME           URL                                       LATESTCREATED        LATESTREADY          READY   REASON
 autoscale-go   http://autoscale-go.default.ai.platform   autoscale-go-xdstf   autoscale-go-xdstf   True    
 {% endhighlight %}
+
+
