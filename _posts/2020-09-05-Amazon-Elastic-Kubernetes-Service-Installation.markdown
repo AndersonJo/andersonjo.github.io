@@ -180,7 +180,7 @@ kubectl 명령어로 Cluster에 붙어서 명령을 내리려면 kubeconfig파�
 Token은 다음의 명령어로 얻을 수 있습니다. 
 
 {% highlight bash %}
-$ aws eks get-token --cluster-name AI-EKS-D | jq .status.token
+$ aws eks get-token --cluster-name {CLUSTER_NAME} | jq .status.token
 {% endhighlight %}
 
 물론 위의 명령어를 사용해서 [kubeconfig 파일은 manual](https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html)로 만들어 줄 수도 있습니다.<br>
@@ -513,3 +513,77 @@ data:
    - **userarn**: IAM User의 ARN
    - **username**: Kubernetes안에서 사용할 이름
    - **groups**: 여기서 권한을 지정. 자세한 내용은 [RBAC Authorization 문서](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#default-roles-and-role-bindings) 참고
+   
+   
+## 7.2 Storage Volume
+
+1. Storage Class (SC): AWS, GCP 등등의 서비스마다 제공하는 디스크 종류가 여러가지 있을텐데.. 구체적인 디스크 종류를 정의해놓은 것  
+2. Persistent Volume (PV): 일종의 디스크 자원 (마치 Node처럼)
+3. Persistent Volume Claim (PVC): PV자원을 요청하는 것 
+
+### 7.2.1 Storage Class
+
+기본 storage class 로 사용되는 gp2 (AWS의 경우 gp2임)를 수정하기 위해서는 다음과 같이 할수 있습니다.<br>
+
+{% highlight bash %}
+$ kubectl get storageclass 
+NAME            PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+gp2 (default)   kubernetes.io/aws-ebs   Delete          WaitForFirstConsumer   false                  2d15h
+
+$ kubectl edit storageclass gp2
+{% endhighlight %}
+
+
+{% highlight yaml %}
+$ cat <<EOF > storage.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp2
+  namespace: seldon
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+  fsType: ext4
+reclaimPolicy: Delete
+mountOptions:
+  - debug
+EOF
+{% endhighlight %} 
+
+{% highlight bash %}
+$ kubectl apply -f storage.yaml
+$ kubectl get storageclass
+NAME            PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+gp2 (default)   kubernetes.io/aws-ebs   Delete          WaitForFirstConsumer   false                  2d15h
+seldon-gp2      kubernetes.io/aws-ebs   Delete          Immediate              false                  9m34s
+{% endhighlight %} 
+
+수정모드에서 metadata.annotations.storageclass.kubernetes.io/is-default-class: "true" 로 변경해주면 기본 storage class를 변경 할 수 있습니다.
+
+
+
+### 7.2.2 Persistent Volume
+
+
+### 7.2.2 Persistent Volume Claim
+
+{% highlight yaml %}
+$ cat <<EOF > claim.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: seldon-claim
+  namespace: seldon
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+EOF
+{% endhighlight %} 
+
+{% highlight bash %}
+kubectl apply -f claim.yaml 
+{% endhighlight %} 

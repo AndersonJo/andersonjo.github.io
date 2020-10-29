@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Istio"
-date:   2020-09-22 01:00:00
+date:   2020-09-15 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
 tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops']

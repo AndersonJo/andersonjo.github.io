@@ -172,7 +172,9 @@ def main():
 Amazon Kinesis Data Analytics 는 단순 SQL을 통해서 streaming data를 처리하고 분석하는데 사용할 수 있습니다. <br>
 마치 Kafka KSQL과 유사하며, Performance는 떨어지나, 손쉽게 쓰기에는 좋다가 제 생각입니다. 
 
-## 3.2 Examples 
+## 3.2 Continuous Filtering Example 
+
+아래 예제에서는 Stream으로 들어오는 데이터에서 "남자"만 뽑아내는 필터를 거는 예제를 보여줍니다. 
 
 {% highlight sql %}
 CREATE OR REPLACE STREAM "AndersonStream" (name VARCHAR(50), age INTEGER, gender VARCHAR(4), score  INTEGER, job VARCHAR(50));

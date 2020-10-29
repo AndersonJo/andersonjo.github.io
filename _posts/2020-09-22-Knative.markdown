@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Knative"
-date:   2020-09-15 01:00:00
+date:   2020-09-22 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
 tags: ['kubeflow', 'namespace', 'hang', '멈춤', 'kubectl']
@@ -22,7 +22,7 @@ $ kubectl get namespace knative-eventing -o 'go-template={{index .metadata.label
 
 ## 1.2 Install Knative CLI
 
-{% highlight bash %}
+{% highlight bash %}2020-09-15-Knative
 $ wget https://storage.googleapis.com/knative-nightly/client/latest/kn-linux-amd64
 $ chmod 110 kn-linux-amd64
 $ sudo mv kn-linux-amd64 /usr/local/bin/kn
