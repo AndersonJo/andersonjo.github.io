@@ -9,12 +9,86 @@ tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops', 'autoscaling
 
 # 1. Setting Up!  
 
-## 1.1 Serving namespace 지정
+## 1.1 Install KFServing 
+
+일단 KFServing은 Kubeflow와 함께 설치가 되기 때문에.. 사실.. 뭐 딱히 더 해줄 필요는 없지만.. <br>
+늘 그렇듯.. Kubeflow의 버젼 업그레이드가 느리기 때문에.. 나처럼 최신 버젼 사용하고 싶어하는.. <생략> 
+
+{% highlight bash %}
+$ wget https://raw.githubusercontent.com/kubeflow/kfserving/master/install/v0.4.1/kfserving.yaml
+$ kubectl apply -f kfserving.yaml
+{% endhighlight %}
+
+
+## 1.2 Install Local Gateway  
+
+먼저 Knative > 0.11.2 이상이 설치가 미리 되어 있어야 합니다. <br>
+`cluster-local-gateway` 는 필수적으로 필요하며, 해당 gateway는 transformer 그리고 explainer사용시 반드시 필요합니다. <br>
+하여튼 그냥 설치 해두면 됩니다.<br>
+자세한 내용은 [Installing Istio for Knative](https://knative.dev/docs/install/installing-istio/#updating-your-install-to-use-cluster-local-gateway) 를 참고 합니다.
+
+아래 yaml 
+{% highlight yaml %}
+cat << EOF > ./local-cluster-gateway.yaml
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  values:
+    global:
+      proxy:
+        autoInject: enabled
+      useMCP: false
+
+  addonComponents:
+    pilot:
+      enabled: true
+    prometheus:
+      enabled: false
+
+  components:
+    ingressGateways:
+      - name: cluster-local-gateway
+        enabled: true
+        label:
+          istio: cluster-local-gateway
+          app: cluster-local-gateway
+        k8s:
+          service:
+            type: ClusterIP
+            ports:
+              - name: http
+                protocol: TCP
+                port: 80
+                targetPort: 8080
+              - name: https
+                protocol: TCP
+                port: 443
+                targetPort: 8443
+              - name: status-port
+                port: 15021
+                targetPort: 15021
+              - name: tls
+                port: 15443
+                targetPort: 15443
+EOF
+{% endhighlight %}
+
+{% highlight bash %}
+$ istioctl manifest generate -f local-cluster-gateway.yaml > manifest.yaml
+$ kubectl apply -f manifest.yaml
+$ kubectl get svc cluster-local-gateway -n istio-system 
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                              AGE
+cluster-local-gateway   ClusterIP   10.100.243.162   <none>        80/TCP,443/TCP,15021/TCP,15443/TCP   69s
+{% endhighlight %}
+
+
+## 1.3 Serving namespace 지정
 
 Kubeflow에서는 이미 KFServing 이 설치되어서 나옵니다.
 
 {% highlight bash %}
 $ kubectl create namespace kfserving
+$ kubectl label namespace kfserving istio-injection=enabled
 $ kubectl label namespace kfserving serving.kubeflow.org/inferenceservice=enabled
 $ kubectl get ns kfserving -o json | jq .metadata.labels
 {
@@ -26,8 +100,14 @@ $ kubectl get ns kfserving -o json | jq .metadata.labels
 KFServing controller 가 설치되어 있는지 확인합니다.
 
 {% highlight bash %}
+# Kuberflow 설치시
 $ kubectl get po -n kubeflow | grep kfserving-controller-manager
 kfserving-controller-manager-0        2/2     Running   0          3h55m
+
+# KFServing 단독 설치시
+$ kubectl get po -n kfserving-system | grep kfserving-controller-manager
+kfserving-controller-manager-0        2/2     Running   0          56s
+
 {% endhighlight %}
 
 
@@ -144,6 +224,7 @@ $ curl -v -H  "Host: ${SERVICE_HOSTNAME}" http://${INGRESS_HOST}:${INGRESS_PORT}
 POST쪽에서 URL을 수정해줘야 합니다.
 
 {% highlight yaml %}
+cat <<EOF > perf.yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -193,16 +274,17 @@ kind: ConfigMap
 metadata:
   annotations:
   name: vegeta-cfg
+EOF
 {% endhighlight %}
 
-{% highlight yaml %}
+{% highlight bash %}
 $ kubectl create -f perf.yaml -n kfserving 
 job.batch/load-testpk9r2 created
 configmap/vegeta-cfg created
 {% endhighlight %}
 
 
-{% highlight yaml %}
+{% highlight bash %}
 $ kubectl logs load-testpk9r2-wmknb -n kfserving 
 Requests      [total, rate, throughput]         30000, 500.02, 0.00
 Duration      [total, attack, wait]             1m0s, 59.998s, 5.806ms
@@ -253,7 +335,7 @@ cat <<EOF > Dockerfile
 FROM python:3.7-slim
 
 ENV APP_HOME /app
-WORKDIR \$APP_HOME
+WORKDIR $APP_HOME
 COPY app.py requirements.txt ./
 RUN pip install --no-cache-dir -r ./requirements.txt
 
@@ -261,7 +343,7 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
-CMD exec gunicorn --bind :\$PORT --workers 1 --threads 8 app:app
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
 EOF
 {% endhighlight %}
 
@@ -272,6 +354,7 @@ EOF
 {% highlight bash %}
 $ docker login
 $ docker build -t andersonjo/custom-image .
+$ docker run -d --name custom-test -p 8080:8080 -it test
 $ docker push andersonjo/custom-image
 {% endhighlight %}
 
@@ -303,7 +386,7 @@ EOF
 
 {% highlight bash %}
 $ kubectl apply -f custom.yaml -n kfserving
-$ k get inferenceservices -n kfserving
+$ kubectl get inferenceservices -n kfserving
 NAME           URL                                                                READY
 custom-image   http://custom-image.kfserving.example.com/v1/models/custom-image   True 
 {% endhighlight %}

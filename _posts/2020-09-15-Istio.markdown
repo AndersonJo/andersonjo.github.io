@@ -4,7 +4,7 @@ title:  "Istio"
 date:   2020-09-15 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
-tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops']
+tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops', 'kfserving']
 ---
 
 # 1. Installation
@@ -87,66 +87,10 @@ This will install the default Istio profile into the cluster. Proceed? (y/N) y
 ✔ Installation complete  
 {% endhighlight %}
 
-Istio를 적용하기 위해서는 namespace에 `istio-injection=enabled` label을 추가해야 합니다.
+Istio를 적용하기 위해서는 namespace에 `istio-injection=enabled` label을 추가해야 합니다.<br>
+아래는 예시 입니다.
 
 {% highlight bash %}
 $ kubectl create namespace kfserving
 $ kubectl label namespace kfserving istio-injection=enabled
-{% endhighlight %}
-
-## 1.4 Install Local Gateway  
-
-추후 KFServing 시에 필요한 Gateway 입니다.
-
-{% highlight yaml %}
-cat << EOF > ./local-cluster-gateway.yaml
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-spec:
-  values:
-    global:
-      proxy:
-        autoInject: enabled
-      useMCP: false
-
-  addonComponents:
-    pilot:
-      enabled: true
-    prometheus:
-      enabled: false
-
-  components:
-    ingressGateways:
-      - name: cluster-local-gateway
-        enabled: true
-        label:
-          istio: cluster-local-gateway
-          app: cluster-local-gateway
-        k8s:
-          service:
-            type: ClusterIP
-            ports:
-              - name: http
-                protocol: TCP
-                port: 80
-                targetPort: 8080
-              - name: https
-                protocol: TCP
-                port: 443
-                targetPort: 8443
-              - name: status-port
-                port: 15021
-                targetPort: 15021
-              - name: tls
-                port: 15443
-                targetPort: 15443
-EOF
-{% endhighlight %}
-
-{% highlight bash %}
-$ istioctl manifest generate -f local-cluster-gateway.yaml > manifest.yaml
-$ kubectl apply -f manifest.yaml
-$ kubectl get svc cluster-local-gateway -n istio-system 
-NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                              AGE
-cluster-local-gateway   ClusterIP   10.100.243.162   <none>        80/TCP,443/TCP,15021/TCP,15443/TCP   69s
 {% endhighlight %}
