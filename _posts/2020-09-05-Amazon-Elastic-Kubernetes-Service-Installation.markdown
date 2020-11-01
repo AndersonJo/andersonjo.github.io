@@ -513,15 +513,102 @@ data:
    - **userarn**: IAM User의 ARN
    - **username**: Kubernetes안에서 사용할 이름
    - **groups**: 여기서 권한을 지정. 자세한 내용은 [RBAC Authorization 문서](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#default-roles-and-role-bindings) 참고
+
+
+## 7.2 IAM Role for Pods 
+
+### 7.2.1 OIDC & IAM Role 세팅
+
+Pods에 IAM권한을 줘서, AWS 의 API 서비스를 이용할 수 있도록 해줍니다.<br>
+먼저 Cluster의 OIDC (OpenID Connect)를 확인합니다.
+
+{% highlight bash %}
+$ aws eks describe-cluster --name <cluster_name> --query "cluster.identity.oidc.issuer" --output text
+https://oidc.eks.us-east-2.amazonaws.com/id/0123456789abcdefg
+{% endhighlight %}
+
+만약 OIDC가 없다면 생성해주면 됩니다.
+
+{% highlight bash %}
+$ eksctl utils associate-iam-oidc-provider --cluster <cluster_name> --approve
+{% endhighlight %}
+
+제대로 생성이 되었는지는 IAM에서 확인이 가능합니다.<br>
+IAM -> Identity Providers -> 검색 
+
+
+그 다음으로 **IAM Role**을 생성합니다. 
+
+<img src="{{ page.asset_path }}eks-iam-role-01.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+
+이후 Pod에 주고자 하는 권한을 할당하고 완료합니다.<br>
+IAM Role 이름을 **AI-EKS-Pod** 으로 만들었고, secrets-manager 권한을 할당 했습니다. 
+
+<img src="{{ page.asset_path }}eks-iam-role-02.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+
+
+### 7.2.2 Kubernetes에서의 세팅
+
+Service Account 생성하고 `eks.amazonaws.com/role-arn` 부분을 위에서 만든 AI-EKS-Pod Role {IAM_ROLE_NAME 부분} 로 변경합니다.
+
+{% highlight yaml %}
+cat <<EOF > svc_account.yaml 
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kf-sa
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<AWS_ACCOUNT_ID>:role/<IAM_ROLE_NAME>
+EOF
+{% endhighlight %}
+
+
+{% highlight yaml %}
+apiVersion: apps/v1
+ kind: Deployment
+ metadata:
+   name: eks-iam-test
+ spec:
+   replicas: 1
+   selector:
+     matchLabels:
+       app: eks-iam-test
+   template:
+     metadata:
+       labels:
+         app: eks-iam-test
+     spec:
+       serviceAccountName: kf-sa
+       containers:
+       - name: eks-iam-test
+         image: sdscello/awscli:latest
+         ports:
+         - containerPort: 80
+{% endhighlight %}
+
+이후 `serviceAccountName: AI-EKS-Pod` 설정을 해주면 됩니다.<br>
+다음 예제를 참고합니다.
+
+
+
+{% highlight yaml %}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  serviceAccountName: kf-sa
+{% endhighlight %}
+
+추가적으로 이미 실행되고 있는 pods에는 바로 적용이 안되는 delete pods 으로 리부트 시켜야 합니다.
    
-   
-## 7.2 Storage Volume
+## 7.3 Storage Volume
 
 1. Storage Class (SC): AWS, GCP 등등의 서비스마다 제공하는 디스크 종류가 여러가지 있을텐데.. 구체적인 디스크 종류를 정의해놓은 것  
 2. Persistent Volume (PV): 일종의 디스크 자원 (마치 Node처럼)
 3. Persistent Volume Claim (PVC): PV자원을 요청하는 것 
 
-### 7.2.1 Storage Class
+### 7.3.1 Storage Class
 
 기본 storage class 로 사용되는 gp2 (AWS의 경우 gp2임)를 수정하기 위해서는 다음과 같이 할수 있습니다.<br>
 
@@ -563,10 +650,10 @@ seldon-gp2      kubernetes.io/aws-ebs   Delete          Immediate              f
 
 
 
-### 7.2.2 Persistent Volume
+### 7.3.2 Persistent Volume
 
 
-### 7.2.2 Persistent Volume Claim
+### 7.3.2 Persistent Volume Claim
 
 {% highlight yaml %}
 $ cat <<EOF > claim.yaml

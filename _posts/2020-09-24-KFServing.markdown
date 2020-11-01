@@ -111,7 +111,6 @@ kfserving-controller-manager-0        2/2     Running   0          56s
 {% endhighlight %}
 
 
-
 # 2. Getting Started
 
 ## 2.1 Iris Tutorial  
