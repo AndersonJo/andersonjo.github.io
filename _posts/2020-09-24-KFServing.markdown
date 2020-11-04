@@ -184,7 +184,7 @@ istio-ingressgateway   LoadBalancer   10.100.200.170   ****.us-east-2.elb.amazon
 
 
 
-### 2.1.2 Inference
+### 2.1.2 Inference from External Source
 
  - INGRESS_HOST: Load Balancer Hostname (ex. `a0e3184ae3-1490218815.us-east-2.elb.amazonaws.com`)
  - INGRESS_PORT: Load Balancer Port (ex. `80`)
@@ -216,8 +216,31 @@ $ curl -v -H  "Host: ${SERVICE_HOSTNAME}" http://${INGRESS_HOST}:${INGRESS_PORT}
 
 <img src="{{ page.asset_path }}kfserving-postman-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
+### 2.1.3 Inference from Local Cluster Gateway
 
-### 2.1.3 Performance Test
+Cluster 내부에서의 통신은 위에처럼 외부 load balancer를 타서 통신을 할 필요가 없습니다. <br>
+즉 내부 통신을 이용하면 빠르게 데이터 교환을 할 수 있습니다.
+
+먼저 내부에서 통신할 URL을 알아냅니다. 
+
+{% highlight bash %}
+$ kubectl get inferenceService -n kfserving sklearn-iris -o jsonpath='{.status.address.url}' 
+http://sklearn-iris.kfserving.svc.cluster.local/v1/models/sklearn-iris:predict
+{% endhighlight %}
+
+이제 특정 Container로 접속합니다. <br>
+아래는 예제 이며, "sklearn-iris-predictor-default-***" 요 부분은 pod 이름입니다.
+
+{% highlight bash %}
+$ kubectl exec -it sklearn-iris-predictor-default-*** -n kfserving  -c kfserving-container /bin/bash
+$ curl -i http://sklearn-iris.kfserving.svc.cluster.local/v1/models/sklearn-iris:predict -d @./iris-input.json
+{"predictions": [0, 1, 2]}
+{% endhighlight %}
+
+
+
+
+### 2.1.4 Performance Test
 
 `vi perf.yaml` 로 다음을 입력합니다.<br>
 POST쪽에서 URL을 수정해줘야 합니다.
