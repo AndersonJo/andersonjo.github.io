@@ -314,6 +314,7 @@ helloworld-python   http://helloworld-python.default.ai.platform   helloworld-py
 {% highlight bash %}
 $ INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 $ curl -H "Host:helloworld-python.default.ai.platform" $INGRESS_HOST
+Hello Python Sample v1!
 {% endhighlight %}
 
 

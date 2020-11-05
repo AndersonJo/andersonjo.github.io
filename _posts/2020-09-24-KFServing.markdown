@@ -14,6 +14,8 @@ tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops', 'autoscaling
 일단 KFServing은 Kubeflow와 함께 설치가 되기 때문에.. 사실.. 뭐 딱히 더 해줄 필요는 없지만.. <br>
 늘 그렇듯.. Kubeflow의 버젼 업그레이드가 느리기 때문에.. 나처럼 최신 버젼 사용하고 싶어하는.. <생략> 
 
+[Version 목록](https://github.com/kubeflow/kfserving/tree/master/install) 을 참조해서 원하는 KFSErving 버젼을 설치 합니다.
+
 {% highlight bash %}
 $ wget https://raw.githubusercontent.com/kubeflow/kfserving/master/install/v0.4.1/kfserving.yaml
 $ kubectl apply -f kfserving.yaml
