@@ -600,7 +600,8 @@ spec:
   serviceAccountName: kf-sa
 {% endhighlight %}
 
-추가적으로 이미 실행되고 있는 pods에는 바로 적용이 안되는 delete pods 으로 리부트 시켜야 합니다.
+추가적으로 이미 실행되고link
+ 있는 pods에는 바로 적용이 안되는 delete pods 으로 리부트 시켜야 합니다.
    
 ## 7.3 Storage Volume
 
