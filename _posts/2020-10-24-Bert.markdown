@@ -7,6 +7,8 @@ asset_path: /assets/images/
 tags: []
 ---
 
+작성중인 문서
+
 <header>
     <img src="{{ page.asset_path }}bert-architecture.png" class="img-responsive img-rounded img-fluid center">
     
