@@ -1,0 +1,17 @@
+---
+layout: post
+title:  "Bert Explained"
+date:   2020-10-24 01:00:00
+categories: "nlp"
+asset_path: /assets/images/
+tags: []
+---
+
+<header>
+    <img src="{{ page.asset_path }}bert-architecture.png" class="img-responsive img-rounded img-fluid center">
+    
+</header>
+
+# 1. Introduction 
+
+Bidirectional Encoder Representations for Transformers (BERT) 는 2018년 10월에 Google AI Language의 연구원으로 부터 퍼블리쉬된 딥러닝 모델입니다. 

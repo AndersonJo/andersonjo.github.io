@@ -427,3 +427,21 @@ autoscale-go   http://autoscale-go.default.ai.platform   autoscale-go-xdstf   au
 {% endhighlight %}
 
 
+{% highlight bash %}
+$ INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+$ curl  -H "Host:autoscale-go.default.ai.platform" "${INGRESS_HOST}?sleep=500&prime=10000&bloat=5"
+Allocated 5 Mb of memory.
+The largest prime less than 10000 is 9973.
+Slept for 500.11 milliseconds.
+{% endhighlight %}
+
+Load Test를 진행합니다.
+
+{% highlight bash %}
+$ hey -z 30s -c 200 -H "Host: autoscale-go.default.ai.platform" "http://${INGRESS_HOST}?sleep=5000&prime=1000000&bloat=20"
+$ kubectl get pods
+NAME                                                              READY   STATUS    RESTARTS   AGE
+autoscale-go-2fkh2-deployment-65bc9d7764-zq2sr                    2/2     Running   0          5m17s
+autoscale-go-5n6gm-deployment-657678f8bd-xp87n                    2/2     Running   0          6m31s
+autoscale-go-dm54z-deployment-c48fcb7ff-49ckr                     2/2     Running   0          179m
+{% endhighlight %}
