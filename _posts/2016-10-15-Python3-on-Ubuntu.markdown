@@ -108,21 +108,12 @@ sudo apt-get install graphviz
 sudo pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz
 {% endhighlight %}
 
-**Ipython**
+**Ipython & Jupyter**
 
 {% highlight bash %}
 sudo pip3 install ipython[all]
-sudo pip3 install ipywidgets
+sudo pip3 install --upgrade ipywidgets jupyter_contrib_nbextensions autopep8 isort
 sudo jupyter nbextension enable --py --sys-prefix widgetsnbextension
-{% endhighlight %}
-
-**Jupyter**
-
-{% highlight bash %}
-python2 -m pip install ipykernel
-python2 -m ipykernel install --user
-
-python3 -m pip install ipykernel
-python3 -m ipykernel install --user
+jupyter contrib nbextension install --user
 {% endhighlight %}
 

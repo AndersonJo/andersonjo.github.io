@@ -17,14 +17,6 @@ tags: ['RVM', 'JAVA', '.bash.rc', 'format', 'my.cnf', 'Atom']
     </div>
 </header>
 
-### ACPI PPC Probe failed
-
-GTX960 디바이스를 읽지 못해서 생기는 에러입니다. <br>
-그냥 warning 정도의 에러인데.. 이것과 상관없이.. 화면이 보이지 않는다면.. <br>
-**nomodeset** 옵션을 주고 우분투를 설치또는 로그인하면 됩니다.
- 
-> 우분투 설치시에는 F6 (other options)를 눌러서 옵션을 지정할수 있습니다.
-
 ### Locale Setup
 
 {% highlight bash %}
@@ -48,12 +40,27 @@ sudo apt-get update
 sudo apt-get install oracle-java13-installer
 {% endhighlight %}
 
+### CapsLock <->  한글키 변경 (Optional)
+
+xev 를 통해서 키를 눌러보면서 keycode 그리고 키 이름을 알 수 있습니다.<br>
+개인 키보드는 다음과 같습니다.
+
+ - capslock: keycode 66 (keysym 0xffe5, Caps_Lock)
+ - 한영: keycode 108 (keysym 0xff31, Hangul)
+
+CapsLock 그리고 한영키를 서로 바꾸려면 다음과 같이 합니다.
+
+{% highlight bash %}
+xmodmap -e "keycode 66 = Hangul"
+xmodmap -e "keycode 108 = Caps_Lock"
+{% endhighlight %}
+
 
 ### 벼루 (Optional)
 
 한글 104키로 해야 함
 
-{% highlight bash%}
+{% highlight bash %}
 sudo apt-get install uim uim-byeoru`
 uim-pref-gtk
 {% endhighlight %}
