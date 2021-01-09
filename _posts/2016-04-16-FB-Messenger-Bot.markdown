@@ -256,15 +256,15 @@ function sendGenericMessage(sender) {
 {% endhighlight %}
 
 
-### Final Results
+[comment]: <> (### Final Results)
 
-<img src="{{ page.static }}capture1.png" class="img-responsive img-rounded img-fluid">
+[comment]: <> (<img src="{{ page.static }}capture1.png" class="img-responsive img-rounded img-fluid">)
 
-<img src="{{ page.static }}capture2.png" class="img-responsive img-rounded img-fluid">
+[comment]: <> (<img src="{{ page.static }}capture2.png" class="img-responsive img-rounded img-fluid">)
 
-<img src="{{ page.static }}capture3.png" class="img-responsive img-rounded img-fluid">
+[comment]: <> (<img src="{{ page.static }}capture3.png" class="img-responsive img-rounded img-fluid">)
 
-<img src="{{ page.static }}capture4.png" class="img-responsive img-rounded img-fluid">
+[comment]: <> (<img src="{{ page.static }}capture4.png" class="img-responsive img-rounded img-fluid">)
 
 
 
