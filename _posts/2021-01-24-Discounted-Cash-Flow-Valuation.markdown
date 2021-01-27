@@ -89,5 +89,108 @@ $$ \text{ERP} = \mathbb{E} \left[ \text{1년동안의 Sharpe 지수}\right] \tim
 마지막 가격을 보면 되며, 예를 들어 JAN 2021 의  마지막 가격은 99.91 인데.. 100에서 빼주면 됩니다. <br>
 즉 100 - 99.91 = 0.09 이며 이며 현재 target rate (0~0.25) 그 사이임을 알 수 있습니다.
 
+## 1.5 Beta 
+
+특정 주식, 펀드, 포트폴리오가 전체 시장과 얼마나 유사한 변동성을 갖는지를 나타낸 지표.<br>
+Linear 공식이 y = y_intercept + beta * x_mean 인데.. 여기서 b는 slope을 나타내고..<br>
+실제로 이 b가 beta값을 나타냅니다. 즉.. **beta == slope** 이다!
+
+ - $$ \beta > 1.0 $$ : 특정 주가가 시장의 변동폭보다 더 심하게 움직이며, 리스크가 높다
+ - $$ \beta = 1.0 $$ : 트정 주가가 시장의 변동폭과 동일하다  
+ - $$ \beta < 1.0 $$ : 특정 주가가 시장의 변동폭보다 덜 움직이며, 리스크가 적다
+ - $$ \beta = 0 $$ : 특정 주가는 시장의 흐름과 상관관계가 없다
+ - $$ \beta < 0 $$ : 특정 주가는 시장의 흐름과 반대로 움직인다 (negatively correlated)
+
+따라서 beta 값은 종종 위험보상(risk-reward)를 측정할때 사용되며, 쉽게 말해.. <br>
+투자자로서 얼마나 큰 리스크를 감수하고 잠재적 보상을 얻겠는가 임. 
 
 
+$$ \begin{align} 
+\beta &= \frac{cov(  s,  m)}{\sigma^2( m)} \\
+\end{align} $$
+
+ - $$ \beta $$ : 베타 상관계수
+ - $$ s $$ : 특정 주식의 일별 변화량 (percentage)
+ - $$ m $$ : 시장의 일별 변화량 (percentage)
+ - $$ \sigma^2 $$ : variance
+
+조금 더 설명하면 아래와 같습니다.
+
+$$ \begin{align}
+cov(s, m) &= \frac{\Sigma^N_{i=1} (s_i - \bar{s}) \times (m_i - \bar{m})}{N-1} \\
+cor(s, m) &= \frac{cov(s, m)}{\sigma_s \times \sigma_m} \\ 
+\sigma_m &= std(m) =  \sqrt{ \frac{\Sigma^N_{i=1} (m_i - \bar{m})^2}{N-1}} \\
+\sigma_m^2 &= var(m) =  \frac{\Sigma^N_{i=1} (m_i - \bar{m})^2}{N-1}
+\end{align} $$
+
+ - cov: covariance 이며, 문제점이 수치가 커질수록 상관관계가 높은데.. normalization이 안된 상태
+ - cor: 상관관계 공식이며, cov에 두 변수의 표준편차를 곱해서 normalization 하는데 -> 결론적으로 -1 ~ 1 사이의 값으로 만듬 <br>
+   이걸 넣은 이유는 사실 Beta값은 이론적으로 상관계수에서 나온 공식이라서 그러함. [참고](https://ebrary.net/500/business_finance/mathematical_derivation_beta)
+ - $$ \sigma $$ : sample standard deviation 이다. 따라서 분모가 N 이 아니라 N-1 이다.
+
+Python 예제는 다음과 같습니다.
+
+{% highlight python %}
+import numpy as np
+
+s = np.array([ 3.052447,  5.224366,  0.101958,  2.502108,  7.811279,  5.185549,
+              -6.122374, -2.556716,  2.952812,  0.776698, -8.855169,  8.284153,
+              -0.7809  ])
+m = np.array([ 0.054649,  1.930289,  2.218817,  2.80826 ,  0.983162,  5.617872,
+              -3.894738, -2.688451,  0.27188 ,  2.160835,  0.48424 ,  3.602159,
+              3.026322])
+{% endhighlight %}
+
+
+**Numpy**
+{% highlight python %}
+def cal_beta(m, s):
+    cov = ((s - s.mean()) * (m - m.mean())).sum()
+    var = np.sum((m - m.mean())**2)
+    return cov/var
+
+cal_beta(m, s)
+# 1.1401684598427013
+{% endhighlight %}
+
+**Numpy - Matrix**
+{% highlight python %}
+import statsmodels.api as sm
+
+def cal_beta2(m, s):
+    """
+    :return : [y-intercept, slope] 
+    """
+    m = sm.add_constant(m)
+    a = np.linalg.inv(m.T @ m)
+    b = m.T @ s
+    B = a @ b
+    return B
+
+cal_beta2(m, s)
+# array([-0.10172452,  1.14016846])  
+{% endhighlight %}
+
+**Numpy - Simple Version**
+
+{% highlight python %}
+def cal_beta3(m, s):
+    y = np.cov(s, m, ddof=0)/np.var(m)
+    return y[0][-1]
+
+cal_beta3(m, s)
+# 1.1401684598427015
+{% endhighlight %}
+
+
+**Scipy**
+{% highlight python %}
+from scipy.stats import linregress
+
+linregress(m, s)
+# LinregressResult(slope=1.1401684598427015, 
+#                  intercept=-0.10172451628899193, 
+#                  rvalue=0.5716942376087407, 
+#                  pvalue=0.04122636145990893, 
+#                  stderr=0.4933667245626671)
+{% endhighlight %}
