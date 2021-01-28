@@ -299,7 +299,8 @@ $$ \begin{align}
    - 데이터는 [Fred 에서 다운로드](https://fred.stlouisfed.org/series/DGS10#0)
    - 실제 모델링에서는 Linear Regression모델링 또는 여튼 미래시점의 수익률을 넣는 것이 좋다
  - $$ \beta $$ : 베타값. `1.14` 
- - ERP: 리스크 프리미엄. sharpe(0.317) * vix(13.965) = 4.428 
+ - ERP: 리스크 프리미엄. sharpe(0.317) * vix(13.965) = 4.428
+ - 캐팸~ 이렇게 읽음
 
 ### 2.1.1 Risk Free Rate
 
@@ -432,7 +433,15 @@ $$ \begin{align}
 11.6281 &= 0.9183 + 2.4186 \times 4.428
 \end{align} $$
 
+ - risk-free rate 그리고 ERP 값 모두 한번만 계산해두면.. 마치 상수처럼 모든 종목에 다 쓰임.<br>
+   즉 개별종목에 영향을 주는건 beta 밖에없음. (확인했음. 정말 이렇게 계산함)
+ - **리스크가 존재할때 위험 정도에 따라서 해당 증권의 적절한 기대수익률**을 계산할때 사용   
+
 {% highlight python %}
 # 11.628131270734137
 capm = risk_free_rate + beta * erp
 {% endhighlight %}
+
+CAPM 값이 11.62가 나왔다는 뜻은 required return on equity = 11.62% 라는 것이며, <br>
+11.62% 수익률이 나와줘야 한다는 뜻이다. (그만큼 리스크가 높다는 뜻)
+
