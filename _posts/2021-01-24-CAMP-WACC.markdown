@@ -122,11 +122,11 @@ vix = np.array([12.86, 15.34, 17.35, 10.31])
 # 다음분기 S&P500 예측값과, 10년 국채 예측값을 더 넣어준다.
 s2 = np.append(s, 0.0172)
 t2 = np.append(t, 0.032)
-sharp_ratio = (s2-t2).mean()/np.std(s2)
+sharpe_ratio = (s2-t2).mean()/np.std(s2)
 
 # ERP는 sharp_ratio를 반영한다
-erp = sharp_ratio * vix.mean()
-# 4.428063228992274 = 0.31708293798727344 * 13.965
+erp = sharpe_ratio * vix.mean() / 100
+# 0.045 = 0.3225 * 13.965 / 100
 {% endhighlight %}
 
 
@@ -287,14 +287,13 @@ linregress(m, s)
 
 
 
-# 2. Models
-
-## 2.1 자본자산 가격결정모형 (Capital Asset Pricing Model, CAPM)
+# 2. 자본자산 가격결정모형 (CAPM)
 
 $$ \begin{align}
 \text{CAPM} &=  \text{risk-free rate} + \beta \times \text{ERP}
 \end{align} $$
 
+ - CAPM: Capital Asset Pricing Model
  - risk-free rate: `10년 만기 미국 국채의 1년 평균`
    - 데이터는 [Fred 에서 다운로드](https://fred.stlouisfed.org/series/DGS10#0)
    - 실제 모델링에서는 Linear Regression모델링 또는 여튼 미래시점의 수익률을 넣는 것이 좋다
@@ -302,7 +301,7 @@ $$ \begin{align}
  - ERP: 리스크 프리미엄. sharpe(0.317) * vix(13.965) = 4.428
  - 캐팸~ 이렇게 읽음
 
-### 2.1.1 Risk Free Rate
+## 2.1 Risk Free Rate
 
 먼저 라이브러리를 불러오고, 10년만기 미국 국채의 최근 1년 평균값을 계산합니다.
 
@@ -320,11 +319,11 @@ us10 = us10.groupby([us10.index.year, us10.index.month]).mean().iloc[-4:]
 #       12    0.933636
 # 2021  1     1.082500
 
-risk_free_rate = us10.mean() # 0.9183198051948052
+risk_free_rate = us10.mean() / 100 # 0.0091
 {% endhighlight %}
 
 
-### 2.1.2 Beta
+## 2.2 Beta
 
 베타값을 계산 합니다.
 
@@ -355,12 +354,14 @@ def cal_beta(m, s):
     return cov/var
 
 beta = cal_beta(snp, fdx)
-# 2.41862207283265
+# 1.3183174059639897
 {% endhighlight %}
 
 
 
-### 2.1.3 Risk Premium
+## 2.3 Risk Premium
+
+$$ \text{Risk Premium} = \text{Sharpe} \times \bar{\text{1-year vix}} $$
 
 리스크 프리미엄은 샤프지수 * VIX 이며, <br>
 특정 종목이 아니라, 주식시장 자체에 투자 했을 경우의 리스크 프리미엄을 계산했습니다.<br>
@@ -379,7 +380,7 @@ beta = cal_beta(snp, fdx)
 fred = Fred(API_KEY)
 us10 = fred.get_series('DGS10')
 us10 = us10.groupby([us10.index.year, us10.index.month]).mean()
-us10 = us10.pct_change().dropna()
+us10 = us10.pct_change().dropna()  # 퍼센트 -> 소수점 으로 바꾸면서 변화량을 계산
 
 # S&P500 주가 -> 수익률
 snp = yf.Ticker('^GSPC')
@@ -390,9 +391,9 @@ sharpe = snp.pct_change().dropna()
 # index 맞추기
 sharpe['us10'] = us10
 snp = sharpe.iloc[:, 0].values
-us10 = sharpe.iloc[:, 1].values
+us10 = sharpe.iloc[:, 1].values 
 
-# Constant Sharpe Ratio. 0.386908018529043
+# Constant Sharpe Ratio. 0.3854
 sharpe = (snp - us10).mean()/snp.std()
 {% endhighlight %}
 
@@ -420,14 +421,14 @@ vix = vix.groupby([vix.index.year, vix.index.month]).first()
 
 
 # Calculate Equity Risk Premium
-# 0.39000579600491575 * 31.21083354949951 = 12.172405982449487
-risk_premium = sharpe * vix.values.mean()
+# 0.1212 = 0.3854 * 31.4508 / 100
+risk_premium = sharpe * vix.values.mean() / 100
 
 {% endhighlight %}
 
 
 
-### 2.1.4 CAPM
+## 2.4 CAPM
 
 $$ \begin{align}
 \text{CAPM} &=  \text{risk-free rate} + \beta \times \text{ERP} \\
@@ -440,19 +441,58 @@ $$ \begin{align}
  - 주주의 요구수익률이 `최소한의 무위험 이자율` 에 `리스크`를 한 이자 수익률을 계산한다고 생각하면 됨
 
 {% highlight python %}
-# 29.462999923875678
+# 0.16900644116976196 = 0.0091 + 1.3183 * 0.1212
 capm = risk_free_rate + beta * risk_premium
 {% endhighlight %}
 
 CAPM 값이 29.46가 나왔다는 뜻은 required return on equity = 29.46% 라는 것이며, <br>
 29.46% 수익률이 나와줘야 한다는 뜻이다. (현재 beta값은 작은데.. GME 사태로 인해서 risk premium이 높아진 상태)
 
-## 2.2 가중평균자본비용 (Weighted Average Cost of Capital, WACC)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 3. 가중평균자본비용 (Weighted Average Cost of Capital, WACC)
+
+## 3.1 EBIT & Interest Expense 
+
+$$ \begin{align} 
+\text{EBIT} &= \text{Revenue} - \text{COGS} - \text{Operating Expenses} \\
+\text{EBIT} &= \text{Net Income} + \text{Interest} + \text{Taxes}
+\end{align} $$
+
+ - EBIT: Earnings Before Interest and Taxes
+    - 법인세 비용과 이자 비용을 공제하기 전 회사의 순이익
+    - Operating Income (영업이익) 도 법인세 비용과 이자 비용을 공제하기 전이라 유사하나.. 다르다.
+ - COGS: Cost of Goods Sold (매출원가)    
+ - Interest Expense
+    - 채권 발행을 통하여 자금을 조달시 세금 절감 효과가 있다
+    - **손익계산서 상으로 정부에게 납부해야 할 세금 금액 계산 전에, 채권자에게 주어야 할 이자가 차감 되기 때문이다 (Tax Deductible)**
+    - EBIT을 계산하기 전에 interest expense를 차감해주고 -> 그 다음에 세금을 먹인다.
+    
+
+<img src="{{ page.asset_path }}valuation-xyz.png" class="img-responsive img-rounded img-fluid center">
+
+\* [Source](https://m.blog.naver.com/PostView.nhn?blogId=yutse&logNo=220504091225&proxyReferer=https:%2F%2Fwww.google.com%2F) 에서 가져온 내용 입니다.
+
+
+   
+## 3.2 WACC
+
 
 $$ \begin{align}
 \text{WACC} &= \frac{\text{E}}{\text{E} + \text{D}} \times R_E + \frac{D}{\text{E} + \text{D}} \times R_D \\
 R_E &= \text{CAMP} \\
-R_D &= (R_f + \text{Credit Spread}) \times (1-\text{Tax Rate})
+R_D &= \frac{\text{Total Interest Cost} }{\text{Total Debt}} \times (1-\text{Effective Tax Rate})
 \end{align} $$
 
 
@@ -464,19 +504,15 @@ R_D &= (R_f + \text{Credit Spread}) \times (1-\text{Tax Rate})
  - $$ R_E $$: Cost of Equity (자기자본비용 = `CAPM` 사용)
     - 변동성(위험)에 대해 투자자들이 요구하는 수익률 (리스크가 높으니 일단 기본으로 요정도 수익률은 깔고 가자!)
     - CAPM, DDM(Dividend Discount Model), Arbitrage Pricing Model, PMP 등등.. 여러가지 있다
- - $$ R_D $$: Cost of Debt (타인자본조달비용) 
-    - 
-    - 은행의 대출은 Loan, 회사채는 Bond
-    - $$ \text{} $$   
- - $$ 1 - \text{Tax Rate} $$: 실효세율을 적용합니다.    
+ - $$ R_D $$: Cost of Debt (타인자본조달비용)
+    - After-tax cost of debt: 총금융비용/평균이자발생부채 (1 - 실효세율) 적용
+    - Pre-tax cost of debt: 실효세율 적용 없음  
 
 
 
+자세하게 알아야 하는 사항 
 
-
- - 총자본 = 총부채 + 자기자본
- - 자기자본: 시가총액 = 발행주식수 x 현재주가
- - 총부채 (아래의 내용들을 포함함)
+ - D: Debt
     - Short-term borrowings: 단기 차입금
     - Current portion of long-term debt : 장기부채에 대한 단기 상황금 및 이자 (current = 유동성/1년이내)
         - 야후: Current Debt And Capital Lease Obligation
@@ -492,12 +528,19 @@ R_D &= (R_f + \text{Credit Spread}) \times (1-\text{Tax Rate})
         - Current Debt And Capital Lease Obligation 사용
         - Long Term Debt And Capital Lease Obligation 사용
       <img src="{{ page.asset_path }}valuation-yf-bs.png" class="img-responsive img-rounded img-fluid center">
- - 자기자본비용: CAPM 사용
  - 타인자본조달비용 (Cost of Debt)
+    - 예를 들어 회사가 1000원을 4% 이자율로 장기대출 그리고 5% 이자율로 2000원의 채권을 사용한다면..<br>
+      `Cost of Debt = (1000*0.04 + 2000*0.05)/(1000+2000) = 0.046` <br>
+      여기서 유효세율이 30%라고 가정하면, 세후 부채 비용은..<br> 
+      `0.046 * (1-0.3) = 0.032`<br>
+      따라서 Cost of Debt는 3.2% 가 됩니다.
+    - `672000000/((1974000000 + 964000000 + 64147000000 + 16617000000)/2)`  
     - (야후) Interest Expense Non Operating<br>
         - interest expense (이자비용)은 일반적으로 공제가 가능합니다. 따라서 세금 절감된 비용을 고려하여 계산을 합니다. 
         - $$  $$
       <img src="{{ page.asset_path }}valueation-interest-expense.png" class="img-responsive img-rounded img-fluid center">
+    - (야후) 총부채의 2년치 평균값<br>
+      <img src="{{ page.asset_path }}valuation-debt.png" class="img-responsive img-rounded img-fluid center">
 
 {% highlight python %}
 # 자기자본 / (자기자본 + 총부채)
@@ -506,24 +549,23 @@ short_debt = 1974000000  # 단기 부채
 long_debt = 34147000000  # 장기 부채
 equity_tc = total_capital/(total_capital + short_debt + long_debt) # equity to total capital 0.6344139347995507  
 
-# 타인자본조달비용 (Cost of Debt)
+# 타인자본조달비용 Cost of Debt After Tax
 interest_expense = 672000000
-
-# Cost of Equity
-# capm 으로 하면 됨
-
-# Cost of Debt After Tax
 effective_tax_rate = 0.25 # 유효세율
 
+short_debt_sum = 1974000000 + 964000000  # Current Debt And Capital Lease Obligation 2년치 평균
+long_debt_sum = 34147000000 + 16617000000  # Long Term Debt And Capital Lease Obligation 2년치 평균 
+debt_avg = (short_debt_sum + long_debt_sum)/2
+
+cost_of_debt_after_tax = interest_expense/debt_avg * (1-effective_tax_rate)  # 0.018770250642434174
 
 
-# 최종 WACC
-equity_tc * capm +  (1-equity_tc)
+# 최종 WACC 0.11408218342417117
+wacc = equity_tc * capm + (1-equity_tc) * cost_of_debt_after_tax
 
 {% endhighlight %}
 
-
-
+최종적으로 11.4% WACC값을 계산했습니다. 
 
 # 3. 용어
 
