@@ -14,7 +14,7 @@ tags: ['fundamental-analysis', 'DCF']
 VIX 지수는 `시카고 옵션 거래소 변동성 지수 (Chicago Board Options Exchange (CBOE) Volatility Index)` 를 의미합니다.<br>
 VIX 는 S&P 500 지수의 옵션 가격에 기초하며, 향후 30일간 지수의 풋옵션 그리고 콜옵션 가중 가격을 결합하여 산정합니다.
 
-보통 `공포 지수`로 잘 알려져 있으며, 주가가 대폭 상승 또는 하락할 것으로 예상하는 투자자는 옵션을 이용해서 해지를 합니다.<br> 
+보통 `공포 지수`로 잘 알려져 있으며, 주가가 대폭 상승 또는 하락할 것으로 예상하는 투자자는 옵션을 이용해서 해지를 합니다.<br>
 따라서 S&P 500지수와 반대로 움직이는 경향이 있으며, 보통 하락 추세에 옵션에 대해서 더 많은 풋옵션을 매입하며, 이때 VIX지수가 오르게 됩니다.
 
 <img src="{{ page.asset_path }}valuation-vix.png" class="img-responsive img-rounded img-fluid center">
@@ -34,11 +34,11 @@ $$ S_a = \frac{\mathop{\mathbb{E}} \left[ R_a - R_b \right] }{ \sigma_a} $$
  - $$ \sigma_a $$ : population standard deviation을 해준다. (즉 std(ddof=0))  
  - **기준지표대비 자산의 `초과 수익률`**이며, 수치가 높을수록 수익률이 좋다 (다만 비례해서 리스크도 높다)
  - 샤프 비율 이라고도 한다
- - constant 가 분은 이유는 cov계산시 $$ \sigma_a $$ 만 계산하기 때문. 즉. 시장상황은 constant값으로 봄 
+ - constant 가 분은 이유는 cov계산시 $$ \sigma_a $$ 만 계산하기 때문. 즉. 시장상황은 constant값으로 봄
 
 보통 해석은 다음과 같이 합니다.
 
-- $$ S_a > 3.0 $$ : 매우 좋음 
+- $$ S_a > 3.0 $$ : 매우 좋음
 - $$ S_a > 2.0 $$ : 좋음
 - $$ S_a < 1.0 $$ : 그닥..
 - $$ S_a < 0 $$ : 손실 ㅎㅎ
@@ -93,18 +93,18 @@ VIX는 일명 `공포 지수`로서 **위험 지수**를 나타내고, 샤프 �
 VIX 공포지수는 주가가 떨어질때 오르고, 반대로 초과 수익률은 시장이 좋아서 주가가 올라갈때 오릅니다. <br>
 주가가 올라갈때는 공포지수가 낮추는 효과가 나오고, 주가가 떨어질때는 공포지수가 높아지면서 서로 상쇄 시키는 효과가 있습니다.<br>
 극단적인 상황에서 수익률이 0% 라면, 리스크 프리미엄은 0이 됩니다. <br>
-반대로 리스크가 없다면 리스크 프리미엄도 없게 됩니다. <br> 
+반대로 리스크가 없다면 리스크 프리미엄도 없게 됩니다. <br>
 즉 **리스크 프리미엄은 리스크를 동한반 수익률을 의미**합니다. <br>
 예제로 1년동안의 ERP 추정치는 다음과 같습니다.
 
 $$ \text{ERP} = \mathbb{E} \left[ \text{1년동안의 Sharpe 지수}\right] \times \mathbb{E}\left[\text{지난 1년동안의 VIX} \right] $$
- 
+
  - 위의 공식은 예제이고 ERP 공식은 변화 가능.. 하나의 예일 뿐
  - 1년을 가정한 이유는 최소 1년동안 투자한후 홀딩하겠다는 뜻
  - 시간은 분석 하려는 목표에 맞춰서 하면 됨
  - Sharpe 지수는 초과수익률이며 vix는 sharpe 지수와 반대로 주가가 떨어질때 올라간다. <br>
 
-아래 그림에서 ERP평균값 이상으로 올라간때는 다음과 같습니다. 
+아래 그림에서 ERP평균값 이상으로 올라간때는 다음과 같습니다.
 
  - 닷컴 IT버블
  - 911 테러
@@ -119,7 +119,7 @@ $$ \text{ERP} = \mathbb{E} \left[ \text{1년동안의 Sharpe 지수}\right] \tim
 # 과거 1년동안의 분기별 vix 평균값. (분석에 따라서 월로 쓸지 분기별로 쓸지.. 자유롭게)
 vix = np.array([12.86, 15.34, 17.35, 10.31])
 
-# 다음분기 S&P500 예측값과, 10년 국채 예측값을 더 넣어준다. 
+# 다음분기 S&P500 예측값과, 10년 국채 예측값을 더 넣어준다.
 s2 = np.append(s, 0.0172)
 t2 = np.append(t, 0.032)
 sharp_ratio = (s2-t2).mean()/np.std(s2)
@@ -133,28 +133,28 @@ erp = sharp_ratio * vix.mean()
 
 
 ## 1.4 연방기금금리 (Federal Funds Rate)
- 
+
  - 연방준비은행 (Federal Reserve Bank)에 예치되어 있는 지급준비금을 은행 상호간에 1일간 (overnight) 빌릴때 적용되는 금리
  - 은행은 일정이상의 돈을 항시 갖고 있어야 하며, 때문에 은행간 여유가 있는곳이 있고 부족해서 빌려야 하는 곳도 생김 -> 이때 빌릴때 적용되는 금리
  - **연방공개시장위원회 (FOMC, Federal Open Market Committee)** 에서 해당 금리를 결정하며, 매 7주간격 연 8회 FOMC가 열린다
  - FOMC는 **연방기금목표금리 (Federal Funds Target Rate)** 정하게 되며, 0%~0.25% 또는 0.25%~0.5% 같이 금리를 설정하게 됨
- - 은행들은 해당 Target Rate안에서 상호간에 초과분/부족분을 대여/대차 거래를 하게됨 
+ - 은행들은 해당 Target Rate안에서 상호간에 초과분/부족분을 대여/대차 거래를 하게됨
  - 이때 항상 target안에서만 하는건 아니고, 서브프라임 모기지 사태때는 은행들이 긴급하게 돈이 필요해져서 target이상으로 금리가 온라간 적도 있음
  - 실제 은행들간에 거래된 금리의 평균을 **연방기금유효금리 (Federal Funds Effective Rate)**라고 함
  - 관련 데이터는 [https://www.federalreserve.gov/monetarypolicy.htm](https://www.federalreserve.gov/monetarypolicy.htm)에서 문서를 봐야 함
 
-실무적으로 들어와서, FOMC가 FOMC statement를 내놓으면 바로 분석에 들어가야 하며,<br> 
-문서중에서 빠르게 금리를 찾는 방법은 `target range`로 검색하면 됨<br> 
+실무적으로 들어와서, FOMC가 FOMC statement를 내놓으면 바로 분석에 들어가야 하며,<br>
+문서중에서 빠르게 금리를 찾는 방법은 `target range`로 검색하면 됨<br>
 아래서 중요한 부분은 federal funds rate를 0% ~ 0.25% 로 설정하겠다는 뜻
 
 <img src="{{ page.asset_path }}valuation-fomc-statement.png" class="img-responsive img-rounded img-fluid center">
 
 그외 FOMC statement와 같이 보면 좋은 macroeconomic 변수들은 다음과 같습니다.<br>
-아래의 내용이 중요한 이유는 statement안에 왜 target rate가 어떻게 설정이 됐는지 나오는데.. <br> 
+아래의 내용이 중요한 이유는 statement안에 왜 target rate가 어떻게 설정이 됐는지 나오는데.. <br>
 그 주요 변수들이 아래의 것들이며, 잘 이해하고 있다면 다음 target rate도 어느정도 유추할 수 있습니다.
 
 1. GDP
-2. Unemployment 
+2. Unemployment
 3. Personal Consuptions Expenditure (PCE) inflation
 4. Core inflation
 
@@ -162,7 +162,7 @@ erp = sharp_ratio * vix.mean()
 마지막 가격을 보면 되며, 예를 들어 JAN 2021 의  마지막 가격은 99.91 인데.. 100에서 빼주면 됩니다. <br>
 즉 100 - 99.91 = 0.09 이며 이며 현재 target rate (0~0.25) 그 사이임을 알 수 있습니다.
 
-## 1.5 Beta 
+## 1.5 Beta
 
 특정 주식, 펀드, 포트폴리오가 전체 시장과 얼마나 유사한 변동성을 갖는지를 나타낸 지표.<br>
 Linear 공식이 y = y_intercept + beta * x_mean 인데.. 여기서 b는 slope을 나타내고..<br>
@@ -176,10 +176,10 @@ Linear 공식이 y = y_intercept + beta * x_mean 인데.. 여기서 b는 slope�
 
 따라서 beta 값은 종종 위험보상(risk-reward)를 측정할때 사용되며, 쉽게 말해.. <br>
 투자자로서 얼마나 큰 리스크를 감수하고 잠재적 보상을 얻겠는가 임.<br>
-참고로 yahoo finance의 경우 **월별 변화량**을 사용하며, market으로 **S&P500** 를 사용함. 
+참고로 yahoo finance의 경우 **월별 변화량**을 사용하며, market으로 **S&P500** 를 사용함.
 
 
-$$ \begin{align} 
+$$ \begin{align}
 \beta &= \frac{cov(  s,  m)}{\sigma^2( m)} \\
 \end{align} $$
 
@@ -193,7 +193,7 @@ $$ \begin{align}
 
 $$ \begin{align}
 cov(s, m) &= \frac{\Sigma^N_{i=1} (s_i - \bar{s}) \times (m_i - \bar{m})}{N-1} \\
-cor(s, m) &= \frac{cov(s, m)}{\sigma_s \times \sigma_m} \\ 
+cor(s, m) &= \frac{cov(s, m)}{\sigma_s \times \sigma_m} \\
 \sigma_m &= std(m) =  \sqrt{ \frac{\Sigma^N_{i=1} (m_i - \bar{m})^2}{N-1}} \\
 \sigma_m^2 &= var(m) =  \frac{\Sigma^N_{i=1} (m_i - \bar{m})^2}{N-1}
 \end{align} $$
@@ -237,7 +237,7 @@ import statsmodels.api as sm
 
 def cal_beta2(m, s):
     """
-    :return : [y-intercept, slope] 
+    :return : [y-intercept, slope]
     """
     m = sm.add_constant(m)
     a = np.linalg.inv(m.T @ m)
@@ -266,10 +266,10 @@ cal_beta3(m, s)
 from scipy.stats import linregress
 
 linregress(m, s)
-# LinregressResult(slope=1.1401684598427015, 
-#                  intercept=-0.10172451628899193, 
-#                  rvalue=0.5716942376087407, 
-#                  pvalue=0.04122636145990893, 
+# LinregressResult(slope=1.1401684598427015,
+#                  intercept=-0.10172451628899193,
+#                  rvalue=0.5716942376087407,
+#                  pvalue=0.04122636145990893,
 #                  stderr=0.4933667245626671)
 {% endhighlight %}
 
@@ -298,7 +298,7 @@ $$ \begin{align}
  - risk-free rate: `10년 만기 미국 국채의 1년 평균`
    - 데이터는 [Fred 에서 다운로드](https://fred.stlouisfed.org/series/DGS10#0)
    - 실제 모델링에서는 Linear Regression모델링 또는 여튼 미래시점의 수익률을 넣는 것이 좋다
- - $$ \beta $$ : 베타값. `1.14` 
+ - $$ \beta $$ : 베타값. `1.14`
  - ERP: 리스크 프리미엄. sharpe(0.317) * vix(13.965) = 4.428
  - 캐팸~ 이렇게 읽음
 
@@ -313,7 +313,7 @@ from fredapi import Fred
 
 # 미국 10년만기 미국 국채
 fred = Fred(API_KEY)
-us10 = fred.get_series('DGS10') 
+us10 = fred.get_series('DGS10')
 us10 = us10.groupby([us10.index.year, us10.index.month]).mean().iloc[-4:]
 # 2020  10    0.787143
 #       11    0.870000
@@ -335,35 +335,35 @@ snp = snp.history('5y', '1mo')[['Close']].dropna()
 snp = snp.groupby([snp.index.year, snp.index.month]).first()
 snp = snp.pct_change().dropna()
 
-# Crisper Therapeutics 1년간의 월별 변동성 평균
-crsp = yf.Ticker('CRSP')
-crsp = crsp.history('5y', '1mo')[['Close']].dropna()
-crsp = crsp.groupby([crsp.index.year, crsp.index.month]).first()
-crsp = crsp.pct_change().dropna()
+# Fedex 1년간의 월별 변동성 평균
+fdx = yf.Ticker('FDX')
+fdx = fdx.history('5y', '1mo')[['Close']].dropna()
+fdx = fdx.groupby([fdx.index.year, fdx.index.month]).first()
+fdx = fdx.pct_change().dropna()
 
 # 개월수 맞추기
-stocks = crsp.join(snp, rsuffix='_snp')
-crsp = stocks.iloc[:, 0].values
+stocks = fdx.join(snp, rsuffix='_snp')
+fdx = stocks.iloc[:, 0].values
 snp = stocks.iloc[:, 1].values
 
 
-# 크리스퍼 테라퓨틱스의 Beta값 = 1.9515830745778673
+# Fedex의 Beta값 = 1.9515830745778673
 def cal_beta(m, s):
     n = len(m)
-    cov = ((s - s.mean()) * (m - m.mean())).sum() 
+    cov = ((s - s.mean()) * (m - m.mean())).sum()
     var = np.sum((m - m.mean())**2)
     return cov/var
 
-beta = cal_beta(snp, crsp)
+beta = cal_beta(snp, fdx)
 # 2.41862207283265
 {% endhighlight %}
 
 
 
-### 2.1.3 Risk Premium 
+### 2.1.3 Risk Premium
 
 리스크 프리미엄은 샤프지수 * VIX 이며, <br>
-특정 종목이 아니라, 주식시장 자체에 투자 했을 경우의 리스크 프리미엄을 계산했습니다.<br> 
+특정 종목이 아니라, 주식시장 자체에 투자 했을 경우의 리스크 프리미엄을 계산했습니다.<br>
 따라서 S&P500 수익율  그리고 미국 10년 만기 국채 수익율 데이터를 사용하며, <br>
 제가 배운 책에서는 역사적 모든 데이터를 사용하지만, 개인적으로는 시대가 달라지니 10년치를 사용하겠습니다.
 
@@ -371,12 +371,13 @@ beta = cal_beta(snp, crsp)
 
  - 10년 만기 미국 국채 금리 수익률 (10년 데이터)
  - S&P 500 수익률 (10년치 데이터)
- - S&P 500의 Volatility Measure 로서 CBOE Volatility Index 사용 (1년치 데이터) 
+ - S&P 500의 Volatility Measure 로서 CBOE Volatility Index 사용 (1년치 데이터)
 
 {% highlight python %}
 # 10년 만기 미국 국채 금리 -> 수익률
+# API_KEY는 Fred에서 받아서 넣어야 함
 fred = Fred(API_KEY)
-us10 = fred.get_series('DGS10') 
+us10 = fred.get_series('DGS10')
 us10 = us10.groupby([us10.index.year, us10.index.month]).mean()
 us10 = us10.pct_change().dropna()
 
@@ -418,30 +419,208 @@ vix = vix.groupby([vix.index.year, vix.index.month]).first()
 # 2021 1     37.209999
 
 
-# Calculate Equity Risk Premium 
-# 0.386908018529043 * 31.794166882832844 = 12.301418109418575
+# Calculate Equity Risk Premium
+# 0.39000579600491575 * 31.21083354949951 = 12.172405982449487
 risk_premium = sharpe * vix.values.mean()
 
 {% endhighlight %}
 
 
 
-### 2.1.4 CAPM 
+### 2.1.4 CAPM
 
 $$ \begin{align}
 \text{CAPM} &=  \text{risk-free rate} + \beta \times \text{ERP} \\
-11.6281 &= 0.9183 + 2.4186 \times 4.428
+11.6281 &= 0.9175 + 1.3048 \times 12.1764
 \end{align} $$
 
  - risk-free rate 그리고 ERP 값 모두 한번만 계산해두면.. 마치 상수처럼 모든 종목에 다 쓰임.<br>
    즉 개별종목에 영향을 주는건 beta 밖에없음. (확인했음. 정말 이렇게 계산함)
- - **리스크가 존재할때 위험 정도에 따라서 해당 증권의 적절한 기대수익률**을 계산할때 사용   
+ - **리스크가 존재할때 위험 정도에 따라서 해당 증권의 적절한 기대수익률**을 계산할때 사용
+ - 주주의 요구수익률이 `최소한의 무위험 이자율` 에 `리스크`를 한 이자 수익률을 계산한다고 생각하면 됨
 
 {% highlight python %}
-# 11.628131270734137
-capm = risk_free_rate + beta * erp
+# 29.462999923875678
+capm = risk_free_rate + beta * risk_premium
 {% endhighlight %}
 
-CAPM 값이 11.62가 나왔다는 뜻은 required return on equity = 11.62% 라는 것이며, <br>
-11.62% 수익률이 나와줘야 한다는 뜻이다. (그만큼 리스크가 높다는 뜻)
+CAPM 값이 29.46가 나왔다는 뜻은 required return on equity = 29.46% 라는 것이며, <br>
+29.46% 수익률이 나와줘야 한다는 뜻이다. (현재 beta값은 작은데.. GME 사태로 인해서 risk premium이 높아진 상태)
+
+## 2.2 가중평균자본비용 (Weighted Average Cost of Capital, WACC)
+
+$$ \begin{align}
+\text{WACC} &= \frac{\text{E}}{\text{E} + \text{D}} \times R_E + \frac{D}{\text{E} + \text{D}} \times R_D \\
+R_E &= \text{CAMP} \\
+R_D &= (R_f + \text{Credit Spread}) \times (1-\text{Tax Rate})
+\end{align} $$
+
+
+ - E: Equity (자기자본의 시장가치 = `시가총액 = 발행주식수 x 현재주가`)
+ - D: Debt (`부채의 시장가치 = 발행채권수 x 채권의 시장 가격`)
+ - V: E + D (기업의 시장가치는 부채와 자기자본의 가치를 합한 것. `총자산 = 자기자본 + 총부채`)
+ - E/V: 자기자본으로 조달된 자본의 비중 (%)
+ - D/V: 부채로 조달된 자본의 비중 (%). `(1 - E/V)` 로 표현 가능  
+ - $$ R_E $$: Cost of Equity (자기자본비용 = `CAPM` 사용)
+    - 변동성(위험)에 대해 투자자들이 요구하는 수익률 (리스크가 높으니 일단 기본으로 요정도 수익률은 깔고 가자!)
+    - CAPM, DDM(Dividend Discount Model), Arbitrage Pricing Model, PMP 등등.. 여러가지 있다
+ - $$ R_D $$: Cost of Debt (타인자본조달비용) 
+    - 
+    - 은행의 대출은 Loan, 회사채는 Bond
+    - $$ \text{} $$   
+ - $$ 1 - \text{Tax Rate} $$: 실효세율을 적용합니다.    
+
+
+
+
+
+ - 총자본 = 총부채 + 자기자본
+ - 자기자본: 시가총액 = 발행주식수 x 현재주가
+ - 총부채 (아래의 내용들을 포함함)
+    - Short-term borrowings: 단기 차입금
+    - Current portion of long-term debt : 장기부채에 대한 단기 상황금 및 이자 (current = 유동성/1년이내)
+        - 야후: Current Debt And Capital Lease Obligation
+    - Long Term Debt And Capital Lease Obligation
+    - 이때 아래의 계정은 제외 된다
+        - (야후) 미지급금 및 미지급 비용 Payables And Accrued Expenses
+        - (야후) 연금 및 기타 퇴직 후 혜택 플랜 Pension & Other Post Retirement Benefit Plans Current
+        - (야후) 직원 혜택 Employee Benefits  
+        - 외상 매입 계정 Accounts payable
+        - 미지급 비용 (Accrued liabilities)
+        - 이연 매출/수익 deferred revenues
+    - Yahoo Finance 
+        - Current Debt And Capital Lease Obligation 사용
+        - Long Term Debt And Capital Lease Obligation 사용
+      <img src="{{ page.asset_path }}valuation-yf-bs.png" class="img-responsive img-rounded img-fluid center">
+ - 자기자본비용: CAPM 사용
+ - 타인자본조달비용 (Cost of Debt)
+    - (야후) Interest Expense Non Operating<br>
+        - interest expense (이자비용)은 일반적으로 공제가 가능합니다. 따라서 세금 절감된 비용을 고려하여 계산을 합니다. 
+        - $$  $$
+      <img src="{{ page.asset_path }}valueation-interest-expense.png" class="img-responsive img-rounded img-fluid center">
+
+{% highlight python %}
+# 자기자본 / (자기자본 + 총부채)
+total_capital = 62682000000  # 시가총액 
+short_debt = 1974000000  # 단기 부채
+long_debt = 34147000000  # 장기 부채
+equity_tc = total_capital/(total_capital + short_debt + long_debt) # equity to total capital 0.6344139347995507  
+
+# 타인자본조달비용 (Cost of Debt)
+interest_expense = 672000000
+
+# Cost of Equity
+# capm 으로 하면 됨
+
+# Cost of Debt After Tax
+effective_tax_rate = 0.25 # 유효세율
+
+
+
+# 최종 WACC
+equity_tc * capm +  (1-equity_tc)
+
+{% endhighlight %}
+
+
+
+
+# 3. 용어
+
+## 3.1 자산 Assets
+
+- 유동자산 (Current Assets)
+     - 당좌 자산 (Quick Assets)
+        - 현금및현금등가물(cash and cash equivalent)
+        - 단기금융상품(financial instrument)
+        - 유가증권(marketable securities)
+        - 단기매매증권(trading securities)
+        - 매출채권(trade receivable)-대손충당금
+        - 단기대여금(short-term loans)-대손충당금
+        - 미수금(non-trade receivables)-대손충당금
+        - 미수수익(accrued revenues)
+        - 선급금(prepaid payments)
+        - 선급비용(advance expenses)
+     - 재고 자산 (Inventories)
+        - 상품(merchandise)
+        - 제품(finished goods)
+        - 반제품(semi-finished goods)
+        - 재공품(work-in progress)
+        - 원재료(raw materials)
+        - 저장품(supplies)
+        - 부산물(by-products)
+        - 미착품(goods in transit)
+- 고정자산 (Fixed Assets)
+     - 투자자산 (Investments)
+        - 투자유가증권(investment securities)
+        - 지분법적용투자주식(securities under equity method)
+        - 매도가능증권(available-for-sale securities)
+        - 장기금융상품(long-term financial instruments)
+        - 장기대여금(long-term loans)-대손충당금
+        - 장기성매출채권(long-term trade receivables)-현재가치할인자금-대손충당금
+        - 투자부동산(investment in real estate)
+        - 보증금(guarantee deposit)
+        - 이연법인세차(deferred income tax assets)
+     - 유형자산 (Tangible Assets)
+        - 토지(land)
+        - 건물(buildings)-감가상각누계액
+        - 구축물(structures)-감가상각누계액
+        - 기계장치(machinery)-감가상각누계액
+        - 선박(ships)-감가상각누계액
+        - 차량운반구(vehicles and transportation equipment)-감가상각누계액
+        - 비품(office equipment)-감가상각누계액
+        - 건설중인자산(construction in-progress)
+     - 무형자산 (Intangible Assets)
+        - 영업권(goodwill)
+        - 산업재산권(intellectual proprietary rights)
+        - 광업권(mining rights)
+        - 어업권(fishing rights)
+        - 차지권(land use rights)
+        - 개발비(development costs)
+
+
+## 3.2 부채 (Liabilities)
+
+ - 유동부채 (Current Liabilities)
+    - 매입채무(trade payable)
+    - 단기차입금(short-term borrowings)
+    - 미지급이자(accrued interest expense)
+    - 미지급금(non-trade payables)
+    - 선수금(advances from customers)
+    - 미지급비용(accrued expense)
+    - 선수수익(unearned revenue)
+    - 미지급법인세(income taxes payable)
+    - 미지급배당금(dividends payable)
+    - 유동성장기부채(current portion of long-term debts)
+ - 고정부채 (Long-Term Liabilities)
+    - 사채(debentures)-사채발행자금
+    - 퇴직급여충당금(provision for severance benefits)
+    - 장기차입금(long-term borrowings)
+    - 장기성매입채무(long-term trade payable)-현재가치할인자금
+    - 임대보증금(leasehold deposits received)
+    - 이연법인세대(deferred income tax liablilities)
+
+## 3.3 자기자본 (Owner's Equity)
+
+ - 자본금 (Capital Stock)
+    - 보통주자본금(common stock)
+    - 우선주자본금(preferred stock)
+ - 자본잉여금 (Capital Surplus)
+    - 자기주식처분이익(gain on sale of treasury stock)
+    - 주식발행초과금(paid-in capital in excess of par value)
+    - 감자차익(gain on capital reduction)
+    - 기타자본잉여금(other capital surplus)
+ - 이익잉여금(Retained Earnings) 또는 누적결손금(Accumulated Deficit)
+    - 이익준비금(legal reserve)
+    - 기업합리화적립금(reserve for business rationalization)
+    - 재무구조개선적립금(reserve for financial structure improvement)
+    - 처분전이익잉여금(unappropriated retained earnings carried over to subsequent year)
+    - 차기이월결손금(undisposed accumulated deficit carried over to subsequent year)
+ - 자본조정 (Capital Adjustments)
+    - 주식할인발행차금(discount stock issuance)
+    - 자기주식(treasury stock)
+    - 미교부주식배당금(unissued stock dividends)
+    - 투자유가증권평가이익(gain on valuation of investment securities) 또는 손실(loss on-)
+    - 지분법적용투자주식평가이익(gain on valuation of securities under equity method) 또는 손실(loss on-)
+
 
