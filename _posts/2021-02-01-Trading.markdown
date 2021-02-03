@@ -1,0 +1,17 @@
+---
+layout: post
+title:  "Trading"
+date:   2021-02-01 01:00:00
+categories: "trading"
+asset_path: /assets/images/
+tags: ['algorithm-trading']
+---
+
+
+# 1. 기초적인 전략
+
+## Trend and Momentum Based Indicators 
+
+ - 비유하자면 Trend는 speed, 그리고 Momentum은 Acceleration  
+
+
