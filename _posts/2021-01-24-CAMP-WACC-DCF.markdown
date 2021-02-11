@@ -1,13 +1,26 @@
 ---
 layout: post
-title:  "CAPM & WACC"
+title:  "CAPM, WACC and DCF"
 date:   2021-01-23 01:00:00
 categories: "finance"
 asset_path: /assets/images/
 tags: ['fundamental-analysis', 'DCF']
 ---
 
-# 1. Inputs  
+# 1. Basic   
+
+## 1.1 Basic 용어정리
+
+### 1.1.1 영업이익 (Operating Income)
+
+$$ \begin{align}
+ \text{Operating Income} &= \text{Total Revenue} - \text{} 
+&= 매출액 - 매출원가 - 영업비용
+\end{align} $$ 
+    
+
+
+
 
 ## 1.1 VIX (CBOE Volatility Index)
 
@@ -361,7 +374,7 @@ beta = cal_beta(snp, fdx)
 
 ## 2.3 Risk Premium
 
-$$ \text{Risk Premium} = \text{Sharpe} \times \bar{\text{1-year vix}} $$
+$$ \text{Risk Premium} = \text{Sharpe} \times \text{avg}(\text{1 year vix}) $$
 
 리스크 프리미엄은 샤프지수 * VIX 이며, <br>
 특정 종목이 아니라, 주식시장 자체에 투자 했을 경우의 리스크 프리미엄을 계산했습니다.<br>
@@ -567,9 +580,54 @@ wacc = equity_tc * capm + (1-equity_tc) * cost_of_debt_after_tax
 
 최종적으로 11.4% WACC값을 계산했습니다. 
 
-# 3. 용어
 
-## 3.1 자산 Assets
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 5. 용어
+
+## 5.1 Book to Yahoo
+
+book : yahoo 형식
+
+- Income Statement
+    - Interest expense : Interest Expense
+    
+
+- Balance Sheet
+    - Cash and equivalents : Cash, Cash Equivalents & Short Term Investments
+    - Spare parts, supplies and fuel, less allowances : Inventory
+    
+- Cash Flow Statement 
+    - Net cash provided by operating activities : Operating Cash Flow
+    - Net income : Net Income from Continuing Operations
+    - Capital expenditures : Capital Expenditure Reported
+
+
+
+## 5.1 자산 Assets
 
 - 유동자산 (Current Assets)
      - 당좌 자산 (Quick Assets)
@@ -621,7 +679,7 @@ wacc = equity_tc * capm + (1-equity_tc) * cost_of_debt_after_tax
         - 개발비(development costs)
 
 
-## 3.2 부채 (Liabilities)
+## 5.2 부채 (Liabilities)
 
  - 유동부채 (Current Liabilities)
     - 매입채무(trade payable)
@@ -642,7 +700,7 @@ wacc = equity_tc * capm + (1-equity_tc) * cost_of_debt_after_tax
     - 임대보증금(leasehold deposits received)
     - 이연법인세대(deferred income tax liablilities)
 
-## 3.3 자기자본 (Owner's Equity)
+## 5.3 자기자본 (Owner's Equity)
 
  - 자본금 (Capital Stock)
     - 보통주자본금(common stock)
