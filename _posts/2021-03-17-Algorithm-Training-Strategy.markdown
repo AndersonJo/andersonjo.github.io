@@ -116,3 +116,31 @@ macd_histogram = macd - macd_signal
 MACD(histogram) 에서 보듯이 0을 기준으로 오르면 사고, 내릴때는 매도 하는 시그널로 사용하면 됨.
 
 <img src="{{ page.asset_path }}trading_macd.png" class="img-responsive img-rounded img-fluid center">
+
+
+## 1.4 Bollinger Bands
+
+# Bollinger Bands
+
+Bollinger bands는 최근 가격의 변동성을 반영하기 때문에 여러가지 상황에 고정적으로 대응하기 보다 좀 더 유연하게 대처할 수 있습니다.
+
+$$ \begin{align} 
+\text{BB}_{upper} = SMA_{n - periods} + \sigma \times \alpha \\
+\text{BB}_{lower} = SMA_{n - periods} - \sigma \times \alpha \\
+\end{align} $$
+
+ - SMA, EMA 가 됐든.. 아무거나 사용하면 됨
+ - $$ \sigma $$ : standard deviation
+
+{% highlight python %}
+data =  pd.Series([random.randint(-5, 5) for i in range(50)]).cumsum()
+ema = pd.Series(data).ewm(span=12, adjust=False).mean()
+
+# Bollinger Bands
+alpha = 2
+std = np.sqrt((data - ema)**2/12)
+upper = ema + std * alpha
+lower = ema - std * alpha
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}trading_bbands.png" class="img-responsive img-rounded img-fluid center">
