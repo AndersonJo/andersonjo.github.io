@@ -68,3 +68,18 @@ def cal_ema2(data, n=10):
 {% highlight python %}
 ema3 = pd.Series(data).ewm(span=10, adjust=False).mean().round(2).tolist()
 {% endhighlight %}
+
+
+## 1.2 Absolute Price Oscillator
+
+$$ \text{Absolute Price Oscillator} = \text{EMA}_{fast} - \text{EMA}_{slow} $$
+
+{% highlight python %}
+data =  pd.Series([random.randint(-5, 5) for i in range(300)]).cumsum()
+
+ema1 = pd.Series(data).ewm(span=7, adjust=False).mean()
+ema2 = pd.Series(data).ewm(span=20, adjust=False).mean()
+
+# Absolute Price Oscillator 
+apo = ema1 - ema2
+{% endhighlight %}
