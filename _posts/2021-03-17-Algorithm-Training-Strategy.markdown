@@ -85,12 +85,12 @@ data =  pd.Series([random.randint(-5, 5) for i in range(300)]).cumsum()
 ema1 = pd.Series(data).ewm(span=7, adjust=False).mean()
 ema2 = pd.Series(data).ewm(span=20, adjust=False).mean()
 
-# 1.3 Absolute Price Oscillator 
+# Absolute Price Oscillator 
 apo = ema1 - ema2
 {% endhighlight %}
 
 
-## 1.4 MACD (Moving Average Convergence Divergence)
+## 1.3 MACD (Moving Average Convergence Divergence)
 
 $$ \begin{align} 
 \text{MACD} &= EMA_{Fast} - EMA_{Slow} \\
@@ -112,5 +112,7 @@ macd = ema1 - ema2
 macd_signal = macd.ewm(span=15, adjust=False).mean()  # span은 ema_slow 와 동일하게 가져감
 macd_histogram = macd - macd_signal
 {% endhighlight %}
+
+MACD(histogram) 에서 보듯이 0을 기준으로 오르면 사고, 내릴때는 매도 하는 시그널로 사용하면 됨.
 
 <img src="{{ page.asset_path }}trading_macd.png" class="img-responsive img-rounded img-fluid center">
