@@ -8,9 +8,9 @@ tags: ['moving-average', 'exponential-ma', 'indicator']
 ---
 
 
-# Basic Indicators
+# 1. Basic Indicators
 
-## Exponential Moving Average
+## 1.1 Exponential Moving Average
 
 $$ \begin{align} 
 EMA &= v_t \times k + EMA(v_{t-1}) \times (1-k)  \\
