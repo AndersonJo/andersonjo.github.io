@@ -120,7 +120,8 @@ MACD(histogram) 에서 보듯이 0을 기준으로 오르면 사고, 내릴때�
 
 ## 1.4 Bollinger Bands
 
-Bollinger bands는 최근 가격의 변동성을 반영하기 때문에 여러가지 상황에 고정적으로 대응하기 보다 좀 더 유연하게 대처할 수 있습니다.
+Bollinger bands는 최근 가격의 변동성을 반영하기 때문에 여러가지 상황에 고정적으로 대응하기 보다 좀 더 유연하게 대처할 수 있습니다.<br>
+사용 예제로는 해당 upper 또는 lower 를 주가가 더 튀어 나갈때는 잡습니다. 
 
 $$ \begin{align} 
 \text{BB}_{upper} = SMA_{n - periods} + \sigma \times \alpha \\
