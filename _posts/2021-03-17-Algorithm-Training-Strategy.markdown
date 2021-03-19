@@ -143,3 +143,39 @@ lower = ema - std * alpha
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}trading_bbands.png" class="img-responsive img-rounded img-fluid center">
+
+
+## RSI (Relative Strength)
+
+# Relative Strength
+
+MA 기반의 Indicator와는 좀 다르게, RSI는 가격의 변화, 강도를 담아냅니다. <br>
+50% 이상은 up-trend 를 가르키며, 50% 이하면 downtrend 를 의미 합니다.
+
+
+$$ \begin{align} 
+RSI &= 100 - \frac{100}{1-RS} \\
+RS &= \frac{AvgU}{AvgD} \\
+AvgU &= \frac{\sum \text{all gain in the last N periods}}{N} \\
+AvgD &= \frac{\sum \text{all loss in the last N periods}}{N} \\
+\end{align} $$
+
+ - AvgU 에서 loss 부분을 0으로 대체
+ - AvgD 에서 gain 부분을 0으로 대체
+
+실제 돌려보면.. MACD기반과 좀 반대되는 성향을 보입니다. 
+상승추세에서 MACD 
+
+{% highlight python %}
+data = pd.Series([random.randint(-1, 1) for i in range(300)]).cumsum()
+gain, loss = data.copy(), data.copy()
+diff = data.diff(1)
+gain[diff <= 0] = 0  
+loss[diff >= 0] = 0
+
+gain_mean = gain.rolling(7).mean()
+loss_mean = loss.rolling(7).mean()
+rsi = 100 - 100 / (1 - (gain_mean / loss_mean))
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}trading_rsi.png" class="img-responsive img-rounded img-fluid center">
