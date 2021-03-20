@@ -163,9 +163,6 @@ AvgD &= \frac{\sum \text{all loss in the last N periods}}{N} \\
  - AvgU 에서 loss 부분을 0으로 대체
  - AvgD 에서 gain 부분을 0으로 대체
 
-실제 돌려보면.. MACD기반과 좀 반대되는 성향을 보입니다. 
-상승추세에서 MACD 
-
 {% highlight python %}
 data = pd.Series([random.randint(-1, 1) for i in range(300)]).cumsum()
 gain, loss = data.copy(), data.copy()
