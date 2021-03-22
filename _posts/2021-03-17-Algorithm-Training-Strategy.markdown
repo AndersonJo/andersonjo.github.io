@@ -145,9 +145,7 @@ lower = ema - std * alpha
 <img src="{{ page.asset_path }}trading_bbands.png" class="img-responsive img-rounded img-fluid center">
 
 
-## RSI (Relative Strength)
-
-# Relative Strength
+## 1.5 RSI (Relative Strength)
 
 MA 기반의 Indicator와는 좀 다르게, RSI는 가격의 변화, 강도를 담아냅니다. <br>
 50% 이상은 up-trend 를 가르키며, 50% 이하면 downtrend 를 의미 합니다.
@@ -176,3 +174,11 @@ rsi = 100 - 100 / (1 - (gain_mean / loss_mean))
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}trading_rsi.png" class="img-responsive img-rounded img-fluid center">
+
+## 1.6 Momentum
+
+$$ \begin{align} 
+\text{Momentum} = Price_t - Price_{t-n}
+\end{align} $$
+
+달리는 말에 올라타는 전략.
