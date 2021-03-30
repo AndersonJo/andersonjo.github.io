@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Algorithm Trading Strategy"
+title:  "Basic Stock Indicators"
 date:   2021-03-17 01:00:00
 categories: "finance"
 asset_path: /assets/images/
