@@ -195,11 +195,17 @@ ATR &= \frac{1}{n} \sum^n_{i=1} TR_i
  - n : 보통 n=14 
  - Stop-loss 를 어디서 걸어야 되는지를 결정하도록 도와줌
 
+의미
+ - 가격폭의 평균 값. -> ATR 값이 높다는건 변동성이 높다는 뜻이고 낮다는건 변동성 작음. 
+ - 손절 익절 기준으로도 활용됨.
+    - 손절: ATR * 3 
+    - 익절: ATR * 1.5 
+
 아래 그림을 보면 쉽게 이해가 됨. 방향을 찾는건 아니고, 어제와 비교해서 가장 크게 움직인 크기를 찾아냄.
 
 <img src="{{ page.asset_path }}trading_tr.png" class="img-responsive img-rounded img-fluid center">
 
-{% highlight %}
+{% highlight python %}
 import numpy as np
 import pandas as pd
 
