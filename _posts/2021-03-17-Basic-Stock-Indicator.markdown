@@ -182,3 +182,41 @@ $$ \begin{align}
 \end{align} $$
 
 달리는 말에 올라타는 전략.
+
+## 1.7 Average True Indicator (ATR)
+
+
+$$ \begin{align} 
+TR &= \max[(H-L), abs(H-C_p), abs(L-C_p)] \\
+ATR &= \frac{1}{n} \sum^n_{i=1} TR_i
+\end{align} $$
+
+ - $ TR_i $ : True Range.
+ - n : 보통 n=14 
+ - Stop-loss 를 어디서 걸어야 되는지를 결정하도록 도와줌
+
+아래 그림을 보면 쉽게 이해가 됨. 방향을 찾는건 아니고, 어제와 비교해서 가장 크게 움직인 크기를 찾아냄.
+
+<img src="{{ page.asset_path }}trading_tr.png" class="img-responsive img-rounded img-fluid center">
+
+{% highlight %}
+import numpy as np
+import pandas as pd
+
+def atr(df, n=14):
+    c_p = df.close.shift()
+    df['H-L'] = df.high - df.low
+    df['H-Cp'] = (df.high - c_p).abs()
+    df['L-Cp'] = (df.low - c_p).abs()
+    df['TR'] = df[['H-L', 'H-Cp', 'L-Cp']].max(axis=1)
+    df['ATR'] = df.TR.ewm(alpha=1/n, min_periods=n, adjust=False).mean()
+    
+atr(df)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}trading_tr2.png" class="img-responsive img-rounded img-fluid center">
+
+ZetaValue 내부 툴로 확인한 ATR. (n=14)
+
+<img src="{{ page.asset_path }}trading_atr.png" class="img-responsive img-rounded img-fluid center">
+
