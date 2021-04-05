@@ -191,7 +191,7 @@ TR &= \max[(H-L), abs(H-C_p), abs(L-C_p)] \\
 ATR &= \frac{1}{n} \sum^n_{i=1} TR_i
 \end{align} $$
 
- - $ TR_i $ : True Range.
+ - $$ TR_i $$ : True Range.
  - n : 보통 n=14 
  - Stop-loss 를 어디서 걸어야 되는지를 결정하도록 도와줌
 
