@@ -305,3 +305,44 @@ views/Hello.vue 에 Bootstrap 이 잘 되는지 버튼을 넣어 봅니다.
 <button type="button" class="btn btn-primary">버튼!</button>
 ...생략
 {% endhighlight %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 3. Veutify 
+
+## 3.1 Setting Up Veutify
+
+> vue create my-app 을 할때 `ESLint + Airbnb config` 선택하면 veutify에서 문제가 생기고 있다.<br> 
+> `ESLint + Prettier` 로 진행하면 됨
+
+{% highlight bash %}
+$ vue create my-app
+$ cd my-app
+$ vue add vuetify
+{% endhighlight %}
+
+
+`src/plugins/vuetify.js` 는 다음과 같이 수정합니다. 
+
+{% highlight javascript %}
+import Vue from "vue";
+import Vuetify from "vuetify/lib/framework";
+import "vuetify/dist/vuetify.min.css";
+
+Vue.use(Vuetify);
+
+const opts = {};
+
+export default new Vuetify(opts);
+{% endhighlight %}
+
