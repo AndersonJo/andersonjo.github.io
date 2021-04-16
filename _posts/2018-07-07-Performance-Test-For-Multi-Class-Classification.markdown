@@ -4,7 +4,7 @@ title:  "Performance Test For Multi Class Classification"
 date:   2018-07-07 01:00:00
 categories: "statistics"
 asset_path: /assets/images/
-tags: ['recall', 'precision', 'f1', 'metric']
+tags: ['recall', 'precision', 'f1', 'metric', 'confusion-matrix', 'accuracy']
 ---
 
 
@@ -37,7 +37,6 @@ weighted avg       0.65      0.50      0.49        10
 {% endhighlight %}
 
 ## Confusion Matrix
-
 
 {% highlight python %}
 from sklearn.metrics import confusion_matrix
@@ -87,6 +86,27 @@ Normalized Accuracy: 5
 {% endhighlight %}
 
 
+## Accuracy from Confusion Matrix
+
+{% highlight python %}
+def cal_accuracy(cm):
+    """
+    대각선으로 (TP + TN) 모두 합하고, 전체 N 값으로 나눈다
+    """
+    return np.diagonal(cm).sum() / cm.sum()
+
+cm = confusion_matrix(y_true, y_pred)
+print('Accuracy:', cal_accuracy(cm))
+{% endhighlight %}
+
+{% highlight python %}
+Accuracy: 0.5
+{% endhighlight %}
+
+
+
+
+
 ## Recall (Sensitivity, True Positive Rate)
 
 $$ \text{True Positive Rate} = \frac{TP}{TP + FN} $$
@@ -124,6 +144,34 @@ Recalls          : [0.5 0.4 1.  0. ]
 Recall (micro)   : 0.5
 Recall (macro)   : 0.47
 Recall (weighted): 0.5
+{% endhighlight %}
+
+## Recall From Confusion Matrix
+
+{% highlight python %}
+def cal_recall(cm, average=None):
+    data = [cm[i, i] / (cm[i, :].sum()) for i in range(cm.shape[0])]
+    data = np.array(data)
+    
+    if average is None:
+        return data
+    elif average == 'macro':
+        return data.mean()
+    elif average == 'micro':
+        weight = cm.sum(axis=1)
+        return (data * weight).sum() / weight.sum()
+    return data
+
+cm = confusion_matrix(y_true, y_pred)
+print('recalls        :', cal_recall(cm, average=None))
+print('recalls (macro):', cal_recall(cm, average='macro'))
+print('recalls (micro):', cal_recall(cm, average='micro'))
+{% endhighlight %}
+
+{% highlight python %}
+recalls        : [0.5 0.4 1.  0. ]
+recalls (macro): 0.475
+recalls (micro): 0.5
 {% endhighlight %}
 
 ## Precision
