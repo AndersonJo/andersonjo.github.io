@@ -332,6 +332,30 @@ $ vue add vuetify
 {% endhighlight %}
 
 
+`eslintrc.js` 파일은 다음과 같이 수정합니다.<br>
+
+- extends에 "plugin:vue/recommended" 를 삭제 했습니다. -> Pycharm 과 잘 안맞습니다.
+
+{% highlight javascript %}
+module.exports = {
+    root: true,
+    env: {
+        node: true,
+    },
+    extends: ["eslint:recommended", "@vue/prettier"],
+    parserOptions: {
+        parser: "babel-eslint",
+    },
+    rules: {
+        "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+        "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    },
+};
+{% endhighlight %}
+
+  
+
+
 `src/plugins/vuetify.js` 는 다음과 같이 수정합니다. 
 
 {% highlight javascript %}
