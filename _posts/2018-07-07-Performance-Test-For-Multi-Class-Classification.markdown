@@ -155,7 +155,7 @@ Recall (weighted): 0.5
 
 {% highlight python %}
 def cal_recall(cm, average=None):
-    data = [cm[i, i] / (cm[i, :].sum()) for i in range(cm.shape[0])]
+    data = [np.nan_to_num(cm[i, i] / cm[i, :].sum()) for i in range(cm.shape[0])]
     data = np.array(data)
     
     if average is None:
@@ -206,6 +206,11 @@ Precision (micro)   : 0.5
 Precision (macro)   : 0.44
 Precision (weighted): 0.65
 {% endhighlight %}
+
+## Precision from Confusion Matrix
+
+
+
 
 
 ## F1 Score
