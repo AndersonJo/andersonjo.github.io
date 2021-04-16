@@ -209,8 +209,30 @@ Precision (weighted): 0.65
 
 ## Precision from Confusion Matrix
 
+{% highlight python %}
+def cal_precision(cm, average=None):
+    data = [np.nan_to_num(cm[i, i] / cm[:, i].sum()) for i in range(cm.shape[0])]
+    data = np.array(data)
 
+    if average is None:
+        return data
+    elif average == 'macro':
+        return data.mean()
+    elif average == 'micro':
+        weight = cm.sum(axis=0)
+        return (data * weight).sum() / weight.sum()
+    return data
 
+print(f'Precisions        : {cal_precision(cm)}')
+print(f'Precision (macro) : {cal_precision(cm, average="macro"):.2}')
+print(f'Precision (micro) : {cal_precision(cm, average="micro"):.2}')
+{% endhighlight %}
+
+{% highlight text %}
+Precisions        : [0.25 1.   0.5  0.  ]
+Precision (macro) : 0.44
+Precision (micro) : 0.5
+{% endhighlight %}
 
 
 ## F1 Score
