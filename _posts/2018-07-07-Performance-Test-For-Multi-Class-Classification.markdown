@@ -38,6 +38,11 @@ weighted avg       0.65      0.50      0.49        10
 
 ## Confusion Matrix
 
+ - Row: True Label 
+ - Column: Predicted Label
+
+<img src="{{ page.asset_path }}performance-test-confusion-explained.jpg" class="img-responsive img-rounded img-fluid">
+
 {% highlight python %}
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
