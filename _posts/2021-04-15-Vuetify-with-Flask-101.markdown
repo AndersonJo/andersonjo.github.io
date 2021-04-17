@@ -332,7 +332,7 @@ $ vue add vuetify
 {% endhighlight %}
 
 
-`eslintrc.js` 파일은 다음과 같이 수정합니다.<br>
+`.eslintrc.js` 파일은 다음과 같이 수정합니다.<br>
 
 - extends에 "plugin:vue/recommended" 를 삭제 했습니다. -> Pycharm 과 잘 안맞습니다.
 
