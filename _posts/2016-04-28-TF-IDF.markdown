@@ -83,7 +83,7 @@ tfidf_df = pd.DataFrame(tfidf_mtx.round(2),
 tfidf_df.style.background_gradient(cmap=cm)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}tfidf_df.png" class="img-responsive img-rounded img-fluid center">
+<img src="{{ page.asset_path }}tfidf_df.png" class="img-responsive img-rounded img-fluid ">
 
 
 
@@ -110,7 +110,7 @@ counter_df = pd.DataFrame(cnt_mtx,
 counter_df.style.background_gradient(cmap=cm)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}tfidf_counter.png" class="img-responsive img-rounded img-fluid center">
+<img src="{{ page.asset_path }}tfidf_counter.png" class="img-responsive img-rounded img-fluid ">
 
 
 
@@ -134,7 +134,7 @@ _df = pd.DataFrame({'sum': counter_df.sum(),
 _df.sort_values('sum', ascending=False)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}tfidf_tf.png" class="img-responsive img-rounded img-fluid center">
+<img src="{{ page.asset_path }}tfidf_tf.png" class="img-responsive img-rounded img-fluid ">
 
 
 
@@ -150,7 +150,7 @@ df = cnt_mtx.astype(bool).sum(axis=0).astype(float)
 display(pd.DataFrame([df], columns=columns))
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}tfidf_df_numpy.png" class="img-responsive img-rounded img-fluid center">
+<img src="{{ page.asset_path }}tfidf_df_numpy.png" class="img-responsive img-rounded img-fluid ">
 
 
 ## 3.4 IDF
@@ -171,7 +171,7 @@ _df = pd.DataFrame({'sum': counter_df.sum(),
 _df.sort_values('sum', ascending=False)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}tfidf_idf.png" class="img-responsive img-rounded img-fluid center">
+<img src="{{ page.asset_path }}tfidf_idf.png" class="img-responsive img-rounded img-fluid ">
 
 
 ## 3.5 TF-IDF
@@ -185,4 +185,4 @@ _df = pd.DataFrame(tfidf_.round(2), columns=columns)
 _df.style.background_gradient(cmap=cm)
 {% endhighlight %}
 
-<img src="{{ page.asset_path }}tfidf_tfidf.png" class="img-responsive img-rounded img-fluid center">
+<img src="{{ page.asset_path }}tfidf_tfidf.png" class="img-responsive img-rounded img-fluid ">
