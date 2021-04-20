@@ -342,8 +342,9 @@ module.exports = {
     env: {
         node: true,
     },
-    extends: ["eslint:recommended", "@vue/prettier"],
+    extends: ["eslint:recommended", "@vue/prettier", "plugin:vue/base"],
     parserOptions: {
+        ecmaVersion: 12,
         parser: "babel-eslint",
     },
     rules: {

@@ -4,7 +4,7 @@ title:  "TF-IDF"
 date:   2016-04-28 01:00:00
 categories: "nlp"
 asset_path: /assets/images/
-tags: ['tfidf']
+tags: ['tfidf', 'counter']
 ---
 
 
