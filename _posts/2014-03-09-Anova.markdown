@@ -4,7 +4,7 @@ title:  "ANOVA"
 date:   2014-03-09 01:00:00
 categories: "statistics"
 asset_path: /assets/images/
-tags: ['Anova', 'degree of freedom', 'analysis of variance']
+tags: ['Anova', 'degree of freedom', 'analysis of variance', 'f-statistic', 'fstatistic']
 ---
 
 
