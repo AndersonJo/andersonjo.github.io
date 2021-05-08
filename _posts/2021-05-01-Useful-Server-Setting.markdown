@@ -12,24 +12,24 @@ tags: ['mariadb', 'mysql', 'db']
 # 1. Database 
 ## 1.1 MariaDB
 
-`sudo vi /etc/mysql/conf.d/mysqld.cnf` 
+`sudo vi /etc/mysql/mariadb.conf.d/50-server.cnf` 서버 설정을 합니다.<br>
+`[mysqld]` 는 mysql server 그리고 mariadb server 둘다 적용이 됩니다. 
 
 {% highlight bash %}
-[client]
-default-character-set=utf8mb4
-
-[mysql]
-default-character-set=utf8mb4
-
-[mysqldump]
-default-character-set=utf8mb4
-
 [mysqld]
-port=3306
+bind-address = 0.0.0.0
 collation-server = utf8mb4_unicode_ci
 init-connect='SET NAMES utf8mb4'
 character-set-server = utf8mb4
 {% endhighlight %}
+
+`sudo vi /etc/mysql/mariadb.conf.d/50-client.cnf` 
+
+{% highlight bash %}
+[client]
+default-character-set=utf8mb4
+{% endhighlight %}
+
 
 MariaDB 리스타트 후에 Root권한으로 접속. 
 
@@ -55,4 +55,15 @@ SHOW variables like 'character_set%';
 | character_set_system     | utf8                       |
 | character_sets_dir       | /usr/share/mysql/charsets/ |
 +--------------------------+----------------------------+
+{% endhighlight %}
+
+Port 설정이 잘 되었는지 확인합니다.
+
+
+{% highlight bash %}
+# LISTEN 하고 있는 port를 체크 합니다. 
+netstat -tlnp
+
+# port 열려 있는지 확인
+# nmap [서버주소]
 {% endhighlight %}
