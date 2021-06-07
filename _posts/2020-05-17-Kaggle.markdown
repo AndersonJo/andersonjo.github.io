@@ -39,7 +39,9 @@ import pandas as pd
 import kaggle.api as kaggle
 from tempfile import gettempdirb
 from pathlib import Path
+{% endhighlight %}
 
+{% highlight python %}
 imdb_download_path = Path(gettempdir()) / 'imdb'
 imdb_path = imdb_download_path / 'imdb_master.csv'
 
