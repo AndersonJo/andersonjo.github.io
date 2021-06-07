@@ -37,20 +37,20 @@ export KAGGLE_KEY=xxxxxxxxxxxxxx
 {% highlight python %}
 import pandas as pd
 import kaggle.api as kaggle
-from tempfile import gettempdirb
+from tempfile import gettempdir
 from pathlib import Path
 {% endhighlight %}
 
 {% highlight python %}
-imdb_path = Path(gettempdir()) / 'imdb' / 'imdb_master.csv'
+data_path = Path(gettempdir()) / 'imdb' / 'imdb_master.csv'
 
 kaggle.authenticate()
-kaggle.dataset_download_files('utathya/imdb-review-dataset', imdb_path.parent, unzip=True)
+kaggle.dataset_download_files('utathya/imdb-review-dataset', data_path.parent, unzip=True)
 {% endhighlight %}
 
 
 {% highlight python %}
-df = pd.read_csv(imdb_path, index_col=0)
+df = pd.read_csv(data_path, index_col=0)
 df.head()
 {% endhighlight %}
 
