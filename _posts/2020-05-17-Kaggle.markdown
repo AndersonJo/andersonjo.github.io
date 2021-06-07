@@ -1,0 +1,57 @@
+---
+layout: post
+title:  "Kaggle API"
+date:   2020-05-17 01:00:00
+categories: "etc"
+asset_path: /assets/images/
+tags: ['kaggle']
+---
+
+# Installation
+
+{% highlight bash %}
+pip install kaggle
+{% endhighlight %}
+
+Credential API Key는 다음과 같이 합니다. 
+
+1. kaggle.com 접속
+2. Account -> API -> Create New API Token 버튼 클릭
+3. ~/.kaggle/kaggle.json 위치에 저장
+
+또는 환경변수로 설정할수도 있습니다. 
+
+{% highlight bash %}
+export KAGGLE_USERNAME=datadinosaur
+export KAGGLE_KEY=xxxxxxxxxxxxxx
+{% endhighlight %}
+
+
+# Python Kaggle API
+
+## Download Dataset
+
+아래는 IMDB 데이터 다운로드 받는 방법입니다.<br>
+`utathya/imdb-review-dataset` 요 부분만 Kaggle Dataset에서 URL을 카피앤페이스트 하면 됩니다. 
+
+{% highlight python %}
+import pandas as pd
+import kaggle.api as kaggle
+from tempfile import gettempdirb
+from pathlib import Path
+
+imdb_download_path = Path(gettempdir()) / 'imdb'
+imdb_path = imdb_download_path / 'imdb_master.csv'
+
+kaggle.authenticate()
+kaggle.dataset_download_files('utathya/imdb-review-dataset', imdb_download_path, unzip=True)
+{% endhighlight %}
+
+
+{% highlight python %}
+df = pd.read_csv(imdb_path, index_col=0)
+df.head()
+{% endhighlight %}
+
+
+
