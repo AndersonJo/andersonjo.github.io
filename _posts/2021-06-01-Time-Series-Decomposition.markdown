@@ -57,7 +57,7 @@ Classical decomposition에서는 **seasonal period값이 상수값**으로 사�
 ## Additive Decomposition 
 
 1. Trend Cycle 을 계산
-    - $$ \hat{T}_t =  MA(m) $$
+    - 공식: $$ \hat{T}_t =  MA(m) $$
     - 원래 공식은 m이 odd 또는 even이냐에 따라 공식이 달라지는데 그냥 MA구한다고 생각하면 됨 
 2. Detrended Series 계산 : 
     - Detranded Series = $$ y_t - \hat{T}_t $$
@@ -65,7 +65,7 @@ Classical decomposition에서는 **seasonal period값이 상수값**으로 사�
     - 예를 들어 월별 데이터에서 3월의 seasonal 값을 구한다면.. 모든 3월 데이터의 평균값을 구합니다. 
     - 예) (2019년 3월 + 2020년 3월 + 2021년 3월)/3 = averaged seasonality 
 4. Remainder Component 계산
-    - $$ R_t = y_t - \hat{T}_t - \hat{S}_t $$
+    - 공식: $$ R_t = y_t - \hat{T}_t - \hat{S}_t $$
     
 * $$ MA(m) $$ : Moving average of order m -> MA(4) 면 df.rolling(4).mean() 과 같음
 
@@ -77,7 +77,7 @@ Additive 와 매우 유사합니다.
 1. MA계산. 
 2. Detrended Series = $$ y_t\ / \ \hat{T}_t $$
 3. Additve decomposition과 동일
-4. $$ R_t = y_t \big/ \left(\hat{T}_t \times \hat{S}_t \right) $$
+4. 공식: $$ R_t = y_t \big/ \left(\hat{T}_t \times \hat{S}_t \right) $$
 
 
 ## 의견
