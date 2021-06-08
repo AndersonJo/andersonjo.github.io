@@ -196,7 +196,7 @@ fig.set_size_inches(12, 7)
 
 <img src="{{ page.asset_path }}decomposition02.png" class="img-responsive img-rounded img-fluid border rounded">
 
-## Recompose 
+### Recompose 
 
 Decomposition 으로 시계열 데이터를 분리 했다면.. 다시 합치는 것도 가능.  
 다만 recompose 시키면서.. 아주 작은 소수점 정도가 틀려 질수 있습니다. <br> 
@@ -219,7 +219,7 @@ df[df['diff'] != 0]
 <img src="{{ page.asset_path }}decomposition05.png" class="img-responsive img-rounded img-fluid border rounded">
 
 
-## STL Robust Fitting for Stock
+### STL Robust Fitting for Stock
 
  - 주가에 robust 옵션이 뭐 그닥 
 
