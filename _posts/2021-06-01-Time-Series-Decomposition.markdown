@@ -4,7 +4,7 @@ title:  "Time-Series Decomposition"
 date:   2021-06-01 01:00:00
 categories: "time-series"
 asset_path: /assets/images/
-tags: ['']
+tags: ['stl', 'x11', 'seats']
 ---
 
 # Introduction
@@ -117,3 +117,103 @@ fig.set_size_inches(9, 5)
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}decomposition01.png" class="img-responsive img-rounded img-fluid border rounded">
+
+
+
+
+# STL Decomposition
+
+STL은 "Seasonal and Trend Decomposition Using Loess"의 약자 이며, <br>
+Loess method는 Non-linear 데이터에 사용됩니다. <br>
+STL은 기존의 classical decomposition, X11, SEATS 등의 알고리즘보다 좋은 어드벤티지를 갖습니다. 
+
+1. Advantages
+    1. X11, SEATS등은 특히 monthly, quaterly 에만 사용이 가능하지만, <br>STL의 경우 모든 타입의 seasonality 데이터에 적용이 가능
+    2. Seasonal component는 시간에 따라 변화하며, 변화량 자체를 유저가 설정 가능
+    3. Trend-Cycle의 smoothness또한 사용자에 의해서 컨트롤이 가능
+    4. Outliers에 robust합니다. 즉 레어한 케이스로 일어나는 급작스러운 변화에 trend-cycle 또는 seasonality에 영향을 주지 않습니다.다만 remainder component에는 영향을 미칩니다. 
+2. Disadvantages
+    1. 주가의 경우 토요일, 일요일 같은 데이터가 없는데.. 이런 캘린더상의 데이터를 잘 처리하지 못함. <br>따라서 STL에 넣기전에 그냥 일별 데이터로 전부다 만들어준다음에 넣어야 함
+   
+
+## Python Code
+
+### STL for Air Passengers
+
+{% highlight python %}
+from statsmodels.tsa.seasonal import STL
+
+stl = STL(air_df, seasonal=13)
+res = stl.fit()
+fig = res.plot()
+fig.set_size_inches(12, 7)
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}decomposition02.png" class="img-responsive img-rounded img-fluid border rounded">
+
+
+### STL Robust Fitting for Stock
+
+ - 주가에 robust 옵션이 뭐 그닥 
+
+{% highlight python %}
+def preprocess(df):
+    """
+    주가 데이터 전처리
+     - 월~금까지 데이터를 남겨두고 지운다. 
+     - 휴장일의 경우 전날의 데이터를 그대로 사용
+     - 이렇게 하는 이유는 5일 로테이션을 맞추기 위해서 (Seasonality)
+    """
+    df = df.copy()
+    datetime_index = pd.DatetimeIndex(pd.date_range(df.index[0], df.index[-1]))
+    
+    df = df.reindex(datetime_index)
+    df = df.loc[~df.index.weekday.isin({5, 6})]
+    
+    df.fillna(method='ffill', inplace=True)
+    df.index.name = 'datetime'
+    return df
+
+def add_stl_plot(fig, res, legend):
+    """Add 3 plots from a second STL fit"""
+    axs = fig.get_axes()
+    comps = ['trend', 'seasonal', 'resid']
+    for ax, comp in zip(axs[1:], comps):
+        series = getattr(res, comp)
+        if comp == 'resid':
+            ax.plot(series, marker='o', linestyle='none', color='tomato')
+        else:
+            ax.plot(series, color='tomato')
+        
+        ax.legend(legend, frameon=False)
+
+df = preprocess(stock)
+
+stl = STL(df.Close, seasonal=5, robust=True)
+res = stl.fit()
+fig = res.plot()
+fig.set_size_inches(12, 12)
+
+
+add_stl_plot(fig, res, ['Robust', 'Non-robust'])
+display(stl.config)
+{% endhighlight %}
+
+{% highlight python %}
+{'period': 5,
+ 'seasonal': 5,
+ 'seasonal_deg': 1,
+ 'seasonal_jump': 1,
+ 'trend': 11,
+ 'trend_deg': 1,
+ 'trend_jump': 1,
+ 'low_pass': 7,
+ 'low_pass_deg': 1,
+ 'low_pass_jump': 1,
+ 'robust': True}
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}decomposition03.png" class="img-responsive img-rounded img-fluid border rounded">
+
+
+
