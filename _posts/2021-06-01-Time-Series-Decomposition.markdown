@@ -121,6 +121,51 @@ fig.set_size_inches(9, 5)
 
 
 
+# Filters 
+
+## Hodrick Prescott Filter
+
+Data Smoothing technique 으로 주로 사용되며, short-term fluctuations을 제거하는데 사용됩니다. <br>
+
+$$ y_t = T_t + C_t $$
+
+- $ T_t $ : Trend
+- $ C_t $ : Cycle
+
+위의 공식처럼 구성되어 있으며, 최적화하는 방법에 있어서 아래의 Quadratic loss function을 minimize 합니다. <br> 
+이때 $$ \lambda $$ 는 smoothing parameter 입니다. 
+
+$$ \min \sum^T_{t=1} C^2_t + \lambda \sum^T_{t=1} \left[ (T_t - T_{t-1}) - (T_{t-1} - T_{t-2}) \right]^2 $$
+
+Lambda 는 다음과 같이 사용합니다. 
+
+- Quarterly Data (기본값): **1600**
+- Monthly Data: **129600** ( $$ 1600 \times 3^4 $$ )
+- Annual Data: **6.25** ( $$ 1600\ /\ 4^4 $$ )
+
+
+
+{% highlight python %}
+from statsmodels.tsa.filters.hp_filter import hpfilter
+
+cycle, trend = hpfilter(air_d, lamb=1600)
+
+# Visualization
+fig, ax = plt.subplots(3, 1, figsize=(7, 5))
+fig.set_tight_layout(True)
+ax[0].plot(air_df)
+ax[0].set_title('Price')
+ax[1].plot(trend)
+ax[1].set_title('Trend')
+ax[2].plot(cycle)
+ax[2].set_title('Cycle')
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}decomposition04.png" class="img-responsive img-rounded img-fluid border rounded">
+
+
+
+
 # STL Decomposition
 
 STL은 "Seasonal and Trend Decomposition Using Loess"의 약자 이며, <br>
