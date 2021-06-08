@@ -126,6 +126,8 @@ fig.set_size_inches(9, 5)
 ## Hodrick Prescott Filter
 
 Data Smoothing technique 으로 주로 사용되며, short-term fluctuations을 제거하는데 사용됩니다. <br>
+<span style="color:red">아래 공식을 보면 T_{t+1} - T_t 부분이 있는데, 미래시점의 데이터를 가져와서 계산을 합니다.<br>
+즉 Forecasting 모델에 사용시 해당 필터를 사용시 미래시점의 정보를 이미 input에 갖고 있기 때문에 사용하면 안됩니다.</span>
 
 $$ y_t = T_t + C_t $$
 
