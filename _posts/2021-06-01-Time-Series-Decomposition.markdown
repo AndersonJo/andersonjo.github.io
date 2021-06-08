@@ -131,8 +131,8 @@ Data Smoothing technique 으로 주로 사용되며, short-term fluctuations을 
 
 $$ y_t = T_t + C_t $$
 
-- $ T_t $ : Trend
-- $ C_t $ : Cycle
+- $$ T_t $$ : Trend
+- $$ C_t $$ : Cycle
 
 위의 공식처럼 구성되어 있으며, 최적화하는 방법에 있어서 아래의 Quadratic loss function을 minimize 합니다. <br> 
 이때 $$ \lambda $$ 는 smoothing parameter 입니다. 
