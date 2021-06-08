@@ -219,7 +219,7 @@ df[df['diff'] != 0]
 <img src="{{ page.asset_path }}decomposition05.png" class="img-responsive img-rounded img-fluid border rounded">
 
 
-### STL Robust Fitting for Stock
+## STL Robust Fitting for Stock
 
  - 주가에 robust 옵션이 뭐 그닥 
 
