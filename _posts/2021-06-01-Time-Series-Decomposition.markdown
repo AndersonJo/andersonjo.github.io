@@ -137,7 +137,7 @@ $$ y_t = T_t + C_t $$
 위의 공식처럼 구성되어 있으며, 최적화하는 방법에 있어서 아래의 Quadratic loss function을 minimize 합니다. <br> 
 이때 $$ \lambda $$ 는 smoothing parameter 입니다. 
 
-$$ \min \sum^T_{t=1} C^2_t + \lambda \sum^T_{t=1} \left[ (T_t - T_{t-1}) - (T_{t-1} - T_{t-2}) \right]^2 $$
+$$ \min \sum^T_{t=1} (x_t - T_t)^2 + \lambda \sum^T_{t=1} \left[ (T_{t+1} - T_{t}) - (T_{t} - T_{t-1}) \right]^2 $$
 
 Lambda 는 다음과 같이 사용합니다. 
 
