@@ -4,7 +4,7 @@ title:  "Time-Series Decomposition"
 date:   2021-06-01 01:00:00
 categories: "time-series"
 asset_path: /assets/images/
-tags: ['stl', 'x11', 'seats']
+tags: ['stl', 'x11', 'seats', 'filter', 'hpfilter']
 ---
 
 # Introduction
