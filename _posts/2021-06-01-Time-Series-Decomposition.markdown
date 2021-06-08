@@ -196,6 +196,28 @@ fig.set_size_inches(12, 7)
 
 <img src="{{ page.asset_path }}decomposition02.png" class="img-responsive img-rounded img-fluid border rounded">
 
+## Recompose 
+
+Decomposition 으로 시계열 데이터를 분리 했다면.. 다시 합치는 것도 가능.  
+다만 recompose 시키면서.. 아주 작은 소수점 정도가 틀려 질수 있습니다. <br> 
+따라서 예측 분야가 아니라.. 아주 정밀한 작업을 요할때는 사용 불가능
+
+{% highlight python %}
+stl = STL(air_df, seasonal=13)
+res = stl.fit()
+
+# 합치기 
+recomposed_series = res.trend + res.seasonal + res.resid
+
+# 검증
+(recomposed_series.values != air_df.values).sum() 
+df = pd.DataFrame({'recomposed': recomposed_series, 'air': air_df['#Passengers']})
+df['diff'] = df['recomposed'] - df['air']
+df[df['diff'] != 0]
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}decomposition05.png" class="img-responsive img-rounded img-fluid border rounded">
+
 
 ### STL Robust Fitting for Stock
 
