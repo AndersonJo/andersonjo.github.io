@@ -107,11 +107,8 @@ $$
 
 $$ \begin{align}
 \frac{\partial J}{\partial w_i} &=
-\frac{\partial }{\partial \hat{y}} \left[ \frac{1}{N} \sum_{i=1} \left( y^{(i)} - \hat{y}^{(i)}  \right)^2 \right] \cdot
-\frac{\partial}{\partial z} \left[ \frac{1}{1+e^{-z}} \right] \odot
-\frac{\partial}{\partial w_i} \left[ w_i^T x^{(i)} + b \right] & [1] \\
-&= -\frac{2}{N} \left[ \sum_{i=1} \left( y^{(i)} - \hat{y}^{(i)} \right) \right] \odot
-\left[ \hat{y}^{(i)} \cdot (1-\hat{y}^{(i)}) \right] \cdot x^{(i)} & [2]
+\frac{\partial }{\partial \hat{y}} \left[ \frac{1}{N} \sum_{i=1} \left( y^{(i)} - \hat{y}^{(i)}  \right)^2 \right] \cdot \frac{\partial}{\partial z} \left[ \frac{1}{1+e^{-z}} \right] \odot  \frac{\partial}{\partial w_i} \left[ w_i^T x^{(i)} + b \right]  \\
+&= -\frac{2}{N} \left[ \sum_{i=1} \left( y^{(i)} - \hat{y}^{(i)} \right) \right] \odot  \left[ \hat{y}^{(i)} \cdot (1-\hat{y}^{(i)}) \right] \cdot x^{(i)} 
 \end{align} $$
 
 * **[2]** 에서 derivative of the sigmoid function은 $$ \phi(z) \cdot (1-\phi(z)) $$ 입니다.<br> 즉 $$ \phi(z) $$는 $$ \hat{y}^{i} $$으로 변경될 수 있습니다.
