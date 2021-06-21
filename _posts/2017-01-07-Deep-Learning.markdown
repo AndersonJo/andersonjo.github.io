@@ -48,19 +48,19 @@ $$ \phi(z; w) = \frac{1}{1 + e^{-z}} $$
 
 $$
 \begin{align}
-\dfrac{d}{dz} \phi(z) &= \dfrac{d}{dz} \left[ \dfrac{1}{1 + e^{-x}} \right] & [1] \\
-&= \dfrac{d}{dz} \left( 1 + \mathrm{e}^{-z} \right)^{-1}  & [2]\\
-&= -(1 + e^{-z})^{-2}(-e^{-z}) & [3]\\
-&= \dfrac{e^{-x}}{\left(1 + e^{-z}\right)^2} & [4]\\
-&= \dfrac{1}{1 + e^{-z}\ } \cdot \dfrac{e^{-z}}{1 + e^{-x}}  & [5]\\
-&= \dfrac{1}{1 + e^{-z}\ } \cdot \dfrac{(1 + e^{-z}) - 1}{1 + e^{-z}}  & [6]\\
-&= \dfrac{1}{1 + e^{-z}\ } \cdot \left( 1 - \dfrac{1}{1 + e^{-z}} \right) & [7]\\
-&= \phi(z) \cdot (1 - \phi(z)) & [8]
+\dfrac{d}{dz} \phi(z) &= \dfrac{d}{dz} \left[ \dfrac{1}{1 + e^{-x}} \right]  \\
+&= \dfrac{d}{dz} \left( 1 + \mathrm{e}^{-z} \right)^{-1}  \\
+&= -(1 + e^{-z})^{-2}(-e^{-z}) \\
+&= \dfrac{e^{-x}}{\left(1 + e^{-z}\right)^2} \\
+&= \dfrac{1}{1 + e^{-z}\ } \cdot \dfrac{e^{-z}}{1 + e^{-x}} \\
+&= \dfrac{1}{1 + e^{-z}\ } \cdot \dfrac{(1 + e^{-z}) - 1}{1 + e^{-z}}  \\
+&= \dfrac{1}{1 + e^{-z}\ } \cdot \left( 1 - \dfrac{1}{1 + e^{-z}} \right) \\
+&= \phi(z) \cdot (1 - \phi(z))
 \end{align}
 $$
 
-* [3] Chain Rule을 적용
-* [4] $$ \frac{d}{dx} e^{-z} = -e^{-z} $$  이며  $$ \frac{d}{dx} e^{z} = e^{z} $$
+* $$ -(1 + e^{-z})^{-2}(-e^{-z}) $$ :  Chain Rule을 적용
+* $$ \frac{d}{dx} e^{-z} = -e^{-z} $$  이며  $$ \frac{d}{dx} e^{z} = e^{z} $$
 
 
 ## Cost Function 
