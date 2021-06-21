@@ -111,10 +111,10 @@ $$ \begin{align}
 \frac{\partial}{\partial z} \left[ \frac{1}{1+e^{-z}} \right] \odot
 \frac{\partial}{\partial w_i} \left[ w_i^T x^{(i)} + b \right] & [1] \\
 &= -\frac{2}{N} \left[ \sum_{i=1} \left( y^{(i)} - \hat{y}^{(i)} \right) \right] \odot
- \left[ \hat{y}^{(i)} \cdot (1-\hat{y}^{(i)}) \right] \cdot x^{(i)} & [2]
+\left[ \hat{y}^{(i)} \cdot (1-\hat{y}^{(i)}) \right] \cdot x^{(i)} & [2]
 \end{align} $$
 
-* **[2]** 에서 derivative of the sigmoid function은 $$ \phi(z) \cdot (1-\phi(z)) $$ 입니다.<br> 즉 $$ \phi(z) $$는 $$ \hat{y}^{(i)} $$으로 변경될 수 있습니다.
+* **[2]** 에서 derivative of the sigmoid function은 $$ \phi(z) \cdot (1-\phi(z)) $$ 입니다.<br> 즉 $$ \phi(z) $$는 $$ \hat{y}^{i} $$으로 변경될 수 있습니다.
 * **[2]** 에서 $$ \odot $$ 은 element wise multiplication이며 이는 action function이 element wise function 이기 때문에 동일하게 backpropagation에서도 element wise multiplication을 해주는 것입니다.
 
 
@@ -166,7 +166,7 @@ w &= w + \Delta w
 * layers의 인덱스는 1 (input), 2 (hidden), ... , L (output)을 가르킵니다.
 
 
-### [1] Feedforward
+## [1] Feedforward
 Feedfoward Pass를 $$ h^{(1)} $$, $$ h^{(2)} $$, $$ h^{(3)} $$, ...., $$ h^{(L)} $$ 에 대해서 계산을 합니다.
 
 $$ \begin{align}
@@ -181,7 +181,7 @@ h(x) = h^{(L)} &= \phi \left( \left( \theta^{(L-1)} \right)^T h^{(L-1)} + b^{(L-
 
 
 
-### [2] output layer 에서의 계산
+## [2] output layer 에서의 계산
 마지막 output에서는 다음과 같은 계산을 해줍니다.
 
 $$ \begin{align}
@@ -206,7 +206,7 @@ $$ \begin{align}
 
 
 
-### [3] L-1 부터의 계산
+## [3] L-1 부터의 계산
 
 $$ l =  L -1, L -2, L -3 $$, ... 부터 다음과 같은 계산을 합니다.<br>
 
@@ -220,7 +220,7 @@ $$ \begin{align}
 
 
 
-### [4] Update
+## [4] Update
 
 $$ \begin{align} 
 \Delta \theta^{(l)} &= \delta^{(l+1)} \left( h^{(l)} \right)^T \\
@@ -232,7 +232,7 @@ $$ \begin{align}
 [https://github.com/AndersonJo/deep-layer](https://github.com/AndersonJo/deep-layer) 에서 전체 코드를 볼 수 있습니다.<br>
 update부분에서 momentum을 적용했습니다.
 
-### Backpropagation Code
+## Backpropagation Code
 
 {% highlight python %}
 def backpropagation(self,
