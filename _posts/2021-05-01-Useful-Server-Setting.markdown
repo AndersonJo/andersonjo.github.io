@@ -18,16 +18,16 @@ tags: ['mariadb', 'mysql', 'db']
 {% highlight bash %}
 [mysqld]
 bind-address = 0.0.0.0
-collation-server = utf8mb4_unicode_ci
-init-connect='SET NAMES utf8mb4'
-character-set-server = utf8mb4
+character-set-server  = utf8
+collation-server      = utf8_general_ci
+init-connect='SET NAMES utf8'
 {% endhighlight %}
 
 `sudo vi /etc/mysql/mariadb.conf.d/50-client.cnf` 
 
 {% highlight bash %}
 [client]
-default-character-set=utf8mb4
+default-character-set = utf8
 {% endhighlight %}
 
 
