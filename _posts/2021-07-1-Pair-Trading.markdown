@@ -338,6 +338,7 @@ stock_df.tail()
 
 ## 5.2 Indicators
 
+{% highlight python %}
 def PCT(arr):
     arr = pd.Series(arr)
     return arr.pct_change().cumsum().fillna(method='bfill')
