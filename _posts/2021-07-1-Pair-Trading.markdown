@@ -6,8 +6,9 @@ categories: "trading"
 asset_path: /assets/images/
 tags: ['mean-reversion']
 ---
-
-
+<header>
+    <img src="{{ page.asset_path }}arbitrage-background.jpg" class="center img-responsive img-rounded img-fluid">
+</header>
 # 1. 결론
 
 1. 통계적 차익 거래는 개인이 할 수 없음
