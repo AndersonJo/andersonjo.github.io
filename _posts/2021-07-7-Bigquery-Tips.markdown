@@ -27,7 +27,7 @@ tags: ['quota', 'limit', 'error', 'bug']
 쿼리 실행시 INFORMATION_SCHEMA 는 다음의 구조로 만듭니다. 
 
 <div class="center text-center">
-`PROJECT_ID`.`region-REGION_NAME`.INFORMATION_SCHEMA.VIEW
+PROJECT_ID.region-REGION_NAME.INFORMATION_SCHEMA.VIEW
 </div>
 
 예를 들어서 프로젝트 ID는 project-1234 이고 BigQuery의 위치는 asia-northeast3 일 경우 다음과 같이 생성합니다. <br>
