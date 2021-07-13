@@ -44,3 +44,9 @@ WHERE creation_time > TIMESTAMP_SUB(CURRENT_TIMESTAMP, INTERVAL 1 DAY) AND
 {% endhighlight %}
 
 <img src="{{ page.asset_path }}bigquery-ts-information-schema.png" class="img-responsive img-rounded img-fluid border rounded">
+
+
+몇가지 해결책은 다음과 같습니다. 
+
+ - `rateLimitExceeded` (403) : 단기간에 지나치게 비번하게 request를 보내서 생긴 현상입니다. 데이터를 모아서 한꺼번에 보낸다던가..   
+    retry 시도시 마다 exponential wait time을 갖고 다시 시도하면 됩니다.
