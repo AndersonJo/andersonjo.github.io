@@ -203,10 +203,7 @@ analysis.solve_power(effect_size=0.8, power=None, nobs1=30, ratio=1, alpha=0.05)
 {% highlight python %} 
 from statsmodels.stats.power import TTestIndPower analysis = TTestIndPower()
 analysis.solve_power(effect_size=0.8, power=0.8, nobs1=None, ratio=1, alpha=0.05)
-{% endhighlight %}
-
 # 25.52457250047935
-
 {% endhighlight %}
 
 중요 포인트는 25로 나온 결과값이 그룹A의 샘플갯수이며, ratio=1 이기 때문에 그룹B도 동일하다고 볼 수 있습니다.<br>
