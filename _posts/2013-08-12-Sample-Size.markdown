@@ -181,8 +181,10 @@ analysis.solve_power(effect_size=0.8, power=None, nobs1=30, ratio=1, alpha=0.05)
 
 ## Finding sample size
 
-{% highlight python %} from statsmodels.stats.power import TTestIndPower analysis = TTestIndPower()
+{% highlight python %} 
+from statsmodels.stats.power import TTestIndPower analysis = TTestIndPower()
 analysis.solve_power(effect_size=0.8, power=0.8, nobs1=None, ratio=1, alpha=0.05)
+{% endhighlight %}
 
 # 25.52457250047935
 
