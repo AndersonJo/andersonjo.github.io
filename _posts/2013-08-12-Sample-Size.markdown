@@ -177,7 +177,8 @@ STD로 나눌때 effect size 값이 나옴 (effect size = standardized mean diff
 아래 코드에서 effect_size를 None값으로 두었고.. None값으로 두면 해당 값을 계산해서 리턴함
 
 {% highlight python %} 
-from statsmodels.stats.power import TTestIndPower analysis = TTestIndPower()
+from statsmodels.stats.power import TTestIndPower 
+analysis = TTestIndPower()
 analysis.solve_power(effect_size=None, power=0.8, nobs1=30, ratio=1, alpha=0.05)
 # 0.735
 {% endhighlight %}
@@ -193,7 +194,8 @@ analysis.solve_power(effect_size=None, power=0.8, nobs1=30, ratio=1, alpha=0.05)
 - 보통 0.8로 두고 함
 
 {% highlight python %} 
-from statsmodels.stats.power import TTestIndPower analysis = TTestIndPower()
+from statsmodels.stats.power import TTestIndPower 
+analysis = TTestIndPower()
 analysis.solve_power(effect_size=0.8, power=None, nobs1=30, ratio=1, alpha=0.05)
 # 0.861422509233477
 {% endhighlight %}
@@ -201,7 +203,8 @@ analysis.solve_power(effect_size=0.8, power=None, nobs1=30, ratio=1, alpha=0.05)
 ## Finding sample size
 
 {% highlight python %} 
-from statsmodels.stats.power import TTestIndPower analysis = TTestIndPower()
+from statsmodels.stats.power import TTestIndPower 
+analysis = TTestIndPower()
 analysis.solve_power(effect_size=0.8, power=0.8, nobs1=None, ratio=1, alpha=0.05)
 # 25.52457250047935
 {% endhighlight %}
