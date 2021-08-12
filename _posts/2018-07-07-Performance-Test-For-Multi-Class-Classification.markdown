@@ -43,6 +43,11 @@ weighted avg       0.65      0.50      0.49        10
 
 <img src="{{ page.asset_path }}performance-test-confusion-explained.jpg" class="img-responsive img-rounded img-fluid">
 
+ - TP 예제: [0, 0, 1, 1, 2, 2] GT에서 [0, 0, 1, 1, 2, 2] 예측시, 다 맞음.
+ - FP 예제: [0, 0, 1, 1, 2, 2] GT에서 [0, 0, 0, 0, 0, 0] 예측시, 0의 FP는 1번을 0으로 예측하고, 2를 0으로 예측한 것을 FP로 봄 (0을 0으로 예측한건 TP)  
+ - FN 예제: [0, 0, 1, 1, 2, 2] GT에서 [2, 2, 0, 0, 1, 1] 예측시, 각 레이블마다 고양이는 강아지라고, 자동차는 사람이라고 예측했는데 다 틀림.  
+
+
 
 {% highlight python %}
 from sklearn.metrics import confusion_matrix
