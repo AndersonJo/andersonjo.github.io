@@ -43,6 +43,7 @@ weighted avg       0.65      0.50      0.49        10
 
 <img src="{{ page.asset_path }}performance-test-confusion-explained.jpg" class="img-responsive img-rounded img-fluid">
 
+
 {% highlight python %}
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
@@ -182,6 +183,10 @@ recalls (micro): 0.5
 ## Precision
 
 $$ \text{Precision} = \frac{TP}{TP + FP} = \frac{TP}{\text{Predicted Yes}} $$
+
+ - 단점: FP가 없는 경우 100% 맞은 것으로 나옴. 
+   - 아래 1의 경우, 다른 레이블 (0, 2, 3) 에서 어떠한 예측값에서 1이 없습니다. (False Positive가 없음) 
+   - 즉, "고양이" 예측을 단 한번만 맞추고, 다른 모든 예측 값을 "강아지"로 하면 precision은 100% 다 맞춘것으로 나옵니다. 
 
 {% highlight python %}
 from sklearn.metrics import precision_score
