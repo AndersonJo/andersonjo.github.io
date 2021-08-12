@@ -129,24 +129,21 @@ visualize_z_scores()
 
 <img src="{{ page.asset_path }}sample-size-01.png" class="img-responsive img-rounded img-fluid center">
 
-
 ## Calculate Sample Size
 
-{% highlight python %}
-from scipy.stats import norm
+{% highlight python %} from scipy.stats import norm
 
 def cal_zscore(confidence_level):
-    return norm.ppf(1-(1-confidence_level)/2, loc=0, scale=1)
+return norm.ppf(1-(1-confidence_level)/2, loc=0, scale=1)
 
 def calculate_sample_size(p_n:int, cl:float, e:float):
-    """
-    :param p_n: population size 모집단의 갯수 ex. 10000
-    :param cl: confidence level 신뢰수준 ex. 0.95, 0.99
-    :param e: margin of error 표본 오차 ex. 0.03
-    """
-    assert 0 < cl < 1
-    assert 0 < e < 1
-    
+"""
+:param p_n: population size 모집단의 갯수 ex. 10000
+:param cl: confidence level 신뢰수준 ex. 0.95, 0.99
+:param e: margin of error 표본 오차 ex. 0.03
+"""
+assert 0 < cl < 1 assert 0 < e < 1
+
     p_n = int(p_n)
     y = cal_zscore(cl)**2 * 0.5*(1-0.5)/(0.05**2)
     return y/(1 + (y* 1/p_n))
@@ -156,6 +153,65 @@ sample_size = int(calculate_sample_size(10000, 0.95, 0.03))
 print(f'1000명의 설문조사이며, 신뢰수준 95%에서 표본오차 ±3.0%일때 필요한 설문조사 인원은 {sample_size}명 입니다')
 {% endhighlight %}
 
-{% highlight text %}
-1000명의 설문조사이며, 신뢰수준 95%에서 표본오차 ±3.0%일때 필요한 설문조사 인원은 369명 입니다
+{% highlight text %} 1000명의 설문조사이며, 신뢰수준 95%에서 표본오차 ±3.0%일때 필요한 설문조사 인원은 369명 입니다 {% endhighlight %}
+
+
+# T-Test Sample Size
+
+## Finding Effect Size (효과크기)
+
+$$ d = \frac{M_1 - M_2}{STD} $$
+
+- d : effect size
+- $$ M_1 $$, $$ M_2 $$ : 두 집단의 평균값
+
+두 그룹간의 평균을 빼주고 STD로 나눠준 것을 의미 $$ (M_2 - M_1) / STD_{pooled} $$ <br>
+예를 들어서 다이어트 약을 먹을때 5Kg이 빠진다는 것은 non-standardized effect size 로서 그냥 두 집단의 평균을 빼준것이고<br>
+STD로 나눌때 effect size 값이 나옴 (effect size = standardized mean difference)
+
+- 두 집단간의 평균 차이를 STD로 나눠준것으로 이해하면 됨
+- 0.2 : Small Effect (평균적인 차이가 작다)
+- 0.5 : Moderate Effect
+- 0.8 :Large Effect (평균적인 차이가 크다. 모르면 그냥 0.8 사용)
+
+아래 코드에서 effect_size를 None값으로 두었고.. None값으로 두면 해당 값을 계산해서 리턴함
+
+{% highlight python %} 
+from statsmodels.stats.power import TTestIndPower 
+analysis = TTestIndPower()
+analysis.solve_power(effect_size=None, power=0.8, nobs1=30, ratio=1, alpha=0.05)
+# 0.735
 {% endhighlight %}
+
+- power : 0.8 사용하며 -> 1 - P(Type2 Error) -> Power는 만약 대립가설이 맞을때, 귀무가설을 기각할 확률을 의미.
+- alpha : significance level 을 의미하며 0.05 사용. -> P(Type1 Error) -> 귀무가설이 옳았을때 귀무가설을 잘못 기각시킬 확률
+- nobs1 : 그룹A 의 샘플 갯수를 의미 -> 그룹B의 샘플 갯숫는 nobs1 * ratio = nobs2 로 계산
+- ratio : 그룹B 의 샘플 갯수를 계산 할때 사용
+- alternative: `two-sided` (default), `larger`, `smaller` -> Power 계산시 사용하며 one-sided test 는 larger 또는 smaller중에서 사용
+
+## Finding Power
+
+- 보통 0.8로 두고 함
+
+{% highlight python %} 
+from statsmodels.stats.power import TTestIndPower 
+analysis = TTestIndPower()
+analysis.solve_power(effect_size=0.8, power=None, nobs1=30, ratio=1, alpha=0.05)
+# 0.861422509233477
+{% endhighlight %}
+
+## Finding sample size
+
+{% highlight python %} 
+from statsmodels.stats.power import TTestIndPower 
+analysis = TTestIndPower()
+analysis.solve_power(effect_size=0.8, power=0.8, nobs1=None, ratio=1, alpha=0.05)
+# 25.52457250047935
+{% endhighlight %}
+
+중요 포인트는 25로 나온 결과값이 그룹A의 샘플갯수이며, ratio=1 이기 때문에 그룹B도 동일하다고 볼 수 있습니다.<br>
+전체 샘플 사이즈 갯수는..
+
+$$ 25 + (25 * 1) = 50 $$
+
+총 필요함 sample size는 대략 50명이 됩니다. 

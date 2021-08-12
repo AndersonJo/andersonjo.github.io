@@ -106,6 +106,7 @@ source test/bin/activate
 {% highlight bash %}
 sudo apt-get install graphviz
 sudo pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz
+pip install --upgrade jupyterlab mpl-interactions[jupyter]
 {% endhighlight %}
 
 **Ipython & Jupyter**

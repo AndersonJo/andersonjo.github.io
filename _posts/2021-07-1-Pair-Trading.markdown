@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Pair Trading - Cointegration and Statistical Arbitrage"
-date:   2021-07-07 01:00:00
+date:   2021-07-01 01:00:00
 categories: "trading"
 asset_path: /assets/images/
 tags: ['mean-reversion']
