@@ -79,3 +79,34 @@ $$ F_{bag}(x) = sign\left( \sum^B_{b=1} f_b(x) \right)  $$
 3. 모델은 랜덤으로 선택된 features 를 기반으로 학습을 하게 됩니다.
 4. 2번 3번을 반복하며 여러개의 모델을 학습시킵니다.
 5. prediction은 해당 학습된 여러개의 모델이 예측한 값을 aggregation해서 예측값을 결정합니다.
+
+## 2.2 Boosting
+
+<img src="{{ page.asset_path }}boosted_trees_process.png" class="img-responsive img-rounded img-fluid center">
+
+- Partitioning Data: Higher vote to misclassified samples
+- Goal: Accuracy 향상
+- Method: Gradient Descent
+- Combine Method: Weighted Majority Vote
+- Models: Ada Boost, XGBoost, LightGBM, Catboost
+- 장점:
+  - 복잡한 문제를 푸는데 예측을 잘함. 경험상으로도 그러함. 
+- 단점:
+    - Overfitting
+
+**Steps**
+
+방식은 꽤 많은데.. 핵심은 에러로 나온 에러 데이터에 가중치를 더해서 그 다음 모델에서 다시 학습시킴. <br>
+이후 여러개의 모델이 만들어지면 최종 prediction에서는 각 모델의 가중평균을 내서 결과값을 도출
+
+1. 데이터에서 램던 샘플을 취하고 weak leaner M1 을 학습시킨다.
+2. training dataset 에서 랜덤샘플을 신규로 취하고, 이전 모델에서 잘못 예측한 데이터셋 50%를 추가 함. -> weak leaner M2 를 학습
+3. 반복적으로 여러개의 모델을 sequentially 만듬. 
+4. prediction시에는 예를 들어 5개의 weak leaners 가 있고, \[1, 1, 1, -1, -1\] 이렇게 예측후, 각 모델마다의 가중치 \[0.2, 0.5, 0.2, 0.8, 0.9\] 를 곱한후 합치면 -0.8이 나오며, 최종값은 -1이 된다
+
+
+
+## 2.3 Stacking
+
+<img src="{{ page.asset_path }}modelstacking.png" class="img-responsive img-rounded img-fluid center">
+
