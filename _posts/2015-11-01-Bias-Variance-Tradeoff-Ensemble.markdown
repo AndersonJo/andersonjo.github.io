@@ -12,6 +12,9 @@ tags: ['underfitting', 'overfitting', '오버피팅']
 
 <img src="{{ page.asset_path }}underfit_right_overfit.png" class="img-responsive img-rounded img-fluid center">
 
+<img src="{{ page.asset_path }}bias_variance_tradeoff.jpeg" class="img-responsive img-rounded img-fluid center">
+
+
 # Error
 
 $$ Error = noise(x) + bias(x) + variance(x) $$
@@ -42,7 +45,7 @@ $$ \text{Variance} = E \left[ \hat{y} - E[\hat{y}] \right]^2  $$
  - Low Variance: 
  - High Variance: 모든 데이터들을 지나치게 학습
  
-<img src="{{ page.asset_path }}bias_variance_tradeoff.jpeg" class="img-responsive img-rounded img-fluid center">
+
 
 
 ## Underfitting and Overfitting
