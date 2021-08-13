@@ -8,14 +8,14 @@ tags: ['underfitting', 'overfitting', '오버피팅']
 
 ---
 
-# Bias and Variance Tradeoff
+# 1. Bias and Variance Tradeoff
 
 <img src="{{ page.asset_path }}underfit_right_overfit.png" class="img-responsive img-rounded img-fluid center">
 
 <img src="{{ page.asset_path }}bias_variance_tradeoff.jpeg" class="img-responsive img-rounded img-fluid center">
 
 
-# Error
+# 1.1 Error
 
 $$ Error = noise(x) + bias(x) + variance(x) $$
 
@@ -24,7 +24,7 @@ $$ Error = noise(x) + bias(x) + variance(x) $$
 
 
 
-## Bias 
+## 1.2 Bias 
 
 Bias는 예측된 값과 기대값(GT) 차이라고 볼 수 있습니다. 
 
@@ -36,7 +36,7 @@ $$ \text{Bias} = E[y - \hat{y}] $$
  - High Bias: 강한 가정 / 오차가 크다 (Linear Regression, Linear Discriminant Analysis, Logistic Regression)
 
 
-## Variance 
+## 1.3 Variance 
 
 $$ \text{Variance} = E \left[ \hat{y} - E[\hat{y}] \right]^2  $$
 
@@ -48,7 +48,7 @@ $$ \text{Variance} = E \left[ \hat{y} - E[\hat{y}] \right]^2  $$
 
 
 
-## Underfitting and Overfitting
+## 1.4 Underfitting and Overfitting
 
  - Underfitting : High Bias and Low Variance
      - 모델은 예측시 강한 가정(assumption)을 갖고 있음. 
@@ -59,6 +59,6 @@ $$ \text{Variance} = E \left[ \hat{y} - E[\hat{y}] \right]^2  $$
      - 복잡한 모델을 단순한 데이터에 적용시 발생
 
 
-# Ensemble - Bagging VS Boosting
+# 2. Ensemble - Bagging VS Boosting
 
 <img src="{{ page.asset_path }}ensemble_methods.png" class="img-responsive img-rounded img-fluid center">
