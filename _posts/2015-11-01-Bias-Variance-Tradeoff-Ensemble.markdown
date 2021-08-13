@@ -102,7 +102,7 @@ $$ F_{bag}(x) = sign\left( \sum^B_{b=1} f_b(x) \right)  $$
 1. 데이터에서 램던 샘플을 취하고 weak leaner M1 을 학습시킨다.
 2. training dataset 에서 랜덤샘플을 신규로 취하고, 이전 모델에서 잘못 예측한 데이터셋 50%를 추가 함. -> weak leaner M2 를 학습
 3. 반복적으로 여러개의 모델을 sequentially 만듬. 
-4. prediction시에는 예를 들어 5개의 weak leaners 가 있고, \[1, 1, 1, -1, -1\] 이렇게 예측후, 각 모델마다의 가중치 \[0.2, 0.5, 0.2, 0.8, 0.9\] 를 곱한후 합치면 -0.8이 나오며, 최종값은 -1이 된다
+
 
 
 
