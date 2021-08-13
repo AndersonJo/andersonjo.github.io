@@ -54,3 +54,8 @@ $$ \text{Variance} = E \left[ \hat{y} - E[\hat{y}] \right]^2  $$
  - Overfitting : Low Bias and High Variance 
      - 노이즈 데이터까지 피팅 시켜서 발생함
      - 복잡한 모델을 단순한 데이터에 적용시 발생
+
+
+# Ensemble - Bagging VS Boosting
+
+<img src="{{ page.asset_path }}ensemble_methods.png" class="img-responsive img-rounded img-fluid center">
