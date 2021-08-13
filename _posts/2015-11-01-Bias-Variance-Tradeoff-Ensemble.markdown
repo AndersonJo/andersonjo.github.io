@@ -1,7 +1,10 @@
 ---
-layout: post title:  "Ensemble / Bias and Variance Tradeoff / Bagging VS Boosting"
-date:   2015-10-25 01:00:00 categories: "machine-learning"
-asset_path: /assets/images/ tags: ['underfitting', 'overfitting', '오버피팅']
+layout: post 
+title:  "Ensemble / Bias and Variance Tradeoff / Bagging VS Boosting"
+date:   2015-10-25 01:00:00 
+categories: "machine-learning"
+asset_path: /assets/images/ 
+tags: ['underfitting', 'overfitting', '오버피팅']
 
 ---
 
