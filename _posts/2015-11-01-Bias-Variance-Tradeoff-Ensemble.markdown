@@ -62,3 +62,46 @@ $$ \text{Variance} = E \left[ \hat{y} - E[\hat{y}] \right]^2  $$
 # 2. Ensemble - Bagging VS Boosting
 
 <img src="{{ page.asset_path }}ensemble_methods.png" class="img-responsive img-rounded img-fluid center">
+
+## 2.1 Bagging - Bootstrap Aggregation 
+
+ - Partitioning Data: Random 
+ - Goal: Variance 최소화
+ - Method: Random Subspace
+ - Combine method: weighted average 
+ - Models: Random Forest
+ - 장점
+   - Over-fitting 문제를 해결 (특히 decision tree -> random forest로 전환시)
+   - missing data가 발생해도 accuracy를 유지함
+
+
+**Regression Problem** 
+
+$$ F_{bag}(x) = \frac{1}{B} \sum^B_{b=1} f_b(x) $$
+
+**Classification Problem**
+
+$$ F_{bag}(x) = sign\left( \sum^B_{b=1} f_b(x) \right)  $$
+
+
+**Steps**
+
+1. n observations 그리고 m features 가 트레이닝 데이터에 존재
+2. m features 중의 일부가 샘플로 랜덤 선택이 됩니다. 
+3. 모델은 랜덤으로 선택된 features 를 기반으로 학습을 하게 됩니다. 
+4. 2번 3번을 반복하며 여러개의 모델을 학습시킵니다. 
+5. prediction은 해당 학습된 여러개의 모델이 예측한 값을 aggregation해서 예측값을 결정합니다. 
+
+
+
+## 2.2 Boosting 
+
+<img src="{{ page.asset_path }}boosted_trees_process.png" class="img-responsive img-rounded img-fluid center">
+
+ - Partitioning Data: Higher vote to misclassified samples 
+ - Goal: Accuracy 향상
+ - Method: Gradient Descent 
+ - Combine Method: Weighted Majority Vote 
+ - Models: Ada Boost
+ - 장점
+   - 
