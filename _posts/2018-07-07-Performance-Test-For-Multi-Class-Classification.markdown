@@ -43,6 +43,12 @@ weighted avg       0.65      0.50      0.49        10
 
 <img src="{{ page.asset_path }}performance-test-confusion-explained.jpg" class="img-responsive img-rounded img-fluid">
 
+ - TP 예제: [0, 0, 1, 1, 2, 2] GT에서 [0, 0, 1, 1, 2, 2] 예측시, 다 맞음.
+ - FP 예제: [0, 0, 1, 1, 2, 2] GT에서 [0, 0, 0, 0, 0, 0] 예측시, 0의 FP는 1번을 0으로 예측하고, 2를 0으로 예측한 것을 FP로 봄 (0을 0으로 예측한건 TP)  
+ - FN 예제: [0, 0, 1, 1, 2, 2] GT에서 [2, 2, 0, 0, 1, 1] 예측시, 각 레이블마다 고양이는 강아지라고, 자동차는 사람이라고 예측했는데 다 틀림.  
+
+
+
 {% highlight python %}
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
@@ -182,6 +188,10 @@ recalls (micro): 0.5
 ## Precision
 
 $$ \text{Precision} = \frac{TP}{TP + FP} = \frac{TP}{\text{Predicted Yes}} $$
+
+ - 단점: FP가 없는 경우 100% 맞은 것으로 나옴. 
+   - 아래 1의 경우, 다른 레이블 (0, 2, 3) 에서 어떠한 예측값에서 1이 없습니다. (False Positive가 없음) 
+   - 즉, "고양이" 예측을 단 한번만 맞추고, 다른 모든 예측 값을 "강아지"로 하면 precision은 100% 다 맞춘것으로 나옵니다. 
 
 {% highlight python %}
 from sklearn.metrics import precision_score
