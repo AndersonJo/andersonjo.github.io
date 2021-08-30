@@ -89,7 +89,7 @@ volume_df.tail()
 
 <img src="{{ page.asset_path }}bar-pandas-volume.png" class="img-responsive img-rounded img-fluid border rounded">
 
-## 1.4 Volume Bar (정확한 구현)
+## 1.4 Volume Bar (Python 구현)
 
 {% highlight python %}
 def build_bar(df_:pd.DataFrame, colume:str, size:int):
@@ -99,7 +99,7 @@ def build_bar(df_:pd.DataFrame, colume:str, size:int):
         _sum += row[colume]
         if _sum >= size:
             data.append(row)
-            _sum %= size
+            _sum = 0
     return pd.DataFrame(data)
 
 volume_df = build_bar(week_df, 'Volume', 20000000)
