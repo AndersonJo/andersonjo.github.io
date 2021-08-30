@@ -27,6 +27,12 @@ tags: ['time', 'volume', 'tick', 'dollar']
     - 같은 1000만원이더라도 주가에 따라서 수량이 크게 차이가 날수 있다. 
     - Dollar Bar는 이러한 문제를 해결한다
 
+
+사실.. Time Bar의 진짜 문제점은.. 헤지펀드사의 Fake 데이터입니다.<br>
+일반적인 retail trader가 대부분 어떤 알고리즘으로 짜여져 있는지 알고 있으며, <br>
+가짜 주문, 가짜 volume을 만들어내서 RSI 또는 Bollinger Bands를 속입니다. 
+
+
 ## 1.2 Data  
 
 {% highlight python %}
