@@ -330,7 +330,18 @@ RAID (Redundant Array of Independent Disk)는 그냥.. 여러개의 디스크를
    2. 최소 3개 디스크 필요 -> 일반적으로 5개 구성 
    3. 하드디스크 고장시 Pairty를 이용하여 복구 
 
+## 2.18 Disaster Recovery VS Fault Tolerance 차이는? 
 
+1. High Availability (고가용성)
+   1. 99.0 ~ 100% 사이의 고가용성을 갖는 시스템을 의미
+2. Fault Tolerance (내결함성)
+   1. High Availability 와 유사하지만, `zero downtime 을 보장`. 하지만 비용이 지나치게 크게 들 수 있다
+   2. 문제가 생겼을 경우 (하드웨어든 뭐든..) -> redundant device 로 바로 교체 -> 중복으로 장비를 준비해야 되기 때문에.. 비용 넘사벽
+   3. fault tolerance가 한글로 하면 장애 허용이라는 말인데.. 장애가 나더라도 다른 장비로 대체하기 때문임. -> 내팽겨치겠다는 뜻이 아님
+3. Disaster Recovery (재해복구)
+   1. disaster가 발생시 (허리케인, 지진, 홍수, 사이버 공격 등등) 시스템 정화하기 위한 일종의 `플랜`이라고 생각하면 됨.
+   2. 그외 복구에 걸리는 시간, Recovery point (체크포인트) 등을 설정해 놔야 함 (결국 백업 시스템)
+   3. 플랜안에는 High availability 시스템이 구현된다. 
 
 
 
