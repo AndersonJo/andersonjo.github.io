@@ -5,7 +5,7 @@ date:   2021-09-20 01:00:00
 categories: "experience"
 asset_path: /assets/images/
 tags: ['subnet', 'ip', 'cidr', 'cap', 'consistency', 'availability', 'lock', 'mutex', 'semaphore', 'nosql', 
-       'udp', 'tcp', 'acid', 'sso', 'kiss', 'sharding']
+       'udp', 'tcp', 'acid', 'sso', 'kiss', 'sharding', 'raid']
 ---
 
 계속 작성중 입니다. 
@@ -309,6 +309,26 @@ CI/CD는 다음과 같은 과정을 거치게 됩니다.
 데이터 유실을 크게 허용하거나, 복구 시간을 크게 가져가면 -> 비즈니스 리스크가 발생하게 됩니다. 
 
 
+
+## 2.17 RAID 설명 
+
+RAID (Redundant Array of Independent Disk)는 그냥.. 여러개의 디스크를 묶어서 마치 하나의 디스크 처럼 사용 하는 것을 의미 합니다.<br>
+
+0. RAID 0 
+   1. `스트라이프` 세트
+   2. 최소 2개 디스크 필요
+   3. 가장 빠름 
+   4. 저장시 데이터를 쪼개서 모든 디스크에 걸쳐서 write 한다 
+   5. 읽을때 여러 디스크가 동시에 읽기 때문에 빠름 
+1. RAID 1:
+   1. `미러링`
+   2. 최소 2개 디스크 필요
+   3. 하나가 고장나더라도 괜찮기 때문에 fault-torelence를 제공. 
+   4. 저장공간 효율은 떨어짐
+2. RAID 5 
+   1. RAID0 장점 + RAID1 장점 
+   2. 최소 3개 디스크 필요 -> 일반적으로 5개 구성 
+   3. 하드디스크 고장시 Pairty를 이용하여 복구 
 
 
 
