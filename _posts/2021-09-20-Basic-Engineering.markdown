@@ -366,6 +366,17 @@ MSA에서는 `Database Per Service`를 추구하기 때문에, 각 서비스별�
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 # 3. Software Engineering 101 for ML Engineers
 
 ## 3.1 Semaphore 그리고 Mutex의 차이점은? 
@@ -424,3 +435,20 @@ MSA에서는 `Database Per Service`를 추구하기 때문에, 각 서비스별�
 
 <img src="{{ page.asset_path }}public-key.jpg" class="img-responsive img-rounded img-fluid border rounded center">
 
+
+## 4.2 SSL/TLS handshake 방식 설명
+
+<img src="{{ page.asset_path }}ssl_ca.png" class="img-responsive img-rounded img-fluid border rounded center">
+
+
+1. Client Hello: 클라쪽 SSL버젼 정보, Cipher Suite list (지원하는 암호화 방식), 무작위 바이트 문자열 -> 서버로 보냄
+2. Server Hello: 암호화 방법 선택 이후 SSL Certificate, 무작위 바이트 문자열 -> 클라로 보냄 
+   1. 서버가 보낸 SSL Certificate에는 서버측 public key, 그리고 서비스 정보를 담고 있다
+3. CA에서 인증: 클라는 서버에서 SSL Certificate을 받았지만, 신뢰할수 있는지 확인하기 위해서 CA에서 확인을 하게 됨 
+   1. CA: certificate authority 로서 GeoTrust, IdenTrust를 의미 
+   2. 클라는 서버가 전달해준 certificate을 CA로 보버냄 
+   3. certificate에서 public key를 꺼내고 CA의 private key를 사용해서 encrypted data를 decrypt함 
+   4. decrypt가 잘됐다면 CA에서 인증한 certificate이기 때문에 신뢰함 
+4. 클라는 symmetric session key를 생성하고, 서버가 보내준 certificate에 존재하는 public key로 encrypt 함. -> 그리고 서버로 보냄
+5. 서버는 private key로 encrypted session key를 decrypt해서, symmetric session key 를 얻음 
+6. 이후! 클라와 서버는 symmetric session key로 서로 encrypt 또는 decrypt하면서 정보를 주고 받음. 

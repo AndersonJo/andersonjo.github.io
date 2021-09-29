@@ -4,7 +4,7 @@ title:  "OpenSSL Explained for Kubernetes"
 date:   2020-09-13 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
-tags: ['kubernetes', 'openssl', 'ssl', 'tsa', 'security', '보안', 'ca']
+tags: ['kubernetes', 'openssl', 'ssl', 'tsa', 'security', '보안', 'ca', 'encrypt', 'ssh']
 ---
 
 # 1. Symmetric Cryptography 
