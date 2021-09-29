@@ -8,6 +8,10 @@ tags: ['subnet', 'ip', 'cidr', 'cap', 'consistency', 'availability', 'lock', 'mu
        'udp', 'tcp', 'acid', 'sso', 'kiss', 'sharding', 'raid']
 ---
 
+<header>
+    <img src="{{ page.asset_path }}engineering-wallpaper.jpeg" class="center img-responsive img-rounded img-fluid">
+</header>
+
 계속 작성중 입니다. 
 
 # 1. Introduction
