@@ -5,7 +5,7 @@ date:   2021-09-20 01:00:00
 categories: "experience"
 asset_path: /assets/images/
 tags: ['subnet', 'ip', 'cidr', 'cap', 'consistency', 'availability', 'lock', 'mutex', 'semaphore', 'nosql', 
-       'udp', 'tcp', 'acid', 'sso', 'kiss', 'sharding', 'raid']
+       'udp', 'tcp', 'acid', 'sso', 'kiss', 'sharding', 'raid', 'ssl', 'https', 'public-key', 'kiss', 'saga', 'msa']
 ---
 
 <header>
