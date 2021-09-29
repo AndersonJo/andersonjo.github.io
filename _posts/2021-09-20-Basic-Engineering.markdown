@@ -369,8 +369,16 @@ MSA에서는 `Database Per Service`를 추구하기 때문에, 각 서비스별�
 따라서 해당 이벤트에 해당되는 구현을 따로 만들어줘야 합니다. (MSA에서는 이렇게 ㅠㅠ)<br>
 
 
+## AVRO VS ORC VS Parquet 차이에 대해서 설명 
 
+하둡에서 저장하는 타입으로서, 모두 binary format 이며, (json같은 형식과는 다르게) 여러개의 디스크로 나뉘어서 저장이 가능하다<br> 
+이로인해 확장성 그리고 동시처리가 가능하다. 
 
+<img src="{{ page.asset_path }}avro_orc_parquet.png" class="img-responsive img-rounded img-fluid border rounded center">
+
+1. Parquet 그리고 ORC는 column 기반으로 데이터를 저장하며, avro는 row 기반으로 저장. 
+   1. columns 기반: 특정 필드에 access가 빈번할때 빠름 / 큰 데이터를 읽어서 분석할때 최적 / 읽기 빠름
+   2. row 기반: 모든 필드에 접근이 필요한때 빠름 / 큰 데이터를 쓸때 최적 / 쓰기 빠름
 
 
 
