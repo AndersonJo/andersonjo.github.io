@@ -380,9 +380,19 @@ MSA에서는 `Database Per Service`를 추구하기 때문에, 각 서비스별�
    1. columns 기반: 특정 필드에 access가 빈번할때 빠름 / 큰 데이터를 읽어서 분석할때 최적 / 읽기 빠름
    2. row 기반: 모든 필드에 접근이 필요한때 빠름 / 큰 데이터를 쓸때 최적 / 쓰기 빠름
 
+## 2.21 WAF VS Firewall
 
+WAF (Web Applicagtion Firewall 일명 와프) 그리고 일반적인 Firewall의 차이는 다음과 같습니다. 
 
-
+1. WAF 
+   - `Layer 7 (Application Level)` 계층에서의 방어를 함 
+   - 기존 방화벽과는 다르게, packet의 내용(payload)를 검사하여 SQL Injection, Buffer OverFlow (BOF), CSRF 공격 등등 다양한 공격을 검사하여 차단합니다. 
+   - 외부로 유출하면 안되는 주민등록번호, 핸드폰등의 개인정보또한 검출하여 차단할수 있습니다. 
+   - 기존 방화벽은 HTTPS일 경우 암호화 되어 있기 때문에 내용을 볼수가 없지만, Layer 7 에서 방어하는 웹방화벽은 내용을 보고 방어를 할 수 있습니다. 
+2. Firewall
+   - `Layer 3 (Network Level)` 에서 방어를 함 
+   - 접근제어: 송/수신자의 IP 주소, 프로토콜 (TCP, UDP), 포트 번호를 기준으로 패킷 필터링을 합니다.
+   
 
 
 
