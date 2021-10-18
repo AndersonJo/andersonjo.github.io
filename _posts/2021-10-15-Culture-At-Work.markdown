@@ -7,6 +7,11 @@ asset_path: /assets/images/
 tags: []
 ---
 
+
+<header>
+    <img src="{{ page.asset_path }}coffee_keyboard.jpeg" class="center img-responsive img-rounded img-fluid">
+</header>
+
 # 1. Introducction 
 
 엔지니어로서 회사 생활을 하면서 격게 되는 많은 어려움들이 존재합니다.<br>
