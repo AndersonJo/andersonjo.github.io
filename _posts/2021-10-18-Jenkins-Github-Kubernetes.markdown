@@ -168,6 +168,15 @@ $ ssh -i ~/.ssh/zeta.pem ubuntu@54.167.240.88
 그리고 위에서 Jenkins 설치하듯이 하면 됩니다. 
 
 
+
+
+
+
+
+
+
+
+
 ## 3. Jenkins + Github Webhook
 
 ## 3.1 Creating GitHub Personal Access Token

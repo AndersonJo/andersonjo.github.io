@@ -9,8 +9,7 @@ tags: ['docker', 'hub', 'registry', 'aws']
 
 # 1. Tutorial  
 
-## 1.1 Create a Docker Image 
-
+## 1.1 Create a Docker Image
 
 **index.html**
 
@@ -72,6 +71,24 @@ $ docker run -d --name hello-nginx -p 8080:80 -t hello-nginx
 {% endhighlight %}
 
 이후 localhost:8080 으로 접속해서 확인
+
+## 1.2 Create User for ECR
+
+먼저 좌측 메뉴에서 IAM User -> Access Management -> Users 선택후 Add User 버튼으로 새로운 유저를 생성합니다.<br>
+권한은 다음이 필요합니다. 
+
+ - AWSAppRunnerServicePolicyForECRAccess
+
+{% highlight bash %}
+$ sudo apt install awscli
+$ aws configure
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}jenkins-21.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+
+
+
 
 ## 1.2 Create ECR Repository
 
