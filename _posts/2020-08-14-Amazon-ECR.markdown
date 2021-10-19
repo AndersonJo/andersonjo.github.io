@@ -77,7 +77,8 @@ $ docker run -d --name hello-nginx -p 8080:80 -t hello-nginx
 먼저 좌측 메뉴에서 IAM User -> Access Management -> Users 선택후 Add User 버튼으로 새로운 유저를 생성합니다.<br>
 권한은 다음이 필요합니다. 
 
- - AWSAppRunnerServicePolicyForECRAccess
+ - ~~AWSAppRunnerServicePolicyForECRAccess~~
+ - AmazonEC2ContainerRegistryFullAccess
 
 이후 configure 시에 다음과 같이 하면 됩니다.<br>
 특히 Jenkins 등에서 자동으로 빌드할 경우 사용할 수 있습니다. 

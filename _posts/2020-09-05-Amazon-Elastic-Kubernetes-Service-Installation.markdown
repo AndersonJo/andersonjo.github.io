@@ -96,10 +96,21 @@ $ sudo mv /tmp/eksctl /usr/local/bin
 ## 2.5 Kubectl
 
 {% highlight bash %}
-$ curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+$ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+$ echo "$(<kubectl.sha256) kubectl" | sha256sum --check
+kubectl: OK
+
+$ # curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
 $ # curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/kubectl
-$ chmod +x ./kubectl
-$ sudo mv ./kubectl /usr/local/bin
+$ # chmod +x ./kubectl
+$ # sudo mv ./kubectl /usr/local/bin
+{% endhighlight %}
+
+kubectl 을 설치 합니다. 
+
+{% highlight bash %}
+$ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 {% endhighlight %}
 
 설치 확인은 버젼 체크로 할 수 있습니다.
