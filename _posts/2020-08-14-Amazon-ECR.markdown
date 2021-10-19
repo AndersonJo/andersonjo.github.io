@@ -90,7 +90,7 @@ $ aws configure
 
 
 
-## 1.2 Create ECR Repository
+## 1.3 Create ECR Repository
 
 Amazon ECR 메뉴에서 Create Repository를 누릅니다.
 
@@ -111,7 +111,7 @@ Amazon ECR 메뉴에서 Create Repository를 누릅니다.
  - **us-east-2**: Region
  - **/test**: Repository 이름
 
-## 1.3 Authenticate to ECR Registry
+## 1.4 Authenticate to ECR Registry
 
 Amazon ECR로 `docker push` 또는 `docker pull` 을 하기 위해서는 Authentication이 필요합니다.<br>
 Docker가 Amazon ECR로 authentication하기 위해서 AWS CLI의 `get-login-password` 명령어를 사용할수 있습니다.<br>
@@ -129,7 +129,7 @@ $ aws ecr get-login-password --region us-east-2 | docker login --username AWS --
 {% endhighlight %}
 
 
-## 1.4 Push & Pull an image to Amazon ECR 
+## 1.5 Push & Pull an image to Amazon ECR 
 
 Image tag 부터 만들어준 후, Push명령어를 합니다. 
 
