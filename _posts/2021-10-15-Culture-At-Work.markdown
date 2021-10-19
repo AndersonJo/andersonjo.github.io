@@ -2,7 +2,7 @@
 layout: post
 title:  "엔지니어의 회사 생활 101"
 date:   2021-10-15 01:00:00
-categories: "engineering"
+categories: "life"
 asset_path: /assets/images/
 tags: []
 ---
