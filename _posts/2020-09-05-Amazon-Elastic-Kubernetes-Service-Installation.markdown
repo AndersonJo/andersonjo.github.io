@@ -126,15 +126,21 @@ $ eksctl version
 
 
 
+
+
+
+
+
 # 3. Cluster 생성/로그인
 
 ## 3.1 IAM Settings 
 
 1. [IAM Console](https://console.aws.amazon.com/iam/) 로 접속합니다.
 2. Roles -> Create Role 
-3. 서비스 리스트 중에서 EKS 선택 -> EKS 관련 Permission 선택
+3. <img src="{{ page.asset_path }}eks-cluster-role.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333"> 
+4. 서비스 리스트 중에서 EKS 선택 -> EKS 관련 Permission 선택
    - [`AmazonEKSClusterPolicy`](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy%24jsonEditor) 는 반드시 선택
-4. Role name은 eksRole, eksServiceRole 등등 적합한 단어로 생성
+5. Role name은 eksRole, eksServiceRole 등등 적합한 단어로 생성
 
 <img src="{{ page.asset_path }}eks-iam-eks-cluster-review.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
 
