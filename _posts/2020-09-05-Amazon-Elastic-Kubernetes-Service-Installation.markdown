@@ -81,30 +81,17 @@ INFO - Success! Your credentials will expire in 43200 seconds at: 2020-09-26 22:
 {% endhighlight %}
 
 
- 
-## 2.4 EKSCTL
+## 2.4 Kubectl
 
-EKSCTL은 Amazon EKS의 공식 CLI툴입니다. 
-
-* [EKSCTL Github](https://github.com/weaveworks/eksctl)
-
-{% highlight bash %}
-$ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-$ sudo mv /tmp/eksctl /usr/local/bin
-{% endhighlight %}
-
-## 2.5 Kubectl
+EKS 의 경우 [링크](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html) 를 참고 합니다.<br>
+아래의 명령어는 EKS for Kubernetes 1.21.2를 기준으로 작성하였습니다. <br>
+참고만 하고, 버젼변경은 링크를 참고 합니다. 
 
 {% highlight bash %}
-$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-$ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-$ echo "$(<kubectl.sha256) kubectl" | sha256sum --check
-kubectl: OK
-
-$ # curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-$ # curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/kubectl
-$ # chmod +x ./kubectl
-$ # sudo mv ./kubectl /usr/local/bin
+$ curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+$ chmod +x ./kubectl
+$ mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+$ kubectl version --short --client
 {% endhighlight %}
 
 kubectl 을 설치 합니다. 
@@ -113,24 +100,30 @@ kubectl 을 설치 합니다.
 $ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 {% endhighlight %}
 
-설치 확인은 버젼 체크로 할 수 있습니다.
-
-{% highlight bash %}
-$ kubectl version --short
-Client Version: v1.19.3
-Server Version: v1.17.9-eks-4c6976
-{% endhighlight %}
-
 .bashrc 에 다음의 넣습니다.
 
 {% highlight bash %}
-# kubectl autocomplete
+``# kubectl autocomplete
 source <(kubectl completion bash)
 
 # kubectl shorthand 
 alias k=kubectl
-complete -F __start_kubectl k
+complete -F __start_kubectl k``
 {% endhighlight %}
+
+
+## 2.5 EKSCTL
+
+EKSCTL은 Amazon EKS의 공식 CLI툴입니다. 
+
+* [EKSCTL Github](https://github.com/weaveworks/eksctl)
+
+{% highlight bash %}
+$ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+$ sudo mv /tmp/eksctl /usr/local/bin
+$ eksctl version
+{% endhighlight %}
+
 
 
 # 3. Cluster 생성/로그인
