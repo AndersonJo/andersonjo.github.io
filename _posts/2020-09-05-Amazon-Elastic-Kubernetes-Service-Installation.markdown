@@ -323,7 +323,7 @@ Cluster를 생성시 Amazon EKS는 kubectl같은 툴로 커뮤니케이션 할 �
 
 그 다음으로 managed node group을 생성합니다. 
 
-1. [Amazon EKS Console](https://console.aws.amazon.com/eks/home#/clusters) 열고 ->  Cluster 선택 -> Compute 탭 -> Add Node Group 선택   
+1. [Amazon EKS Console](https://console.aws.amazon.com/eks/home#/clusters) 열고 ->  Cluster 선택 -> Configuration -> Compute -> Add Node Group 버튼   
 2. Step3 Specify networking
    - subnets: Cloud Formation으로 생성한 subnets을 선택
    - Allow remote access to nodes: 생성후에 enable 시킬수 없고, SSH 접속이 안되니, 이건 거의 반드시 enable 시키고 시작함
