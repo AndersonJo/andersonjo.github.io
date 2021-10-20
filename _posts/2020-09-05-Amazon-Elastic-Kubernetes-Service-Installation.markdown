@@ -163,10 +163,15 @@ $ eksctl version
 
 1. 먼저 [CloudFormation](https://console.aws.amazon.com/cloudformation/)으로 접속 -> Create Stack -> With new resources(standard) 선택
 2. 다음과 같이 선택하고 S3 URL을 넣습니다. <br>
-   ```
-   https://amazon-eks.s3.us-west-2.amazonaws.com/cloudformation/2020-08-12/amazon-eks-vpc-private-subnets.yaml
-   ```
+   1. Public and Private subnets<br> 
+      ```https://amazon-eks.s3.us-west-2.amazonaws.com/cloudformation/2020-08-12/amazon-eks-vpc-private-subnets.yaml```
+   2. Only Public subnets<br>
+      ```https://amazon-eks.s3.us-west-2.amazonaws.com/cloudformation/2020-10-29/amazon-eks-vpc-sample.yaml```
+   3. Only Private subnets<br>
+      ```https://amazon-eks.s3.us-west-2.amazonaws.com/cloudformation/2020-10-29/amazon-eks-fully-private-vpc.yaml```
+   
    <img src="{{ page.asset_path }}eks-cloudformation-select-s3-template.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+   
 3. 나머지는 Subnets CIDR정도만 수정하고, 리뷰하고 생성 
 4. 중요한점은 모두 생성되고나서, Outputs를 보고 SecurityGroups, SubnetIds, VpcId 을 따로 기록해둡니다. (Kubernetes생성시 사용) <br><br>
    <img src="{{ page.asset_path }}eks-cloudformation-outputs.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
