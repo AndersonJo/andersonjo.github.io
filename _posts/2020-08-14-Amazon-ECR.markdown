@@ -2,7 +2,7 @@
 layout: post
 title:  "Amazon Elastic Container Registry (ECR)"
 date:   2020-08-14 01:00:00
-categories: "aws"
+categories: "kubernetes"
 asset_path: /assets/images/
 tags: ['docker', 'hub', 'registry', 'aws']
 ---
