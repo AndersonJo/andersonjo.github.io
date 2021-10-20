@@ -162,7 +162,7 @@ $ eksctl version
 본문에서는 Two public subnets 그리고 two private subnets 생성과 관련을 설명하겠습니다. 
 
 1. 먼저 [CloudFormation](https://console.aws.amazon.com/cloudformation/)으로 접속 -> Create Stack -> With new resources(standard) 선택
-2. 다음과 같이 선택하고 S3 URL을 넣습니다. <br>
+2. S3 URL을 넣습니다. [링크](https://docs.aws.amazon.com/eks/latest/userguide/create-public-private-vpc.html) (문서에서는 Public and Private subnets 을 선택했습니다.) <br>
    1. Public and Private subnets<br> 
       ```https://amazon-eks.s3.us-west-2.amazonaws.com/cloudformation/2020-08-12/amazon-eks-vpc-private-subnets.yaml```
    2. Only Public subnets<br>
