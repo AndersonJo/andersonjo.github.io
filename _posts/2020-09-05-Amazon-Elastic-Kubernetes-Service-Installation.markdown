@@ -268,7 +268,7 @@ amazon-k8s-cni:v1.6.3-eksbuild.1
 아래의 코드는 지역 상관없이 1.7을 설치하는 예제 입니다. 
 
 {% highlight bash %}
-$ curl -o aws-k8s-cni.yaml https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/master/config/v1.7/aws-k8s-cni.yaml
+$ curl -o aws-k8s-cni.yaml https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/master/config/v1.9/aws-k8s-cni.yaml
 $ sed -i -e 's/us-west-2/<region-code>/' aws-k8s-cni.yaml
 $ kubectl apply -f aws-k8s-cni.yaml
 {% endhighlight %}
