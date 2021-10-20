@@ -56,7 +56,8 @@ Amazon EKS는 IAM을 사용해서 EKS Cluter에 대한 authentication을 [aws-ia
 {% highlight bash %}
 $ curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/aws-iam-authenticator
 $ chmod +x ./aws-iam-authenticator
-$ sudo cp ./aws-iam-authenticator /usr/local/bin/
+$ mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$PATH:$HOME/bin
+$ aws-iam-authenticator version
 {% endhighlight %}
 
 ## 2.3 AWS MFA 
@@ -202,10 +203,16 @@ $ aws eks get-token --cluster-name {CLUSTER_NAME} | jq .status.token
 `~/.kube/admin.conf` 또는 `~/.kube/config` 파일을 자동으로 생성하기 위해서는 아래의 명령어를 사용합니다.
 
 - `--role-arn <IAM role ARN>` : 해당 option을 추가해서 authentication을 사용할 수 있습니다.
-jo
+  - 내부적으로 Cluster를 생성한 유저나 Role을 Kubernetes RBAC 에 매핑시킵니다. 
+  - --role-arn 옵션을 줘야지만, kubectl 명령어시 authentication이 잘 될 수 있습니다. 
+
 {% highlight bash %}
-$ aws eks --region <us-west-2> update-kubeconfig --name <cluster_name>
+$ aws eks --region <us-west-2> update-kubeconfig --name <cluster_name> --role-arn arn:aws:iam:<aws_account_id>:role/<role_name>
+# 예제는 다음과 같습니다. 
 {% endhighlight %}
+
+
+
 
 kubectl명령어가 잘되는지 확인을 해 봅니다. 
 

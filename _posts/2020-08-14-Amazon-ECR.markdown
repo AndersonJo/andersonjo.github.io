@@ -79,6 +79,7 @@ $ docker run -d --name hello-nginx -p 8080:80 -t hello-nginx
 
  - ~~AWSAppRunnerServicePolicyForECRAccess~~
  - AmazonEC2ContainerRegistryFullAccess
+ - AmazonEKSClusterPolicy (EKS시에 필요)
 
 이후 configure 시에 다음과 같이 하면 됩니다.<br>
 특히 Jenkins 등에서 자동으로 빌드할 경우 사용할 수 있습니다. 
