@@ -7,8 +7,10 @@ asset_path: /assets/images/
 tags: ['aws', 'mfa', 'otp', 'authentication', 'eks', 'kubeflow', 'dashboard', 'login', '로그인']
 ---
 
-# 1. Introduction
- 
+# 1. Preparation
+
+## 1.1 What is EKS 
+
 Amazon EKS (Elastic Kubernetes Service)는 가장 손쉽게 Kubernetes를 바로 돌릴수 있는 서비스 입니다. <br>
 EKS는 AWS안의 다른 서비스와 연결되어서 scalability 그리고 security 등을 제공하고 있습니다. 대표적으로 ..
 
@@ -18,6 +20,42 @@ EKS는 AWS안의 다른 서비스와 연결되어서 scalability 그리고 secur
  - Amazon VPC: Isolation
  
 EKS는 각 클러스터마다 각각의 control plane을 운영하며, control plane은 최소 2개의 API server nodes 를 가용하며, 3개의 etcd nodes를 가용합니다. 
+
+## 1.2 Iam User 생성
+
+1. `Iam -> Users -> Add users` 버튼을 누릅니다. <br>
+2. User name: 당신의 영어 이름 넣습니다. 
+3. Access key - Programmatic access 체크 합니다. 
+4. Password - AWS Management Console access 체크 합니다. (암호도 넣습니다.)
+
+<img src="{{ page.asset_path }}eks-20.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+
+Set permissions 에서는 다음을 추가 합니다.
+
+- AdministratorAccess
+
+
+## 1.3 Iam Role 생성
+
+1. Roles -> Create Role <br> Role을 생성합니다. <br>
+   <img src="{{ page.asset_path }}eks-cluster-role.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+2. 서비스 리스트 중에서 EKS 선택 -> EKS - Cluster 선택 <br>
+   - [`AmazonEKSClusterPolicy`](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy%24jsonEditor) 는 반드시 선택
+
+<img src="{{ page.asset_path }}eks-iam-eks-cluster-review.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
+  
+
+## 1.4 Logout 하고 -> 새로 생성한 User로 로그인 하기! 
+
+만약 Root User라면 로그아웃하고 -> 새로 생성한 Iam User로 다시 재로그인 합니다. <br>
+
+참고로..<br>
+EKS 생성시, 만든 사람 이외의 다른 모든 사람들은 EKS Cluster 접근이 불가능해집니다. <br>
+이유는 생성한 Iam User가 Kubernetes RBAC에 등록되기 때문입니다.
+
+
+
+
 
 
 # 2. Installation
@@ -134,17 +172,6 @@ $ eksctl version
 
 # 3. Cluster 생성/로그인
 
-## 3.1 IAM Settings 
-
-1. [IAM Console](https://console.aws.amazon.com/iam/) 로 접속합니다.
-2. Roles -> Create Role 
-3. <img src="{{ page.asset_path }}eks-cluster-role.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333"> 
-4. 서비스 리스트 중에서 EKS 선택 -> EKS - Cluster 선택
-   - [`AmazonEKSClusterPolicy`](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy%24jsonEditor) 는 반드시 선택
-5. Role name은 eksRole, eksServiceRole 등등 적합한 단어로 생성
-
-<img src="{{ page.asset_path }}eks-iam-eks-cluster-review.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">
-
 ## 3.2 Create Cluster VPC with Cloud Formation 
 
  * Cluster생성시에 VPC subnets을 지정해야 하며, EKS는 최소 2 availability zones을 선택해야 합니다. 
@@ -202,12 +229,12 @@ $ aws eks get-token --cluster-name {CLUSTER_NAME} | jq .status.token
 물론 위의 명령어를 사용해서 [kubeconfig 파일은 manual](https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html)로 만들어 줄 수도 있습니다.<br>
 `~/.kube/admin.conf` 또는 `~/.kube/config` 파일을 자동으로 생성하기 위해서는 아래의 명령어를 사용합니다.
 
-- `--role-arn <IAM role ARN>` : 해당 option을 추가해서 authentication을 사용할 수 있습니다.
+  - `--role-arn arn:aws:iam:<aws_account_id>:role/<role_name>` : 해당 option을 추가해서 authentication을 사용할 수 있습니다.
   - 내부적으로 Cluster를 생성한 유저나 Role을 Kubernetes RBAC 에 매핑시킵니다. 
   - --role-arn 옵션을 줘야지만, kubectl 명령어시 authentication이 잘 될 수 있습니다. 
 
 {% highlight bash %}
-$ aws eks --region <us-west-2> update-kubeconfig --name <cluster_name> --role-arn arn:aws:iam:<aws_account_id>:role/<role_name>
+$ aws eks --region <us-west-2> update-kubeconfig --name <cluster_name> 
 # 예제는 다음과 같습니다. 
 {% endhighlight %}
 
