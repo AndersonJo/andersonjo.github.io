@@ -79,6 +79,8 @@ $ ssh -i ~/.ssh/zeta.pem ubuntu@54.167.240.88
 
 
 
+
+
 # 2. Jenkins
 
 ## 2.1 Installation
@@ -176,6 +178,37 @@ bf283■■■■■■■■■■■■■■■■■■■ee24
 
 
 
+## 2.7 Set AWS Credentials 
+
+1. 가장 쉽게 credentials을 알아내는 방법은.. `cat ~/.aws/credentials` 명령어로 이미 설정되어 있는 credentials 을 꺼내는 것입니다.
+2. 또는 IAM -> Users -> Security credentials -> Create Access Key 를 생성할수 있습니다. 
+
+그래서 필요한건 `ACCESS KEY` 그리고 `SECRET KEY` 두개 입니다. 
+
+Jenkins에서 설정은 다음과 같이 합니다.
+
+1. Dashboard -> Manage Jenkins -> Manage Credentials
+2. 아래와 같은 화면에서 Stores -> `(global)` 누릅니다. -> 누르면 왼쪽에 `Add Credentials` 를 누릅니다. 
+
+<img src="{{ page.asset_path }}jenkins-58.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+
+생성은 다음과 같이 참고해서 만듭니다.<br>
+ID (jenkins-aws-anderson-credentials) 는 Jenkins Pipeline에서 다시 사용 됩니다. 
+
+<img src="{{ page.asset_path }}jenkins-57.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+
+
+
+
+
+
+
+
+
+
+
 # 3. Jenkins + Github Webhook
 
 ## 3.1 Creating GitHub Personal Access Token
@@ -264,7 +297,7 @@ Gtihub Repository에 들어가서, 다음과 같이 설정 합니다.<br>
 
 
 
-# 4. Jenkins Pipeline
+# 4. Jenkins Pipeline and ECR
 
 ## 4.1 신규 아이템 생성
 
@@ -283,7 +316,7 @@ Gtihub Repository에 들어가서, 다음과 같이 설정 합니다.<br>
 <img src="{{ page.asset_path }}jenkins-56.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
-## 4.2 Jenkinsfile Main Structure
+## 4.2 Jenkinsfile & Docker Build & Push to ECR
 
 jenkinsfile 은 그냥 텍스트 파일이고, 크게 3가지로 구성되어 있습니다.<br>
 Groovy syntax 를 갖고 있으며, stage, 그리고 step 명령어 구조화하며,<br> 
@@ -291,75 +324,144 @@ credentials을 통해서 secret key등을 환경변수에서 가져올 수 있�
 
 자세한 것은 [Documentation](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/)을 참고 합니다.
 
+Jenkinsfile 파일은 해당 github repository에 넣으면 됩니다. (Jenkins 어딘가 X)
+Git Push를 하면, webhook으로 Jenkins에서 전달받게 되고, 해당 git repository를 checkout하게 됩니다.<br>
+이후 Jenkins는 모두 다 다운받은후 -> 아래 빌드를 순차적으로 하게 됩니다. 
+
 {% highlight groovy %}
-pipeline {
-    agent any
-    environment {
-        AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+ECR_REGION = 'us-east-1'
+ECR_PATH = '826443632289.dkr.ecr.us-east-1.amazonaws.com'
+ECR_IMAGE = 'jenkins-test'
+
+app = docker.build("${ECR_PATH}/${ECR_IMAGE}")
+echo "app: ${app}"
+
+node {
+    stage('Clone Repository'){
+        checkout scm
     }
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building..'
-            }
+
+    stage('Build to ECR'){
+        // Docker Build and Push to ECR
+        docker.withRegistry("https://${ECR_PATH}", 'ecr:us-east-1:jenkins-aws-anderson-credentials'){
+            def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_ID}")
+            image.push()
         }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
+    }
+    stage('Kubernetes'){
+        
     }
 }
 {% endhighlight %}
 
+아래 그림은 성공적으로 진행됐을 경우의 Jenkins 화면입니다. 
+
+<img src="{{ page.asset_path }}jenkins-59.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
-## 4.2 Build Docker Image 
 
 
-{% highlight groovy %}
-pipeline {
-    agent {
-    }
-    environment {
-        AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
-    }
-    stages {
-        stage('Build Docker Image') {
-            steps {
-        } 
-        }
-        stage('Build') {
-            steps {
-                echo 'Building..'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
-    }
-}
+
+
+
+
+
+
+# 5. Kubernetes and Jenkins
+
+## 5.1 New Service Account for Jenkins
+
+Jenkins에서 Kubernetes Cluster로 deploy할 수 있도록 Service Account를 새로 만들어 줍니다. 
+
+{% highlight bash %}
+$ kubectl create sa jenkins-deployer
+$ kubectl create clusterrolebinding jenkins-deployer-role --clusterrole==cluster-admin --serviceaccount=default:jenkins-deployer
+$ kubectl get secrets
+NAME                           TYPE                                  DATA   AGE
+default-token-7b6nf            kubernetes.io/service-account-token   3      16h
+jenkins-deployer-token-vgsfj   kubernetes.io/service-account-token   3      2m41s
+{% endhighlight %}
+
+다음 명령어로 새로 만들어진  credentials을 복사합니다. 
+
+{% highlight bash %}
+$ kubectl describe secret jenkins-deployer-token-vgsfj
 {% endhighlight %}
 
 
+<img src="{{ page.asset_path }}jenkins-72.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
 
+## 5.2 Credentials 을 Jenkins에 등록
 
+- Manage Jenkins -> Manage Credentials -> 아무거나 (global) 선택 -> Add Credentials 선택 
+- 여기서는 이름을 kubectl-deploy-credentials 로 하였음
+
+<img src="{{ page.asset_path }}jenkins-73.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+
+## 5.3 다필요없고 제일 쉬운 방법
+
+문제가 되는 부분이 jenkins 유저로 돌아갈때 kubectl 이 안되는 문제가 있는데.. <br>
+아직까지 이걸 되게 만드려면 매우 어려움이 있다. 
+따라서 그냥 제일 쉽게 하는 방법은 그냥 jenkins 유저로 접속해서 미리 인증 받아놓는 것이다. 
+
+먼저 기존 ACCESS KEY 그리고 SECRET KEY를 파악한다. 
+
+{% highlight bash %}
+$ cat ~/.aws/credentials 
+[default]
+aws_access_key_id = AKIA4A27BB2QXSFEVPOE
+aws_secret_access_key = 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
+{% endhighlight %}
+
+이후 jenkins 유저로 접 속해서 인증한다
+
+{% highlight bash %}
+$ sudo su jenkins
+$ aws configure
+AWS Access Key ID [****************VPOE]: 
+AWS Secret Access Key [****************5Vq/]: 
+Default region name [us-east-1]: 
+Default output format [json]:
+{% endhighlight %}
+
+`aws eks --region <us-west-2> update-kubeconfig --name <cluster_name>` 명령어로 authentication 한다
+
+{% highlight bash %}
+$ aws eks --region us-east-1 update-kubeconfig --name My-EKS
+{% endhighlight %}
+
+현재까지는 이게 가장 쉬운 방법이고, EKS와 기존 plugin이 작동을 잘 안함. <br>
+일단은 이렇게 쓰는게 쉽게 해결하는 방법. 
+
+왜 안되냐하면.. EKS는 내부적으로 `aws-iam-authenticator` 를 사용하는데..<br>
+그냥 Kubernetes에 맞춰져 있는 플러그인 사용시 EKS 인증이 안됨. 
+
+
+## 5.4 Kubernetes Plugin
+
+Jenkins에서 Kubernetes plugin을 설치합니다. 
+
+ - **Kubernetes Plugin** 
+ - **Kubernetes CLI**
+
+<img src="{{ page.asset_path }}jenkins-70.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+<img src="{{ page.asset_path }}jenkins-71.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+
+## 5.5 최종 확인
+
+{% highlight bash %}
+$ kubectl get svc
+NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)        AGE
+kubernetes                   ClusterIP      10.100.0.1       <none>                                                                    443/TCP        17h
+nginx-service-loadbalancer   LoadBalancer   10.100.160.221   a171eb183b72a45d8a93a11eab57c1bb-1295299660.us-east-1.elb.amazonaws.com   80:31063/TCP   13h
+{% endhighlight %}
+
+external IP로 들어간후.. nginx text 내용 변경하면.. 변경된 내용 배포됨
 
 
 
