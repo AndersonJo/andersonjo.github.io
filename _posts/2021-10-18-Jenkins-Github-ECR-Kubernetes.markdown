@@ -463,6 +463,10 @@ nginx-service-loadbalancer   LoadBalancer   10.100.160.221   a171eb183b72a45d8a9
 
 external IP로 들어간후.. nginx text 내용 변경하면.. 변경된 내용 배포됨
 
+<img src="{{ page.asset_path }}jenkins-74.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+<img src="{{ page.asset_path }}jenkins-75.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
 
 
 
