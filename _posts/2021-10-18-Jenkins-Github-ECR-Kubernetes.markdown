@@ -452,6 +452,42 @@ Jenkins에서 Kubernetes plugin을 설치합니다.
 <img src="{{ page.asset_path }}jenkins-71.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
+## 5.5 Pipeline
+
+{% highlight groovy %}
+EKR_API = 'https://2ABF4B00A5858CE072BD19CE13ADCCA3.gr7.us-east-1.eks.amazonaws.com'
+ECR_REGION = 'us-east-1'
+ECR_PATH = '826443632289.dkr.ecr.us-east-1.amazonaws.com'
+ECR_IMAGE = 'jenkins-test'
+
+app = docker.build("${ECR_PATH}/${ECR_IMAGE}")
+echo "app: ${app}"
+
+node {
+    stage('Clone Repository'){
+        checkout scm
+    }
+
+    stage('Build to ECR'){
+        // Docker Build and Push to ECR
+        docker.withRegistry("https://${ECR_PATH}", 'ecr:us-east-1:jenkins-aws-anderson-credentials'){
+            def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_ID}")
+            image.push()
+        }
+    }
+    stage('Kubernetes'){
+        withKubeConfig([credentialsId: "kubectl-deploy-credentials",
+                        serverUrl: "${EKR_API}",
+                        namespace: 'default',
+                        clusterName: 'My-EKS']){
+
+            sh "sed 's/IMAGE_VERSION/${env.BUILD_ID}/g' nginx-deployment.yaml > output.yaml"
+            sh "kubectl apply -f output.yaml"
+        }
+    }
+}
+{% endhighlight %}
+
 ## 5.5 최종 확인
 
 {% highlight bash %}
