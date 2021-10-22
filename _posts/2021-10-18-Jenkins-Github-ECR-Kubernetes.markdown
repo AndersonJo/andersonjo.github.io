@@ -104,7 +104,16 @@ $ sudo apt update
 $ sudo apt install jenkins
 {% endhighlight %}
 
-## 2.2 Starting Jenkins
+## 2.2 Docker Permission for Jenkins
+
+Jenkins에서 docker를 실행할 수 있도록 해줘야 합니다.
+
+{% highlight bash %}
+sudo usermod -a -G docker jenkins
+sudo chmod 777 /var/run/docker.sock
+{% endhighlight %}
+
+## 2.3 Starting Jenkins
 
 systemctl 로 시작하고, status를 통해서 상태를 확인합니다. 
 
@@ -114,7 +123,7 @@ $ sudo systemctl status jenkins
 {% endhighlight %}
 
 
-## 2.3 OpenSSH
+## 2.4 OpenSSH
 
 {% highlight bash %}
 $ sudo apt-get install openssh-server
@@ -124,7 +133,7 @@ $ sudo systemctl start ssh
 
 설치이후 `ssh user@localhost` 같은 명령어로 테스트 해봅니다. 
 
-## 2.4 Configure Firewall (Optional)
+## 2.5 Configure Firewall (Optional)
 
 아래 코드는 ssh (port 22) 그리고 8080 포트를 여는 명령어 입니다. <br>
 AWS는 Security Group에서 하면 됨으로 패스합니다. 
@@ -136,7 +145,7 @@ $ sudo ufw allow ssh
 $ sudo ufw allow 8080
 {% endhighlight %}
 
-## 2.5 Setting Up Jenkins
+## 2.6 Setting Up Jenkins
 
 `http://jenkins_server_ip_address:8080` 으로 접속시 다음과 화면이 보이고, 암호를 넣어야 합니다.<br>
 암호는 아래에서 보이는 명령어로 꺼내서 복사 붙여넣기 합니다. 
@@ -166,19 +175,21 @@ bf283■■■■■■■■■■■■■■■■■■■ee24
 
 
 
-## 2.6 Plugins
+## 2.7 Plugins
 
 1. Manage Jenkins -> Manage Plugins 
 2. 다음을 설치 합니다. 
-   1. **`Docker Pipeline`**
-   2. **`Amazon ECR plugin`**
+   1. **`CloudBees AWS Credentials Plugin`**
+   2. **`Docker Pipeline`**
+   3. **`Amazon ECR plugin`**
+   4. **`Kubernetes CLI`**
    
 
 <img src="{{ page.asset_path }}jenkins-33.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
 
-## 2.7 Set AWS Credentials 
+## 2.8 Set AWS Credentials 
 
 1. 가장 쉽게 credentials을 알아내는 방법은.. `cat ~/.aws/credentials` 명령어로 이미 설정되어 있는 credentials 을 꺼내는 것입니다.
 2. 또는 IAM -> Users -> Security credentials -> Create Access Key 를 생성할수 있습니다. 
@@ -211,7 +222,20 @@ ID (jenkins-aws-anderson-credentials) 는 Jenkins Pipeline에서 다시 사용 �
 
 # 3. Jenkins + Github Webhook
 
-## 3.1 Creating GitHub Personal Access Token
+## 3.1 Webhook 설정
+
+Gtihub Repository에 들어가서, 다음과 같이 설정 합니다.<br>
+위치는 `Repository -> Settings -> Webhooks`
+
+
+ - Jenkins 주소에 `/github-webhook/` 을 붙여줍니다. 
+   - 예) `http://34.227.49.74:8080/github-webhook/`
+   - 중요한점은 끝에 슬래쉬가 반드시 들어가야 합니다.
+
+<img src="{{ page.asset_path }}jenkins-20.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+
+## 3.2 Creating GitHub Personal Access Token
 
 Github의 우측상단에 자신의 프로필 사진을 누르고, `Setting -> Developer Settings -> Personal Access Tokens` 메뉴를 누릅니다.<br>
 이름 넣어주고, scopes은 다음과 같이 선택합니다. 
@@ -223,6 +247,7 @@ Github의 우측상단에 자신의 프로필 사진을 누르고, `Setting -> D
 
 생성하면 랜덤 문자열 같은게 생성 됩니다.  <br>
 복사해서 Jenkins에 복사해줍니다. 
+
 
 
 ## 3.2 Jenkins Credential
@@ -247,40 +272,6 @@ Credential 추가를 눌러서, Github에서 생성한 personal access token을 
 New Item 생성을 하며, Freestyle 을 선택합니다 .
 
 <img src="{{ page.asset_path }}jenkins-10.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
-
-
-Repository URL에 git 주소를 넣어줍니다. <br>
-여기서는 https://github.com/AndersonJo/jenkins-tutorial.git 넣었습니다.<br>
-추가적으로 branch 입력시 master 인지 main 인지도 확실하게 해줘야 합니다.
-
-<img src="{{ page.asset_path }}jenkins-11.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
-
-Credential 생성시에는 Login ID, Password 로 생성합니다. <br>
-
-<img src="{{ page.asset_path }}jenkins-16.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
-
-Build Triggers 에서는 `GitHub hook trigger for GITScm polling` 을 선택합니다.<br>
-GitHub에 코드가 push되면 빌드를 하도록 설정하는 것 입니다. <br> 
-
-push를 날리게 되면, GitHub에서 webhook 메세지를 Jenkins에 보내게 되며, <br> 
-webhook 메세지를 받은 Jenkins는 이때부터 빌드를 진행하게 됩니다.
-
-
-<img src="{{ page.asset_path }}jenkins-12.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
-
-
-## 3.4 Webhook 설정
-
-Gtihub Repository에 들어가서, 다음과 같이 설정 합니다.<br>
-위치는 `Repository -> Settings -> Webhooks`
-
-
- - Jenkins 주소에 `/github-webhook/` 을 붙여줍니다. 
-   - 예) `http://34.227.49.74:8080/github-webhook/`
-   - 중요한점은 끝에 슬래쉬가 반드시 들어가야 합니다.
-
-<img src="{{ page.asset_path }}jenkins-20.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
-
 
 
 
@@ -316,6 +307,35 @@ Gtihub Repository에 들어가서, 다음과 같이 설정 합니다.<br>
 <img src="{{ page.asset_path }}jenkins-56.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
+
+Repository URL에 git 주소를 넣어줍니다. <br>
+여기서는 https://github.com/AndersonJo/jenkins-tutorial.git 넣었습니다.<br>
+추가적으로 branch 입력시 master 인지 main 인지도 확실하게 해줘야 합니다.
+
+<img src="{{ page.asset_path }}jenkins-11.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+<span style="color:red">**Credential 생성시에는 Login ID, Password 로 생성합니다.**<br>
+(Secret Text로 하면 Jenkins 버그로 인해서 dropbox에서 보이지 않는 일이 발생합니다. <br>
+반드시 Github UserID 그리고 Password로 해야 합니다. <br>
+또한 유저ID는 이메일이 아니라 Github UserID로 해야 합니다.<br>
+예를 들어 제 Github UserID는 **AndersonJo** 입니다. )
+</span> <br>
+관련된 버그는 [링크](https://github.com/jenkinsci/ghprb-plugin/issues/534) 에서 확인 가능합니다. 
+
+<img src="{{ page.asset_path }}jenkins-16.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+Build Triggers 에서는 `GitHub hook trigger for GITScm polling` 을 선택합니다.<br>
+GitHub에 코드가 push되면 빌드를 하도록 설정하는 것 입니다. <br> 
+
+push를 날리게 되면, GitHub에서 webhook 메세지를 Jenkins에 보내게 되며, <br> 
+webhook 메세지를 받은 Jenkins는 이때부터 빌드를 진행하게 됩니다.
+
+
+<img src="{{ page.asset_path }}jenkins-12.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+
+
+
+
 ## 4.2 Jenkinsfile & Docker Build & Push to ECR
 
 jenkinsfile 은 그냥 텍스트 파일이고, 크게 3가지로 구성되어 있습니다.<br>
@@ -329,24 +349,13 @@ Git Push를 하면, webhook으로 Jenkins에서 전달받게 되고, 해당 git 
 이후 Jenkins는 모두 다 다운받은후 -> 아래 빌드를 순차적으로 하게 됩니다. 
 
 {% highlight groovy %}
-ECR_REGION = 'us-east-1'
-ECR_PATH = '826443632289.dkr.ecr.us-east-1.amazonaws.com'
-ECR_IMAGE = 'jenkins-test'
-
-app = docker.build("${ECR_PATH}/${ECR_IMAGE}")
-echo "app: ${app}"
-
 node {
     stage('Clone Repository'){
         checkout scm
     }
 
     stage('Build to ECR'){
-        // Docker Build and Push to ECR
-        docker.withRegistry("https://${ECR_PATH}", 'ecr:us-east-1:jenkins-aws-anderson-credentials'){
-            def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_ID}")
-            image.push()
-        }
+
     }
     stage('Kubernetes'){
         
@@ -369,9 +378,13 @@ node {
 
 # 5. Kubernetes and Jenkins
 
-## 5.1 New Service Account for Jenkins
+## 5.1 Get EKS Cluster Token
 
-Jenkins에서 Kubernetes Cluster로 deploy할 수 있도록 Service Account를 새로 만들어 줍니다. 
+Jenkins에서 EKS Cluster에 deploy할 수 있도록 Cluster Token을 Jenkins에 넣어 줘야 합니다. <br>
+두가지 중의 하나입니다. <br>
+그냥 default로 있는 secret 사용하던가 또는 새로 Service Account를 만들어서 사용하는 방법입니다.<br> 
+중요한건 default로 사용하던 새로운 Service Account 사용하던, Token 잘 꺼내서 넣어주면 됩니다. 
+
 
 {% highlight bash %}
 $ kubectl create sa jenkins-deployer
@@ -454,14 +467,26 @@ Jenkins에서 Kubernetes plugin을 설치합니다.
 
 ## 5.5 Pipeline
 
-{% highlight groovy %}
-EKR_API = 'https://2ABF4B00A5858CE072BD19CE13ADCCA3.gr7.us-east-1.eks.amazonaws.com'
-ECR_REGION = 'us-east-1'
-ECR_PATH = '826443632289.dkr.ecr.us-east-1.amazonaws.com'
-ECR_IMAGE = 'jenkins-test'
+ - EKS_API: EKS Cluster -> 당신의 Cluster -> API server endpoint 
+   - 예) `https://D5B994D3CB7B91D8FED3D60B2A7674FA.gr7.us-east-1.eks.amazonaws.com`
+ - EKS_CLUSTER_NAME: EKS Cluster의 이름
+   - 예) `EKS-AI-Cluster`
+ - EKS_NAMESPACE: 적용하려는 kubernetes의 namespace
+ - EKS_JENKINS_CREDENTIAL_ID
+   - `kubectl get secrets`
+   - `kubectl describe secret default-token-k7bst`
+ - ECR_REGION: ECR Region을 적으면 됨
+ - ECR_PATH: ECR로 가서 Repository의 URI을 가져오되 `/repository-name` 은 제거한다
+   - 만약 `826443632289.dkr.ecr.us-east-1.amazonaws.com/jenkins-ecr` 이라면 <br>`826443632289.dkr.ecr.us-east-1.amazonaws.com` 까지만 적는다
 
-app = docker.build("${ECR_PATH}/${ECR_IMAGE}")
-echo "app: ${app}"
+{% highlight groovy %}
+REGION = 'us-east-1'
+EKS_API = 'https://D5B994D3CB7B91D8FED3D60B2A7674FA.gr7.us-east-1.eks.amazonaws.com'
+EKS_CLUSTER_NAME='EKS-Cluster'
+EKS_NAMESPACE='default'
+EKS_JENKINS_CREDENTIAL_ID='kubectl-deploy-credentials'
+ECR_PATH = '826443632289.dkr.ecr.us-east-1.amazonaws.com'
+ECR_IMAGE = 'jenkins-ecr'
 
 node {
     stage('Clone Repository'){
@@ -470,18 +495,18 @@ node {
 
     stage('Build to ECR'){
         // Docker Build and Push to ECR
-        docker.withRegistry("https://${ECR_PATH}", 'ecr:us-east-1:jenkins-aws-anderson-credentials'){
+        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:jenkins-aws-anderson-credentials"){
             def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_ID}")
             image.push()
         }
     }
     stage('Kubernetes'){
         withKubeConfig([credentialsId: "kubectl-deploy-credentials",
-                        serverUrl: "${EKR_API}",
-                        namespace: 'default',
-                        clusterName: 'My-EKS']){
+                        serverUrl: "${EKS_API}",
+                        clusterName: "${EKS_CLUSTER_NAME}"]){
 
             sh "sed 's/IMAGE_VERSION/${env.BUILD_ID}/g' nginx-deployment.yaml > output.yaml"
+            sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
             sh "kubectl apply -f output.yaml"
         }
     }
