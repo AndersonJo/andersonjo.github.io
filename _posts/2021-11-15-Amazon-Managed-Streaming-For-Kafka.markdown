@@ -2,7 +2,7 @@
 layout: post 
 title:  "AWS MSK (Managed Streaming for Apache Kafka)"
 date:   2021-11-15 01:00:00 
-categories: "machine-learning"
+categories: "data-engineering"
 asset_path: /assets/images/ 
 tags: []
 ---
