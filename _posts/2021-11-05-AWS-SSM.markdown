@@ -1,0 +1,85 @@
+---
+layout: post 
+title:  "AWS SSM"
+date:   2021-11-05 01:00:00 
+categories: "aws"
+asset_path: /assets/images/ 
+tags: []
+---
+
+# 1. Architecture
+
+왼쪽은 SSH 로 접속시이고, 오른쪽은 SSM으로 연결했을때 입니다.
+
+<img src="{{ page.asset_path }}ssm_01.png" class="center img-responsive img-rounded img-fluid">
+
+
+## 1.2 SSM 의 장점
+
+1. Bastion Host 필요 없어진다
+
+
+# 2. Setting Up
+
+## 2.1 Installation on Local
+
+아래는 Ubuntu에서의 설치 방법입니다. 
+
+{% highlight bash %}
+# Intel 64
+$ curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+
+# ARM 64
+$ curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_arm64/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+{% endhighlight %}
+
+설치합니다.
+
+{% highlight bash %}
+$ sudo dpkg -i session-manager-plugin.deb
+$ session-manager-plugin
+{% endhighlight %}
+
+
+## 2.2 SSM Agent on EC2
+
+EC2 Instance 로 접속을 합니다.
+
+{% highlight bash %}
+$ sudo snap switch --channel=candidate amazon-ssm-agent
+$ sudo snap install amazon-ssm-agent --classic
+
+$ sudo systemctl start snap.amazon-ssm-agent.amazon-ssm-agent.service
+$ sudo systemctl status snap.amazon-ssm-agent.amazon-ssm-agent.service
+
+$ sudo snap start amazon-ssm-agent
+$ sudo snap services amazon-ssm-agent
+{% endhighlight %}
+
+## 2.3 Role
+
+1. IAM
+   1. Roles 선택 -> Create Role
+   2. 추가할 Policies
+      1. AmazonSSMManagedInstanceCore
+      2. AmazonSSMDirectoryServiceAccess
+      3. CloudWatchAgentServerPolicy
+   3. Name: ssm-instance-profile 
+2. EC2
+   1. SSM으로 접속할 Instance 선택
+   2. Actions -> Security -> Modify IAM Role
+   3. ssm-instance-profile 추가
+
+
+
+## 2.4 Connect to EC2
+
+EC2 접속은 다음과 같이 합니다. 
+
+{% highlight bash %}
+$ aws ssm start-session --region us-east-2 --target i-abc12345
+{% endhighlight %}
+
+
+## 2.5 Tunneling
+

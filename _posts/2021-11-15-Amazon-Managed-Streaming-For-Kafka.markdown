@@ -217,7 +217,7 @@ MSK의 가장 큰 문제점은 역시.. 외부에서 topic 연결이 안된다�
 이를 해결하는 방법은 많은데.. 제가 사용하는 방법은 그냥 ssh tunneling을 사용하는 것 입니다.
 
 기본적으로 `ssh -i aws.pem -N -L {local port}:{MSK Broker}:9092 ubuntu@{EC2 address}` 이렇게 사용합니다.<br>
-예제에서는 3개의 broker를 사용하기 때문에.. 아래의 내용을 3번 해주면 됩니다. 
+예제에서는 3개의 broker를 사용하기 때문에.. "-L {local port}:{MSK Broker}:9092" 방식으로 추가를 더 해주면 됩니다. 
 
 {% highlight bash %}
 ssh -i ~/.ssh/aws.pem -N -L 9093:b-3.kafka-test.allwn4.c3.kafka.us-east-2.amazonaws.com:9092 ubuntu@ec2-5-20-100-100.us-east-2.compute.amazonaws.com
