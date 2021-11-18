@@ -1,0 +1,69 @@
+---
+layout: post 
+title:  "OpenVPN on EC2"
+date:   2021-11-10 01:00:00 
+categories: "aws"
+asset_path: /assets/images/ 
+tags: []
+---
+
+# 1. Installation
+
+## 1.1 Docker
+
+아래 링크를 보면서 docker를 설치합니다. <br>
+[https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/) 
+
+아래 링크를 통해서 docker compose를 설치합니다.<br>
+[https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
+
+## EC2 Security Group
+
+- Inbound
+  - UDP / 1194 가 열려 있어야 합니다. source 부분을 현재 IP Address 또는 회사 주소로 해 놓습니다.
+
+
+## 1.3 OpenVPN on EC2
+
+아래 링크를 참조해서 OpenVPN을 설치합니다. 
+
+[https://github.com/kylemanna/docker-openvpn](https://github.com/kylemanna/docker-openvpn)
+
+아래 코드 중에서 `VPN.SERVERNAME.COM` 를 실제 EC2 host 로 변경해 줍니다.<br>
+예를 들어서 ec2-11-11-111-111.ap-northeast-2.compute.amazonaws.com 같은 주소입니다. 
+
+
+{% highlight bash %}
+$ export OVPN_DATA="/home/ubuntu/openvpn/"
+$ docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM
+$ docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+{% endhighlight %}
+
+ - passphrase: 대충 암호 넣습니다. 
+ - comman name: 그냥 엔터
+
+{% highlight bash %}
+$ docker run -v $OVPN_DATA:/etc/openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn
+
+# 실행중단시 자동으로 restart하게 만듭니다.
+$ docker update --restart=always {docker_container_id}
+{% endhighlight %}
+
+암호없는 Client Certificate 을 생성합니다.<br>
+awsvpn 은 적절한 이름으로 수정을 합니다. <br> 
+
+{% highlight bash %}
+$ docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full awsvpn nopass
+{% endhighlight %}
+
+Client configuration 파일을 docker에서 꺼냅니다. 
+
+{% highlight bash %}
+$ docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient awsvpn > awsvpn.ovpn
+{% endhighlight %}
+
+Local computer에서 awsvpn.ovpn 을 가져옵니다.
+
+{% highlight bash %}
+$ scp -i ~/.ssh/gifting-ml-dev.pem ubuntu@ec2-11-11-111-111.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/awsvpn.ovpn ./
+{% endhighlight %}

@@ -168,15 +168,24 @@ export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
 
 
 {% highlight bash %}
+# EC2 Instance
+# 2.8.1 인 경우
 $ wget https://archive.apache.org/dist/kafka/2.8.1/kafka_2.12-2.8.1.tgz
+
+# 2.6.2 인 경우
+$ wget https://archive.apache.org/dist/kafka/2.6.2/kafka_2.12-2.6.2.tgz
+
 $ tar -xzf kafka_2.12-2.8.1.tgz
 $ cd kafka_2.12-2.8.1
 {% endhighlight %}
 
+
+다시 로컬 환경으로 와서 ZookeeperConnectString 값을 확인합니다. <br>
 CLUSTER ARN을 복사하고 다음의 명령어로 클러스터를 확인합니다.<br>
 CLUSTER_ARN은 변경해야 합니다.
 
 {% highlight bash %}
+# Local Computer
 $ aws kafka describe-cluster --region us-east-2 --cluster-arn CLUSTER_ARN 
 {% endhighlight %}
 
@@ -185,13 +194,15 @@ $ aws kafka describe-cluster --region us-east-2 --cluster-arn CLUSTER_ARN
 다음의 명령어로 Zookeeper Connect 를 알아냅니다. 
 
 {% highlight bash %}
-$ aws kafka describe-cluster --region us-east-2 --cluster-arn `CLUSTER ARN` | | grep ZookeeperConnectString
+# Local Computer
+$ aws kafka describe-cluster --region us-east-2 --cluster-arn CLUSTER ARN | grep ZookeeperConnectString
 {% endhighlight %}
 
 다음과 같이 생성합니다. <br>
 ZookeeperConnectString 부분은 위에서 grep으로 잡은 전체 정보를 넣어야 합니다. 
 
 {% highlight bash %}
+# EC2 Instance 
 $ bin/kafka-topics.sh --create --zookeeper ZookeeperConnectString --replication-factor 3 --partitions 1 --topic TestTopic
 Created topic TestTopic.
 {% endhighlight %}
@@ -202,6 +213,7 @@ Created topic TestTopic.
 아래에서 ClusterArn 는 수정해야 합니다.
 
 {% highlight bash %}
+# Local 
 $ aws kafka get-bootstrap-brokers --region us-east-2 --cluster-arn ClusterArn
 {
     "BootstrapBrokerString": "b-2.kafka-test.allwn4.c3.kafka.us-east-2.amazonaws.com:9092,b-1.kafka-test.allwn4.c3.kafka.us-east-2.amazonaws.com:9092,b-3.kafka-test.allwn4.c3.kafka.us-east-2.amazonaws.com:9092",
@@ -223,6 +235,8 @@ MSK의 가장 큰 문제점은 역시.. 외부에서 topic 연결이 안된다�
 ssh -i ~/.ssh/aws.pem -N -L 9093:b-3.kafka-test.allwn4.c3.kafka.us-east-2.amazonaws.com:9092 ubuntu@ec2-5-20-100-100.us-east-2.compute.amazonaws.com
 {% endhighlight %}
 
+> 근데 실제 사용해보니.. SSH Tunneling은 매우 느립니다.<br>
+> 가장 쉽게 해결할수 있는 방법은 EC2에 OpenVPN을 설치해서 연결하는게 가장 편리합니다. 
 
 ## 3.4 Connection from outside 
 
