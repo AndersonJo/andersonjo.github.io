@@ -260,20 +260,44 @@ import json
 from kafka import KafkaProducer
 
 def produce():
-producer = KafkaProducer(
+    producer = KafkaProducer(
         acks=0,
         bootstrap_servers=[
-            'localhost:9091'
-            'localhost:9092',
-            'localhost:9093'],
+            'a-1.kafka-dev.a11111.c4.kafka.ap-northeast-2.amazonaws.com:9092',
+            'a-2.kafka-dev.a11111.c4.kafka.ap-northeast-2.amazonaws.com:9092',
+            'a-3.kafka-dev.a11111.c4.kafka.ap-northeast-2.amazonaws.com:9092',
+        ],
         api_version=(2, 8, 1),
         value_serializer=lambda x: json.dumps(x).encode('utf-8'))
 
     for i in range(10):
         print(f'Sending: {i}')
-        producer.send('TestTopic', value=f'test {i}')
-    producer.flush()
+        r = producer.send('TestTopic', value=f'test {i}')
+        producer.flush()
+{% endhighlight %}
 
-if __name__ == '__main__':
-    produce()
+Consumer 코드는 다음과 같습니다.<br>
+
+
+{% highlight python %}
+import json
+from kafka import KafkaConsumer
+
+def consume():
+    consumer = KafkaConsumer(
+        'TestTopic',
+        bootstrap_servers=[
+            'a-1.kafka-dev.a11111.c4.kafka.ap-northeast-2.amazonaws.com:9092',
+            'a-2.kafka-dev.a11111.c4.kafka.ap-northeast-2.amazonaws.com:9092',
+            'a-3.kafka-dev.a11111.c4.kafka.ap-northeast-2.amazonaws.com:9092',
+        ],
+        api_version=(2, 8, 1),
+        auto_offset_reset='earliest',
+        group_id='my-group',
+        enable_auto_commit=True,
+        value_deserializer=lambda x: json.dumps(x).encode('utf-8'))
+
+    for message in consumer:
+        print(message)
+
 {% endhighlight %}
