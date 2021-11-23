@@ -383,7 +383,6 @@ MSA에서는 `Database Per Service`를 추구하기 때문에, 각 서비스별�
 
 
 
-
 # 3. Software Engineering 101 for ML Engineers
 
 ## 3.1 Semaphore 그리고 Mutex의 차이점은? 
