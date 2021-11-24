@@ -1,7 +1,7 @@
 ---
 layout: post 
 title:  "Incremental Batch Transfer from AWS RDS to BigQuery"
-date:   2021-11-22 01:00:00 
+date:   2021-09-22 01:00:00 
 categories: "data-engineering"
 asset_path: /assets/images/ 
 tags: []
