@@ -113,6 +113,10 @@ t1 = BigQueryCreateEmptyTableOperator(
 
 <img src="{{ page.asset_path }}airflow_connection_01.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
+추가적으로..
+ - time_partitioning: 파티셔닝
+ - gcs_schema_object: `gs://test-bucket/dir1/dir2/employee_schema.json` 처럼 GCS에서 가져오게 할 수도 있다
+
 # 2. AWS
 
 ## 2.1 Assume Role
