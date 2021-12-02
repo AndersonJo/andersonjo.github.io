@@ -305,6 +305,15 @@ data:
 
 
 
+수정된 내용으로 업그레이드를 합니다. <br>
+아래 명령어는 몇분 이상이 소요 될 수 있습니다. 
+
+{% highlight bash %}
+$ helm upgrade --install airflow apache-airflow/airflow -f values.yaml --namespace airflow \
+    --set images.airflow.repository=123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow \
+    --set images.airflow.tag=0.0.1
+{% endhighlight %}
+
 
 
 
