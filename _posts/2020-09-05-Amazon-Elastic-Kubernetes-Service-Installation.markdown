@@ -315,7 +315,7 @@ Cluster를 생성시 Amazon EKS는 kubectl같은 툴로 커뮤니케이션 할 �
 3. Permissions 은 다음을 선택합니다. 
    - `AmazonEKSWorkerNodePolicy`
    - `AmazonEKS_CNI_Policy` 
-   - `AmazonEC2ContainerRegistryReadOnly` 
+   - `AmazonEC2ContainerRegistryReadOnly`  (ECR에서 반드시 필요)
 6. Next: Tags 클릭
 7. Role Name: `EKSNodeInstanceRole` 등의 유니크한 이름 생성 <br><br>
    <img src="{{ page.asset_path }}eks-managed-node-iam-role.png" class="img-responsive img-rounded img-fluid" style="border: 2px solid #333333">

@@ -148,9 +148,48 @@ airflow scheduler
 
 
 
+## 1.4 Debug Executor 
+
+PyCharm 에서 바로 사용 가능 합니다.
+
+{% highlight python %}
+if __name__ == "__main__":
+    from airflow.utils.state import State
+
+    dag.clear(dag_run_state=State.NONE)
+    dag.run()
+{% endhighlight %}
 
 
-## 1.4 Settings 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 2. Example
+
+## 2.1 Settings 
 
 대부분의 설정할 내용들은 `~/airflow/airflow.cfg`  에 모두 있습니다. 
 
@@ -176,7 +215,22 @@ airflow scheduler
 
 
 
-## 1.5 Example
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 2.2 Example
 
 `~/airflow/dags/my_dag.py` 에 작성합니다. 
 
@@ -216,13 +270,13 @@ with DAG('my_dag',
                       retries=3)
 
     templated_command = dedent(
-        """
+        """{% raw %}
         {% for i in range(5) %}
             echo "{{ ds }}"
             echo "{{ macros.ds_add(ds, 7)}}"
             echo "{{ params.my_param }}"
         {% endfor %}
-        """)
+        {% endraw %}""")
 
     t3 = BashOperator(task_id='template',
                       depends_on_past=False,
