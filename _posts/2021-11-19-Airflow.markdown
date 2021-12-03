@@ -129,12 +129,13 @@ airflow users create \
 airflow webserver --port 8080
 {% endhighlight %}
 
-
-로컬 환경에서 그냥 연습용으로는 standalone 도 나쁘지 않습니다. 
+기본 예제를 불러오지 않을려면 airflow.cfg 에서 아래처럼 수정합니다. 
 
 {% highlight  bash %}
-airflow standalone
+load_examples = False
 {% endhighlight %}
+
+
 
 스케쥴러 실행은 다음과 같이 합니다.
 
