@@ -10,7 +10,7 @@ tags: ['assumerole', 'role', 'iam', 'aws', 's3', 'sts']
 
 # 1. Connections
 
-## 1.1 MySQL
+## 1.1 MySQL (AWS RDS)
 
 **Airflow Connection**
 

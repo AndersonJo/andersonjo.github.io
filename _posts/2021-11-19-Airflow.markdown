@@ -57,12 +57,6 @@ pip install 'apache-airflow[all]'
 {% endhighlight %}
 
 
-airflow standalone 을 실행시키면, ~/airflow 디렉토리가 생기고, airflow.cfg 도 생성됩니다.
-
-{% highlight bash %}
-$ airflow standalone
-{% endhighlight %}
-
 
 ## 1.2 Setting Up Database Backend
 
@@ -120,6 +114,8 @@ auth_backend = airflow.api.auth.backend.basic_auth
 ## 1.3 Initialize DB and Webserver
 
 {% highlight  bash %}
+# 예제 없이 설치
+export AIRFLOW__CORE__LOAD_EXAMPLES=False
 airflow db init
 
 airflow users create \
