@@ -22,6 +22,7 @@ tags: []
 {% highlight bash %}
 $ aws eks --region <ap-northeast-2> update-kubeconfig --name <cluster_name>
 $ kubectl cluster-info
+$ kubectl config get-contexts
 {% endhighlight %}
 
 **ECR**도 이미 생성되어 있는 것으로 가정하겠습니다. <br>
@@ -33,6 +34,8 @@ $ aws ecr get-login-password --region {region} | docker login --username AWS --p
 
 
 ## 1.2 Helm Chart
+
+아래와 같이 설치를 합니다. 
 
 {% highlight bash %}
 # Namespace 생성 
@@ -61,7 +64,7 @@ $ helm list -n airflow
 설치를 다하게 되면 위에 있는 것처럼 Airflow에 접속할 수 있습니다.
 
 - Webserver: `kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow`
-  - default Username: `admin`
+  - default Username: `admin`kubectl cluster-info
   - default Password: `admin`
 - Postgre Connection
   - default Username: `postgres`
@@ -87,16 +90,75 @@ $ kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
 
 
 
-# 2. Production Airflow 
 
-## 2.1 Adding DAGs
+
+
+
+
+
+
+
+
+
+# 2. Production Airflow
+
+## 2.1 values.yaml 
+
+먼저 values.yaml 을 파일로 다운받습니다.<br>
+이후 values.yaml파일 안에서 모든 설정들을 하시면 됩니다.
+
+{% highlight bash %}
+$ mkdir my-airflow-project && cd my-airflow-project
+$ mkdir dags  # put dags here
+$ helm show values apache-airflow/airflow > values.yaml
+{% endhighlight %}
+
+## 2.2 Webserver Secret Key
+
+Static Webserver Secret Key 를 설정해두면, Chart로 디플로이시에 Airflow Components들은 오직 필요할때만 restart하게 됩니다.<br>
+
+### 2.2.1 Python으로 Secret Key 생성
+
+첫번째 방법은 Python으로  Secret Key 를 생성해서 넣어주는 방식입니다. 
+
+{% highlight python %}
+$ python3 -c 'import secrets; print(secrets.token_hex(16))'
+{% endhighlight %}
+
+values.yaml 파일을 열어서 아래와 같이 설정합니다.
+
+{% highlight yaml %}
+webserverSecretKey: <secret key>
+{% endhighlight %}
+
+### 2.2.2 Kubernetes Secret Key 사용
+
+두번째 방법은 Kubernetes Secret을 사용하는 방법입니다.<br> 
+values.yaml 파일을 열어서 아래와 이름을 지정합니다.
+
+{% highlight yaml %}
+webserverSecretKeySecretName: airflow-webserver-secret-key
+{% endhighlight %}
+
+{% highlight bash %}
+# 먼저 기존 secret 삭제
+# kubectl delete secrets airflow-webserver-secret-key
+
+# Secret Key 생성
+$ kubectl create secret generic airflow-webserver-secret-key -n airflow \
+    --from-literal="webserver-secret-key=$(python3 -c 'import secrets; print(secrets.token_hex(16))')"
+    
+$ kubectl get secrets
+NAME                           TYPE                                  DATA   AGE
+airflow-webserver-secret-key   Opaque                                1      41s
+{% endhighlight %}
+
+
+## 2.3 Adding DAGs
 
 dags 디렉토리에 DAG파일을 추가시키면 됩니다.
 
 {% highlight bash %}
-mkdir my-airflow-project && cd my-airflow-project
-mkdir dags  # put dags here
-
 cat <<EOM > Dockerfile
 FROM apache/airflow
 COPY . .
@@ -172,9 +234,10 @@ Docker Build 시키고 배포합니다.
 $ docker build --tag my-dags:0.0.1 .
 $ docker tag my-dags:0.0.1 123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow
 $ docker push 123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow
-$ helm upgrade airflow apache-airflow/airflow --namespace airflow \
+$ helm upgrade airflow apache-airflow/airflow -f values.yaml --namespace airflow \
     --set images.airflow.repository=123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow \
-    --set images.airflow.tag=0.0.1
+    --set images.airflow.tag=0.0.1 \
+    --timeout 30m
 {% endhighlight %}
 
 port-forward를 통해서 Airflow Webserver에 접속합니다. 
@@ -188,11 +251,11 @@ $ kubectl port-forward svc/airflow-webserver 8080:8080 -n airflow
 <img src="{{ page.asset_path }}airflow_simple_dag.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
-## 2.2 Configure Airflow
 
-{% highlight bash %}
-$ helm show values apache-airflow/airflow > values.yaml
-{% endhighlight %}
+
+
+## 2.4 Configure Airflow
+
 
 values.yaml 의 주요 설정 요소들은 다음과 같습니다. <br>
 복사 붙여넣기가 아니라.. 각각 따로따로 찾아서 수정해야 합니다.
@@ -238,16 +301,19 @@ $ kubectl get configmap -n airflow
 values.yaml 을 배포후 확인합니다.
 
 {% highlight bash %}
-$ helm upgrade --install airflow apache-airflow/airflow -n airflow -f values.yaml  --debug
+$ helm upgrade airflow apache-airflow/airflow -f values.yaml --namespace airflow \
+    --set images.airflow.repository=123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow \
+    --set images.airflow.tag=0.0.1 \
+    --timeout 30m
 $ kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
 {% endhighlight %}
 
 
-## 2.3 External DB
+## 2.5 External DB
 
 외부에서 생성하는 Database로 설정해주는 것이 좋습니다.<br>
 
-### 2.3.1 PostgreSQL
+### 2.5.1 PostgreSQL
 
 
 PostgreSQL를 Kubernetes에 올리고, Airflow를 설정해주는 것을 해보겠습니다.
@@ -312,6 +378,7 @@ data:
 $ helm upgrade --install airflow apache-airflow/airflow -f values.yaml --namespace airflow \
     --set images.airflow.repository=123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow \
     --set images.airflow.tag=0.0.1
+$ kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
 {% endhighlight %}
 
 
@@ -322,7 +389,7 @@ $ helm upgrade --install airflow apache-airflow/airflow -f values.yaml --namespa
 
 
 
-### ~~2.3.2 MariaDB Database for External DB~~
+### ~~2.5.2 MariaDB Database for External DB~~
 
 <span style="color:red">**일단 MariaDB는 안되는 것 같습니다. 포트연결에서 문제 발생함**</span>
 
@@ -395,7 +462,7 @@ $ helm upgrade --install airflow apache-airflow/airflow -f values.yaml --namespa
 {% endhighlight %}
 
 
-## 2.4 Delete External Database
+## 2.6 Delete External Database
 
 **삭제**시에는 다음과 같이 합니다.<br>
 중요한건 persistent volume 도 동시에 삭제 해야 합니다.
@@ -412,4 +479,6 @@ $ kubectl get persistentvolume -n airflow
 $ kubectl delete persistentvolume -n airflow <mariadb persistenvolume ID>
 {% endhighlight %}
 
+
+## 2.7 Deployment
 
