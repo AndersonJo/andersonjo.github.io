@@ -21,6 +21,12 @@ tags: ['assumerole', 'role', 'iam', 'aws', 's3', 'sts']
 - Login: User 이름
 - Password: 패스워드
 - Port: 3306
+- Extra: `{"charset": "utf8mb4", "database_type": "mysql", "use_proxy": false}`
+
+Extra 부분에서 charset이 중요합니다. <br> 
+이유는 일단 airflow 는 SQL을 encoding시에 latin1으로 하는듯 합니다. (즉 기본값이 utf-8 아닙니다.)<br>
+utf8mb4 가 안되면 utf-8 도 해보면 됩니다. 
+
 
 **Connection Test**
 
