@@ -187,6 +187,7 @@ $ wget https://archive.apache.org/dist/kafka/2.6.2/kafka_2.12-2.6.2.tgz
 
 $ tar -xzf kafka_2.12-2.8.1.tgz
 $ sudo mv kafka_2.12-2.8.1 /usr/local/kafka
+$ sudo chown anderson:anderson -R /usr/local/kafka
 {% endhighlight %}
 
 
