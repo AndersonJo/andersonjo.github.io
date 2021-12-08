@@ -183,7 +183,10 @@ plugin.path=/usr/local/kafka/plugins
 Distributed Mode 로 Connector를 실행시킵니다. 
 
 {% highlight bash %}
+# production 에서 daemon 으로 돌릴려면.. -daemon 을 맨 앞에 넣어서 돌리면 됨
+# connect-distributed.sh -daemon connect-distributed.properties
 $ connect-distributed.sh connect-distributed.properties
+
 
 # 정상적으로 작동하는지 확인합니다.
 $ curl -s localhost:8083 | jq
