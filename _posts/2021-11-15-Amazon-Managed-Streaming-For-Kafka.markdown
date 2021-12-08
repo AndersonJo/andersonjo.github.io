@@ -26,7 +26,7 @@ tags: []
   - CLI 또는 SDK를 통해서 control-plane operations 을 수행할수 있습니다. 
   - 예를 들어 cluster 생성, 삭제 또는 클러스터 리스팅, 클러스터 속성 보기, 또는 Broker 변경등을 수행할 수 있습니다. 
 
-# 2. VPC Configureation
+# 2. AWS MSK Cluster
 
 ## 2.1 Create a VPC for MSK Cluster
 
@@ -108,9 +108,7 @@ MSK 서비스로 이동후 Create Cluster 를 누릅니다.
 
 
 
-# 3. Create Topic
-
-## 3.1 Create EC2 
+## 2.4 Create EC2 & Security Group Configuration
 
 AWS MSK는 좀 특이하게도.. 외부 접속이 되지를 않습니다.<br> 
 내부적으로, MSK는 VPC zone 내부에 존재하고 있으며 Zookeep, broker url은 private ip로 사용됩니다. <br> 
@@ -148,7 +146,18 @@ VPC 내부의 EC2를 생성해서 접속해야 합니다.
 
 
 
-## 3.1 Installation
+
+
+
+
+
+
+
+
+
+# 3. Kafka Client and Topic
+
+## 3.1 Installing Kafka Client
 
 .bashrc 에 다음과 같이 `JAVA_HOME`을 설정해 줍니다. 
 
@@ -161,7 +170,8 @@ $ sudo apt install mlocate
 다음의 내용을 ~/.bashrc 에 넣습니다. 
 
 {% highlight bash %}
-export PATH=$PATH:/home/ubuntu/.local/bin/
+# KAFKA 
+export PATH=$PATH:/home/ubuntu/.local/bin/:/usr/local/kafka/bin
 export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
 {% endhighlight %}
 
@@ -176,26 +186,80 @@ $ wget https://archive.apache.org/dist/kafka/2.8.1/kafka_2.12-2.8.1.tgz
 $ wget https://archive.apache.org/dist/kafka/2.6.2/kafka_2.12-2.6.2.tgz
 
 $ tar -xzf kafka_2.12-2.8.1.tgz
-$ cd kafka_2.12-2.8.1
+$ sudo mv kafka_2.12-2.8.1 /usr/local/kafka
 {% endhighlight %}
 
 
-다시 로컬 환경으로 와서 ZookeeperConnectString 값을 확인합니다. <br>
-CLUSTER ARN을 복사하고 다음의 명령어로 클러스터를 확인합니다.<br>
-CLUSTER_ARN은 변경해야 합니다.
+## 3.2 Installing Local Kafka Server (optional)
 
-{% highlight bash %}
-# Local Computer
-$ aws kafka describe-cluster --region us-east-2 --cluster-arn CLUSTER_ARN 
+Kafka Server를 설치합니다.<br>
+이 부분은 local 실행을 어떻게 하는지 남기기 위해서 남기는 것이고, 현재 MSK를 사용하기 때문에 그냥 패스해도 됩니다.<br>
+Zookeeper 와 Kafka service 에 대한 systemd unit files 을 생성합니다.<br>
+이를 통해서 kafka service 를 start/stop 명령어로 좀 더 쉽게 관리할수 있도록 합니다. <br>
+
+
+Kafka Systemd Unit File 을 생성합니다. <br>
+`sudo vim /etc/systemd/system/zookeeper.service` 으로 열고 아래와 같이 설정합니다.
+
+{% highlight yaml %}
+[Unit]
+Description=Apache Zookeeper server
+Documentation=http://zookeeper.apache.org
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/kafka/bin/zookeeper-server-start.sh /usr/local/kafka/config/zookeeper.properties
+ExecStop=/usr/local/kafka/bin/zookeeper-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
 {% endhighlight %}
 
-## 3.2 Create Topic
+`sudo vim /etc/systemd/system/kafka.service` 으로 열고 아래와 같이 설정합니다. 
 
-다음의 명령어로 Zookeeper Connect 를 알아냅니다. 
+{% highlight yaml %}
+[Unit]
+Description=Apache Kafka Server
+Documentation=http://kafka.apache.org/documentation.html
+Requires=zookeeper.service
+
+[Service]
+Type=simple
+Environment="JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64"
+ExecStart=/usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties
+ExecStop=/usr/local/kafka/bin/kafka-server-stop.sh
+
+[Install]
+WantedBy=multi-user.target
+{% endhighlight %}
+
+
+Systemd daemon을 리로드 해줍니다.
+
+{% highlight bash %}
+$ sudo systemctl daemon-reload
+
+$ sudo systemctl start zookeeper
+$ sudo systemctl start kafka
+
+$ sudo systemctl status zookeeper
+$ sudo systemctl status kafka
+{% endhighlight %}
+
+
+## 3.3 Create Topic
+
+다음의 명령어로 Zookeeper Connect 를 알아냅니다.
+
+ZookeeperConnectString 값을 확인합니다. <br>
 
 {% highlight bash %}
 # Local Computer
-$ aws kafka describe-cluster --region us-east-2 --cluster-arn CLUSTER ARN | grep ZookeeperConnectString
+# aws kafka describe-cluster --region <region> --cluster-arn <CLUSTER_ARN> 
+$ aws kafka describe-cluster --region ap-northeast-2 --cluster-arn CLUSTER ARN | grep ZookeeperConnectString
 {% endhighlight %}
 
 다음과 같이 생성합니다. <br>
@@ -203,9 +267,17 @@ ZookeeperConnectString 부분은 위에서 grep으로 잡은 전체 정보를 �
 
 {% highlight bash %}
 # EC2 Instance 
-$ bin/kafka-topics.sh --create --zookeeper ZookeeperConnectString --replication-factor 3 --partitions 1 --topic TestTopic
+$ kafka-topics.sh --create --zookeeper <ZookeeperConnectString> --replication-factor 3 --partitions 1 --topic TestTopic
 Created topic TestTopic.
+
+$ kafka-topics.sh  --list --zookeeper <ZookeeperConnectString>
+TestTopic
+__amazon_msk_canary
+__consumer_offsets
 {% endhighlight %}
+
+
+
 
 
 ## 3.4 Broker URL
@@ -236,13 +308,7 @@ ssh -i ~/.ssh/aws.pem -N -L 9093:b-3.kafka-test.allwn4.c3.kafka.us-east-2.amazon
 {% endhighlight %}
 
 > 근데 실제 사용해보니.. SSH Tunneling은 매우 느립니다.<br>
-> 가장 쉽게 해결할수 있는 방법은 EC2에 OpenVPN을 설치해서 연결하는게 가장 편리합니다. 
-
-## 3.4 Connection from outside 
-
-SSH Tunneling은 지역에 따라 느릴수 있습니다.<br>
-[링크](https://awsfeed.com/whats-new/big-data/secure-connectivity-patterns-to-access-amazon-msk-across-aws-regions) 에서 다른 방법으로 접속하는 방법을 잘 설명하고 있습니다.<br>
-
+> 가장 쉽게 해결할수 있는 방법은 **EC2에 OpenVPN을 설치**해서 연결하는게 가장 편리합니다. 
 
 
 
@@ -253,7 +319,8 @@ pip3 install kafka-python
 {% endhighlight %}
 
 
-producer.py 는 다음과 같이 작성합니다.
+producer.py 는 다음과 같이 작성합니다.<br>
+`bootstrap_servers` 에는 `aws kafka get-bootstrap-brokers`명령어로 알아낸 `BootstrapBrokerString` 을 적어 넣으면 됩니다.
 
 {% highlight python %}
 import json
@@ -274,6 +341,9 @@ def produce():
         print(f'Sending: {i}')
         r = producer.send('TestTopic', value=f'test {i}')
         producer.flush()
+
+if __name__ == '__main__':
+    produce()
 {% endhighlight %}
 
 Consumer 코드는 다음과 같습니다.<br>
@@ -295,9 +365,11 @@ def consume():
         auto_offset_reset='earliest',
         group_id='my-group',
         enable_auto_commit=True,
-        value_deserializer=lambda x: json.dumps(x).encode('utf-8'))
+        value_deserializer=lambda x: json.dumps(x.decode('utf-8')))
 
     for message in consumer:
         print(message)
 
+if __name__ == '__main__':
+    consume()
 {% endhighlight %}
