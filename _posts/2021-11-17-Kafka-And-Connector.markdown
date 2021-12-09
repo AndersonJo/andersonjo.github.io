@@ -1,7 +1,7 @@
 ---
 layout: post 
 title:  "Apache Kafka & Connector"
-date:   2021-11-15 01:00:00 
+date:   2021-11-17 01:00:00 
 categories: "data-engineering"
 asset_path: /assets/images/ 
 tags: []
