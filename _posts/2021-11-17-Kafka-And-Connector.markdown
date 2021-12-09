@@ -60,11 +60,11 @@ Confluent 를 통해서는 commercial 서비스를 받을 수 있고, 기본적�
  - FileStreamSource 뒷쪽에 스페이스가 존재할경우 에러가 날수 있습니다. ㅠㅠ 4시간 날려먹음
 
 {% highlight yaml %}
-name=local-file-source  
+name=local-file-source
 connector.class=FileStreamSource
-tasks.max=1  
+tasks.max=1
 file=/home/anderson/Downloads/test.txt
-topic=test-topic  
+topic=test-topic
 {% endhighlight %}
 
 
@@ -73,9 +73,9 @@ topic=test-topic
 {% highlight yaml %}
 name=local-file-sink  
 connector.class=FileStreamSink
-tasks.max=1  
+tasks.max=1
 file=/home/anderson/Downloads/test.sink.txt  
-topics=test-topic  
+topics=test-topic
 {% endhighlight %}
 
 

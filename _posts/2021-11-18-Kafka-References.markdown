@@ -21,7 +21,7 @@ tags: []
 $ aws kafka describe-cluster --region ap-northeast-2 --cluster-arn <CLUSTER_ARN> | jq .ClusterInfo.ZookeeperConnectString
 
 # AWS Kafka Broker URL (Bootstrap Broker)
-$ aws kafka get-bootstrap-brokers --region ap-northeast-2 --cluster-arn <CLUSTER_ARN>
+$ aws kafka get-bootstrap-brokers --region ap-northeast-2 --cluster-arn <CLUSTER_ARN> | jq
 {% endhighlight %}
 
 ## 1.2 Kafka Console
