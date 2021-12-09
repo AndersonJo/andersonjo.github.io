@@ -231,12 +231,12 @@ EOM
 Docker Build 시키고 배포합니다. 
 
 {% highlight bash %}
-$ docker build --tag my-dags:0.0.1 .
-$ docker tag my-dags:0.0.1 123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow
-$ docker push 123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow
+$ docker build --tag my-dags:v0.0.1 .
+$ docker tag my-dags:v0.0.1 123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow:v0.0.1
+$ docker push 123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow:v0.0.1
 $ helm upgrade airflow apache-airflow/airflow -f values.yaml --namespace airflow \
     --set images.airflow.repository=123456489123.dkr.ecr.ap-northeast-2.amazonaws.com/ml-airflow \
-    --set images.airflow.tag=0.0.1 \
+    --set images.airflow.tag=v0.0.1 \
     --timeout 30m
 {% endhighlight %}
 
