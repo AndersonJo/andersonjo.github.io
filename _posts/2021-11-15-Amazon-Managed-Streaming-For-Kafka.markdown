@@ -260,7 +260,7 @@ ZookeeperConnectString 값을 확인합니다. <br>
 {% highlight bash %}
 # Local Computer
 # aws kafka describe-cluster --region <region> --cluster-arn <CLUSTER_ARN> 
-$ aws kafka describe-cluster --region ap-northeast-2 --cluster-arn CLUSTER ARN | grep ZookeeperConnectString
+$ aws kafka describe-cluster --region ap-northeast-2 --cluster-arn <CLUSTER_ARN> | jq .ClusterInfo.ZookeeperConnectString
 {% endhighlight %}
 
 다음과 같이 생성합니다. <br>
