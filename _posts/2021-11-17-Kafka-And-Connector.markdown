@@ -186,8 +186,11 @@ Distributed Mode 로 Connector를 실행시킵니다.
 # production 에서 daemon 으로 돌릴려면.. -daemon 을 맨 앞에 넣어서 돌리면 됨
 # connect-distributed.sh -daemon connect-distributed.properties
 $ connect-distributed.sh connect-distributed.properties
+{% endhighlight %}
 
+정상 작동 확인합니다.
 
+{% highlight bash %}
 # 정상적으로 작동하는지 확인합니다.
 $ curl -s localhost:8083 | jq
 {
@@ -196,7 +199,7 @@ $ curl -s localhost:8083 | jq
   "kafka_cluster_id": "zrADZwVuRQ2CnAMIW_6DZw"
 }
 
-
+# 사용 가능한 plugins 리스트 
 $ curl -s localhost:8083/connector-plugins | jq
 [
   {
@@ -296,3 +299,82 @@ $ tail -f output.txt
 $ touch input.txt
 $ echo hello >> input.txt
 {% endhighlight %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 2.3 ESK Distributed Mode
+
+
+
+- NOT_ENOUGH_REPLICAS 에러가 발생하면 connect-offsets, connect-configs, 그리고 connect-status <br>
+  이 3개의 topics의 replication.factor 의 값이 min.insync.replica 보다 작아서 발생하는 문제입니다.<br>
+  이 문제가 발생할시 3개의 토픽을 삭제하고 replication.factor=3 으로 맞추고 다시 생성하면 됩니다 .
+- 2.2의 distributed mode 와 모두 동일하지만 replication 설정만 조금 다릅니다. 
+
+
+
+먼저 min.insync.replicas 를 설정한 Topic을 생성합니다.
+
+{% highlight bash %}
+$ kafka-topics.sh --zookeeper $ZooKeeperConnect --create --topic test-topic \
+                  --config min.insync.replicas=1 --partitions 10 --replication-factor 3
+{% endhighlight %}
+
+**connect-distributed.properties**
+
+{% highlight yaml %}
+bootstrap.servers=<Bootstrap Connect>
+
+# unique name for the cluster
+# consumer group ID와 중복되면 안됨
+group.id=connect-cluster
+
+key.converter=org.apache.kafka.connect.json.JsonConverter
+value.converter=org.apache.kafka.connect.json.JsonConverter
+key.converter.schemas.enable=true
+value.converter.schemas.enable=true
+
+# offsets을 저장할 topic / the topic should have many partitions and be replicated and compacted. 
+# 해당 토픽은 자동으로 생성됨 
+# default replication factor = 3 이며 특별한 케이스에서는 더 커질수도 있다
+# 개발환경에서는 single-broker 로 움직이기 때문에 1로 설정
+offset.storage.topic=connect-offsets
+offset.storage.replication.factor=3
+#offset.storage.partitions=25
+
+# connector 그리고 task configuration을 저장할 Topic을 설정합니다. 
+# this should be a single partition, highly replicated and compacted topic. 
+# 해당 토픽은 자동으로 생성됨
+# default replication factor = 3 이며 특별한 케이스에서는 더 커질수도 있다
+# 개발환경에서는 single-broker 로 움직이기 때문에 1로 설정
+config.storage.topic=connect-configs
+config.storage.replication.factor=3
+
+# status를 저장할 Topic 설정. 
+# this topic can have multiple partitions and should be replicated and compacted. 
+# 해당 토픽은 자동으로 생성됨 
+# default replication factor = 3 이며 특별한 케이스에서는 더 커질수도 있다
+# 개발환경에서는 single-broker 로 움직이기 때문에 1로 설정
+status.storage.topic=connect-status
+status.storage.replication.factor=3
+#status.storage.partitions=5
+
+# 테스트/디버깅을 위해서 더 빠르게 설정해 놓습니다.
+offset.flush.interval.ms=1000
+plugin.path=/usr/local/kafka/plugins
+{% endhighlight %}
+
