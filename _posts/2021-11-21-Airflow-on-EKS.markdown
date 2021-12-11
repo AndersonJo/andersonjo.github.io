@@ -166,8 +166,10 @@ FROM apache/airflow
 COPY . .
 USER root
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends vim 
+    && apt-get upgrade -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends vim 
 USER airflow
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 EOM
 {% endhighlight %}
