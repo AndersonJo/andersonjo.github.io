@@ -159,6 +159,7 @@ airflow-webserver-secret-key   Opaque                                1      41s
 dags 디렉토리에 DAG파일을 추가시키면 됩니다.
 
  - 반드시 pip install 은 `USER airflow` 이후에 와야 합니다.
+ - 아래코드는 예제일뿐인지 실제 배포시에는 특별하게 설치할거 없으면 vim은 삭제합니다.
 
 {% highlight bash %}
 cat <<EOM > Dockerfile
