@@ -2,7 +2,7 @@
 layout: post 
 title:  "Zeppelin on Kubernetes with Connections"
 date:   2021-12-15 01:00:00 
-categories: ""
+categories: "zeppelin"
 asset_path: /assets/images/ 
 tags: ['helm', 'k8s', 'secret', 'gcp', 'eks', 'kubernetes', 'bigquery', 'mariadb']
 ---
