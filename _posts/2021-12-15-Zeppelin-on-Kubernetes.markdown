@@ -53,7 +53,7 @@ Kubernetes 환경에서는 뭔가 실행시 새로운 pod을 열게 됩니다.<b
 이로 인해서 접속이 안되게 됩니다. <br>
 따라서 local 환경으로 작동시킵니다. 
 
- - ZEPPELIN_RUN_MODE: Run mode. 'auto|local|k8s'. 'auto' autodetect environment. 'local' runs interpreter as a local process. k8s runs interpreter on Kubernetes cluster
+ - ZEPPELIN_RUN_MODE: Run mode. 'auto\|local\|k8s'. 'auto' autodetect environment. 'local' runs interpreter as a local process. k8s runs interpreter on Kubernetes cluster
 
 {% highlight yaml %}
 apiVersion: v1
