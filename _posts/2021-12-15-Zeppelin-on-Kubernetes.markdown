@@ -279,7 +279,7 @@ Interpreter 에서 JDBC 를 설정하면 됩니다.
  - default.user: 유저 이름
  - default.password: 암호
  - default.driver: org.mariadb.jdbc.Driver
- - Dependencies 
-   - `org.mariadb.jdbc:mariadb-java-client:3.0.2-rc`
+ - Dependencies
+   - `org.mariadb.jdbc:mariadb-java-client:2.7.3`
 
 이렇게 설정해주고.. 노트북에서는 `%jdbc` 로 사용합니다. 
