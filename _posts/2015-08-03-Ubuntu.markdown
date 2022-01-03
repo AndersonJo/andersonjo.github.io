@@ -284,7 +284,7 @@ sudo alien -i oracle-*
 [Installing SBT on Linux]: http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html
 
 
-## 2.9 Postman 
+## 2.9 Postman Shortcut
 
 Postman Linux 버젼을 설치후, `~/.local/share/applications/postman.desktop` 에 파일을 만들고 다음을 넣습니다. <br>
 Exec, Icon 은 설치된 Postman의 위치를 설정하면 됩니다.
