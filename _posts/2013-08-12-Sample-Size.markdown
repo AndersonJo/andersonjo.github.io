@@ -131,19 +131,19 @@ visualize_z_scores()
 
 ## Calculate Sample Size
 
-{% highlight python %} from scipy.stats import norm
+{% highlight python %} 
+from scipy.stats import norm
 
 def cal_zscore(confidence_level):
-return norm.ppf(1-(1-confidence_level)/2, loc=0, scale=1)
+    return norm.ppf(1-(1-confidence_level)/2, loc=0, scale=1)
 
 def calculate_sample_size(p_n:int, cl:float, e:float):
-"""
-:param p_n: population size 모집단의 갯수 ex. 10000
-:param cl: confidence level 신뢰수준 ex. 0.95, 0.99
-:param e: margin of error 표본 오차 ex. 0.03
-"""
-assert 0 < cl < 1 assert 0 < e < 1
-
+    """
+    :param p_n: population size 모집단의 갯수 ex. 10000
+    :param cl: confidence level 신뢰수준 ex. 0.95, 0.99
+    :param e: margin of error 표본 오차 ex. 0.03
+    """
+    assert 0 < cl < 1 assert 0 < e < 1
     p_n = int(p_n)
     y = cal_zscore(cl)**2 * 0.5*(1-0.5)/(0.05**2)
     return y/(1 + (y* 1/p_n))

@@ -9,31 +9,46 @@ tags: ['kubernetes']
 
 # 1. Install Cert Manager
 
-## 3.6 Install Cert-Manager
+## 1.1 Uninstall Cert-Manager
+
+{% highlight bash %}
+# 삭제 format 
+$ kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/vX.Y.Z/cert-manager.yaml
+
+# 1.3.1 삭제
+$ kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml
+
+# terminating state 로 멈춰 있다면..
+$ kubectl delete apiservice v1beta1.webhook.cert-manager.io
+{% endhighlight %}
+
+## 1.2 Install Cert-Manager
 
  - 자세한 설치 방법은 [Kubernetes Installation](https://cert-manager.io/docs/installation/kubernetes/)를 참조 합니다.
+ - Knative 설치시 cert-manger 1.3.1 까지만 지원이 되는듯 합니다. webhook 에러발생
 
-먼저 kubectl client version을 확인합니다.<br>
-**반드시 v1.19.0-rc.1 보다 높아야 하며**, 낮을 경우 CRD 업데이트에서 에러가 생깁니다.
-SSL 101
+
 {% highlight bash %}
 $ kubectl version --short --client
 Client Version: v1.19.3
 {% endhighlight %}
 
+
+
 {% highlight bash %}
 # 일반적인 manifest 파일로 설치
-$ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.0.2/cert-manager.yaml
+# 만약 에러가 나면 apply를 replace 로 변경되 다시 apply 해볼 것
+$ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml
 {% endhighlight %}
 
 설치 확인은 다음과 같이 하며, `cert-manager`, `cert-manager-cainjector`, `cert-manager-webhook` 이 있어야 합니다.
 
 {% highlight bash %}
 $ kubectl get pods --namespace cert-manager
-NAME                                       READY   STATUS    RESTARTS   AGE
-cert-manager-cainjector-774bd85548-w2vkb   1/1     Running   0          2d4h
-cert-manager-f8f6c65f9-7klrk               1/1     Running   0          2d4h
-cert-manager-webhook-59fb566ff-29wfj       1/1     Running   0          2d4h
+NAME                                      READY   STATUS    RESTARTS   AGE
+cert-manager-55658cdf68-7c5xw             1/1     Running   0          6m40s
+cert-manager-cainjector-967788869-x6fgx   1/1     Running   0          6m40s
+cert-manager-webhook-6668fbb57d-pbqd5     1/1     Running   0          6m40s
 {% endhighlight %}
 
 

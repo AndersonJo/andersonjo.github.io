@@ -65,5 +65,5 @@ $ docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient aw
 Local computer에서 awsvpn.ovpn 을 가져옵니다.
 
 {% highlight bash %}
-$ scp -i ~/.ssh/gifting-ml-dev.pem ubuntu@ec2-11-11-111-111.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/awsvpn.ovpn ./
+$ scp -i ~/.ssh/aws.pem ubuntu@ec2-11-11-111-111.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/awsvpn.ovpn ./
 {% endhighlight %}

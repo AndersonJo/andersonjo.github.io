@@ -7,7 +7,12 @@ asset_path: /assets/images/
 tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops']
 ---
 
-# 1. Installation 
+
+**개인적으로 kubeflow는 개인적으로 버렸습니다. 이유는 서포트가 적으며 코드 불안정성 그리고 쓰잘때 없는 기능들 때문입니다.**
+
+
+
+# 1. Installation
 
 먼저 kubectl, AWS CLI, eksctl 등이 설치되어 있어야 하며, Cluster 생성까지 되어 있어야 합니다. <br>
 설치 방법은 [링크](http://localhost:4000/kubernetes/2020/09/26/Amazon-Elastic-Kubernetes-Service-Installation/)를 참고 합니다.
@@ -18,8 +23,8 @@ tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops']
 현 시점에서는 v1.1.0 이 최신버젼이며 다음과 같이 다운로드 받고 설치 합니다.
 
 {% highlight bash %}
-$ wget https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
-$ tar -xvf kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
+$ wget https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz
+$ tar -xvf kfctl_v1.2.0-0-gbc038f9_linux.tar.gz
 $ cp ./kfctl /usr/local/bin/
 {% endhighlight %}
 
@@ -49,11 +54,11 @@ auth:
 kfctl configuration file 설정이 이렇다는 것을 이해하고, 다음을 설치하면 됩니다. 
 
 {% highlight bash %}
-# Authentication 없는 설치 방법 
-export CONFIG_URI="https://raw.githubusercontent.com/kubeflow/manifests/v1.1-branch/kfdef/kfctl_aws.v1.1.0.yaml"
+# Authentication 없는 설치 방법
+export CONFIG_URI="https://raw.githubusercontent.com/kubeflow/manifests/v1.2-branch/kfdef/kfctl_aws.v1.2.0.yaml"
 
 # Cognito로 Authentication하는 방법
-export CONFIG_URI="https://raw.githubusercontent.com/kubeflow/manifests/v1.1-branch/kfdef/kfctl_aws_cognito.v1.1.0.yaml"
+export CONFIG_URI="https://raw.githubusercontent.com/kubeflow/manifests/v1.2-branch/kfdef/kfctl_aws_cognito.v1.2.0.yaml"
 
 # Cluster 이름 지정 및 디렉토리 생성
 export AWS_CLUSTER_NAME=<YOUR EKS CLUSTER NAME>
@@ -77,8 +82,8 @@ IAM Role을 사용해서 Service Account를 관리하겠다는 것은, 따로 no
 `kf-admin-${region}-${cluster_name}` 그리고 `kf-user-${region}-${cluster_name}` 에 권한을 줌으로서 권한 관리를 할 수 있다는 뜻입니다.<br>
 관련 문서 [AWS IAM Roles for Service Account](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)를 참조 합니다.
 
-{% highlight yaml %}
-vi kfctl_aws.yaml
+{% highlight bash %}
+$ vi kfctl_aws.yaml
 {% endhighlight %}
 
 IAM Role for Service Account를 사용하기 위해서는 kfctl_aws.yaml 파일을 변경해야 합니다.<br>
@@ -94,6 +99,10 @@ aws iam list-roles \
   | select(.RoleName \
   | startswith(\"eksctl-$AWS_CLUSTER_NAME\") and contains(\"NodeInstanceRole\")) \
   .RoleName"
+      ``` 
+    - 정확하게 특정 cluster 의 node group을 확인하고자 할때는 다음과 같이 합니다. 
+      ```
+eksctl get nodegroup --cluster=<Cluster Name>  -o yaml
       ```
     - eksctl말고 다른 방법으로 cluster를 생성시켰다면 node group 생성시 사용한 IAM Role을 적용하면 됩니다. <br> 본문에서는 `AI-EKS-Node` 를 사용했습니다.
     
@@ -114,7 +123,10 @@ plugins:
       - AI-EKS-Node
 {% endhighlight %}
 
-아래 Deploy 이후, 다음 2개의 roles 그리고 service accounts를 생성합니다.
+아래쪽 1.4 에서 `kfctl apply -V -f kfctl_aws.yaml` 실행하고 나면, <br>
+다음 2개의 roles 그리고 service accounts 가 자동으로 생성됩니다.<br>
+다시 말하지만 자동으로 생성되기 때문에 따로 만들 필요 없습니다.
+
 
 1. IAM Roles 
   - `kf-admin-${region}-${cluster_name}`
@@ -132,6 +144,7 @@ $ kubectl get serviceaccounts -n kubeflow | grep ^kf
 kf-admin                                      1         47m
 kf-user                                       1         47m
 {% endhighlight %}
+
 
 
 ## 1.4 Deployment of Kubeflow
@@ -189,6 +202,53 @@ tensorboard-79bdbb4866-gkk6w                             1/1     Running   0    
 tf-job-operator-5bf84768bf-q67t2                         1/1     Running   0          18m
 workflow-controller-54dccb7dc4-pjgkl                     1/1     Running   0          18m
 {% endhighlight %}
+
+
+## 1.5 Auth Dex 에러 in Kubernetes 1.21 
+
+Kubernetes 1.21에서 Auth dex 이슈가 있습니다.<br>
+이 문제가 해결되면 istio-system namespace 에서 발생하면 authservice-0 pod 이 죽는 문제도 동시에 해결이 됩니다.
+
+{% highlight bash %}
+$ kubectl get pods -n auth
+NAME                   READY   STATUS             RESTARTS   AGE
+dex-6df48678bf-vx5vn   0/1     CrashLoopBackOff   3          70s
+
+# 아래와 같은 에러 메세지
+$ kubectl logs -n auth dex-6df48678bf-vx5vn
+failed to initialize storage: failed to inspect service account token: jwt claim "kubernetes.io/serviceaccount/namespace" not found
+{% endhighlight %}
+
+Kubernetes 1.21 에서 dex 에서 jwt 파싱관련된 문제가 있었으며, 해결방법은 다음과 같이 합니다. 
+
+{% highlight bash %}
+# Edit 
+$ kubectl edit deployments -n auth dex
+
+# 아래와 같이 env 를 추가합니다. 
+spec:
+  template:
+    spec:
+      containers:
+        - name:dex
+          env:
+          - name: KUBERNETES_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+{% endhighlight %}
+
+문제 해결
+
+{% highlight bash %}
+$ kubectl get pods -n auth
+NAME                   READY   STATUS    RESTARTS   AGE
+dex-666b85fbb7-2lfpq   1/1     Running   0          6m29s
+{% endhighlight %}
+
+
+
 
 
 ## 1.5 Kubeflow Dashboard 

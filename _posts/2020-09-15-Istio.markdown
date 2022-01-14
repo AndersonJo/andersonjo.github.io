@@ -9,15 +9,30 @@ tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops', 'kfserving']
 
 # 1. Installation
 
+ - Knative 설치시 Istio 설치가 함께 있습니다. 해당 문서를 보지 마시고 Knative 문서를 보세요<br>
+   여기서는 클라이언트만 설치해두고, Knative 설치할때 Istio를 설치하세요. <br> 
+   따로 설치시, Knative가 정상작동을 안합니다. 
+
 ## 1.1 Delete existing Istio 
 
 이거 하는 이유는 Kubeflow설치하고 버젼이 낮아서 올리는데 목적이 있습니다. <br>
 서비스를 하지 않는 상태에서 진행할때 쓸수 있습니다.<br>
-<span style="color:red;font-weight:bold">경고. 아래의 코드는 istio-system을 날립니다. 반드시 서비스 중이 아닌 경우에만 실행합니다.</span> 
+<span style="color:red;font-weight:bold">경고. 아래의 코드는 istio-system을 날립니다. 반드시 서비스 중이 아닌 경우에만 실행합니다.</span>
+
+간단한 방법은 다음과 같이 합니다.
+
+{% highlight bash %}
+$ istioctl x uninstall --purge
+$ istioctl operator remove --force
+$ kubectl delete ns istio-system --grace-period=0 --force
+{% endhighlight %}
+
+그 다음 namespace를 삭제 합니다.  
 
 {% highlight bash %}
 $ kubectl get namespaces istio-system -o json | jq '.spec.finalizers'=null | kubectl apply -f -
 $ kubectl delete namespace istio-system
+$ kubectl delete namespace istio-operator
 {% endhighlight %}
 
 만약 freeze 현상이 일어난다면 (삭제되지 않고 계속 Terminating만 뜨는 상태).. <br>
@@ -39,16 +54,16 @@ $ kubectl replace --raw "/api/v1/namespaces/istio-system/finalize" -f ./istio-sy
 {% endhighlight %}
 
 
-## 1.2 Install Istio on Cloud
+## 1.2 Install Istio Client
 
 Istio를 다운로드 받고, istioctl을 설치합니다.
 
 {% highlight bash %}
 # 최신 버젼
-$ curl -L https://istio.io/downloadIstio | sh - 
+$ curl -L https://istio.io/downloadIstio | sh -
 
 # 특정 버젼
-$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
+$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.11.5 sh -
 
 # 설치
 $ cd istio-*
@@ -56,19 +71,23 @@ $ sudo cp bin/istioctl /usr/local/bin/istioctl
 
 # 버젼 확인
 $ istioctl version --remote
-client version: 1.7.3
-control plane version: root@07253e1c-4f13-11ea-97de-0e8f370df5e1-docker.io/istio-release-1.3-<생략>
+no running Istio pods in "istio-system"
+1.11.0
 {% endhighlight %}
+
+
+## 1.3 Install Istio on Kubernetes
 
 클라우드에 있는 Kubernetes 클러스터에 Istio를 설치합니다. 
 
 {% highlight bash %}
 $ istioctl install
-This will install the default Istio profile into the cluster. Proceed? (y/N) y
-✔ Istio core installed                                                                                                                                                                                                                                                                                     
-✔ Istiod installed                                                                                                                                                                                                                                                                                         
-✔ Ingress gateways installed                                                                                                                                                                                                                                                                               
-✔ Installation complete  
+This will install the Istio 1.11.0 default profile with ["Istio core" "Istiod" "Ingress gateways"] components into the cluster. Proceed? (y/N) y
+✔ Istio core installed                                                                                                                                                    
+✔ Istiod installed                                                                                                                                                        
+✔ Ingress gateways installed                                                                                                                                              
+✔ Installation complete                                                                                                                                                   
+Thank you for installing Istio 1.11.  
 {% endhighlight %}
 
 Istio를 적용하기 위해서는 namespace에 `istio-injection=enabled` label을 추가해야 합니다.<br>
@@ -77,4 +96,19 @@ Istio를 적용하기 위해서는 namespace에 `istio-injection=enabled` label�
 {% highlight bash %}
 $ kubectl create namespace kfserving
 $ kubectl label namespace kfserving istio-injection=enabled
+{% endhighlight %}
+
+
+## 1.4 Istio Operator
+
+설치는 다음과 같이 합니다.
+
+{% highlight bash %}
+# 설치합니다.
+$ istioctl operator init
+
+# 확인
+$ kubectl get pods -n istio-operator 
+NAME                              READY   STATUS    RESTARTS   AGE
+istio-operator-6c4d864cdf-pxhdt   1/1     Running   0          21m
 {% endhighlight %}

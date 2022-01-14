@@ -9,6 +9,11 @@ tags: ['kubeflow', 'namespace', 'hang', '멈춤', 'kubectl']
 
 # 1. Installation
 
+- Cert-Manager: version 1.3 이하만 됩니다. 체크 필요! (나중에 에러남)
+- Istio 따로 설치 하지 말고, 여기 있는 문서에서 Knative 먼저 설치후 추가로 Networking Layer 설정시에 Istio 설정함
+
+
+
 ## 1.1 Check Version
 
 {% highlight bash %}{% raw %}
@@ -22,7 +27,9 @@ $ kubectl get namespace knative-eventing -o 'go-template={{index .metadata.label
 
 ## 1.2 Install Knative CLI
 
-{% highlight bash %}2020-09-15-Knative
+kn 명령을 내릴수 있는 클라이언트를 먼저 설치 합니다.
+
+{% highlight bash %}
 $ wget https://storage.googleapis.com/knative-nightly/client/latest/kn-linux-amd64
 $ chmod 110 kn-linux-amd64
 $ sudo mv kn-linux-amd64 /usr/local/bin/kn
@@ -39,8 +46,9 @@ $ sudo mv kn-linux-amd64 /usr/local/bin/kn
 
 {% highlight bash %}
 $ kubectl get namespaces knative-serving -o json | jq '.spec.finalizers'=null | kubectl apply -f -
-$ kubectl delete --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-crds.yaml
-$ kubectl delete --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-core.yaml
+$ kubectl delete -f https://storage.googleapis.com/knative-nightly/serving/latest/serving-core.yaml
+$ kubectl delete -f https://storage.googleapis.com/knative-nightly/serving/latest/serving-crds.yaml
+$ kubectl delete -f https://github.com/knative/operator/releases/download/knative-v1.1.0/operator.yaml
 $ kubectl get namespaces  knative-serving 
 NAME              STATUS        AGE
 knative-serving   Terminating   44m
@@ -86,114 +94,157 @@ $ kubectl replace --raw "/api/v1/namespaces/knative-serving/finalize" -f ./knati
 
 이후 `kubectl get namespaces` 로 확인해보면 삭제되어 있을겁니다.
 
+
+
+
+
 ## 1.4 Install Serving Component
-
-Knative Component를 설치합니다.
-
-{% highlight bash %}
-$ kubectl apply -f https://github.com/knative/operator/releases/download/v0.18.0/operator.yaml
-{% endhighlight %}
 
 Serving을 설치합니다.
 
 {% highlight bash %}
-$ kubectl apply --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-crds.yaml
-$ kubectl apply --filename https://github.com/knative/serving/releases/download/v0.18.0/serving-core.yaml
+$ kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.1.0/serving-crds.yaml
+$ kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.1.0/serving-core.yaml
 {% endhighlight %}
 
-Istio Controller를 설치 합니다. 
+Knative Component를 설치합니다.<br>
+자세한 설치방법은 [링크](https://knative.dev/docs/install/operator/knative-with-operators/) 를 참조 합니다.
+
+ - Knative Operator 는 default namespace에 설치가 되야 합니다. 
 
 {% highlight bash %}
-$ kubectl apply --filename https://github.com/knative/net-istio/releases/download/v0.18.0/release.yaml
-$ kubectl get svc istio-ingressgateway  -n istio-system
-NAME                   TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                                                                                                      AGE
-istio-ingressgateway   NodePort   10.100.144.52   <none>        15020:32290/TCP,80:31380/TCP,443:31390/TCP,31400:31400/TCP,15029:32607/TCP,15030:32547/TCP,15031:30376/TCP,15032:32370/TCP,15443:32567/TCP   80m
-{% endhighlight %}
-
-여기서 AWS의 경우 NodePort로 나오고 EXTERNAL-IP가 none값으로 되어 있을겁니다.<br>
-AWS EKS 에서는 LoadBalancer를 따로 잡아줘야지 실제 Elastic LoadBalancer가 잡힙니다.
-
-{% highlight bash %}
-$ kubectl edit svc istio-ingressgateway  -n istio-system
-{% endhighlight %}
-
-`type: NodePort` 를 `type: LoadBalancer`로 변경해줍니다.<br>
-만약 AWS EKS를 사용시 EC2 -> Load Balancers -> 기존 사용하던 Load Balancer를 클릭 -> DNS Name 을 복사합니다. 
-
-<img src="{{ page.asset_path }}knative-ec2-loadbalancer-dns.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
-
-아래와 같이 변경합니다.
-
-{% highlight yaml %}
-  type: LoadBalancer
-status:
-  loadBalancer:
-    ingress:
-    - hostname: a5af7519611fe4e7f90aa325e747cb1f-687089119.us-east-2.elb.amazonaws.com
-{% endhighlight %}
-
-
-이후 다시 service를 확인해보면 EXTERNAL-IP가 잡혀있게 됩니다. 
-
-{% highlight bash %}
-$ kubectl --namespace istio-system get service istio-ingressgateway
-NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP                        PORT(S)                    
-istio-ingressgateway   LoadBalancer   10.100.200.170   ****.us-east-2.elb.amazonaws.com   80:32051/TCP,443:31101/TCP
-{% endhighlight %}
-
-Knative Components 들이 모두 잘 작동하는지 점검합니다.
-
-{% highlight bash %}
-$ kubectl get pods -n knative-serving
-NAME                                READY   STATUS    RESTARTS   AGE
-activator-56cf848f9d-k79h8          1/1     Running   0          5m40s
-autoscaler-67c75d8566-4ln8c         1/1     Running   0          5m39s
-controller-6568f84b8b-fqhwc         1/1     Running   0          5m37s
-istio-webhook-6594d8d54c-7mbz8      1/1     Running   0          4m22s
-networking-istio-568ffff747-fmxfk   1/1     Running   0          4m22s
-webhook-785c5879fb-kpdp6            1/1     Running   0          5m36s
-
-$ kubectl get deployments -n knative-serving
+$ kubectl config set-context --current --namespace=default
+$ kubectl apply -f https://github.com/knative/operator/releases/download/knative-v1.1.0/operator.yaml
+$ kubectl get deployment knative-operator
 NAME               READY   UP-TO-DATE   AVAILABLE   AGE
-activator          1/1     1            1           17m
-autoscaler         1/1     1            1           17m
-controller         1/1     1            1           17m
-istio-webhook      1/1     1            1           5m6s
-networking-istio   1/1     1            1           5m6s
-webhook            1/1     1            1           17m
+knative-operator   1/1     1            1           20s
 {% endhighlight %}
 
-## 1.5 Install Eventing Component 
+## 1.5 Install Istio
+
+반드시 아래에 있는 방법으로 설치를 해야지 Knative가 정상 작동합니다. <br>
+따로 Istio에 있는 문서대로 하면 설치가 안됩니다. 
+
+{% highlight bash %}
+$ kubectl apply -l knative.dev/crd-install=true -f https://github.com/knative/net-istio/releases/download/knative-v1.1.0/istio.yaml
+$ kubectl apply -f https://github.com/knative/net-istio/releases/download/knative-v1.1.0/istio.yaml
+$ kubectl apply -f https://github.com/knative/net-istio/releases/download/knative-v1.1.0/net-istio.yaml
+
+# 확인
+$ kubectl --namespace istio-system get service istio-ingressgateway
+{% endhighlight %}
+
+
+
+
+## 1.5 cluster-local-gateway 설정
+
+자세한 설치방법은 [링크](https://knative-v1.netlify.app/docs/install/installing-istio/) 를 참조 합니다. 
+
+{% highlight bash %}
+cat << EOF > ./istio-minimal-operator.yaml
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  values:
+    global:
+      proxy:
+        autoInject: disabled
+      useMCP: false
+      # The third-party-jwt is not enabled on all k8s.
+      # See: https://istio.io/docs/ops/best-practices/security/#configure-third-party-service-account-tokens
+      jwtPolicy: first-party-jwt
+
+  addonComponents:
+    pilot:
+      enabled: true
+    prometheus:
+      enabled: false
+
+  components:
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: true
+      - name: cluster-local-gateway
+        enabled: true
+        label:
+          istio: cluster-local-gateway
+          app: cluster-local-gateway
+        k8s:
+          service:
+            type: ClusterIP
+            ports:
+            - port: 15020
+              name: status-port
+            - port: 80
+              targetPort: 8080
+              name: http2
+            - port: 443
+              targetPort: 8443
+              name: https
+EOF
+{% endhighlight %}
+
+실행
+
+{% highlight bash %}
+$ istioctl install -f istio-minimal-operator.yaml
+This will install the Istio 1.11.0 default profile with ["Istio core" "Istiod" "Ingress gateways"] components into the cluster. Proceed? (y/N) y
+✔ Istio core installed                                                                                                                                                                                                                        
+✔ Istiod installed                                                                                                                                                                                                                            
+✔ Ingress gateways installed                                                                                                                                                                                                                  
+✔ Installation complete                                                                                                                                                                                                                       
+Thank you for installing Istio 1.11.
+
+# 설치 확인
+$ kubectl get pods --namespace istio-system
+NAME                                    READY   STATUS    RESTARTS   AGE
+cluster-local-gateway-c9d6b9dbf-2tqh5   1/1     Running   0          5m55s
+istio-ingressgateway-754f55757d-sqgrk   1/1     Running   0          5m55s
+istiod-59b95457f9-x5fcc                 1/1     Running   0          8m19s
+
+$ kubectl get svc -n istio-system
+NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP                                                                   PORT(S)                                      AGE
+cluster-local-gateway   ClusterIP      172.20.87.103    <none>                                                                        15020/TCP,80/TCP,443/TCP                     6m31s
+istio-ingressgateway    LoadBalancer   172.20.107.71    a1234567890abcdefghijklmnopqrstu-123456789.ap-northeast-2.elb.amazonaws.com   15021:31476/TCP,80:30369/TCP,443:31261/TCP   62m
+istiod                  ClusterIP      172.20.138.114   <none>                                                                        15010/TCP,15012/TCP,443/TCP,15014/TCP        62m
+knative-local-gateway   ClusterIP      172.20.106.201   <none>                                                                        80/TCP                                       15m
+{% endhighlight %}
+
+
+
+
+
+
+## 1.6 Install Eventing Component 
+
+ - KServing 설치시 필요없는 component
+
 
 Custom Resource Definitions (CRD) 그리고 핵심 core components를 설치 합니다. <br>
 
 {% highlight bash %}
-$ kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.0/eventing-crds.yaml
-$ kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.0/eventing-core.yaml
+$ kubectl apply -f https://github.com/knative/eventing/releases/download/knative-v1.1.0/eventing-crds.yaml
+$ kubectl apply -f https://github.com/knative/eventing/releases/download/knative-v1.1.0/eventing-core.yaml
 {% endhighlight %}
-
-Message Channel을 설치 (아래는 in-memory standalone 버젼. 그외 Kafka, GCP Pub/Sub 등등 있음)
-
-{% highlight bash %}
-$ kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.0/in-memory-channel.yaml
-$ kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.0/mt-channel-broker.yaml
-{% endhighlight %}
-
 
 모두 정상 작동 하는지 확인 
 
 {% highlight bash %}
-$ kubectl get pods --namespace knative-eventing
-NAME                                    READY   STATUS    RESTARTS   AGE
-eventing-controller-6fc9c6cfc4-h79h7    1/1     Running   1          2m58s
-eventing-webhook-667c8f6dc4-45w8v       1/1     Running   4          2m56s
-imc-controller-6c4f87765c-k4snr         1/1     Running   0          2m
-imc-dispatcher-74dcf4647f-clspk         1/1     Running   0          119s
-mt-broker-controller-6d789b944d-f59xg   1/1     Running   0          32s
-mt-broker-filter-6bbcc67bc5-rfssc       1/1     Running   0          35s
-mt-broker-ingress-64987f6f4-cv8qx       1/1     Running   0          33s
+$ kubectl get pods -n knative-eventing
+NAME                                   READY   STATUS    RESTARTS   AGE
+eventing-controller-56ccd89cd8-xxn9c   1/1     Running   0          39s
+eventing-webhook-76b66cd56c-vrpzc      1/1     Running   0          38s
 {% endhighlight %}
 
+
+Broker Layer는 Apache Kafka, MT-Channel-based, RabbitMQ 등을 지원하고 있습니다.<br>
+MT Broker는 다음과 같이 설치 합니다.<br>
+자세한 내용은 [링크](https://knative.dev/docs/install/eventing/install-eventing-with-yaml/#optional-install-a-broker-layer)를 확인합니다.
+
+{% highlight bash %}
+$ kubectl apply -f https://github.com/knative/eventing/releases/download/knative-v1.1.0/mt-channel-broker.yaml
+{% endhighlight %}
 
 # 2. Configuration
 
@@ -234,11 +285,10 @@ data:
   example.org: |
     selector:
       app: nonprofit
-  incredible.ai: ""
+  ml.incredible.ai: ""
   svc.cluster.local: |
     selector:
-      app: secret
-kind: ConfigMap
+      app: cluster-local
 {% endhighlight %}
 
 
@@ -259,7 +309,7 @@ def hello_world():
     target = os.environ.get('TARGET', 'World')
     return 'Hello {}!\n'.format(target)
 if __name__ == "__main__":
-    app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
+    app.run(debug=True,host='0.0.0.0',port=8080)
 EOF
 {% endhighlight %}
 
@@ -286,27 +336,31 @@ $ docker push andersonjo/knative-hello-world
 **Service & Deploy** <br>
 andersonjo 부분을 Docker Hub 아이디로 변경 필요 
 
+
+
 {% highlight yaml %}
 cat <<EOF > service.yaml
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: helloworld-python
-  namespace: default
+  namespace: knative-samples
 spec:
   template:
     spec:
       containers:
-      - image: docker.io/andersonjo/knative-hello-world 
-        env:
-        - name: TARGET
-          value: "Python Sample v1"
+        - name: helloworld-python
+          image: docker.io/andersonjo/knative-hello-world
+          imagePullPolicy: IfNotPresent 
+          env:
+          - name: TARGET
+            value: "Python Sample v1"
 EOF
 {% endhighlight %}
 
 {% highlight bash %}
 $ kubectl apply -f service.yaml
-$ kubectl get ksvc helloworld-python
+$ kubectl get ksvc helloworld-python -n knative-samples
 NAME                URL                                            LATESTCREATED             LATESTREADY               READY   REASON
 helloworld-python   http://helloworld-python.default.ai.platform   helloworld-python-69cbt   helloworld-python-69cbt   True    
 {% endhighlight %}
@@ -314,6 +368,7 @@ helloworld-python   http://helloworld-python.default.ai.platform   helloworld-py
 {% highlight bash %}
 $ INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 $ curl -H "Host:helloworld-python.default.ai.platform" $INGRESS_HOST
+$ curl -H "Host:helloworld-python.default.ml.inthewear.com" $INGRESS_HOST
 Hello Python Sample v1!
 {% endhighlight %}
 

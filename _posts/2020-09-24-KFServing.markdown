@@ -7,84 +7,50 @@ asset_path: /assets/images/
 tags: ['aws', 'machine-learning', 'ml-ops', 'seldon-core', 'mlops', 'autoscaling']
 ---
 
-# 1. Setting Up!  
+# 1. Setting Up!
 
-## 1.1 Install KFServing 
+## 1.1 Before Installation
 
-일단 KFServing은 Kubeflow와 함께 설치가 되기 때문에.. 사실.. 뭐 딱히 더 해줄 필요는 없지만.. <br>
-늘 그렇듯.. Kubeflow의 버젼 업그레이드가 느리기 때문에.. 나처럼 최신 버젼 사용하고 싶어하는.. <생략> 
+해당 문서는 2022년 01월 기준으로 썼으며 (계속 업데이트중), KServing 0.7 버젼을 기준으로 합니다.  
 
-[Version 목록](https://github.com/kubeflow/kfserving/tree/master/install) 을 참조해서 원하는 KFSErving 버젼을 설치 합니다.
+ 1. Kubeflow 설치 필요 없음 (하지마)
+ 2. Cert Manager (v1.0 이상) 설치 필요함 
+ 3. Istio (latest) 설치해야 함 
+ 4. Knative Serving (latest) 설치 해야 함
+    - Knative Eventing 설치 필요 없음 (하지마!)
 
-{% highlight bash %}
-$ wget https://raw.githubusercontent.com/kubeflow/kfserving/master/install/v0.4.1/kfserving.yaml
-$ kubectl apply -f kfserving.yaml
-{% endhighlight %}
+추가적으로 현재 문서에서 KFServing 으로 되어 있는데, 0.7버젼으로 가면서 KServe 로 이름 변경함<br>
+나는 안 바꿨음.. 
+
+## 1.2 Kuberflow 와 비교
+
+일단 kubeflow는 사용하지 마세요.<br>
+그 안에 뭐 pipeline이나 notebook 기능 등등 다채로운 기능들 하나로 다 짬뽕 시켜놓은 것인데.. <br>
+문제는 그렇게 짬뽕 시켜놨으면 관리가 잘 되야 하는데 안되고 있어요.<br>
+버젼 업그레이드도 느리고 .. 그냥 KFServing 만 사용하는 것을 추천 합니다. 
 
 
-## 1.2 Install Local Gateway  
+## 1.3 Install Serverless KFServing  
 
-먼저 Knative > 0.11.2 이상이 설치가 미리 되어 있어야 합니다. <br>
-`cluster-local-gateway` 는 필수적으로 필요하며, 해당 gateway는 transformer 그리고 explainer사용시 반드시 필요합니다. <br>
-하여튼 그냥 설치 해두면 됩니다.<br>
-자세한 내용은 [Installing Istio for Knative](https://knative.dev/docs/install/installing-istio/#updating-your-install-to-use-cluster-local-gateway) 를 참고 합니다.
-
-아래 yaml 
-{% highlight yaml %}
-cat << EOF > ./local-cluster-gateway.yaml
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-spec:
-  values:
-    global:
-      proxy:
-        autoInject: enabled
-      useMCP: false
-
-  addonComponents:
-    pilot:
-      enabled: true
-    prometheus:
-      enabled: false
-
-  components:
-    ingressGateways:
-      - name: cluster-local-gateway
-        enabled: true
-        label:
-          istio: cluster-local-gateway
-          app: cluster-local-gateway
-        k8s:
-          service:
-            type: ClusterIP
-            ports:
-              - name: http
-                protocol: TCP
-                port: 80
-                targetPort: 8080
-              - name: https
-                protocol: TCP
-                port: 443
-                targetPort: 8443
-              - name: status-port
-                port: 15021
-                targetPort: 15021
-              - name: tls
-                port: 15443
-                targetPort: 15443
-EOF
-{% endhighlight %}
+먼저 Python SDK를 설치합니다.
 
 {% highlight bash %}
-$ istioctl manifest generate -f local-cluster-gateway.yaml > manifest.yaml
-$ kubectl apply -f manifest.yaml
-$ kubectl get svc cluster-local-gateway -n istio-system 
-NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                              AGE
-cluster-local-gateway   ClusterIP   10.100.243.162   <none>        80/TCP,443/TCP,15021/TCP,15443/TCP   69s
+$ pip install kfserving
+{% endhighlight %}
+
+[Serverless Mode](https://kserve.github.io/website/admin/serverless/) 를 설치합니다. <br>
+Serverless Mode는 반드시 Knative가 base를 이루고 있으며, Knative의 제약을 받습니다.<br>
+제약을 피하고자 한다면 [Kubernetes Deployment Installation](https://kserve.github.io/website/admin/kubernetes_deployment/)을 참조 합니다. 
+
+{% highlight bash %}
+# Serverless Model Installation
+$ kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.7.0/kserve.yaml
 {% endhighlight %}
 
 
-## 1.3 Serving namespace 지정
+
+
+## 1.4 ~~Serving namespace 지정~~
 
 Kubeflow에서는 이미 KFServing 이 설치되어서 나옵니다.
 
@@ -113,24 +79,29 @@ kfserving-controller-manager-0        2/2     Running   0          56s
 {% endhighlight %}
 
 
-# 2. Getting Started
+# 2. Iris Tutorial  
 
-## 2.1 Iris Tutorial  
+### 2.1 Deployment
 
-### 2.1.1 Model Deployment
 
 {% highlight yaml %}
 cat <<EOF > sklearn.yaml 
-apiVersion: "serving.kubeflow.org/v1alpha2"
+apiVersion: "serving.kserve.io/v1beta1"
 kind: "InferenceService"
 metadata:
   name: "sklearn-iris"
 spec:
-  default:
-    predictor:
-      sklearn:
-        storageUri: "gs://kfserving-samples/models/sklearn/iris"
+  predictor:
+    sklearn:
+      storageUri: "gs://kfserving-samples/models/sklearn/iris"
 EOF
+{% endhighlight %}
+
+모델 배포
+
+{% highlight bash %}
+$ kubectl create namespace kserve-test
+$ kubectl apply -f sklearn.yaml -n kserve-test
 {% endhighlight %}
 
 **데이터 생성**
@@ -151,10 +122,10 @@ EOF
 
 {% highlight bash %}
 # sklearn InferenceService를 배포합니다. 
-$ kubectl apply -f sklearn.yaml -n kfserving
+$ kubectl apply -f sklearn.yaml -n kserve-test
 
 # Service URL 을 확인합니다. (URL 뜨는데 까지 약 20~30초 걸림)
-$ kubectl get inferenceservices sklearn-iris -n kfserving
+$ kubectl get inferenceservices sklearn-iris -n kserve-test
 NAME           URL                                                                READY   DEFAULT TRAFFIC
 sklearn-iris   http://sklearn-iris.kfserving.example.com/v1/models/sklearn-iris   True    100            
 {% endhighlight %}
@@ -197,7 +168,7 @@ istio-ingressgateway   LoadBalancer   10.100.200.170   ****.us-east-2.elb.amazon
 {% highlight bash %}
 $ INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 $ INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
-$ SERVICE_HOSTNAME=$(kubectl get inferenceservice sklearn-iris -n kfserving -o jsonpath='{.status.url}' | cut -d "/" -f 3)
+$ SERVICE_HOSTNAME=$(kubectl get inferenceservice sklearn-iris -n kserve-test -o jsonpath='{.status.url}' | cut -d "/" -f 3)
 {% endhighlight %}
 
 **Inference**
@@ -226,7 +197,7 @@ Cluster 내부에서의 통신은 위에처럼 외부 load balancer를 타서 �
 먼저 내부에서 통신할 URL을 알아냅니다. 
 
 {% highlight bash %}
-$ kubectl get inferenceService -n kfserving sklearn-iris -o jsonpath='{.status.address.url}' 
+$ kubectl get inferenceService -n kserve-test sklearn-iris -o jsonpath='{.status.address.url}' 
 http://sklearn-iris.kfserving.svc.cluster.local/v1/models/sklearn-iris:predict
 {% endhighlight %}
 
@@ -234,8 +205,8 @@ http://sklearn-iris.kfserving.svc.cluster.local/v1/models/sklearn-iris:predict
 아래는 예제 이며, "sklearn-iris-predictor-default-***" 요 부분은 pod 이름입니다.
 
 {% highlight bash %}
-$ kubectl exec -it sklearn-iris-predictor-default-*** -n kfserving  -c kfserving-container /bin/bash
-$ curl -i http://sklearn-iris.kfserving.svc.cluster.local/v1/models/sklearn-iris:predict -d @./iris-input.json
+$ kubectl exec -it sklearn-iris-predictor-*** -n kserve-test -c kserve-container /bin/bash
+$ curl -i http://sklearn-iris.kserve-test.svc.cluster.local/v1/models/sklearn-iris:predict -d @./iris-input.json
 {"predictions": [0, 1, 2]}
 {% endhighlight %}
 
@@ -244,82 +215,36 @@ $ curl -i http://sklearn-iris.kfserving.svc.cluster.local/v1/models/sklearn-iris
 
 ### 2.1.4 Performance Test
 
-`vi perf.yaml` 로 다음을 입력합니다.<br>
-POST쪽에서 URL을 수정해줘야 합니다.
-
-{% highlight yaml %}
-cat <<EOF > perf.yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  generateName: load-test
-spec:
-  backoffLimit: 6
-  parallelism: 1
-  template:
-    metadata:
-      annotations:
-        sidecar.istio.io/inject: "false"
-    spec:
-      restartPolicy: OnFailure
-      containers:
-      - args:
-        - vegeta -cpus=5 attack -duration=1m -rate=500/1s -targets=/var/vegeta/cfg
-          | vegeta report -type=text
-        command:
-        - sh 
-        - -c
-        image: peterevans/vegeta:latest
-        imagePullPolicy: Always
-        name: vegeta
-        volumeMounts:
-        - mountPath: /var/vegeta
-          name: vegeta-cfg
-      volumes:
-      - configMap:
-          defaultMode: 420
-          name: vegeta-cfg
-        name: vegeta-cfg
----
-apiVersion: v1
-data:
-  cfg: |
-    POST http://sklearn-iris.kfserving.ai.platform/v1/models/sklearn-iris:predict
-    @/var/vegeta/payload
-  payload: |
-    {
-      "instances": [
-        [5.0,  3.4,  1.5,  0.2],
-        [6.7,  3.1,  4.4,  1.4],
-        [6.1,  3.0,  4.9,  1.8]
-      ]
-    }
-kind: ConfigMap
-metadata:
-  annotations:
-  name: vegeta-cfg
-EOF
-{% endhighlight %}
+위에서 배포한 IRIS 모델의 퍼포먼스를 측정합니다. 
 
 {% highlight bash %}
-$ kubectl create -f perf.yaml -n kfserving 
-job.batch/load-testpk9r2 created
-configmap/vegeta-cfg created
+$ kubectl create -f https://raw.githubusercontent.com/kserve/kserve/release-0.7/docs/samples/v1beta1/sklearn/v1/perf.yaml -n kserve-test
 {% endhighlight %}
 
 
 {% highlight bash %}
 $ kubectl logs load-testpk9r2-wmknb -n kfserving 
-Requests      [total, rate, throughput]         30000, 500.02, 0.00
-Duration      [total, attack, wait]             1m0s, 59.998s, 5.806ms
-Latencies     [min, mean, 50, 90, 95, 99, max]  49.359µs, 3.64ms, 3.202ms, 5.691ms, 7.267ms, 12.156ms, 102.735ms
-Bytes In      [total, mean]                     0, 0.00
-Bytes Out     [total, mean]                     0, 0.00
-Success       [ratio]                           0.00%
-Status Codes  [code:count]                      0:30000  
+Requests      [total, rate, throughput]         30000, 500.02, 499.95
+Duration      [total, attack, wait]             1m0s, 59.998s, 7.861ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  3.293ms, 8.509ms, 5.778ms, 15.34ms, 21.869ms, 47.731ms, 155.37ms
+Bytes In      [total, mean]                     690000, 23.00
+Bytes Out     [total, mean]                     2460000, 82.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:30000  
 Error Set:
-Post "http://sklearn-iris.kfserving.ai.platform/v1/models/sklearn-iris:predict": dial tcp: lookup sklearn-iris.kfserving.ai.platform on 10.100.0.10:53: no such host
 {% endhighlight %}
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 2.2 InferenceService with Custom Image
 
