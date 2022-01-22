@@ -35,23 +35,22 @@ $ export KafkaBootstrapConnect=$(aws kafka  get-bootstrap-brokers --cluster-arn 
 
 {% highlight bash %}
 # Topic 리스트
-$ kafka-topics.sh --list --zookeeper $ZooKeeperConnect
-
+$ kafka-topics.sh --list --bootstrap-server $KafkaBootstrapConnect
 
 # Topic 자세하게 보기 (Partition 정보 볼수 있음)
-$ kafka-topics.sh --describe --zookeeper $ZooKeeperConnect
-$ kafka-topics.sh --describe --zookeeper $ZooKeeperConnect --topic <TopicName>
+$ kafka-topics.sh --describe --bootstrap-server $ZooKeeperConnect
+$ kafka-topics.sh --describe --bootstrap-server $ZooKeeperConnect --topic <TopicName>
 
 
 # Topic 생성
-$ kafka-topics.sh --zookeeper $ZooKeeperConnect --create --topic test-topic \
+$ kafka-topics.sh --bootstrap-server $ZooKeeperConnect --create --topic test-topic \
                   --partitions 3 --replication-factor 1
-$ kafka-topics.sh --zookeeper $ZooKeeperConnect --create --topic test-topic \
+$ kafka-topics.sh --bootstrap-server $ZooKeeperConnect --create --topic test-topic \
                   --config min.insync.replicas=1 --partitions 10 --replication-factor 3
 
 
 # Topic 삭제 
-$ kafka-topics.sh --zookeeper $ZooKeeperConnect --delete --topic <TopicName>
+$ kafka-topics.sh --bootstrap-server $ZooKeeperConnect --delete --topic <TopicName>
 
 # Retention 수정 (기본값은 7)
 {% endhighlight %}
