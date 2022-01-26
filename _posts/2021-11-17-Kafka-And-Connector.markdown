@@ -1,6 +1,6 @@
 ---
 layout: post 
-title:  "Apache Kafka & Connector"
+title:  "Apache Kafka Using Docker & Connector"
 date:   2021-11-17 01:00:00 
 categories: "data-engineering"
 asset_path: /assets/images/ 
@@ -378,3 +378,223 @@ offset.flush.interval.ms=1000
 plugin.path=/usr/local/kafka/plugins
 {% endhighlight %}
 
+
+
+
+
+
+
+
+
+
+
+# 3. Docker Kafka and Connector Tutorial
+
+## 3.1 Setting environment variables 
+
+아래 Zookeeper, Kafka, Schema Registry, Rest Proxy, Connect 등등  properties 내용을 환경변수로 대체 사용 가능 합니다.
+다만 아래처럼 글자 치환이 필요 합니다.
+
+- kafka.properties를 환경변수로 대체해서 사용 
+  - prefix: `KAFKA_`
+  - replace: `.` -> `_`
+  - replace: `--` -> `__` (2 underscores)
+  - replace: `_` -> `___` (3 underscores)
+  
+
+## 3.2 Zookeeper 
+
+MSK사용시 실행할 필요 없습니다.
+
+- ZOOKEEPER_CLIENT_PORT: (required)
+- ZOOKEEPER_SERVER_ID: cluster mode 사용시 필요.
+- 자세한 내용은 [링크](https://docs.confluent.io/platform/current/installation/docker/config-reference.html) 참조
+
+{% highlight bash %}
+$ docker run -d \
+--net=host \
+--name=zookeeper \
+-e ZOOKEEPER_CLIENT_PORT=32181 \
+-e ZOOKEEPER_TICK_TIME=2000 \
+-e ZOOKEEPER_SYNC_LIMIT=2 \
+confluentinc/cp-zookeeper:7.0.1
+{% endhighlight %}
+
+## 3.3 Kafka
+
+{% highlight bash %}
+$ docker run -d \
+    --net=host \
+    --name=kafka \
+    -e KAFKA_ZOOKEEPER_CONNECT=localhost:32181 \
+    -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:29092 \
+    -e KAFKA_BROKER_ID=2 \
+    -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+    confluentinc/cp-kafka:7.0.1
+{% endhighlight %}
+
+## 3.4 Schema Registry
+
+{% highlight bash %}
+$ docker run -d \
+  --net=host \
+  --name=schema-registry \
+  -e SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=SSL://hostname2:9092 \
+  -e SCHEMA_REGISTRY_HOST_NAME=localhost \
+  -e SCHEMA_REGISTRY_LISTENERS=http://localhost:8081 \
+  -e SCHEMA_REGISTRY_DEBUG=true \
+  confluentinc/cp-schema-registry:7.0.1
+{% endhighlight %}
+
+
+## 3.5 Rest Proxy
+
+{% highlight bash %}
+$ docker run -d \
+  --net=host \
+  --name=kafka-rest \
+  -e KAFKA_REST_ZOOKEEPER_CONNECT=localhost:32181 \
+  -e KAFKA_REST_LISTENERS=http://localhost:8082 \
+  -e KAFKA_REST_SCHEMA_REGISTRY_URL=http://localhost:8081 \
+  -e KAFKA_REST_BOOTSTRAP_SERVERS=localhost:29092 \
+  confluentinc/cp-kafka-rest:7.0.1
+{% endhighlight %}
+
+
+## 3.6 Create Topics
+
+Kafka Connect는 config, status, offsets of the connectors 등의 정보들을 모두 Kafka Topics 에 저장해 둡니다.
+
+{% highlight bash %}
+$ kafka-topics.sh --create \
+        --topic quickstart-avro-offsets \
+        --partitions 1 \
+        --replication-factor 1 \
+        --config cleanup.policy=compact \
+        --if-not-exists --bootstrap-server localhost:29092
+
+$ kafka-topics.sh --create \
+        --topic quickstart-avro-config \
+        --partitions 1 \
+        --replication-factor 1 \
+        --config cleanup.policy=compact \
+        --if-not-exists --bootstrap-server localhost:29092
+
+$ kafka-topics.sh --create \
+        --topic quickstart-avro-status \
+        --partitions 1 \
+        --replication-factor 1 \
+        --config cleanup.policy=compact \
+        --if-not-exists --bootstrap-server localhost:29092
+
+$ kafka-topics.sh --describe --bootstrap-server localhost:29092
+{% endhighlight %}
+
+
+## 3.7 Connect 
+
+먼저 운영에 필요한 jars 파일들을 다운받아서 Docker에 넣어야 합니다.
+
+{% highlight bash %}
+# MySQL Connectors
+$ mkdir -p /tmp/quickstart/jars
+$ curl -k -SL "http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.37.tar.gz" | tar -xzf - -C /tmp/quickstart/jars --strip-components=1 mysql-connector-java-5.1.37/mysql-connector-java-5.1.37-bin.jar
+$ curl -k -SL "https://downloads.mysql.com/archives/get/p/3/file/mysql-connector-java-5.1.49.tar.gz" | tar -xzf - -C /tmp/quickstart/jars --strip-components=1 mysql-connector-java-5.1.49/mysql-connector-java-5.1.49-bin.jar
+$ curl -k -SL "https://downloads.mysql.com/archives/get/p/3/file/mysql-connector-java-8.0.27.tar.gz" | tar -xzf - -C /tmp/quickstart/jars --strip-components=1 mysql-connector-java-8.0.27/mysql-connector-java-8.0.27.jar
+{% endhighlight %}
+
+
+{% highlight bash %}
+$ docker run -d \
+  --name=kafka-connect-avro \
+  --net=host \
+  -e CONNECT_BOOTSTRAP_SERVERS=localhost:29092 \
+  -e CONNECT_REST_PORT=28083 \
+  -e CONNECT_GROUP_ID="quickstart-avro" \
+  -e CONNECT_CONFIG_STORAGE_TOPIC="quickstart-avro-config" \
+  -e CONNECT_OFFSET_STORAGE_TOPIC="quickstart-avro-offsets" \
+  -e CONNECT_STATUS_STORAGE_TOPIC="quickstart-avro-status" \
+  -e CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR=1 \
+  -e CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR=1 \
+  -e CONNECT_STATUS_STORAGE_REPLICATION_FACTOR=1 \
+  -e CONNECT_KEY_CONVERTER="io.confluent.connect.avro.AvroConverter" \
+  -e CONNECT_VALUE_CONVERTER="io.confluent.connect.avro.AvroConverter" \
+  -e CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL="http://localhost:8081" \
+  -e CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL="http://localhost:8081" \
+  -e CONNECT_INTERNAL_KEY_CONVERTER="org.apache.kafka.connect.json.JsonConverter" \
+  -e CONNECT_INTERNAL_VALUE_CONVERTER="org.apache.kafka.connect.json.JsonConverter" \
+  -e CONNECT_REST_ADVERTISED_HOST_NAME="localhost" \
+  -e CONNECT_LOG4J_ROOT_LOGLEVEL=DEBUG \
+  -e CONNECT_PLUGIN_PATH=/usr/share/java,/etc/kafka-connect/jars \
+  -v /tmp/quickstart/file:/tmp/quickstart \
+  -v /tmp/quickstart/jars:/etc/kafka-connect/jars \
+  confluentinc/cp-kafka-connect:latest
+{% endhighlight %}
+
+정상 작동했는지 확인은 다음과 같이 합니다. (대충 요렇게 나옵니다)
+
+{% highlight bash %}
+$ docker logs kafka-connect-avro  | egrep   "(Connect|Herder) started"
+[2022-01-25 09:26:15,948] INFO Kafka Connect started 
+[2022-01-25 09:26:16,780] INFO [Worker clientId=connect-1, groupId=quickstart-avro] Herder started 
+{% endhighlight %}
+
+
+
+## 3.8 MySQL 
+
+Database를 실행시킵니다.
+
+{% highlight bash %}
+$ docker run -d \
+  --name=quickstart-mysql \
+  --net=host \
+  -e MYSQL_ROOT_PASSWORD=confluent \
+  -e MYSQL_USER=confluent \
+  -e MYSQL_PASSWORD=confluent \
+  -e MYSQL_DATABASE=connect_test \
+  mysql
+
+$ docker exec -it quickstart-mysql bash
+$ mysql -u confluent -pconfluent
+{% endhighlight %}
+
+
+{% highlight sql %}
+CREATE DATABASE IF NOT EXISTS connect_test;
+USE connect_test;
+
+DROP TABLE IF EXISTS test;
+
+
+CREATE TABLE IF NOT EXISTS test (
+  id serial NOT NULL PRIMARY KEY,
+  name varchar(100),
+  email varchar(200),
+  department varchar(200),
+  modified timestamp default CURRENT_TIMESTAMP NOT NULL,
+  INDEX `modified_index` (`modified`)
+);
+
+INSERT INTO test (name, email, department) VALUES ('alice', 'alice@abc.com', 'engineering');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+INSERT INTO test (name, email, department) VALUES ('bob', 'bob@abc.com', 'sales');
+exit;
+{% endhighlight %}
+
+## 3.9 Source
+
+{% highlight bash %}
+$ export CONNECT_HOST=localhost
+$ curl -X POST \
+  -H "Content-Type: application/json" \
+  --data '{ "name": "quickstart-jdbc-source", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", "tasks.max": 1, "connection.url": "jdbc:mysql://127.0.0.1:3306/connect_test?user=root&password=confluent", "mode": "incrementing", "incrementing.column.name": "id", "timestamp.column.name": "modified", "topic.prefix": "quickstart-jdbc-", "poll.interval.ms": 1000 } }' \
+  http://$CONNECT_HOST:28083/connectors
+{% endhighlight %}
