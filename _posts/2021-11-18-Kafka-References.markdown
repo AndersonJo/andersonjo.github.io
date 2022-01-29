@@ -87,7 +87,7 @@ $ export ZooKeeperConnect=$(aws kafka describe-cluster --cluster-arn $KAFKA_CLUS
 # AWS Kafka Broker URL (Bootstrap Broker)
 $ aws kafka get-bootstrap-brokers --region ap-northeast-2 --cluster-arn $KAFKA_CLUSTER_ARN | jq
 $ export KafkaBootstrapConnect="<BootstrapBrokerString>"
-$ export KafkaBootstrapConnect=$(aws kafka  get-bootstrap-brokers --cluster-arn $KAFKA_CLUSTER_ARN --output text)
+$ export KafkaBootstrapConnect=$(aws kafka  get-bootstrap-brokers --cluster-arn $KAFKA_CLUSTER_ARN --output text | tr -s '[:blank:]' ',')
 {% endhighlight %}
 
 ## 2.3 Topic

@@ -122,6 +122,10 @@ make check
 sudo make install
 {% endhighlight %}
 
+추가적으로 .so 파일들을 연결시켜주기 위해서 `sudo vi /etc/ld.so.conf` 으로 열고.. <br>
+`/usr/local/lib` 를 추가합니다. <br>
+마지막으로 `sudo ldconfig` 를 실행.
+
 버젼을 확인합니다.
 
 {% highlight bash %}
