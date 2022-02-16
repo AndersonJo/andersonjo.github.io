@@ -168,8 +168,6 @@ $ eksctl version
 
 
 
-
-
 # 3. Cluster 생성/로그인
 
 ## 3.2 Create Cluster VPC with Cloud Formation 

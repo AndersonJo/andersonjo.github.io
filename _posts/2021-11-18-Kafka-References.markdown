@@ -64,6 +64,7 @@ $ docker start kafka-ui
 $ docker run -p 8070:8080 \
     --name kafka-ui \
 	-e KAFKA_CLUSTERS_0_NAME=kafka-ml \
+    -e KAFKA_HEAP_OPTS="-Xms512m -Xmx1g" \
 	-e KAFKA_CLUSTERS_0_ZOOKEEPER=z-1.kafka-dev.a123456.a1.kafka.ap-northeast-2.amazonaws.com:2181 \
 	-e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=b-1.kafka-dev.a123456.a1.kafka.ap-northeast-2.amazonaws.com:9092 \
 	-d provectuslabs/kafka-ui:latest

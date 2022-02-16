@@ -236,7 +236,29 @@ Handling connection for 5000
 
 
 
+# EKSCtl 
 
+## Node Group 
+
+Node Group에 대한 정보
+
+{% highlight bash %}
+# node group 의 리스트
+$ eksctl get nodegroup --cluster <클러스터 이름>
+
+# 특정 노드의 정보
+$ eksctl get nodegroup <노드그룹 이름> --cluster <클러스터 이름> -o yaml
+- AutoScalingGroupName: eksctl-ml-cluster-nodegroup-ml-group-v120-NodeGroup-1234567890ABC
+  Cluster: ml-cluster
+  DesiredCapacity: 11
+  InstanceType: t3a.medium
+  MaxSize: 20
+  MinSize: 3
+  Name: node-group-name
+  NodeInstanceRoleARN: arn:aws:iam::123456789012:role/eksctl-ml-cluster-nodegroup-ml-gr-NodeInstanceRole-1234567890ABC
+  Status: UPDATE_COMPLETE
+  Version: 1.21.5
+{% endhighlight %}
 
 
 
