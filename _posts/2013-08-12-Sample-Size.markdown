@@ -137,18 +137,19 @@ from scipy.stats import norm
 def cal_zscore(confidence_level):
     return norm.ppf(1-(1-confidence_level)/2, loc=0, scale=1)
 
-def calculate_sample_size(p_n:int, cl:float, e:float):
+def calculate_sample_size(p_n:int, p:float, cl:float, moe:float):
     """
     :param p_n: population size 모집단의 갯수 ex. 10000
     :param cl: confidence level 신뢰수준 ex. 0.95, 0.99
-    :param e: margin of error 표본 오차 ex. 0.03
+    :param moe: margin of error 표본 오차 ex. 0.03
     """
-    assert 0 < cl < 1 assert 0 < e < 1
+    assert 0 < cl < 1 
+    assert 0 < moe < 1
     p_n = int(p_n)
-    y = cal_zscore(cl)**2 * 0.5*(1-0.5)/(0.05**2)
+    y = cal_zscore(cl)**2 * p*(1-p)/(moe**2)
     return y/(1 + (y* 1/p_n))
 
-sample_size = int(calculate_sample_size(10000, 0.95, 0.03))
+sample_size = int(calculate_sample_size(10000, 0.25, 0.95, 0.03))
 
 print(f'1000명의 설문조사이며, 신뢰수준 95%에서 표본오차 ±3.0%일때 필요한 설문조사 인원은 {sample_size}명 입니다')
 {% endhighlight %}

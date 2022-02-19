@@ -97,6 +97,33 @@ r \\
 
 
 
+## 2.3 Confidence Interval
+
+**문제 01. 회사 배너 광고에서 100번의 노출이 있었고 25번의 클릭이 있었습니다. Confidence interval 값은 어떻게 될까요?**
+
+자세한 공식및 설명은 [링크](/statistics/2019/06/28/AB_Testing/) 참조 <br>
+먼저 CI 계산 공식은.. 
+
+$$ \begin{align} CI &= \bar{x} \pm Z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \\
+&= p \pm Z_{\alpha/2} \sqrt{ \frac{p(1-p)}{n} } 
+\end{align} $$
+
+- $$ \bar{x} $$ : sample mean 
+- $$ z $$ : confidence level
+- $$ s $$ : sample standard deviation
+- $$ n $$ : sample size
+
+대입하면 다음의 공식이 됩니다.
+
+$$ \begin{align} 
+CI &= 25\ \pm 1.96 \frac{18.75}{\sqrt{100}} \
+\end{align} $$
+
+- $$ \bar{x} $$ : 평균값이며 베르누의 분포에서의 평균값의 공식은 $$ P(1-P) $$ -> 
+
+## 2.4 Margin of Error
+
+**문제 01** sample size n 에 대해서, margin of error 는 3입니다. 
 
 
 
@@ -115,18 +142,12 @@ r \\
 
 
 
-# 3. Statistics 
-
-## 3.1 Statistical Significance 
-
-통계적 유의성 (statistical significance)을 찾기 위해서 보통 가설 검증(hypothesis)를 사용하며, 
-확률적으로 "우연히" 발생하지 않은 것으로 생각되는 의미있는 결과를 말합니다. <br>
-보통 p-value 가 5% 이하일때 통계적 유의성이 존재한다고 합니다.
 
 
-## 3.2 Bias and Variance 
 
-아래 링크를 참고 합니다. <br>
-[Ensemble / Bias and Variance Tradeoff / Bagging VS Boosting](/machine-learning/2015/10/25/Bias-Variance-Tradeoff-Ensemble/)
+
+
+
+
 
 
