@@ -137,15 +137,15 @@ from scipy.stats import norm
 def cal_zscore(confidence_level):
     return norm.ppf(1-(1-confidence_level)/2, loc=0, scale=1)
 
-def calculate_sample_size(p_n:int, p:float, cl:float, moe:float):
+def calculate_sample_size(population_size:int, p:float, cl:float, moe:float):
     """
-    :param p_n: population size 모집단의 갯수 ex. 10000
+    :param population_size: population size 모집단의 갯수 ex. 10000
     :param cl: confidence level 신뢰수준 ex. 0.95, 0.99
     :param moe: margin of error 표본 오차 ex. 0.03
     """
     assert 0 < cl < 1 
     assert 0 < moe < 1
-    p_n = int(p_n)
+    p_n = int(population_size)
     y = cal_zscore(cl)**2 * p*(1-p)/(moe**2)
     return y/(1 + (y* 1/p_n))
 
