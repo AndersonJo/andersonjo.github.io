@@ -174,7 +174,7 @@ $ curl -u "elastic:${PASSWORD}" -k "https://localhost:9200" | jq
 {% endhighlight %}
 
 
-## 1.3 Deploy Kibana
+## 1.3 Kibana
 
 먼저 Kibana Pod 을 검색합니다. 
 
@@ -200,19 +200,12 @@ ABCDEFGHIJK12345678902K
 $ kubectl port-forward -n elasticsearch service/elk-kb-http 5601
 {% endhighlight %}
 
-브라우져를 열고 접속을 하되 반드시 "https://" 로 접속을 해야 합니다.<br>
-[https://localhost:5601/](https://localhost:5601/)<br>
+
+[http://localhost:5601/](http://localhost:5601/) 로 접속을 합니다<br>
 접속시 warning이 뜨는데 certificate authority 가 신뢰할수 없어서 그렇습니다. <br>
 문제를 해결하기 위해서는 [링크](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-tls-certificates.html#k8s-setting-up-your-own-certificate) 문서를 참조 합니다.
 
+패스워드는 위에서 얻은 password를 사용하고 default username 은 **elastic** 입니다
 
 
-
-
-{% highlight bash %}
-
-$ IP=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' | cut -d' ' -f 1)
-$ PORT=$(kubectl get service elk-es-http -n elasticsearch --output jsonpath='{.spec.ports[?(@.name=="http")].port}')
-
-$ kubectl get secret elk-es-elastic-user -o=jsonpath='{.data.elastic}' -n elasticsearch | base64 --decode; echo
-{% endhighlight %}
+<img src="{{ page.asset_path }}kibana-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
