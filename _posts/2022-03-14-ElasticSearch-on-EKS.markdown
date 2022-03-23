@@ -165,7 +165,7 @@ $ kubectl port-forward -n elasticsearch service/elk-es-http 9200:9200
 {% highlight bash %}
 {% raw %}
 $ PASSWORD=$(kubectl get secret elk-es-elastic-user -n elasticsearch -o go-template='{{.data.elastic | base64decode}}')
-$ curl -u "elastic:${PASSWORD}" -k "https://localhost:9200"                                                            
+$ curl -u "elastic:${PASSWORD}" -k "https://localhost:9200" | jq                                                            
 {
   "name" : "elk-es-master-0",
   "cluster_name" : "elk",
