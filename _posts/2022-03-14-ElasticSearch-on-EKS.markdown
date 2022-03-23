@@ -163,6 +163,7 @@ $ kubectl port-forward -n elasticsearch service/elk-es-http 9200:9200
 이후 credentials을 얻고 access 요청을 보냅니다. 
 
 {% highlight bash %}
+{% raw %}
 $ PASSWORD=$(kubectl get secret elk-es-elastic-user -n elasticsearch -o go-template='{{.data.elastic | base64decode}}')
 $ curl -u "elastic:${PASSWORD}" -k "https://localhost:9200"                                                            
 {
@@ -182,6 +183,7 @@ $ curl -u "elastic:${PASSWORD}" -k "https://localhost:9200"
   },
   "tagline" : "You Know, for Search"
 }
+{% endraw %}
 {% endhighlight %}
 
 
