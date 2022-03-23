@@ -62,7 +62,6 @@ spec:
   - name: data
     count: 2
     config:
-#      xpack.security.enrollment.enabled: true
       node.roles: ["data"]
 
     volumeClaimTemplates:
