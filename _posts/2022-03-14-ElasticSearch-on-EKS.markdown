@@ -62,7 +62,7 @@ spec:
   - name: data
     count: 2
     config:
-      xpack.security.enrollment.enabled: true
+#      xpack.security.enrollment.enabled: true
       node.roles: ["data"]
 
     volumeClaimTemplates:
@@ -90,6 +90,10 @@ spec:
               memory: 15Gi
         nodeSelector:
           node_role: ml-elasticsearch
+  http:
+    tls:
+      selfSignedCertificate:
+         disabled: true           # http service
 ---
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
@@ -97,8 +101,10 @@ metadata:
   name: elk
   namespace: elasticsearch
 spec:
-  version: 8.1.0
+  version: 8.1.1
   count: 1
+  elasticsearchRef:
+    name: elk
   podTemplate:
     spec:
       containers:
@@ -113,28 +119,10 @@ spec:
           limits:
             memory: 3.5Gi
             cpu: 2
----
-apiVersion: maps.k8s.elastic.co/v1alpha1
-kind: ElasticMapsServer
-metadata:
-  name: elk-mapserver
-  namespace: elasticsearch
-spec:
-  version: 8.1.0
-  podTemplate:
-    spec:
-      containers:
-      - name: maps
-        env:
-          - name: NODE_OPTIONS
-            value: "--max-old-space-size=980"
-        resources:
-          requests:
-            memory: 1Gi
-            cpu: 1
-          limits:
-            memory: 1Gi
-            cpu: 1
+  http:
+    tls:
+      selfSignedCertificate:
+         disabled: true
 EOF
 {% endhighlight %}
 
@@ -217,3 +205,15 @@ $ kubectl port-forward -n elasticsearch service/elk-kb-http 5601
 [https://localhost:5601/](https://localhost:5601/)<br>
 접속시 warning이 뜨는데 certificate authority 가 신뢰할수 없어서 그렇습니다. <br>
 문제를 해결하기 위해서는 [링크](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-tls-certificates.html#k8s-setting-up-your-own-certificate) 문서를 참조 합니다.
+
+
+
+
+
+{% highlight bash %}
+
+$ IP=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' | cut -d' ' -f 1)
+$ PORT=$(kubectl get service elk-es-http -n elasticsearch --output jsonpath='{.spec.ports[?(@.name=="http")].port}')
+
+$ kubectl get secret elk-es-elastic-user -o=jsonpath='{.data.elastic}' -n elasticsearch | base64 --decode; echo
+{% endhighlight %}
