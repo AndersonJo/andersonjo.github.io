@@ -192,9 +192,11 @@ $ curl -u "elastic:${PASSWORD}" -k "https://localhost:9200" | jq
 먼저 Kibana Pod 을 검색합니다. 
 
 {% highlight bash %}
+# 먼저 kibana 를 검색하고 해당 pod을 검색하기 위해서 selector를 검색합니다. 
 $ kubectl get kibana -n elasticsearch -o yaml | grep selector
     selector: common.k8s.elastic.co/type=kibana,kibana.k8s.elastic.co/name=elk
 
+# 해당 selector를 이용해서 kibana에 해당하는 pod 을 검색합니다.
 $ kubectl get pod -n elasticsearch --selector='kibana.k8s.elastic.co/name=elk'
 NAME                      READY   STATUS    RESTARTS   AGE
 elk-kb-7f984c6b77-xgkfd   1/1     Running   0          9m41s
