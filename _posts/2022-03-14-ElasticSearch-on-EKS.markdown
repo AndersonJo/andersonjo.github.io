@@ -4,7 +4,7 @@ title:  "ElasticSearch on EKS"
 date:   2022-03-14 01:00:00 
 categories: "elasticsearch"
 asset_path: /assets/images/ 
-tags: []
+tags: ['elastichq', 'kibana']
 ---
 
 # 1. Installation
@@ -205,7 +205,32 @@ $ kubectl port-forward -n elasticsearch service/elk-kb-http 5601
 접속시 warning이 뜨는데 certificate authority 가 신뢰할수 없어서 그렇습니다. <br>
 문제를 해결하기 위해서는 [링크](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-tls-certificates.html#k8s-setting-up-your-own-certificate) 문서를 참조 합니다.
 
-패스워드는 위에서 얻은 password를 사용하고 default username 은 **elastic** 입니다
+패스워드는 위에서 얻은 password를 사용하고 default username 은 **elastic** 입니9200 
+다
 
 
 <img src="{{ page.asset_path }}kibana-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+## 1.4 Elastic HQ
+
+좋은 관리 툴 입니다. <br>
+
+{% highlight bash %}
+{% raw %}
+# 먼저 port forward 실행 
+$ kubectl port-forward -n elasticsearch service/elk-es-http 9200:9200
+
+# 다른 터미널에서 Elastic HQ 실행
+$ PASSWORD=$(kubectl get secret elk-es-elastic-user -n elasticsearch -o go-template='{{.data.elastic | base64decode}}')
+$ docker run -p 5000:5000 \
+    --name elastic-hq \
+    --net host \
+    --restart=always \
+    -e HQ_DEFAULT_URL="http://elastic:${PASSWORD}@localhost:9200" \
+    -d elastichq/elasticsearch-hq
+{% endraw %}
+{% endhighlight %}
+
+<img src="{{ page.asset_path }}elastichq.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
