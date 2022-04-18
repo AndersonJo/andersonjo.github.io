@@ -110,6 +110,7 @@ $ sudo apt install jenkins
 ## 2.2 Docker Permission for Jenkins
 
 Jenkins에서 docker를 실행할 수 있도록 해줘야 합니다.
+jenkins 유저에게 docker 권한을 주는 것 입니다.
 
 {% highlight bash %}
 sudo usermod -a -G docker jenkins
@@ -258,14 +259,14 @@ Github의 우측상단에 자신의 프로필 사진을 누르고, `Setting -> D
 ## 3.2 ~~Jenkins Credential~~
 
 Jenkins 초기화면에서 `Manage Jenkins -> Configure System` 메뉴에서 GitHub 계정을 설정하는 곳을 찾아서 설정해줍니다.<br>
-이름은 적절하게 만들어주고, API URL은 https://api.github.com 으로 되어 있는데 그냥 default값 사용하고, <br> 
+이름은 적절하게 만들어주고, API URL은 https://api.github.com 으로 되어 있는데 그냥 default값 사용하고, <_br> 
 Manage hooks 체크박스 눌러줍니다. 
 
 <img src="{{ page.asset_path }}jenkins-15.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 Credential 추가를 눌러서, Github에서 생성한 personal access token을  secret에다가 넣고, Github ID도 넣어줍니다. 
 
-<img src="{{ page.asset_path }}jenkins-14.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
+<img src="{{ page.asset_path }}jenkins-14.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">_
 
 
 
@@ -365,46 +366,43 @@ node {
 
 # 5. Kubernetes and Jenkins
 
-## 5.1 Get EKS Cluster Token
+## 5.1 Jenkins Kubernetes CLI Plugin
 
-Jenkins에서 EKS Cluster에 deploy할 수 있도록 Cluster Token을 Jenkins에 넣어 줘야 합니다. <br>
-두가지 중의 하나입니다. <br>
-그냥 default로 있는 secret 사용하던가 또는 새로 Service Account를 만들어서 사용하는 방법입니다.<br> 
-중요한건 default로 사용하던 새로운 Service Account 사용하던, Token 잘 꺼내서 넣어주면 됩니다. 
+
+Jenkins에서는 jenkins 리눅스 유저를 사용해고, 여기서 EKS 로 로그인이 필요합니다. <br>
+Jenkins 플러그인중에 [Kubernetes CLI Plugin](https://plugins.jenkins.io/kubernetes-cli/) 에서 이런 기능을 제공합니다.<br>
+중요한건 사용을 하기 위해서는 Jenkins에서 EKS 로그인에 필요한 credentials을 만들어야 합니다. 
+
 
 
 {% highlight bash %}
-$ kubectl create sa jenkins-deployer
+$ kubectl create serviceaccount jenkins-deployer
 $ kubectl create clusterrolebinding jenkins-deployer-role --clusterrole==cluster-admin --serviceaccount=default:jenkins-deployer
-$ kubectl get secrets
-NAME                           TYPE                                  DATA   AGE
-default-token-7b6nf            kubernetes.io/service-account-token   3      16h
-jenkins-deployer-token-vgsfj   kubernetes.io/service-account-token   3      2m41s
+$ kubectl get secrets jenkins-deployer-token-vgsfj -o go-template --template '{{index .data "token"}}' | base64 -d
+eyJhbGciOiJSUzI1NiIsImtpZCI6IlJNQjV6QlNLT<생략 암호가 나오고 복사함!>
 {% endhighlight %}
 
 다음 명령어로 새로 만들어진  credentials을 복사합니다. 
 
-{% highlight bash %}
-$ kubectl describe secret jenkins-deployer-token-vgsfj
-{% endhighlight %}
 
 
 <img src="{{ page.asset_path }}jenkins-72.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
-
-## 5.2 Credentials 을 Jenkins에 등록
+이후 해당 Credentials 을 Jenkins 에 등록을 합니다.
 
 - Manage Jenkins -> Manage Credentials -> 아무거나 (global) 선택 -> Add Credentials 선택 
-- 여기서는 이름을 kubectl-deploy-credentials 로 하였음
+- Secret: 복사한 token을 붙여넣습니다.
+- ID: kubectl-deploy-credentials 
 
 <img src="{{ page.asset_path }}jenkins-73.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
-## 5.3 다필요없고 제일 쉬운 방법
+## 5.2 다필요없고 제일 쉬운 방법
 
-문제가 되는 부분이 jenkins 유저로 돌아갈때 kubectl 이 안되는 문제가 있는데.. <br>
-아직까지 이걸 되게 만드려면 매우 어려움이 있다. 
+문제가 되는 부분이 jenkins 유저로 돌아갈때 kubectl 이 안되는 문제가 있습니다.. <br>
+정확하게는.. Jenkins Kubernetes CLI Plugin에 문제가 있는듯 하고.. <br>
+아직까지 이걸 되게 만드려면 매우 어려움이 있습니다. <br>
 따라서 그냥 제일 쉽게 하는 방법은 그냥 jenkins 유저로 접속해서 미리 인증 받아놓는 것이다. 
 
 먼저 기존 ACCESS KEY 그리고 SECRET KEY를 파악한다. 
@@ -427,20 +425,9 @@ Default region name [us-east-1]:
 Default output format [json]:
 {% endhighlight %}
 
-`aws eks --region <us-west-2> update-kubeconfig --name <cluster_name>` 명령어로 authentication 한다
+~~`aws eks --region <us-west-2> update-kubeconfig --name <cluster_name>` 명령어로 authentication 한다~~
 
-{% highlight bash %}
-$ aws eks --region us-east-1 update-kubeconfig --name My-EKS
-{% endhighlight %}
-
-현재까지는 이게 가장 쉬운 방법이고, EKS와 기존 plugin이 작동을 잘 안함. <br>
-일단은 이렇게 쓰는게 쉽게 해결하는 방법. 
-
-왜 안되냐하면.. EKS는 내부적으로 `aws-iam-authenticator` 를 사용하는데..<br>
-그냥 Kubernetes에 맞춰져 있는 플러그인 사용시 EKS 인증이 안됨. 
-
-
-## 5.4 Kubernetes Plugin
+## 5.3 Kubernetes Plugin
 
 Jenkins에서 Kubernetes plugin을 설치합니다. 
 
@@ -452,10 +439,10 @@ Jenkins에서 Kubernetes plugin을 설치합니다.
 <img src="{{ page.asset_path }}jenkins-71.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
-## 5.5 Pipeline
+## 5.4 Pipeline
 
  - EKS_API: EKS Cluster -> 당신의 Cluster -> API server endpoint 
-   - 예) `https://D5B994D3CB7B91D8FED3D60B2A7674FA.gr7.us-east-1.eks.amazonaws.com`
+   - 예) `https://6918042C2B9B60669CFCE2B59402AF83.gr7.ap-northeast-2.eks.amazonaws.com`
  - EKS_CLUSTER_NAME: EKS Cluster의 이름
    - 예) `EKS-AI-Cluster`
  - EKS_NAMESPACE: 적용하려는 kubernetes의 namespace
@@ -464,37 +451,46 @@ Jenkins에서 Kubernetes plugin을 설치합니다.
    - `kubectl describe secret default-token-k7bst`
  - ECR_REGION: ECR Region을 적으면 됨
  - ECR_PATH: ECR로 가서 Repository의 URI을 가져오되 `/repository-name` 은 제거한다
-   - 만약 `826443632289.dkr.ecr.us-east-1.amazonaws.com/jenkins-ecr` 이라면 <br>`826443632289.dkr.ecr.us-east-1.amazonaws.com` 까지만 적는다
 
 {% highlight groovy %}
-REGION = 'us-east-1'
-EKS_API = 'https://D5B994D3CB7B91D8FED3D60B2A7674FA.gr7.us-east-1.eks.amazonaws.com'
-EKS_CLUSTER_NAME='EKS-Cluster'
+REGION = 'ap-northeast-2'
+EKS_API = 'https://6918042C2B9B60669CFCE2B59402AF83.gr7.ap-northeast-2.eks.amazonaws.com'
+EKS_CLUSTER_NAME='EKS-AI-Cluster'
 EKS_NAMESPACE='default'
 EKS_JENKINS_CREDENTIAL_ID='kubectl-deploy-credentials'
-ECR_PATH = '826443632289.dkr.ecr.us-east-1.amazonaws.com'
-ECR_IMAGE = 'jenkins-ecr'
+ECR_PATH = '998902534284.dkr.ecr.ap-northeast-2.amazonaws.com'
+ECR_IMAGE = 'test-repository'
+AWS_CREDENTIAL_ID = 'aws-credentials'
 
 node {
     stage('Clone Repository'){
         checkout scm
     }
-
-    stage('Build to ECR'){
-        // Docker Build and Push to ECR
-        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:jenkins-aws-anderson-credentials"){
-            def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_ID}")
-            image.push()
+    stage('Docker Build'){
+        // Docker Build
+        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
+            image = docker.build("${ECR_PATH}/${ECR_IMAGE}", "--network=host --no-cache .")
         }
     }
-    stage('Kubernetes'){
+    stage('Push to ECR'){
+        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
+            image.push("v${env.BUILD_NUMBER}")
+        }
+    }
+    stage('CleanUp Images'){
+        sh"""
+        docker rmi ${ECR_PATH}/${ECR_IMAGE}:v$BUILD_NUMBER
+        docker rmi ${ECR_PATH}/${ECR_IMAGE}:latest
+        """
+    }
+    stage('Deploy to K8S'){
         withKubeConfig([credentialsId: "kubectl-deploy-credentials",
                         serverUrl: "${EKS_API}",
                         clusterName: "${EKS_CLUSTER_NAME}"]){
-
-            sh "sed 's/IMAGE_VERSION/${env.BUILD_ID}/g' nginx-deployment.yaml > output.yaml"
+            sh "sed 's/IMAGE_VERSION/${env.BUILD_ID}/g' service.yaml > output.yaml"
             sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
             sh "kubectl apply -f output.yaml"
+            sh "rm output.yaml"
         }
     }
 }
