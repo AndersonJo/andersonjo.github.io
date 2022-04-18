@@ -238,7 +238,9 @@ Gtihub Repository에 들어가서, 다음과 같이 설정 합니다.<br>
 <img src="{{ page.asset_path }}jenkins-20.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
 
 
-## 3.2 Creating GitHub Personal Access Token
+## ~~3.2 Creating GitHub Personal Access Token~~
+
+* Jenkins 버그로 인해서 작동을 안하고, 그냥 아래의 Github ID, Password 방식으로 해야 작동함
 
 Github의 우측상단에 자신의 프로필 사진을 누르고, `Setting -> Developer Settings -> Personal Access Tokens` 메뉴를 누릅니다.<br>
 이름 넣어주고, scopes은 다음과 같이 선택합니다. 

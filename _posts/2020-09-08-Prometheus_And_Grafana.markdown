@@ -30,7 +30,7 @@ Metrics Server를 설치 합니다. <br>
 자세한 설치방법은 [Metrics-Server Git Repository](https://github.com/kubernetes-sigs/metrics-server)을 참고 합니다.
 
 {% highlight yaml %}
-$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
+$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 {% endhighlight %}
 
 
