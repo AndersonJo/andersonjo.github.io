@@ -272,24 +272,6 @@ Credential 추가를 눌러서, Github에서 생성한 personal access token을 
 
 
 
-## 3.3 Jenkins GitHub 설정
-
-New Item 생성을 하며, Freestyle 을 선택합니다 .
-
-<img src="{{ page.asset_path }}jenkins-10.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
