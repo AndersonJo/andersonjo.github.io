@@ -183,10 +183,10 @@ bf283■■■■■■■■■■■■■■■■■■■ee24
 
 1. Manage Jenkins -> Manage Plugins 
 2. 다음을 설치 합니다. 
-   1. **`CloudBees AWS Credentials Plugin`**
-   2. **`Docker Pipeline`**
-   3. **`Amazon ECR plugin`**
-   4. **`Kubernetes CLI`**
+   1. **`CloudBees AWS Credentials Plugin`** 
+   2. **`Docker Pipeline`** 
+   3. **`Amazon ECR plugin`** 
+   4. **`Kubernetes CLI`** (작동 안함. 하지만 일단 설치)
    
 
 <img src="{{ page.asset_path }}jenkins-33.png" class="center img-responsive img-rounded img-fluid" style="border:1px solid #aaa; max-width:800px;">
@@ -611,7 +611,8 @@ gunicorn>=20.1.0
 
 {% highlight yaml %}
 apiVersion: apps/v1
-kind: Deployment
+kind: DeploymentCredential 생성시에는 Login ID, Password 로 생성합니다.
+(Secret Text로 하면 Jenkins 버
 metadata:
   name: hello-flask
   labels:
