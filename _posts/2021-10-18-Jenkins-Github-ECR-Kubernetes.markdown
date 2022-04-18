@@ -513,8 +513,139 @@ external IP로 들어간후.. nginx text 내용 변경하면.. 변경된 내용 
 
 
 
+# 6. Code
+
+## 6.1 Flask App 
+
+{% highlight python %}
+import os
+from flask import Flask, request
+
+app = Flask(__name__)
 
 
+@app.route('/')
+def hello_world():
+    name = request.args.get('name', 'World')
+    return 'Hello {}!\n'.format(name)
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+{% endhighlight %}
+
+## 6.2 Dcokerfile
+
+{% highlight bash %}
+FROM python:3.8
+MAINTAINER Anderson Jo
+USER root
+ENV PYTHONUNBUFFERED=True
+ENV APP_HOME=/app
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+COPY . ./
+RUN pip install --upgrade pip \
+    && pip install -r requirements.txt
+CMD exec gunicorn --bind 0.0.0.0:80 --workers 4 --threads 8 app:app
+{% endhighlight %}
+
+## 6.3 Jenkinsfile
+
+{% highlight bash %}
+REGION = 'ap-northeast-2'
+EKS_API = 'https://6918042C2B9B60669CFCE2B59402AF83.gr7.ap-northeast-2.eks.amazonaws.com'
+EKS_CLUSTER_NAME='test-cluster'
+EKS_NAMESPACE='default'
+EKS_JENKINS_CREDENTIAL_ID='kubectl-deploy-credentials'
+ECR_PATH = '998902534284.dkr.ecr.ap-northeast-2.amazonaws.com'
+ECR_IMAGE = 'test-repository'
+AWS_CREDENTIAL_ID = 'aws-credentials'
+
+node {
+    stage('Clone Repository'){
+        checkout scm
+    }
+    stage('Docker Build'){
+        // Docker Build
+        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
+            image = docker.build("${ECR_PATH}/${ECR_IMAGE}", "--network=host --no-cache .")
+        }
+    }
+    stage('Push to ECR'){
+        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
+            image.push("v${env.BUILD_NUMBER}")
+        }
+    }
+    stage('CleanUp Images'){
+        sh"""
+        docker rmi ${ECR_PATH}/${ECR_IMAGE}:v$BUILD_NUMBER
+        docker rmi ${ECR_PATH}/${ECR_IMAGE}:latest
+        """
+    }
+    stage('Deploy to K8S'){
+        withKubeConfig([credentialsId: "kubectl-deploy-credentials",
+                        serverUrl: "${EKS_API}",
+                        clusterName: "${EKS_CLUSTER_NAME}"]){
+            sh "sed 's/IMAGE_VERSION/${env.BUILD_ID}/g' service.yaml > output.yaml"
+            sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
+            sh "kubectl apply -f output.yaml"
+            sh "rm output.yaml"
+        }
+    }
+}
+{% endhighlight %}
+
+
+## 6.3 requirements.txt
+
+{% highlight bash %}
+# Server
+Flask>=2.0.2
+Flask-Cors>=3.0.10
+gunicorn>=20.1.0
+{% endhighlight %}
+
+
+## 6.4 service.yaml
+
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-flask
+  labels:
+    app: hello-flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-flask
+  template:
+    metadata:
+      labels:
+        app: hello-flask
+    spec:
+      containers:
+      - name: flask-app
+        image: 998902534284.dkr.ecr.ap-northeast-2.amazonaws.com/test-repository:IMAGE_VERSION
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-flask-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-flask
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+{% endhighlight %}
 
 
 
