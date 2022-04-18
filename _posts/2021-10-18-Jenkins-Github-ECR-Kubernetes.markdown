@@ -255,7 +255,7 @@ Github의 우측상단에 자신의 프로필 사진을 누르고, `Setting -> D
 
 
 
-## 3.2 Jenkins Credential
+## 3.2 ~~Jenkins Credential~~
 
 Jenkins 초기화면에서 `Manage Jenkins -> Configure System` 메뉴에서 GitHub 계정을 설정하는 곳을 찾아서 설정해줍니다.<br>
 이름은 적절하게 만들어주고, API URL은 https://api.github.com 으로 되어 있는데 그냥 default값 사용하고, <br> 
