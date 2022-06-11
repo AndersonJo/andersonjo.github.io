@@ -14,17 +14,23 @@ tags: ['linear', 'gradient', 'loss']
 
 derivative of x 에 대한 테이블
 
-| Rule        | Function         | Derivative        |
-|:------------|:-----------------|:------------------| 
-| Constant    | c                | 0                 |
-| Line        | x                | 1                 |
-|             | ax               | a                 |
-| Square      | $$ x^2 $$        | $$ 2x $$          |
-| Square Root | $$ \sqrt{x} $$   | $$ ½ x^{-½} $$    |
-| Exponential | $$ e^x $$        | $$ e^x $$         |
-|             | $$ a^x $$        | $$ \ln(a) a^x $$  |
-| Logarithms  | $$ \ln(x) $$     | 1/x               |
-|             | $$ \log_a(x) $$  | 1/ (x ln(a))      |
+| Rule                       | Function        | Derivative         |
+|:---------------------------|:----------------|:-------------------| 
+| Constant                   | c               | 0                  |
+| Line                       | x               | 1                  |
+|                            | ax              | a                  |
+| Square                     | $$ x^2 $$       | $$ 2x $$           |
+| Square Root                | $$ \sqrt{x} $$  | $$ ½ x^{-½} $$     |
+| Exponential                | $$ e^x $$       | $$ e^x $$          |
+|                            | $$ a^x $$       | $$ \ln(a) a^x $$   |
+| Logarithms                 | $$ \ln(x) $$    | 1/x                |
+|                            | $$ \log_a(x) $$ | 1/ (x ln(a))       |
+| Trigonometry (x is radian) | sin(X)          | cos(x)             |
+|                            | cos(x)          | -sin(x)            |
+|                            | tan(x)          | $$ sec^2(x) $$     |
+| Inverse Trigonometry       | $$ sin^-1(x) $$ | 1/ \sqrt{(1-x^2)}  |
+|                            | $$ cos^-1(x) $$ | -1/\sqrt{(1-x^2)}  |
+
 
 Function Rules!
 
