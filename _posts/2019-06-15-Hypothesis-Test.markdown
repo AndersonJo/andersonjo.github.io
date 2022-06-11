@@ -111,7 +111,7 @@ $$ \beta = P(\text{type 2 error}) = P(\text{accept } H_0 | H_0 \text{ is false})
 **즉, $$ \alpha $$ 와 $$ \beta $$ 는 서로 상반된 크기를 갖습니다.**
 
 
-## P-Value
+## 2.6 P-Value
 
 - 1종 오류 == p-value (일단 쉽게 이해)
 - **`귀무가설을 잘못 기각시킬 확률`** (정확히는 틀린말이나 쉽게 이해하기 위해)
@@ -144,14 +144,9 @@ Cumulative distribution function (CDF)를 사용해서 p-value를 구한다음, 
 
 
 
-## Parametric Test
-
-1. 표본의 갯수가 30개 이상이면 parametric test (모수적 검정)을 하면 됩니다. 
-2. 표본의 갯수가 10개이상 30개 미만이면서, 정규성 검정을 통과한다면 모수적 검정을 사용할수 있습니다. (실패하면 비모수적 검정사용)
-3. 표본의 갯수가 10개미만이라면 non-parametric test (비모수적 검정)을 진행합니다.
 
 
-# Normality Test
+# 3. Normality Test
 
 - 현실에서는 바빠서 대충 t-test돌리고 하지만, 사실 통계라는 것은 상당히 많은 제약사항들이 붙어 있습니다. <br> `이때 데이터는 정규분포를 따라야 한다` 와 같은 문장이 있다면 정규성 검증을 통해서 정규분포를 따르는지 먼저 체크를 해줘야 합니다.
 
@@ -161,7 +156,14 @@ Cumulative distribution function (CDF)를 사용해서 p-value를 구한다음, 
 - 만약 표본의 갯수가 30개 이상이라면, 그냥 모수적 검정을 사용해도 됩니다.
 
 
-## Normal Quantile-Quantile Plot
+## 3.1 Parametric Test
+
+1. 표본의 갯수가 30개 이상이면 parametric test (모수적 검정)을 하면 됩니다. 
+2. 표본의 갯수가 10개이상 30개 미만이면서, 정규성 검정을 통과한다면 모수적 검정을 사용할수 있습니다. (실패하면 비모수적 검정사용)
+3. 표본의 갯수가 10개미만이라면 non-parametric test (비모수적 검정)을 진행합니다.
+
+
+## 3.2 Normal Quantile-Quantile Plot
 
  - 분위수-분위수 그래프 
  - 정규분포를 따를 경우 일직선으로 나온다
@@ -183,7 +185,7 @@ plt.show()
 
 <img src="{{ page.asset_path }}hypothesis-test-qqplot.png" class="img-responsive img-rounded img-fluid">
 
-## Histogram
+## 3.3 Histogram
 
 {% highlight python %} 
 uniform = np.random.random(size=100) * 3.5 + 120
@@ -197,7 +199,7 @@ legend()
 <img src="{{ page.asset_path }}hypothesis-test-histogram.png" class="img-responsive img-rounded img-fluid">
 
 
-## Shapiro-Wilks Test
+## 3.4 Shapiro-Wilks Test
 
  - 샤피로 윌크 검정
  - 각 샘플안의 관측치는 독립 동일 분포를 따른다 (independetn and identically distributed - iid)
@@ -226,7 +228,7 @@ legend()
 <img src="{{ page.asset_path }}hypothesis-test-shapiro-wilk.png" class="img-responsive img-rounded img-fluid">
 
 
-## D'Agostino's K^2 Test
+## 3.5 D'Agostino's K^2 Test
  
  - 디아고스티노 검정 
  - 각 샘플안의 관측치는 독립 동일 분포를 따른다 (independetn and identically distributed - iid)
@@ -251,7 +253,7 @@ uniform data | 통계치: 29.70 | p-value:0.00000 | 정규분포?: False
 normal data  | 통계치: 1.85 | p-value:0.39570 | 정규분포?: True
 {% endhighlight %}
 
-## Anderson-Darling Test
+## 3.6 Anderson-Darling Test
 
  - 각 샘플안의 관측치는 독립 동일 분포를 따른다 (independetn and identically distributed - iid)
  - $$ H_0 $$: 귀무가설은 정규분포를 따른다
@@ -279,7 +281,7 @@ print(f'[r2] statistic:{r2.statistic:5.2f} | significance_level: {r2.significanc
 
 
 
-# T-Test
+# 4. T-Test
 
 
 - 모집단의 표준편차 $$ \sigma $$ 를 모를때 사용. (표준오차 $$ \frac{s}{\sqrt{n}} $$ 를  대신 사용)
@@ -288,7 +290,7 @@ print(f'[r2] statistic:{r2.statistic:5.2f} | significance_level: {r2.significanc
 - 관측치는 모두 독립적이어야 한다
 - outlier 제거 필수
 
-## One-Sample T-Test 
+## 4.1 One-Sample T-Test 
 
 - 단일표본 T 검정 
 - 표본이 하나일 때, 모집단의 평균과 표본집단의 평균 사이에 차이가 있는지 검정한다 <br>(사실 여기서 모집단은 어떤 값과 비교한다고 생각해도 된다 - ex. 전년도 판매 평균가와 금년도 판매 평균가)
@@ -308,7 +310,7 @@ $$ \text{df} = n-1  $$
 
 
 
-### Scipy
+### 4.1.1 Scipy
 
 scipy에서는 [ttest_1samp](https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.ttest_1samp.html) 함수를 사용할 수 있습니다. <br>
 다만 ttest_1samp 함수는 two-tailed test입니다. <br>
@@ -358,7 +360,7 @@ data
 <img src="{{ page.asset_path }}hypothesis-test-t-test.png" class="img-responsive img-rounded img-fluid">
 
 
-### 직접 만들어서 사용
+### 4.1.2 직접 만들어서 사용
 
 * critical value: t.ppf 사용하며, (CDF값을 -> x값으로 변환. `t.ppf(0.95, 10) = 1.812`)
 * p-value: t.cdf(abs(t_statistic), df) 사용 
@@ -407,7 +409,7 @@ df
 
 
 
-## Two-Sample T-Test (Independent T-Test)
+## 4.2 Two-Sample T-Test (Independent T-Test)
 
 * 독립표본 T 검정
 * 독립된 두 그룹간의 평균차이가 있는지 검정
@@ -436,7 +438,7 @@ S_p &= \sqrt{\frac{ \sum_{\sim x_1}(x_{i} - \bar{x}_1)^2 + \sum_{\sim x_2}(x_{j}
 - $$ n_1 + n_2 -2 $$: degrees of freeddom
 
 
-### Scipy
+### 4.2.1 Scipy
 
 * ttest_ind
   - Calculate the T-test for the means of two independent samples of scores.
@@ -481,7 +483,7 @@ data
 
 
 
-### Statsmodels
+### 4.2.2 Statsmodels
 
 statsmodels을 사용하면 명시적으로 smaller, larger등으로 단측 검정을 할 수 있으며, <br>
 pooled 또는 unequal 등의 옵션으로 Welsh ttest with Satterthwait degrees of freedom 을 사용할수 있다 
@@ -535,7 +537,7 @@ data
 
 
 
-### 직접 만들어서 사용
+### 4.2.3 직접 만들어서 사용
 
 {% highlight python %}
 from scipy.stats import t
@@ -585,7 +587,7 @@ df
 
 
 
-## Paired T-Test (Dependent Sample T-Test)
+## 4.3 Paired T-Test (Dependent Sample T-Test)
 
 * 대응표본 T 검정
 * 독립표본 T 검정은 서로 다른 집단간의 평균에 유의미한 차이가 있는지를 알아보는 것이고, <br>대응표본 T 검정은 **동일한 집단**에 대해서 **사전** 그리고 **사후** 등의 차이를 보고자 할때 사용 <br>예를들어, 특정 약물이 **동일한 환자집단**에게 사용시 **사용전** 그리고 **사용후**의 혈당수치에 유의미한 차이가 있는지를 보고자 할때 사용
@@ -608,7 +610,7 @@ $$ \begin{align} T &= \frac{\bar{d}}{\frac{s_d}{\sqrt{n}}}
 
 
 
-### Scipy
+### 4.3.1 Scipy
 
 * ttest_rel
    - Calculate the T-test on TWO RELATED samples of scores, a and b
@@ -651,7 +653,7 @@ data
 <img src="{{ page.asset_path }}hypothesis-test-paired-t-test.png" class="img-responsive img-rounded img-fluid">
 
 
-### 직접 만들어서 사용
+### 4.3.2 직접 만들어서 사용
 
 {% highlight python %}   
 def my_ttest_rel(a, b, alpha=0.05):
@@ -695,7 +697,7 @@ df
 
 
 
-# Chi-Square Test
+# 5. Chi-Square Test
 
 * Pearson Chi-Squared Test 라고도 함
 * `categorical 독립변수`와 `categorical 종속변수` 사이의 관계를 분석 (따라서 상관관계 분석이라고도 볼 수 있다)
@@ -720,7 +722,7 @@ $$ \chi^2 = \sum \frac{(O - E)^2}{E} $$
 
 
 
-## Contingency Table (Two-way Frequency Table)
+## 5.1 Contingency Table (Two-way Frequency Table)
 
 여러개의 **categorical variables의 관계**를 요약해서 보여줄때 사용하며, <br>
 두 변수가 동시에 보이는 일종의 frequency distribution table입니다.
@@ -736,18 +738,18 @@ $$ \chi^2 = \sum \frac{(O - E)^2}{E} $$
 
 Contingency Table의 장점은 여러개가 있습니다. <br>
 
-### 통계치
+### 5.1.1 통계치
 
 아래, 우측의 "합계" 같은 **통계치**는 확률 계산을 하는데 유용하게 사용될 수 있습니다. 
  - ex) 빅맥을 고를 확률: $$ \frac{1958}{4400} = 0.445 $$ 
 
-### Conditional probability
+### 5.1.2 Conditional probability
 
 **Conditional probability** 계산하는데 유용하게 사용할 수 있습니다.
    - 남자라는 조건을 가정하에, 1955버거를 좋아할 확률: $$ \frac{872}{2351} = 0.37 $$
    - 1955를 좋아한다는 가정하에, 남자일 확률: $$ \frac{872}{1691} = 0.5156 $$
   
-### Expected frequency
+### 5.1.3 Expected frequency
 
 **Expected frequency** 를 계산할때도 편하게 사용할 수 있습니다.
 
@@ -775,7 +777,7 @@ expected frequency를 알면 좋은 점은 two variables의 독립성을 검정�
 
 
 
-## Chi Square Test in Pandas
+## 5.2 Chi Square Test in Pandas
 
 - 두 categorical variables 이 서로 독립적인지 (연관성이 없음) 또는 종속적인지 (연관성이 있음) 검정 할 수 있습니다. 
 - 오직 categorical data (성별, 색상) 에만 사용될 수 있습니다. 
@@ -879,7 +881,7 @@ chi square statistic: 8.455522488460222
 
 
 
-## Chi Square Test in Scipy
+## 5.3 Chi Square Test in Scipy
 
 Scipy를 사용하면 매우 쉽게 해결할 수 있습니다.<br>
 chi2_contingency 함수를 사용하고, contingency table을 넣으면 끝입니다.
