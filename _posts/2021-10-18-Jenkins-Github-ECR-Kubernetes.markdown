@@ -376,10 +376,12 @@ Jenkins 플러그인중에 [Kubernetes CLI Plugin](https://plugins.jenkins.io/ku
 
 
 {% highlight bash %}
+{% raw %}
 $ kubectl create serviceaccount jenkins-deployer
 $ kubectl create clusterrolebinding jenkins-deployer-role --clusterrole==cluster-admin --serviceaccount=default:jenkins-deployer
 $ kubectl get secrets jenkins-deployer-token-vgsfj -o go-template --template '{{index .data "token"}}' | base64 -d
 eyJhbGciOiJSUzI1NiIsImtpZCI6IlJNQjV6QlNLT<생략 암호가 나오고 복사함!>
+{% endraw %}
 {% endhighlight %}
 
 다음 명령어로 새로 만들어진  credentials을 복사합니다. 
