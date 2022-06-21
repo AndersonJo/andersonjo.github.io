@@ -613,8 +613,7 @@ gunicorn>=20.1.0
 
 {% highlight yaml %}
 apiVersion: apps/v1
-kind: DeploymentCredential 생성시에는 Login ID, Password 로 생성합니다.
-(Secret Text로 하면 Jenkins 버
+kind: Deployment
 metadata:
   name: hello-flask
   labels:
