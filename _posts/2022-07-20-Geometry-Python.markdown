@@ -17,3 +17,13 @@ Degree &= Radian \times \frac{180}{\pi} \\
 2\pi Radians &= 360^o \\
 \pi Radians &= 180^o
 \end{align} $$
+
+{% highlight python %}
+import math
+
+def to_radian(degree):
+    return degree * math.pi / 180
+
+def to_degree(radian):
+    return radian * 180 / math.pi
+{% endhighlight %}
