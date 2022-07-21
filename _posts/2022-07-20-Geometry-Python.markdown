@@ -78,8 +78,7 @@ r &= \sqrt{x^2 + y^2}
 > math.tan(60 * math.pi / 180)  # \sqrt(3)
 {% endhighlight %}
 
-
-## 1.3 좌표계를 통한 각도 계산
+좌표계를 통한 radian값 계산은 다음과 같이 합니다.
 
 {% highlight python %}
 def sin(x, y):
@@ -89,10 +88,18 @@ def sin(x, y):
 def cos(x, y):
     r = math.sqrt(y ** 2 + x ** 2)
     return to_radian(x / r)
+
+def tan(x, y):
+    return to_radian(y / x)
 {% endhighlight %}
 
 
-<img src="{{ page.asset_path }}trigonometry-01.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
+## 1.3 arctangent
 
-위의 사진에서 좌표 (-4, 3) 다음과 같이 계산할 수 있습니다. 
+만약 좌표를 알고 있을때, $$ \theta $$ 에 해당하는 radian 값을 알고 싶을때 어떻게 계산하면 될까요?
 
+<img src="{{ page.asset_path }}trigonometry-02.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
+
+arctan 를 사용해서 각도를 계산할 수 있습니다.<br>
+arctan는 tan의 역함수이며, 수식으로는 $$ tan^{-1} = arctan $$ 이렇게 사용합니다.<br>
+(주의할점은 $$ tan^{-1} $$ 에서 -1의 의미가 역함수라는 뜻이지, -1 지수가 아닙니다. 즉 $$ tan^{-1} \neq  \frac{1}{tan} $$ 입니다) 
