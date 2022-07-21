@@ -108,3 +108,7 @@ arctan는 tan의 역함수이며, 수식으로는 $$ tan^{-1} = arctan $$ 이렇
 $$ \begin{align} \theta &= tan^{-1}(\frac{hypotenuse}{base}) \\
 &= arctan(\frac{r}{x})
 \end{align} $$
+
+{% highlight python %}
+> math.atan2(3, 3)  # 0.7853 -> degree 변환시 45
+{% endhighlight %}  
