@@ -39,7 +39,7 @@ return radian * 180 / math.pi
 $$ \begin{align}
 sin\theta &= y / r \\
 cos\theta &= x / r \\
-tan\theta &= y / x \\
+tan\theta &= y / x = sin\theta / cos\theta \\
 csc\theta &= 1 / sin\theta \\
 sec\theta &= 1 / cos\theta \\
 cat\theta &= 1 / tan\theta \\
@@ -49,6 +49,7 @@ r &= \sqrt{x^2 + y^2}
 - y: height (높이)
 - x: base (밑변)
 - r: hypotenuse (빗변)
+- csc: 코시컨트 
 
 참고.. 중학교때 배운것들..
 
