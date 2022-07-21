@@ -28,10 +28,10 @@ Degree &= Radian \times \frac{180}{\pi} \\
 import math
 
 def to_radian(degree):
-return degree * math.pi / 180
+    return degree * math.pi / 180
 
 def to_degree(radian):
-return radian * 180 / math.pi
+    return radian * 180 / math.pi
 {% endhighlight %}
 
 ## 1.2 Basic Trigonometry
