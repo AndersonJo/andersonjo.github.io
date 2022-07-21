@@ -47,3 +47,13 @@ r &= \sqrt{x^2 + y^2}
  - y: height (높이)
  - x: base (밑변)
  - r: hypotenuse (빗변)
+
+| $$ \theta $$     |  $$ 0^o $$  |
+|:-----------------|:------------|
+| $$ sin\theta $$  | 0           |
+
+
+<img src="{{ page.asset_path }}trigonometry-01.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
+
+위의 사진에서 좌표 (-4, 3) 다음과 같이 계산할 수 있습니다. 
+
