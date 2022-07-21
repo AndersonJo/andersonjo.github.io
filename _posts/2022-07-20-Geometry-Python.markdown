@@ -15,7 +15,7 @@ tags: ['interview', 'math', 'sin', 'cos', 'tan']
 
 ## 1.1 Degree and Radian
 
-Python의 삼각 함수는 모두 radian을 기본값으로 사용합니다.
+**Python의 삼각 함수는 모두 radian을 기본값으로 사용**합니다.
 
 $$ \begin{align}
 Radian &= Degree \times \frac{\pi}{180} \\
@@ -61,6 +61,13 @@ r &= \sqrt{x^2 + y^2}
 | $$ cos\theta $$ | 1             | $$ \frac{\sqrt{3}}{2} $$ | $$ \frac{\sqrt{2}}{2} $$ | $$ \frac{1}{2}        $$ | 0                     |
 | $$ tan\theta $$ | 0             | $$ \frac{\sqrt{3}}{3} $$ | 1                        | $$ \sqrt{3} $$           | 0                     |
 | Radian          |               | $$ \frac{\pi}{6} $$      | $$ \frac{\pi}{4} $$      | $$ \frac{\pi}{3} $$      | $$ \frac{\pi}{2} $$   |
+
+
+{% highlight python %}
+> math.sin(30 * math.pi / 180)  # 0.5
+> math.cos(45 * math.pi / 180)  # \sqrt(2)/2
+> math.tan(60 * math.pi / 180)  # \sqrt(3)
+{% endhighlight %}
 
 
 ## 1.3 각
