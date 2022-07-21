@@ -109,6 +109,8 @@ $$ \begin{align} \theta &= tan^{-1}(\frac{hypotenuse}{base}) \\
 &= arctan(\frac{r}{x})
 \end{align} $$
 
+Python에서는 math.atan2(y, x) -> radian 을 사용합니다.  
+
 {% highlight python %}
 > math.atan2(3, 3)  # 0.7853 -> degree 변환시 45
 {% endhighlight %}  
