@@ -4,14 +4,14 @@ title:  "Basic Trigonometric in Python"
 date:   2022-07-20 01:00:00
 categories: "math"
 asset_path: /assets/images/
-tags: ['interview', 'math', 'sin', 'cos', 'tan']
+tags: ['interview', 'math', 'sin', 'cos', 'tan', 'arctan', 'arcsin']
 ---
 
 최근에 코딩 테스트를 봤는데, arctan 물어보는 것이 나왔습니다. <br>
 다행히 모빌리티에서 geometry 관련 코딩을 해놓은게 있어서 코딩 테스트는..<br>
 다행히 풀었지만, 기억을 더듬더듬 했습니다. 그래서.. 다시 정리.
 
-# 1. Basic Geometry
+# 1. Basic Trigonometry
 
 ## 1.1 Degree and Radian
 
@@ -94,7 +94,7 @@ def tan(x, y):
 {% endhighlight %}
 
 
-## 1.3 arctangent
+## 1.3 arctangent - x, y 좌표를 알때 각도를 알고 싶을때 
 
 만약 좌표를 알고 있을때, $$ \theta $$ 에 해당하는 radian 값을 알고 싶을때 어떻게 계산하면 될까요?
 
@@ -103,3 +103,8 @@ def tan(x, y):
 arctan 를 사용해서 각도를 계산할 수 있습니다.<br>
 arctan는 tan의 역함수이며, 수식으로는 $$ tan^{-1} = arctan $$ 이렇게 사용합니다.<br>
 (주의할점은 $$ tan^{-1} $$ 에서 -1의 의미가 역함수라는 뜻이지, -1 지수가 아닙니다. 즉 $$ tan^{-1} \neq  \frac{1}{tan} $$ 입니다) 
+
+
+$$ \begin{align} \theta &= tan^{-1}(\frac{hypotenuse}{base}) \\
+&= arctan(\frac{r}{x})
+\end{align} $$
