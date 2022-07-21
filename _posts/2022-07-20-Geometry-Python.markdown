@@ -40,6 +40,9 @@ $$ \begin{align}
 sin\theta &= y / r \\
 cos\theta &= x / r \\
 tan\theta &= y / x \\
+csc\theta &= 1 / sin\theta \\
+sec\theta &= 1 / cos\theta \\
+cat\theta &= 1 / tan\theta \\
 r &= \sqrt{x^2 + y^2}
 \end{align} $$
 
@@ -55,6 +58,11 @@ r &= \sqrt{x^2 + y^2}
 | $$ cos\theta $$ | 1             | $$ \frac{\sqrt{3}}{2} $$ | $$ \frac{\sqrt{2}}{2} $$ | $$ \frac{1}{2}        $$ | 0                     |
 | $$ tan\theta $$ | 0             | $$ \frac{\sqrt{3}}{3} $$ | 1                        | $$ \sqrt{3} $$           | 0                     |
 | Radian          |               | $$ \frac{\pi}{6} $$      | $$ \frac{\pi}{4} $$      | $$ \frac{\pi}{3} $$      | $$ \frac{\pi}{2} $$   |
+
+
+## 1.3 각
+
+
 
 <img src="{{ page.asset_path }}trigonometry-01.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
 
