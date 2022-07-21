@@ -48,9 +48,9 @@ r &= \sqrt{x^2 + y^2}
  - x: base (밑변)
  - r: hypotenuse (빗변)
 
-| $$ \theta $$     |  $$ 0^\circ $$  | $$ 30^\circ $$
-|:-----------------|:------------|
-| $$ sin\theta $$  | 0           |
+| $$ \theta $$     | $$ 0^\circ $$ | $$ 30^\circ $$ | $$ 45^\circ $$            | $$ 60^\circ $$       | $$ 90^\circ $$ |
+|:-----------------|:--------------|:---------------|:--------------------------|:---------------------|:---------------|
+| $$ sin\theta $$  | 0             | 1/2            | $$ \frac{\sqrt{2}}{2} $$  | \frac{\sqrt{3}}{2}   | 1              |
 
 
 <img src="{{ page.asset_path }}trigonometry-01.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
