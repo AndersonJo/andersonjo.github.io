@@ -12,8 +12,8 @@ tags: ['interview', 'math', 'sin', 'cos', 'tan']
 ## 1.1 Degree and Radian 
 
 $$ \begin{align}
-Radian &= Degree \time \frac{\pi}{180} \\
-Degree &= Radian \time \frac{180}{\pi} \\
+Radian &= Degree \times \frac{\pi}{180} \\
+Degree &= Radian \times \frac{180}{\pi} \\
 2\pi Radians &= 360^o \\
 \pi Radians &= 180^o
 \end{align} $$
