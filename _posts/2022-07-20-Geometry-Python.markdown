@@ -1,7 +1,7 @@
 ---
 layout: post 
 title:  "Basic Geometry in Python"
-date:   2022-04-02 01:00:00 
+date:   2022-07-20 01:00:00 
 categories: "math"
 asset_path: /assets/images/ 
 tags: ['interview', 'math', 'sin', 'cos', 'tan']
