@@ -34,6 +34,15 @@ def to_degree(radian):
     return radian * 180 / math.pi
 {% endhighlight %}
 
+라이러리 사용시 math 사용
+
+{% highlight python %}
+> import math
+> 
+> math.degrees(2 * math.pi)  # 360
+> math.radians(180)  # 3.141596...
+{% endhighlight %}
+
 ## 1.2 Basic Trigonometry
 
 $$ \begin{align}
@@ -70,8 +79,17 @@ r &= \sqrt{x^2 + y^2}
 {% endhighlight %}
 
 
-## 1.3 각
+## 1.3 좌표계를 통한 각도 계산
 
+{% highlight python %}
+def sin(x, y):
+    r = math.sqrt(y ** 2 + x ** 2)
+    return to_radian(y / r)
+
+def cos(x, y):
+    r = math.sqrt(y ** 2 + x ** 2)
+    return to_radian(x / r)
+{% endhighlight %}
 
 
 <img src="{{ page.asset_path }}trigonometry-01.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
