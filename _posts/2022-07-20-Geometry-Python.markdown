@@ -49,7 +49,9 @@ r &= \sqrt{x^2 + y^2}
 - y: height (높이)
 - x: base (밑변)
 - r: hypotenuse (빗변)
-- csc: 코시컨트 
+- csc: cosecant (코시컨트)
+- sec: secant (시컨트)
+- cot: cotangent (코탄젠트)
 
 참고.. 중학교때 배운것들..
 
