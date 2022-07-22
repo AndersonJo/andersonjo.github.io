@@ -104,6 +104,7 @@ arctan 를 사용해서 각도를 계산할 수 있습니다.<br>
 arctan는 tan의 역함수이며, 수식으로는 $$ tan^{-1} = arctan $$ 이렇게 사용합니다.<br>
 (주의할점은 $$ tan^{-1} $$ 에서 -1의 의미가 역함수라는 뜻이지, -1 지수가 아닙니다. 즉 $$ tan^{-1} \neq  \frac{1}{tan} $$ 입니다) 
 
+- 리턴값의 범위: $$ -\pi/2 $$ 부터 $$ \pi / 2 $$ 의 radians 입니다. (즉 0 ~ 180도부터 0 ~ -180도 까지의 범위입니다.)
 
 $$ \begin{align} \theta &= tan^{-1}(\frac{hypotenuse}{base}) \\
 &= arctan(\frac{r}{x})
@@ -112,5 +113,19 @@ $$ \begin{align} \theta &= tan^{-1}(\frac{hypotenuse}{base}) \\
 Python에서는 math.atan2(y, x) -> radian 을 사용합니다.  
 
 {% highlight python %}
-> math.atan2(3, 3)  # 0.7853 -> degree 변환시 45
+# 포인트는 atan2 의 범위는 [-pi/2, pi/2] 이기 때문에 
+# 180도 이상부터는 (y값이 음수) 부터는 음수의 영역대 입니다. 
+# 중요한 이유는 atan2 의 각도를 array와 함께 사용시 180도에서 -> -179 도로 변하게 되니.. 
+# 범위를 찾는경우 circular array 를 사용하는 방법으로 문제를 해결해야 합니다.    
+> math.atan2( 0,  1)  # 0 
+> math.atan2( 1,  1)  # 0.7853 radians // 45도
+> math.atan2( 1,  0)  # 1.5707 radians // 90도
+> math.atan2( 1, -1)  # 2.3561 radians // 135도
+> math.atan2( 0, -1)  # 3.1415 radians // 180도
+> math.atan2( 0, -1)  # 3.1415 radians // 180도
+> math.atan2(-1, -1)  # -2.3561 radians // -135도
+> math.atan2(-1,  0)  # -1.5707 radians // -90도
+> math.atan2(-1,  1)  # -0.7853 radians // -45도
+> math.atan2( 0,  1)  # 0
+> math.atan2( 0,  0)  # 0
 {% endhighlight %}  
