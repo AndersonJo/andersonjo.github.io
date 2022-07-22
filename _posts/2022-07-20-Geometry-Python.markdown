@@ -122,7 +122,7 @@ Python에서는 math.atan2(y, x) -> radian 을 사용합니다.
 > math.atan2( 1,  0)  # 1.5707 radians // 90도
 > math.atan2( 1, -1)  # 2.3561 radians // 135도
 > math.atan2( 0, -1)  # 3.1415 radians // 180도
-> math.atan2( 0, -1)  # 3.1415 radians // 180도
+> math.atan2(-0.00000001, -1)  # -3.1415 radians // -179.99999도
 > math.atan2(-1, -1)  # -2.3561 radians // -135도
 > math.atan2(-1,  0)  # -1.5707 radians // -90도
 > math.atan2(-1,  1)  # -0.7853 radians // -45도
