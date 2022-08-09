@@ -1,0 +1,84 @@
+---
+layout: post
+title:  "PyEnv"
+date:   2022-08-06 01:00:00
+categories: "python"
+asset_path: /assets/images/
+tags: ['virtualenv']
+---
+
+# 1. Installation 
+
+Dependencies 는 다음과 같습니다.
+
+{% highlight bash %}
+$ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev
+{% endhighlight %}
+
+PyEnv 설치는 다음과 같이 합니다. 
+
+{% highlight bash %}
+$ curl https://pyenv.run | bash
+{% endhighlight %}
+
+update 그리고 uninstall 은 다음과 같이 합니다.
+
+{% highlight bash %}
+# Update
+$ pyenv update
+
+# Uninstall // 이후 .bashrc 그리고 .profile 에서도 설정 삭제
+$ rm -fr ~/.pyenv
+{% endhighlight %}
+
+.bashrc 또는 .profile 에 다음의 설정이 필요합니다.
+
+{% highlight bash %}
+# PyEnv
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+{% endhighlight %}
+
+Shell Restart 를 해줍니다. 
+
+{% highlight bash %}
+$ exec $SHELL
+{% endhighlight %}
+
+# 2. Usage
+
+## 2.1 Basic Usages
+
+**현재 설치된 python 버젼 확인**
+
+{% highlight bash %}
+$ pyenv versions
+* system (set by /home/anderson/.pyenv/version)
+{% endhighlight %}
+
+**추가적인 python version 설치**
+
+## 2.2 추가적인 Python 설치
+
+설치 관련 명령어
+
+{% highlight bash %}
+# 설치 가능한 Python 버젼들의 목록을 볼 수 있음
+$ pyenv install --list 
+
+# 설치
+$ pyenv install 3.10.6
+
+# 현재 설치된 버젼들 보기
+$ pyenv versions
+{% endhighlight %}
+
+## 2.3 설치된 버젼 선택하기
+
+3가지 방법으로 변경을 할 수 있습니다. 
+
+1. `pyenv shell <version>` : 현재 shell session 만 버젼 변경
+2. `pyenv local <version>` : 현재 디렉토리에 있으면 자동으로 선택되게 만듬 (sub-directories 포함)
+3. `pyenv global <version>` : 해당 user account에 모든 python version 을 변경
