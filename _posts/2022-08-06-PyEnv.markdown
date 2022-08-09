@@ -58,9 +58,8 @@ $ pyenv versions
 * system (set by /home/anderson/.pyenv/version)
 {% endhighlight %}
 
-**추가적인 python version 설치**
 
-## 2.2 추가적인 Python 설치
+## 2.2 Install Additional Python Version
 
 설치 관련 명령어
 
@@ -75,7 +74,7 @@ $ pyenv install 3.10.6
 $ pyenv versions
 {% endhighlight %}
 
-## 2.3 설치된 버젼 선택하기
+## 2.3 Switch Python Version
 
 3가지 방법으로 변경을 할 수 있습니다. 
 
@@ -83,4 +82,38 @@ $ pyenv versions
 2. `pyenv local <version>` : 현재 디렉토리에 있으면 자동으로 선택되게 만듬 (sub-directories 포함)
 3. `pyenv global <version>` : 해당 user account에 모든 python version 을 변경
 
-## 
+## 2.4 VirtualEnv
+
+PyEnv 의 plugin으로서 virtualenv도 제공을 합니다.<br>
+**현재 설치된 virtualenv 목록 보기**
+
+{% highlight bash %}
+$ pyenv virtualenvs
+{% endhighlight %}
+
+3.10.6 의 기준으로 **virtual environment 생성**은 다음과 같이 합니다. 
+
+{% highlight bash %}
+$ pyenv virtualenv 3.10.6 venv3.10
+{% endhighlight %}
+
+**Activate & Deactivate 방법**
+
+ - `pyenv activate <version>`
+ - `pyenv deactivate`
+
+{% highlight bash %}
+# Activate
+$ pyenv activate venv3.10
+
+# Deactivate
+$ pyenv deactivate
+{% endhighlight %}
+
+**Virtual Environment 삭제**
+
+- `pyenv uninstall <virtualenv name>`
+
+{% highlight bash %}
+$ pyenv uninstall venv3.10
+{% endhighlight %}
