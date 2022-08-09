@@ -1,7 +1,8 @@
 # Installation
 
 ```bash
-sudo gem install jekyll bundler
+$ sudo apt-get install build-essential
+$ sudo gem install jekyll bundler
 ```
 
 # 실행

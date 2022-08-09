@@ -29,8 +29,8 @@ Ubuntu에서 Python 3 를 설치하는 방법에 대해서 써놓겠습니다. <
 먼저 dependencies를 설치 합니다.
 
 {% highlight bash %}
-sudo apt-get install libreadline6-dev libbz2-dev libssl-dev libsqlite3-dev libncursesw5-dev libffi-dev
-sudo apt-get install libreadline-gplv2-dev tk-dev libc6-dev libffi-dev libgdbm-dev libmpdec-dev liblzma-dev
+sudo apt-get install libreadline6-dev libbz2-dev libssl-dev libsqlite3-dev libncursesw5-dev libffi-dev libncurses5-dev libreadline-dev libtk8.6 libgdm-dev libdb4o-cil-dev libpcap-dev
+sudo apt-get install tk-dev libc6-dev libffi-dev libgdbm-dev libmpdec-dev liblzma-dev
 sudo apt-get install libdb-dev libexpat1-dev zlib1g-dev build-essential checkinstall tk-dev
 {% endhighlight %}
 
@@ -51,8 +51,8 @@ sudo make altinstall
 
 {% highlight python %}
 sudo mkdir /usr/include/python3.6
-sudo cp Include/* /usr/include/python3.6/
-sudo cp PC/* /usr/include/python3.6/
+sudo cp -r Include/* /usr/include/python3.6/
+sudo cp -r PC/* /usr/include/python3.6/
 {% endhighlight %}
 
 
