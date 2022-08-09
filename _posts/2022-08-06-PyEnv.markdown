@@ -82,3 +82,5 @@ $ pyenv versions
 1. `pyenv shell <version>` : 현재 shell session 만 버젼 변경
 2. `pyenv local <version>` : 현재 디렉토리에 있으면 자동으로 선택되게 만듬 (sub-directories 포함)
 3. `pyenv global <version>` : 해당 user account에 모든 python version 을 변경
+
+## 
