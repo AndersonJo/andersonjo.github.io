@@ -117,3 +117,16 @@ $ pyenv deactivate
 {% highlight bash %}
 $ pyenv uninstall venv3.10
 {% endhighlight %}
+
+# 3. Pycharm 
+
+## 3.1 Pycharm 설정
+
+- File -> Settings -> Project -> Python Interpreter 
+
+해당 Menu 에서 PyEnv 를 선택하는 것이 아니라 Virtual Environment 를 선택후 그림과 같이 설정
+
+<img src="{{ page.asset_path }}pyenv-pycharm.png" class="img-responsive img-rounded img-fluid border rounded">
+
+
+
