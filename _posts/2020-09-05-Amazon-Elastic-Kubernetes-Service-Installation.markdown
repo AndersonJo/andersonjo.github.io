@@ -369,14 +369,16 @@ Metrics Server는 CPU, Memory같은 metrics 데이터를 수집하는 서버이�
 **Metrics Server deployment**는 그리고 확인은 다음의 명령어로 합니다.
 
 {% highlight bash %}
-$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
+$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 $ kubectl get deployment metrics-server -n kube-system
 {% endhighlight %}
+
+
 
 **Dashboard** 를 배포합니다.
 
 {% highlight bash %}
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.1/aio/deploy/recommended.yaml
 {% endhighlight %}
 
 **eks-admin service account 그리고 cluster role binding** 을 만들어야 합니다. <br>
