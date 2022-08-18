@@ -395,21 +395,21 @@ cat <<EOF > eks-admin-service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: eks-admin
-  namespace: kube-system
+  name: admin-user
+  namespace: kubernetes-dashboard
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: eks-admin
+  name: admin-user
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: cluster-admin
 subjects:
 - kind: ServiceAccount
-  name: eks-admin
-  namespace: kube-system
+  name: admin-user
+  namespace: kubernetes-dashboard
 EOF
 {% endhighlight %}
 
@@ -417,7 +417,7 @@ EOF
 
 {% highlight bash %}
 $ kubectl apply -f eks-admin-service-account.yaml
-$ kubectl get serviceaccounts eks-admin -n kube-system
+$ kubectl get serviceaccounts admin-user -n kubernetes-dashboard
 {% endhighlight %}
 
 ## 6.2 Access to Dashboard
