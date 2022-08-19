@@ -19,8 +19,14 @@ tags: ['hpa', 'ray']
 
 ## 1.2 IAM OIDC provider
 
-1. 만들어놓은 EKS Cluster 를 AWS 콘솔에서 보면 `OpenID Connect provider URL` 이 있습니다.<br> 
+1. 만들어놓은 EKS Cluster 클릭하면 `OpenID Connect provider URL` 있고, 이것을 복사합니다.<br>
    <img src="{{ page.asset_path }}kuberntes-autoscaler-openid.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
+2. IAM -> Identity Provider (자격 증명 공급자) -> Add Provider (공급자 추가) 선택 
+3. 다음 옵션으로 생성 
+   - OpenID Connect 선택
+   - Provider: 복사한 EKS Cluster의 OpenID Connect Provider URL 붙여넣기 -> Get Thumbprint
+   - Audience (대상): `sts.amazonaws.com` 
+   <img src="{{ page.asset_path }}kuberntes-autoscaler-openid2.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
 
 
 
