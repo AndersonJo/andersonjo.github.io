@@ -17,7 +17,41 @@ tags: ['hpa', 'ray']
 2. Pod에 대한 autoscaling 은 아래쪽 HPA를 참조
 
 
-## 1.2 IAM OIDC provider
+## 1.2 Autoscaling Group 
+
+eksctl 로 EKS cluster를 만들었다면 이미 만들어져 있고, tag 만 정해주면 되지만, console 에서 만들었을경우 다음을 실행하여
+AWS EC2 에서 Autoscaling Group 을 만들어줍니다. 
+
+ - `EKS_CLUSTER_NAME`: 당신이 만들 EKS Cluster 이름
+ - `EKS_NODEGROUP_NAME`: AutoScaling Group 적용하려는 Node Group의 이름
+
+{% highlight bash %}
+$ export EKS_CLUSTER_NAME=<My EKS Cluster Name>
+$ export EKS_NODEGROUP_NAME=<My EKS Node Group for AutoScaling>
+$ export ASG_NAME=$(aws eks describe-nodegroup --cluster-name ${EKS_CLUSTER_NAME} --nodegroup-name ${EKS_NODEGROUP_NAME} --query "nodegroup.resources.autoScalingGroups" --output text)
+{% endhighlight %}
+
+Auto Scaling Group 생성/업데이트를 합니다.
+
+{% highlight bash %}
+# 생성 
+$ aws autoscaling \
+    create-auto-scaling-group \
+    --auto-scaling-group-name ${ASG_NAME} \
+    --min-size 1 \
+    --desired-capacity 1 \
+    --max-size 5
+
+# 업데이트
+$ aws autoscaling \
+    update-auto-scaling-group \
+    --auto-scaling-group-name ${ASG_NAME} \
+    --min-size 1 \
+    --desired-capacity 1 \
+    --max-size 5
+{% endhighlight %}
+
+## 1.3 IAM OIDC provider
 
 1. 만들어놓은 EKS Cluster 클릭하면 `OpenID Connect provider URL` 있고, 이것을 복사합니다.<br>
    <img src="{{ page.asset_path }}kuberntes-autoscaler-openid.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
@@ -30,7 +64,7 @@ tags: ['hpa', 'ray']
 
 
 
-## 1.3 IAM Policy
+## 1.4 IAM Policy
 
 먼저 아래 코드를 실행시켜서 cluster-autoscaler-policy.json 파일을 생성합니다.<br>
 이때 my-cluster 로 되어 있는 부분은 변경이 필요합니다. <br>
@@ -97,7 +131,7 @@ $ aws iam create-policy \
 
 
 
-## 1.4 IAM Role 
+## 1.5 IAM Role 
 
 1. AWS Console -> IAM -> Roles 이동 -> Create Role 클릭 (역활 만들기 버튼)
 2. 아래 옵션으로 생성
@@ -111,7 +145,7 @@ $ aws iam create-policy \
 
 생성!
 
-## 1.5 Deploy the Cluster Autoscaler
+## 1.6 Deploy the Cluster Autoscaler
 
 {% highlight bash %}
 # 일단 Cluster Autoscaler YAML 파일 다운로드
@@ -130,7 +164,7 @@ $ kubectl apply -f cluster-autoscaler-autodiscover.yaml
 {% endhighlight %}
 
 
-## 1.6 Service Account & 그외 설정
+## 1.7 Service Account & 그외 설정
 
 아래 코드를 수정후 실행합니다. 
 
@@ -191,7 +225,7 @@ $ kubectl set image deployment cluster-autoscaler \
 {% endhighlight %}
 
 
-## 1.7 AutoScaler Logs 
+## 1.8 AutoScaler Logs 
 
 log는 다음의 명령어로 확인 가능합니다. 
 
