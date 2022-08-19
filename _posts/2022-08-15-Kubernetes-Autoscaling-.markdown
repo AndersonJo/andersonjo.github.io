@@ -105,10 +105,18 @@ $ aws iam create-policy \
    - Provider: 이전에 만들었던 openID 선택
    - Audience: `sts.amazonaws.com`
    <img src="{{ page.asset_path }}kuberntes-autoscaler-role1.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
-3. 
+3. 다음 옵션으로 설정
+   - Role Name: `AmazonEKSClusterAutoscalerRole`
+   - Description: `Amazon EKS - Cluster autoscaler role`
 
+생성!
 
+## 1.5 Deploy the Cluster Autoscaler
 
+{% highlight bash %}
+# 일단 Cluster Autoscaler YAML 파일 다운로드
+$ curl -o cluster-autoscaler-autodiscover.yaml https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+{% endhighlight %}
 
 
 
