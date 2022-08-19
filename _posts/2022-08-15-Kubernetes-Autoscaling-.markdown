@@ -100,8 +100,12 @@ $ aws iam create-policy \
 ## 1.4 IAM Role 
 
 1. AWS Console -> IAM -> Roles 이동 -> Create Role 클릭 (역활 만들기 버튼)
-2. 
-
+2. 아래 옵션으로 생성
+   - Trusted Entity Type: Web Identity (웹 자격 증명)
+   - Provider: 이전에 만들었던 openID 선택
+   - Audience: `sts.amazonaws.com`
+   <img src="{{ page.asset_path }}kuberntes-autoscaler-role1.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
+3. 
 
 
 
