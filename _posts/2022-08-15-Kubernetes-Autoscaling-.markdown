@@ -118,6 +118,99 @@ $ aws iam create-policy \
 $ curl -o cluster-autoscaler-autodiscover.yaml https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
 {% endhighlight %}
 
+`cluster-autoscaler-autodiscover.yaml` 파일을 열고, 다음을 수정
+
+- `<YOUR CLUSTER NAME>` 부분을 당신의 cluster name 으로 수정
+- `cpu` 그리고 `memory` 부분을 환경에 맞게 수정
+
+이후 배포 합니다. 
+
+{% highlight bash %}
+$ kubectl apply -f cluster-autoscaler-autodiscover.yaml 
+{% endhighlight %}
+
+
+## 1.6 Service Account & 그외 설정
+
+아래 코드를 수정후 실행합니다. 
+
+- `<ACCOUNT_ID>` 그리고 `<AmazonEKSClusterAutoscalerRole>` : `AmazonEKSClusterAutoscalerRole` 이름으로 Role을 위에서 만들었는데, 해당 Role의 ARN 을 복사해서 넣으면 됩니다.
+
+{% highlight bash %}
+$ kubectl annotate serviceaccount cluster-autoscaler \
+  -n kube-system \
+  eks.amazonaws.com/role-arn=arn:aws:iam::<ACCOUNT_ID>:role/<AmazonEKSClusterAutoscalerRole> 
+{% endhighlight %}
+
+annotation을 추가합니다.  (그냥 실행하면 됨)
+
+{% highlight bash %}
+$ kubectl patch deployment cluster-autoscaler \
+  -n kube-system \
+  -p '{"spec":{"template":{"metadata":{"annotations":{"cluster-autoscaler.kubernetes.io/safe-to-evict": "false"}}}}}'
+{% endhighlight %}
+
+
+이후 edit 으로 Cluster Autoscaler deployment 를 수정합니다. 
+
+{% highlight bash %}
+$ kubectl -n kube-system edit deployment.apps/cluster-autoscaler
+{% endhighlight %}
+
+`cluster-autoscaler` contianer 부분의 command 부분에 다음을 추가 합니다. 
+- `--balance-similar-node-groups` : ensures that there is enough available compute across all availability zones
+- `--skip-nodes-with-system-pods=false` : ensures that there are no problems with scaling to zero
+
+수정후 아래와 같이 보일 것입니다.
+
+{% highlight yaml %}
+     app: cluster-autoscaler
+ spec:
+   containers:
+   - command:
+     - ./cluster-autoscaler
+     - --v=4
+     - --stderrthreshold=info
+     - --cloud-provider=aws
+     - --skip-nodes-with-local-storage=false
+     - --expander=least-waste
+     - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/aai-dev-eks-cluster
+     - --balance-similar-node-groups
+     - --skip-nodes-with-system-pods=false
+{% endhighlight %}
+
+
+이후 [Cluster Autoscaler releases](https://github.com/kubernetes/autoscaler/releases) 에 들어가서 만들어놓은 Kubernetes 버젼과 동일한 Auto Scaler 버젼을 다운로드 받습니다.<br>
+예를 들어 당신의 Kubernetes Cluster 버젼이 1.22 라면, 마찬가지로 Auto Scaler 버젼도 1.22 로 시작하는 Images 를 찾아서 <br>
+아래 코드의 `cluster-autoscaler=` 요 부분을 대체 합니다. 
+
+{% highlight bash %}
+$ kubectl set image deployment cluster-autoscaler \
+  -n kube-system \
+  cluster-autoscaler=k8s.gcr.io/autoscaling/cluster-autoscaler:v1.22.3
+{% endhighlight %}
+
+
+## 1.7 AutoScaler Logs 
+
+log는 다음의 명령어로 확인 가능합니다. 
+
+{% highlight bash %}
+$ kubectl -n kube-system logs -f deployment.apps/cluster-autoscaler
+{% endhighlight %}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # 2. Horizontal Pod Autoscaler
