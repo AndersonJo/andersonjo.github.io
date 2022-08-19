@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Kubernetes - Autoscaling (Cluster Scaler, Pod Scaler)"
-date:   2022-08-06 01:00:00
+title:  "Kubernetes - Cluster Scaler"
+date:   2022-08-15 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
-tags: ['hpa', 'ray']
+tags: ['hpa', 'ray', 'pod', 'scaling']
 ---
 
 
