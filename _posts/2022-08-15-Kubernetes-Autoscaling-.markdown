@@ -66,12 +66,20 @@ EOF
 $ aws iam create-policy \
     --policy-name AmazonEKSClusterAutoscalerPolicy \
     --policy-document file://cluster-autoscaler-policy.json
+
+# 아래는 결과값 
+<생략>
+    "Policy": {
+        "PolicyName": "AmazonEKSClusterAutoscalerPolicy",
+        "PolicyId": "ABCDEFGHIJKLMNOPQRST",
+        "Arn": "arn:aws:iam::123456789012:policy/AmazonEKSClusterAutoscalerPolicy",
+<생략>
 {% endhighlight %}
  
-생성후 IAM -> Policy 를 보면 다음과 같은 Policy가 생성되어 있습니다. 
+위의 결과값중에서 ARN 값을 다시 사용하니 다른 곳에 적어둡니다. <br>
+또한 생성후 IAM -> Policy 를 보면 다음과 같은 Policy가 생성되어 있는 것을 확인 할 수 있습니다.
 
-
-<img src="{{ page.asset_path }}kuberntes-autoscaler-policy.png" class="img-responsive img-rounded img-fluid border rounded" style="border:1px solid #aaa;">
+<img src="{{ page.asset_path }}kuberntes-autoscaler-policy.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
 
 
 
