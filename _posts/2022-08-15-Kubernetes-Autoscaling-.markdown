@@ -208,7 +208,7 @@ $ kubectl -n kube-system edit deployment.apps/cluster-autoscaler
      - --cloud-provider=aws
      - --skip-nodes-with-local-storage=false
      - --expander=least-waste
-     - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/aai-dev-eks-cluster
+     - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/my-cluster
      - --balance-similar-node-groups
      - --skip-nodes-with-system-pods=false
 {% endhighlight %}
