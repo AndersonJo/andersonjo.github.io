@@ -9,3 +9,61 @@ tags: ['mlops']
 
 # 1. Installation 
 
+## 1.1 Install Ray Kubernetes Operator
+
+Ray deployment는 `Ray Kubernetes Operator`에 의해서 관리가 되며, 다음 두가지 패턴을 갖고 있습니다. 
+
+1. `Ray Cluster`: 일종의 Kubernetes Custom Resource이며, 현재 Ray Cluster의 상태를 관리하게 됩니다. 
+2. `Ray Operator`: 일종의 Kubernetes Custom Controller이며, Ray Cluster resource를 처리/관리 합니다.
+    - `Ray Autoscaler`: `Ray Operator` 하위에 존재하며, Ray Cluster의 scale out/in 을 관리합니다.
+    - `Head Node`, `Worker Node` 둘다 Ray Operator에서 관리하는 듯 함. <br>문제는 resource 부족시 Kubernete Node가 자동으로 생성되지 못하는 듯 함.   
+
+[Ray Helm chart](https://github.com/ray-project/ray/tree/master/deploy/charts/ray/) 가 git repository로 제공됩니다.<br>
+* 기본설정값은 4 CPU 그리고 2.5Gi memory 가 필요로 합니다. (node 하나가 4 cpu and 2.5Gi memory 가 필요한게 아님)
+
+{% highlight bash %}
+$ git clone https://github.com/ray-project/ray.git
+$ cd ray/deploy/charts/
+$ helm -n ray install ray-cluster --create-namespace ./ray
+{% endhighlight %}
+
+설치 확인은 다음과 같이 합니다. 
+
+{% highlight bash %}
+# Ray Cluster의 상태 체크
+$ kubectl -n ray get rayclusters
+NAME              STATUS    RESTARTS   AGE
+example-cluster   Running   0          32m
+
+# Ray Head Node 그리고 Ray Worker Node 확인 
+$ kubectl -n ray get pods
+example-cluster-ray-head-type-gpdls     1/1     Running   0          32m
+example-cluster-ray-worker-type-26hp6   1/1     Running   0          25m
+example-cluster-ray-worker-type-vlml7   1/1     Running   0          25m
+
+# Ray Head Node 와 연결 시키는 Service 
+$ kubectl -n ray get service
+NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                       AGE
+ray-cluster-ray-head   ClusterIP   10.100.251.218   <none>        10001/TCP,8265/TCP,8000/TCP   3m55s
+
+# Ray Operator는 기본적으로 default namespace 에 배포가 된다
+$ kubectl get deployment ray-operator
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ray-operator   1/1     1            1           43m
+
+
+{% endhighlight %}
+
+
+## 1.2 Uninstall Ray Helm
+
+{% highlight bash %}
+# Ray Cluster Custom Resource 삭제
+$ kubectl -n ray delete raycluster example-cluster
+
+# Helm Release 삭제
+$ helm -n ray uninstall example-cluster
+
+# Namespace 삭제
+$ kubectl delete namespace ray
+{% endhighlight %}
