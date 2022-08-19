@@ -17,7 +17,14 @@ tags: ['hpa', 'ray']
 2. Pod에 대한 autoscaling 은 아래쪽 HPA를 참조
 
 
-## 1.2 IAM Policy
+## 1.2 IAM OIDC provider
+
+1. 만들어놓은 EKS Cluster 를 AWS 콘솔에서 보면 `OpenID Connect provider URL` 이 있습니다.<br> 
+   <img src="{{ page.asset_path }}kuberntes-autoscaler-openid.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
+
+
+
+## 1.3 IAM Policy
 
 먼저 아래 코드를 실행시켜서 cluster-autoscaler-policy.json 파일을 생성합니다.<br>
 이때 my-cluster 로 되어 있는 부분은 변경이 필요합니다. <br>
@@ -77,9 +84,18 @@ $ aws iam create-policy \
 {% endhighlight %}
  
 위의 결과값중에서 ARN 값을 다시 사용하니 다른 곳에 적어둡니다. <br>
-또한 생성후 IAM -> Policy 를 보면 다음과 같은 Policy가 생성되어 있는 것을 확인 할 수 있습니다.
+또한 생성후 IAM -> Policy 를 보면 다음과 같은 Policy가 생성되어 있는 것을 확인 할 수 있습니다.<br>
+해당 정책을 클릭해서 보면, 여기에서도 ARN을 확인 할 수 있습니다. 
 
 <img src="{{ page.asset_path }}kuberntes-autoscaler-policy.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
+
+
+
+## 1.4 IAM Role 
+
+1. AWS Console -> IAM -> Roles 이동 -> Create Role 클릭 (역활 만들기 버튼)
+2. 
+
 
 
 
