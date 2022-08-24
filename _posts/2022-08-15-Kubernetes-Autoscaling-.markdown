@@ -31,23 +31,15 @@ $ export EKS_NODEGROUP_NAME=<My EKS Node Group for AutoScaling>
 $ export ASG_NAME=$(aws eks describe-nodegroup --cluster-name ${EKS_CLUSTER_NAME} --nodegroup-name ${EKS_NODEGROUP_NAME} --query "nodegroup.resources.autoScalingGroups" --output text)
 {% endhighlight %}
 
-Auto Scaling Group 생성/업데이트를 합니다.
+Auto Scaling Group 업데이트를 합니다.
 
 {% highlight bash %}
-# 생성 
-$ aws autoscaling \
-    create-auto-scaling-group \
-    --auto-scaling-group-name ${ASG_NAME} \
-    --min-size 1 \
-    --desired-capacity 1 \
-    --max-size 5
-
 # 업데이트
 $ aws autoscaling \
     update-auto-scaling-group \
     --auto-scaling-group-name ${ASG_NAME} \
     --min-size 1 \
-    --desired-capacity 1 \
+    --desired-capacity 2 \
     --max-size 5
 {% endhighlight %}
 
@@ -142,6 +134,11 @@ $ aws iam create-policy \
 3. 다음 옵션으로 설정
    - Role Name: `AmazonEKSClusterAutoscalerRole`
    - Description: `Amazon EKS - Cluster autoscaler role`
+4. Policy 선택
+   - `AmazonEKSClusterAutoscalerPolicy` 추가
+   <img src="{{ page.asset_path }}kuberntes-autoscaler-autoscaler-role-permission.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
+
+
 
 생성!
 
