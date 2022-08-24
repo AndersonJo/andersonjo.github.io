@@ -7,9 +7,78 @@ asset_path: /assets/images/
 tags: ['mlops', 'kubernetes']
 ---
 
-# 1. Installation 
+# 1. KubeRay 
 
-## 1.1 Install Ray Kubernetes Operator
+## 1.1 Install KubeRay
+
+현재 [KubeRay](https://github.com/ray-project/kuberay) 의 master는 실험적인 nightly 버젼으로 사용하고 있으며, <br>
+`v0.3.0` 이 stable 버젼입니다. (뭔가 좀 이상한.. ㅋ)<br>
+따라서 v0.3.0 설치는 다음과 같이 합니다.
+
+{% highlight bash %}
+# KubeRay Operator 설치
+$ export KUBERAY_VERSION=v0.3.0
+$ kubectl create -k "github.com/ray-project/kuberay/manifests/cluster-scope-resources?ref=${KUBERAY_VERSION}&timeout=90s"
+$ kubectl apply -k "github.com/ray-project/kuberay/manifests/base?ref=${KUBERAY_VERSION}&timeout=90s"
+
+# 설치 확인
+$ kubectl -n ray-system get pod --selector=app.kubernetes.io/component=kuberay-operator
+NAME                                READY   STATUS    RESTARTS   AGE
+kuberay-operator-799899ff46-dgv6p   1/1     Running   0          2m44s
+{% endhighlight %}
+
+
+Ray Cluster 설치는 다음과 같이 합니다.<br>
+만약 default namespace에 설치하고자 한다면.. apply 할때 -n ray-cluster 빼면 됩니다. 
+
+{% highlight bash %}
+# 먼저 다운을 받고, yaml파일안의 리소스 수정을 할 수 있습니다. 
+$ wget https://raw.githubusercontent.com/ray-project/kuberay/release-0.3/ray-operator/config/samples/ray-cluster.autoscaler.yaml
+$ kubectl create namespace ray-cluster
+$ kubectl apply -f ray-cluster.autoscaler.yaml -n ray-cluster
+
+# 설치 확인
+$ kubectl get raycluster -n ray-cluster
+{% endhighlight %}
+
+
+이후 KubeRay operator가 자동으로 RayCluster object를 감지하고, Operator 는 Head Node 그리고 Worker Node 를 실행시켜서 Cluster를 실행시키기 시작합니다. <br>
+
+{% highlight bash %}
+# Head Node 그리고 Worker Node 가 제대로 생성되는지 확인합니다. 
+$ kubectl get pods --selector=ray.io/cluster=raycluster-autoscaler -n ray-cluster
+NAME                                             READY   STATUS    RESTARTS   AGE
+raycluster-autoscaler-head-wsdsc                 2/2     Running   0          94s
+raycluster-autoscaler-worker-small-group-74rnx   1/1     Running   0          94s
+{% endhighlight %}
+
+
+일단 Head Node가 정상작동하는지 확인하는 방법은 다음과 같이 합니다.<br>
+방법은 Head Node에 직접 연결해서 python을 실행시킬 것 입니다. 
+
+{% highlight bash %}
+# 먼저 head node의 pod 이름을 알아냅니다. 
+$ kubectl get pods --selector=ray.io/cluster=raycluster-autoscaler --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers -n ray-cluster
+raycluster-autoscaler-head-wsdsc
+
+# 해당 이름을 사용해서 python을 다이렉트로 실행시킵니다. 
+$ kubectl exec raycluster-autoscaler-head-wsdsc -n ray-cluster -it -c ray-head -- python -c "import ray; ray.init(); print('Done')"
+2022-08-20 00:08:49,139	INFO worker.py:1224 -- Using address 127.0.0.1:6379 set in the environment variable RAY_ADDRESS
+2022-08-20 00:08:49,139	INFO worker.py:1333 -- Connecting to existing Ray cluster at address: 192.168.85.95:6379...
+2022-08-20 00:08:49,146	INFO worker.py:1515 -- Connected to Ray cluster. View the dashboard at http://192.168.85.95:8265 
+Done
+{% endhighlight %}
+
+제대로 된 테스트 방법은 Job submission을 하는 것 입니다. 
+
+
+## 1.2 Ray Job Submission
+
+
+
+
+
+## 1.2 ~~Install Ray Kubernetes Operator~~ (deprecated)
 
 Ray deployment는 `Ray Kubernetes Operator`에 의해서 관리가 되며, 다음 두가지 패턴을 갖고 있습니다. 
 
