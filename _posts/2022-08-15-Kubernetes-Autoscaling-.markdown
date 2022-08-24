@@ -43,7 +43,7 @@ $ aws autoscaling \
     --max-size 5
 {% endhighlight %}
 
-## 1.3 IAM OIDC provider
+## 1.3 IAM OIDC provider - EKS Cluster OIDC
 
 1. 만들어놓은 EKS Cluster 클릭하면 `OpenID Connect provider URL` 있고, 이것을 복사합니다.<br>
    <img src="{{ page.asset_path }}kuberntes-autoscaler-openid.png" class="img-responsive img-rounded img-fluid border rounded center" style="border:1px solid #aaa;">
@@ -56,7 +56,7 @@ $ aws autoscaling \
 
 
 
-## 1.4 IAM Policy
+## 1.4 IAM Policy - AmazonEKSClusterAutoscalerPolicy
 
 먼저 아래 코드를 실행시켜서 cluster-autoscaler-policy.json 파일을 생성합니다.<br>
 이때 my-cluster 로 되어 있는 부분은 변경이 필요합니다. <br>
@@ -123,7 +123,7 @@ $ aws iam create-policy \
 
 
 
-## 1.5 IAM Role 
+## 1.5 IAM Role - AmazonEKSClusterAutoscalerRole
 
 1. AWS Console -> IAM -> Roles 이동 -> Create Role 클릭 (역활 만들기 버튼)
 2. 아래 옵션으로 생성
