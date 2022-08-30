@@ -82,97 +82,15 @@ Head Node 그리고 Worker Node 의 container 설정부터 cpu, memory 등의 �
 
 * 참고: [RayCluster Configuration 공식 문서](https://docs.ray.io/en/latest/cluster/kubernetes/user-guides/config.html)
 
+위의 예제에서 `ray-cluster.autoscaler.yaml` 예제를 사용해서 Cluster 를 설치했고, 해당 yaml 파일안에 <br>
+`headGroupSpec` 그리고 `workerGroupSpecs` 등에서 메모리, cpu, container image 등을 수정할 수 있습니다.<br>
+`ray-cluster.autoscaler.yaml` 예제 이외에 다른 예제들은 [KubeRay Official Config Samples](https://github.com/ray-project/kuberay/tree/v0.3.0/ray-operator/config/samples)를 참고 합니다.
+
 {% highlight bash %}
+# 현재 KubeRay Cluster Configuration 확인
 $ kubectl get crd rayclusters.ray.io -o yaml
 {% endhighlight %}
 
-아래는 참고용으로 사용할만한 YAML 파일이며, 수정후 적용은 `kubectl apply -f raycluster.yaml` 하면 됨
-
-{% highlight yaml %}
-apiVersion: ray.io/v1alpha1
-kind: RayCluster
-metadata:
-  name: raycluster-autoscaler
-  namespace: ray-cluster
-spec:
-  autoscalerOptions:
-    idleTimeoutSeconds: 60
-    imagePullPolicy: Always
-    resources:
-      limits:
-        cpu: 500m
-        memory: 512Mi
-      requests:
-        cpu: 500m
-        memory: 512Mi
-  enableInTreeAutoscaling: true
-  headGroupSpec:
-    rayStartParams:
-      block: 'true'
-      dashboard-host: 0.0.0.0
-    serviceType: LoadBalancer
-    enableIngress: false # Optional
-    template:
-      spec:
-        containers:
-          - image: rayproject/ray:2.0.0
-            imagePullPolicy: Always
-            lifecycle:
-              preStop:
-                exec:
-                  command: ["/bin/sh", "-c", "ray stop"]
-            name: ray-head
-            ports:
-              - containerPort: 6379
-                name: gcs
-                protocol: TCP
-              - containerPort: 8265
-                name: dashboard
-                protocol: TCP
-              - containerPort: 10001
-                name: client
-                protocol: TCP
-            resources:
-              limits:
-                cpu: '1'
-                memory: 1G
-              requests:
-                cpu: 500m
-                memory: 512Mi
-  rayVersion: 2.0.0
-  workerGroupSpecs:
-    - groupName: small-group
-      maxReplicas: 300
-      minReplicas: 1
-      rayStartParams:
-        block: 'true'
-      replicas: 1
-      template:
-        metadata:
-          annotations:
-            key: value
-          labels:
-            key: value
-        spec:
-          containers:
-            - image: rayproject/ray:2.0.0
-              lifecycle:
-                preStop:
-                  exec:
-                    command: ["/bin/sh","-c","ray stop"]
-              name: machine-learning
-              resources:
-                limits:
-                  cpu: '1'
-                  memory: 512Mi
-                requests:
-                  cpu: 500m
-                  memory: 256Mi
-          initContainers:
-            - command: ['sh', '-c', "until nslookup $RAY_IP.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
-              image: busybox:1.28
-              name: init-myservice
-{% endhighlight %}
 
 
 
