@@ -163,7 +163,7 @@ $ ray job submit --working-dir . -- python script.py
 Python에서도 동일하게 job submission을 할 수 있습니다. 
 
 `JobSubmissionClient` 를 사용해서 붙으며, `submit_job` 함수를 사용해서 job을 올릴수 있습니다. <br>
-이때 중요한 부분이 `runtime_env={"working_dir": "./"`를 설정해야지만 로컬 파일들이 업로드되며, 
+이때 중요한 부분이 `runtime_env={"working_dir": "./"`를 설정해야지만 로컬 파일들이 업로드되며, <br>
 내부적으로 upload_working_dir_if_needed 함수가 호출되서 리모트 클러스터에 업로드 됩니다. 
 
 
