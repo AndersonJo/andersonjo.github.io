@@ -4,7 +4,7 @@ title:  "RAY on Kubernetes"
 date:   2022-08-06 01:00:00
 categories: "ml-ops"
 asset_path: /assets/images/
-tags: ['mlops', 'kubernetes']
+tags: ['mlops', 'kubernetes', 'job', 'submission']
 ---
 
 # 1. KubeRay 
@@ -14,6 +14,8 @@ tags: ['mlops', 'kubernetes']
 현재 [KubeRay](https://github.com/ray-project/kuberay) 의 master는 실험적인 nightly 버젼으로 사용하고 있으며, <br>
 `v0.3.0` 이 stable 버젼입니다. (뭔가 좀 이상한.. ㅋ)<br>
 따라서 v0.3.0 설치는 다음과 같이 합니다.
+
+[YAML 방식의 공식 설치문서](https://ray-project.github.io/kuberay/deploy/installation/)를 참고 합니다.
 
 {% highlight bash %}
 # KubeRay Operator 설치
@@ -69,7 +71,119 @@ $ kubectl exec raycluster-autoscaler-head-wsdsc -n ray-cluster -it -c ray-head -
 Done
 {% endhighlight %}
 
-제대로 된 테스트 방법은 Job submission을 하는 것 입니다. 
+제대로 된 테스트 방법은 Job submission을 하는 것 입니다.<br>
+아래에 job submission 하는 방법에 대해서 참고 합니다.
+
+
+## 1.2 Cluster Configuration 
+
+Head Node 그리고 Worker Node 의 container 설정부터 cpu, memory 등의 설정등을 할 수 있습니다.<br>
+이 모든 설정은 `rayclusters.ray.io` 의 custom resource 에 올라가 있습니다. 
+
+* 참고: [RayCluster Configuration 공식 문서](https://docs.ray.io/en/latest/cluster/kubernetes/user-guides/config.html)
+
+{% highlight bash %}
+$ kubectl get crd rayclusters.ray.io -o yaml
+{% endhighlight %}
+
+아래는 참고용으로 사용할만한 YAML 파일이며, 수정후 적용은 `kubectl apply -f raycluster.yaml` 하면 됨
+
+{% highlight yaml %}
+apiVersion: ray.io/v1alpha1
+kind: RayCluster
+metadata:
+  name: raycluster-autoscaler
+  namespace: ray-cluster
+spec:
+  autoscalerOptions:
+    idleTimeoutSeconds: 60
+    imagePullPolicy: Always
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 500m
+        memory: 512Mi
+  enableInTreeAutoscaling: true
+  headGroupSpec:
+    rayStartParams:
+      block: 'true'
+      dashboard-host: 0.0.0.0
+    serviceType: LoadBalancer
+    enableIngress: false # Optional
+    template:
+      spec:
+        containers:
+          - image: rayproject/ray:2.0.0
+            imagePullPolicy: Always
+            lifecycle:
+              preStop:
+                exec:
+                  command: ["/bin/sh", "-c", "ray stop"]
+            name: ray-head
+            ports:
+              - containerPort: 6379
+                name: gcs
+                protocol: TCP
+              - containerPort: 8265
+                name: dashboard
+                protocol: TCP
+              - containerPort: 10001
+                name: client
+                protocol: TCP
+            resources:
+              limits:
+                cpu: '1'
+                memory: 1G
+              requests:
+                cpu: 500m
+                memory: 512Mi
+  rayVersion: 2.0.0
+  workerGroupSpecs:
+    - groupName: small-group
+      maxReplicas: 300
+      minReplicas: 1
+      rayStartParams:
+        block: 'true'
+      replicas: 1
+      template:
+        metadata:
+          annotations:
+            key: value
+          labels:
+            key: value
+        spec:
+          containers:
+            - image: rayproject/ray:2.0.0
+              lifecycle:
+                preStop:
+                  exec:
+                    command: ["/bin/sh","-c","ray stop"]
+              name: machine-learning
+              resources:
+                limits:
+                  cpu: '1'
+                  memory: 512Mi
+                requests:
+                  cpu: 500m
+                  memory: 256Mi
+          initContainers:
+            - command: ['sh', '-c', "until nslookup $RAY_IP.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+              image: busybox:1.28
+              name: init-myservice
+{% endhighlight %}
+
+
+
+
+
+
+
+
+
+
+
 
 # 2. Job Submission
 
