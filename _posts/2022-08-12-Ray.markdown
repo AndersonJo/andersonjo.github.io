@@ -126,8 +126,41 @@ $ ray job submit --working-dir . -- python script.py
 
 ## 1.4 Submitting a Ray Job in Python
 
-{% highlight python %}
+위에서는 `ray job submit` CLI 명령어로 script.py를 클러스터에 올리고 실행했다면,<br>
+Python에서도 동일하게 job submission을 할 수 있습니다. 
 
+`JobSubmissionClient` 를 사용해서 붙으며, `submit_job` 함수를 사용해서 job을 올릴수 있습니다. <br>
+이때 중요한 부분이 `runtime_env={"working_dir": "./"`를 설정해야지만 로컬 파일들이 업로드되며, 
+내부적으로 upload_working_dir_if_needed 함수가 호출되서 리모트 클러스터에 업로드 됩니다. 
+
+
+{% highlight python %}
+from ray.job_submission import JobSubmissionClient, JobStatus
+import time
+
+client = JobSubmissionClient("http://localhost:8265")
+job_id = client.submit_job(
+    entrypoint="python script.py",
+    runtime_env={
+        'working_dir': './' # 이게 있어야 리모트 클러스터에 업로드
+    }
+)
+print(job_id)
+
+
+def wait_until_status(job_id, status_to_wait_for, timeout_seconds=5):
+    start = time.time()
+    while time.time() - start <= timeout_seconds:
+        status = client.get_job_status(job_id)
+        print(f"status: {status}")
+        if status in status_to_wait_for:
+            break
+        time.sleep(1)
+
+
+wait_until_status(job_id, {JobStatus.SUCCEEDED, JobStatus.STOPPED, JobStatus.FAILED})
+logs = client.get_job_logs(job_id)
+print(logs)
 {% endhighlight %}
 
 
