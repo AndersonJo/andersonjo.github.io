@@ -30,4 +30,4 @@ tags: ['coupang']
 
 | Patterns                                           | Description |
 |:---------------------------------------------------|:------------|
-| - Since everyone is here, Let's get started <br/>  | 회의 시작       |
+| - Since everyone is here, Let's get started. <br/> | 회의 시작       |
