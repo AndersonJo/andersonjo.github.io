@@ -9,8 +9,7 @@ tags: ['coupang']
 
 외워야 하는 직장인 영어 패턴들을 정리
 
-# 인사 / 정보 얻기 / 부탁 
-
+# 인사 / 정보 얻기 / 부탁
 
 | Patterns                                                                                                                                                    | Description                               |
 |:------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------|
@@ -18,16 +17,15 @@ tags: ['coupang']
 | - Do you have a moment (a minute)? <br/> - Could I talk to you for a minute (a moment)? - Are you available to talk?                                        | 잠시 시간 괜찮으세요? <br/> (상대에게 선택권을 주지 않으면 무례할 수 있음) |
 | - If you wouldn't mind, would you be able to pull the latest commit                                                                                         | 괜찮으시다면..                                  | 
 
-
 # 중요도 강조
 
 | Patterns                                                                                                                                                                                             | Description |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------|
 | - `It is essential (crucial) that` our customers have most amazing experience <br/> - Feature Selection `is a major part of` efficient algorithm <br/> - Augmentation `plays a key role in many ML`  | 중요하다 표현     |
 
-
 # 회의 시작
 
-| Patterns                                           | Description |
-|:---------------------------------------------------|:------------|
-| - Since everyone is here, Let's get started. <br/> | 회의 시작       |
+| Patterns                                                                                                           | Description                                                                |
+|:-------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------|
+| - Since everyone is here, Let's get started. <br/>                                                                 | 회의 시작                                                                      |
+| - `The objective of this meeting is to` clarify and discuss the detailed plan for the search optimization <br/> -  | 목표 설정 <br/> - goal: 장기목표 <br/> - objective: 중장기 <br/> - target: 눈앞의 단기 목표  |
