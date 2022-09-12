@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Basic Speaking Patterns"
+title:  "Basic Speaking Patterns in English"
 date:   2022-08-01 01:00:00
 categories: "english"
 asset_path: /assets/images/
