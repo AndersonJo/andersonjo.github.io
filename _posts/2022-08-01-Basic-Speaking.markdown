@@ -25,7 +25,7 @@ tags: ['coupang']
 
 # 회의 시작
 
-| Patterns                                                                                                           | Description                                                                |
-|:-------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------|
-| - Since everyone is here, Let's get started. <br/>                                                                 | 회의 시작                                                                      |
-| - `The objective of this meeting is to` clarify and discuss the detailed plan for the search optimization <br/> -  | 목표 설정 <br/> - goal: 장기목표 <br/> - objective: 중장기 <br/> - target: 눈앞의 단기 목표  |
+| Patterns                                                                                                                                                                                                                        | Description                                                                |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------|
+| - Since everyone is here, Let's get started. <br/>                                                                                                                                                                              | 회의 시작                                                                      |
+| - `The objective of this meeting is to` clarify and discuss the detailed plan for the search optimization <br/> - our team's goal is to optimize search recommendation to increase profit, without compromising user retention. | 목표 설정 <br/> - goal: 장기목표 <br/> - objective: 중장기 <br/> - target: 눈앞의 단기 목표  |
