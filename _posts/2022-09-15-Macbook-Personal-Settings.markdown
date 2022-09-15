@@ -8,9 +8,11 @@ tags: ['brew']
 ---
 
 
-# 1. Terminal
+# 1. Basic Configuration
 
-Bash로 변경
+## 1.1 Terminal & Brew & Bash
+
+**Bash로 변경**
 
 {% highlight bash %}
 $ chsh -s /bin/bash
@@ -22,3 +24,11 @@ $ chsh -s /bin/bash
 {% highlight bash %}
 export CLICOLOR=1
 {% endhighlight %}
+
+**Brew 설치**
+
+{% highlight bash %}
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+{% endhighlight %}
+
+
