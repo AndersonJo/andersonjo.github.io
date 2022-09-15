@@ -40,7 +40,7 @@ $ brew install bash
 **~/.bash_profile 에 작성**
 
 {% highlight bash %}
-export PATH="/usr/local/bin:$PATH"
+export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
 
 # Hide default loging message
 export BASH_SILENCE_DEPRECATION_WARNING=1
