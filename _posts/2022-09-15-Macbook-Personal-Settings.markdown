@@ -33,8 +33,30 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
 $ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/chjo19/.profile
 $ eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Bash 설ㅊ
+# Bash 설치
 $ brew install bash
 {% endhighlight %}
 
+**~/.bash_profile 에 작성**
+
+{% highlight bash %}
+export PATH="/usr/local/bin:$PATH"
+
+# Hide default loging message
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+# Fancy colors in Bash
+export CLICOLOR=1
+export LSCOLORS=GxBxCxDxexegedabagaced
+
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# Show Current Git Branch
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
+{% endhighlight %}
 
