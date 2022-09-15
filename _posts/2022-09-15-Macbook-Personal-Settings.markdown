@@ -17,7 +17,7 @@ tags: ['brew']
 {% highlight bash %}
 # Brew 설치
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-$ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/chjo19/.profile
+$ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.profile
 $ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Bash 설치
