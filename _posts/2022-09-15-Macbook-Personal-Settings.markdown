@@ -12,6 +12,19 @@ tags: ['brew']
 
 ## 1.1 Terminal & Brew & Bash
 
+**Brew 설치**
+
+{% highlight bash %}
+# Brew 설치
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+$ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/chjo19/.profile
+$ eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Bash 설치
+$ brew install bash
+{% endhighlight %}
+
+
 **Bash로 변경**
 
 {% highlight bash %}
@@ -25,17 +38,6 @@ $ chsh -s /bin/bash
 export CLICOLOR=1
 {% endhighlight %}
 
-**Brew 설치**
-
-{% highlight bash %}
-# Brew 설치
-$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-$ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/chjo19/.profile
-$ eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# Bash 설치
-$ brew install bash
-{% endhighlight %}
 
 **~/.bash_profile 에 작성**
 
