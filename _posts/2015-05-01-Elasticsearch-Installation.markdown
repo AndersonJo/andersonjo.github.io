@@ -14,22 +14,22 @@ tags: ['logstash']
 
 ### Installing Elasticsearch
 
-JDK가 먼저 깔려 있어야 하고, [다운로드 페이지](https://www.elastic.co/downloads)에서 devian package로 다운받으면 됩니다.
+JDK가 먼저 깔려 있어야 하고, [오피셜 다운로드 페이지](https://www.elastic.co/downloads) 참고합니다. 
 
 {% highlight bash %}
-sudo dpkg -i elasticsearch-*.deb
+$ sudo apt-get install apt-transport-https
+$ wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+$ echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list
+$ sudo apt-get update 
+$ sudo apt-get install elasticsearch
 {% endhighlight %}
 
 ### Running as a service
 
 {% highlight bash %}
-sudo systemctl daemon-reload
-sudo systemctl enable elasticsearch.service
-sudo systemctl start elasticsearch.service
-{% endhighlight %}
-
-{% highlight bash %}
-sudo service elasticsearch start
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable elasticsearch.service
+$ sudo systemctl start elasticsearch.service
 {% endhighlight %}
 
 
