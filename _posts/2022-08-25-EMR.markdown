@@ -7,14 +7,22 @@ asset_path: /assets/images/
 tags: ['hadoop']
 ---
 
-# 1. Installation
 
-## 1.1 Preparation 
+# 1. Tutorial
 
-1. EC2 KeyPair 를 미리 만들어놔야 합니다. 
+## 1.1 Install Dependencies
+
+{% highlight bash %}
+$ pip install pyspark[all]
+{% endhighlight %}
 
 
-## 1.2 S3 Bucket 
+## 1.2 AWS Preparation 
+
+EC2 KeyPair 를 미리 만들어놔야 합니다. 
+
+
+## 1.3 S3 Bucket 
 
 S3 Bucket을 생성합니다. 
 
@@ -25,7 +33,52 @@ Amazon EMR은 S3를 사용해서 데이터를 저장하고, 연산을 합니다.
 - ACL: ACL 비활성화됨(권장)
 
 
-## 1.3 Create a Cluster on EMR
+## 1.4 CSV Data
+
+CSV Data
+
+데이터는 [맥도날드 데이터](https://www.kaggle.com/datasets/thedevastator/mcdonalds-ice-cream-machines-broken-timeseries)를
+사용합니다.<br>
+데이터를 로컬 컴퓨터에 다운로드 받습니다.
+
+
+
+## 1.5 Bootstrap Files
+
+클러스터안의 모든 노드들이 동일한 패키지를 갖을 수 있도록 하기 위해서 bootstrap 파일을 만들어 줍니다.
+
+**emr_bootstrap.sh**
+
+{% highlight bash %}
+#!/bin/bash
+aws s3 cp s3://data-emr-tutorial/bootstrap/requirements.txt ./
+sudo pip install -r requirements.txt
+{% endhighlight %}
+
+**requirements.txt**
+
+{% highlight bash %}
+#!/bin/bash
+sudo pip install -r requirements.txt
+{% endhighlight %}
+
+
+# 1.5 Upload files
+
+{% highlight bash %}
+# 복사 / s3:// 반드시 있어야 함
+$ aws s3 cp mcdonalds_dataset.csv s3://data-emr-tutorial/data/
+$ aws s3 cp emr_bootstrap.sh s3://data-emr-tutorial/bootstrap/
+$ aws s3 cp requirements.txt s3://data-emr-tutorial/bootstrap/
+
+# 확인 / 끝에 slash 꼭 붙여줘야 함 / s3:// 로 시작 안해도 됨
+$ aws s3 ls data-emr-tutorial/
+{% endhighlight %}
+
+
+
+
+## 1.6 Create a Cluster on EMR
 
 AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 같은 화면이 보입니다. 
 
@@ -47,63 +100,9 @@ AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 �
 
 그리고 스토리지 모드는 S3 를 사용하며 미리 만들어둔 s3://data-emr-tutorial/ 을 사용합니다. 
 
+<img src="{{ page.asset_path }}emr-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-
-
-
-
-
-# 1. Tutorial
-
-## 1.1 Install Dependencies
-
-{% highlight bash %}
-$ pip install pyspark[all]
-{% endhighlight %}
-
-
-
-## 1.3 CSV Data
-
-CSV Data
-
-데이터는 [맥도날드 데이터](https://www.kaggle.com/datasets/thedevastator/mcdonalds-ice-cream-machines-broken-timeseries)를
-사용합니다.<br>
-데이터를 로컬 컴퓨터에 다운로드 받습니다.
-
-
-
-## 1.2 Bootstrap Files
-
-클러스터안의 모든 노드들이 동일한 패키지를 갖을 수 있도록 하기 위해서 bootstrap 파일을 만들어 줍니다.
-
-**emr_bootstrap.sh**
-
-{% highlight bash %}
-#!/bin/bash
-sudo pip install -r requirements.txt
-{% endhighlight %}
-
-**requirements.txt**
-
-{% highlight bash %}
-#!/bin/bash
-sudo pip install -r requirements.txt
-{% endhighlight %}
-
-
-# 1.4 Upload files
-
-{% highlight bash %}
-# 복사 / s3:// 반드시 있어야 함
-$ aws s3 cp mcdonalds_dataset.csv s3://data-emr-tutorial/data/
-$ aws s3 cp emr_bootstrap.sh s3://data-emr-tutorial/bootstrap/
-$ aws s3 cp requirements.txt s3://data-emr-tutorial/bootstrap/
-
-# 확인 / 끝에 slash 꼭 붙여줘야 함 / s3:// 로 시작 안해도 됨
-$ aws s3 ls data-emr-tutorial/
-{% endhighlight %}
-
+Tutorial 에서는 `c4.large` 그리고 `c4.xlarge` 를 사용합니다. 
 
 
 
