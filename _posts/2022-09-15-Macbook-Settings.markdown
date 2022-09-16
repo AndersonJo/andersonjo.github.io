@@ -92,3 +92,6 @@ $ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
 
  - 라인의 처음으로 이동: `\033OH`
  - 라인의 마지막으로 이동: `\033OF`
+
+
+설정이 완료된 이후, 컴퓨터 재시작 필요.
