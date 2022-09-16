@@ -118,7 +118,7 @@ AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 �
 
 Tutorial 에서는 `r3.xlarge` 를 사용합니다. <br> 
 또한 100Gb root device EBS volume 을 사용합니다.<br>
-기본 10Gb를 사용시 요량문제로 bootstrap error 가 나옵니다.
+기본 10Gb를 사용시 용량문제로 bootstrap error 가 나옵니다.
 
 <img src="{{ page.asset_path }}emr-09.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
@@ -129,8 +129,6 @@ Tutorial 에서는 `r3.xlarge` 를 사용합니다. <br>
 
 
 
-
-<img src="{{ page.asset_path }}emr-05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 <img src="{{ page.asset_path }}emr-06.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
