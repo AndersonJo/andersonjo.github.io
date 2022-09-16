@@ -79,7 +79,7 @@ sudo pip install -r requirements.txt
 {% endhighlight %}
 
 
-# 1.5 Upload files
+## 1.5 Upload files
 
 {% highlight bash %}
 # 복사 / s3:// 반드시 있어야 함
