@@ -116,10 +116,18 @@ AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 �
 
 <img src="{{ page.asset_path }}emr-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-Tutorial 에서는 `m4.large` 를 사용합니다. <br> 
-일반옵션에서 로깅, 종료 보호등등 다 끕니다. (튜토리얼이니까..)<br>
+Tutorial 에서는 `r3.xlarge` 를 사용합니다. <br> 
+또한 100Gb root device EBS volume 을 사용합니다.<br>
+기본 10Gb를 사용시 요량문제로 bootstrap error 가 나옵니다.
+
+<img src="{{ page.asset_path }}emr-09.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
 그리고 부트스트랩 작업에서는 미리 올려둔 `emr_bootstrap.sh` 를 선택해줍니다.<br>
 추가는 `부트스트랩 작업 추가`에서 `사용자 지정 작업` 을 선택후 `구성 및 추가` 를 누르면 됩니다.
+
+
 
 
 <img src="{{ page.asset_path }}emr-05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
