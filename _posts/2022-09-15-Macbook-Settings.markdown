@@ -85,3 +85,10 @@ $ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
 {% endhighlight %}
 
 그외 대부분의 기본 세팅값들은 .. `/System/Library/Frameworks/AppKit.framework/Resources/StandardKeyBinding.dict` 에 있습니다.
+
+**Terminal 에서의 변경**
+
+`Preferences > Profiles > Settings > Keyboard.` 에서 변경이 가능합니다. 
+
+ - 라인의 처음으로 이동: `\033OH`
+ - 라인의 마지막으로 이동: `\033OF`
