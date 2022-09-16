@@ -8,7 +8,7 @@ tags: ['hadoop']
 ---
 
 
-# 1. Tutorial
+# 1. Installation
 
 ## 1.1 Install Dependencies
 
@@ -43,39 +43,37 @@ CSV Data
 
 
 
-## 1.5 Bootstrap Files
+## 1.5 Bootstrap (EMR-6.7.0 기준)
 
 클러스터안의 모든 노드들이 동일한 패키지를 갖을 수 있도록 하기 위해서 bootstrap 파일을 만들어 줍니다.
 
 **emr_bootstrap.sh**
 
 가장 중요한 부분이 pip 버젼의 사용인데, `sudo pip` 사용시 에러가 납니다.<br>
-그냥 `pip install -U` 사용하는게 좋습니다. 또는 pip부분에서 에러가 난다면.. 일단 comment out 시키고 
-EC2가 생성되면.. 직접 들어가서 pip어떻게 사용되는지 확인하면 됩니다.
+pip부분에서 에러가 난다면.. 일단 comment out 시키고 EC2가 생성되면.. 직접 들어가서 pip어떻게 사용되는지 확인하면 됩니다.<br>
+또한 S3에 남겨지는 에러 메세지를 보면서 문제를 해결하는게 중요합니다. <br>
+특히 spark관련해서 특정 버젼의 pyspark 설치가 필요 할 수 있습니다.
 
 {% highlight bash %}
 #!/bin/bash
 aws s3 cp s3://data-emr-tutorial/bootstrap/requirements.txt ./
-pip install -U --upgrade pip
-pip install -U -r requirements.txt
+sudo pip3 install --upgrade pip
+pip3 install -U -r requirements.txt
 {% endhighlight %}
 
-
-또는 이렇게 해도 됩니다.
-
-{% highlight bash %}
-#!/bin/bash
-aws s3 cp s3://data-emr-tutorial/bootstrap/requirements.txt ./
-python3 -m pip install -U --upgrade pip
-python3 -m pip install -U -r requirements.txt
-{% endhighlight %}
 
 
 **requirements.txt**
 
+`pyspark==2.3.4` 같은 정확한 버젼 설치가 필요하다.<br> 
+이유는 다른 버젼이라면 sage-maker 와 충돌이 날 수 있는데 에러가 나면.. bootstrap 에서 에러가 나고.. 전체 클러스터가 떨어진다<br>
+EMR-6.7.0 기준이다.
+
 {% highlight bash %}
-#!/bin/bash
-sudo pip install -r requirements.txt
+pandas
+numpy
+matplotlib
+pyspark==2.3.4
 {% endhighlight %}
 
 
@@ -135,3 +133,9 @@ Tutorial 에서는 `m4.large` 를 사용합니다. <br>
 
 
 
+## 1.7 Notebook
+
+Amazon EMR 좌측 메뉴에서 `노트북`을 선택후 노트북 생성을 합니다. <br>
+기존 클러스터 누르고, 위에서 만든 클러스터를 선택합니다. 
+
+<img src="{{ page.asset_path }}emr-08.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
