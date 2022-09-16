@@ -62,3 +62,26 @@ parse_git_branch() {
 export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 {% endhighlight %}
 
+
+
+## 1.2 키 바인딩 설정
+
+**`HOME`, `END` 키를 줄의 처음, 끝으로 보내도록 설정**
+ 
+{% highlight bash %}
+$ mkdir -p ~/Library/KeyBindings/
+$ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
+{% endhighlight %}
+
+이후 다음의 내용을 넣습니다. 
+
+{% highlight json %}
+{
+    "\UF729"  = moveToBeginningOfLine:; // home
+    "\UF72B"  = moveToEndOfLine:; // end
+    "$\UF729" = moveToBeginningOfLineAndModifySelection:; // shift-home
+    "$\UF72B" = moveToEndOfLineAndModifySelection:; // shift-end
+}
+{% endhighlight %}
+
+그외 대부분의 기본 세팅값들은 .. `/System/Library/Frameworks/AppKit.framework/Resources/StandardKeyBinding.dict` 에 있습니다.
