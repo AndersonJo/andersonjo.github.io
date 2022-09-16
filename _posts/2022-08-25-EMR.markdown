@@ -49,11 +49,27 @@ CSV Data
 
 **emr_bootstrap.sh**
 
+가장 중요한 부분이 pip 버젼의 사용인데, `sudo pip` 사용시 에러가 납니다.<br>
+그냥 `pip install -U` 사용하는게 좋습니다. 또는 pip부분에서 에러가 난다면.. 일단 comment out 시키고 
+EC2가 생성되면.. 직접 들어가서 pip어떻게 사용되는지 확인하면 됩니다.
+
 {% highlight bash %}
 #!/bin/bash
 aws s3 cp s3://data-emr-tutorial/bootstrap/requirements.txt ./
-sudo pip install -r requirements.txt
+pip install -U --upgrade pip
+pip install -U -r requirements.txt
 {% endhighlight %}
+
+
+또는 이렇게 해도 됩니다.
+
+{% highlight bash %}
+#!/bin/bash
+aws s3 cp s3://data-emr-tutorial/bootstrap/requirements.txt ./
+python3 -m pip install -U --upgrade pip
+python3 -m pip install -U -r requirements.txt
+{% endhighlight %}
+
 
 **requirements.txt**
 
@@ -102,16 +118,19 @@ AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 �
 
 <img src="{{ page.asset_path }}emr-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-Tutorial 에서는 `c4.large` 그리고 `c4.xlarge` 를 사용합니다. <br> 
+Tutorial 에서는 `m4.large` 를 사용합니다. <br> 
 일반옵션에서 로깅, 종료 보호등등 다 끕니다. (튜토리얼이니까..)<br>
 그리고 부트스트랩 작업에서는 미리 올려둔 `emr_bootstrap.sh` 를 선택해줍니다.<br>
 추가는 `부트스트랩 작업 추가`에서 `사용자 지정 작업` 을 선택후 `구성 및 추가` 를 누르면 됩니다.
+
 
 <img src="{{ page.asset_path }}emr-05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 <img src="{{ page.asset_path }}emr-06.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
+마지막으로 EC2 키 페어를 설정합니다. 
 
+<img src="{{ page.asset_path }}emr-07.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
 
