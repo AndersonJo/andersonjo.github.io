@@ -75,7 +75,7 @@ $ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
 
 이후 다음의 내용을 넣습니다. 
 
-{% highlight json %}
+{% highlight bash %}
 {
     "\UF729"  = moveToBeginningOfLine:; // home
     "\UF72B"  = moveToEndOfLine:; // end
