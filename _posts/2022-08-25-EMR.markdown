@@ -48,15 +48,23 @@ Amazon EMR은 S3를 사용해서 데이터를 저장하고, 연산을 합니다.
 
 **emr_bootstrap.sh**
 
-가장 중요한 부분이 pip 버젼의 사용인데, `sudo pip` 사용시 에러가 납니다.<br>
+가장 중요한 부분이 pip 버젼의 사용인데, `sudo pip` 사용시 에러가 납니다. (`sudo pip3` 는 가능)<br>
 pip부분에서 에러가 난다면.. 일단 comment out 시키고 EC2가 생성되면.. 직접 들어가서 pip어떻게 사용되는지 확인하면 됩니다.<br>
 또한 S3에 남겨지는 에러 메세지를 보면서 문제를 해결하는게 중요합니다. <br>
 특히 spark관련해서 특정 버젼의 pyspark 설치가 필요 할 수 있습니다.
 
+EMR 버젼에 따라서 pip-3.4 또는 pip-3.6 등등 모두 다른 버젼을 갖고 있습니다. <br>
+문제는 특정 버젼을 정의시 업그레이드 또는 해당 버젼에서 지원하는 pip 버젼을 알고 있어야 함으로 좋은 방향은 아닙니다.<br>
+따라서 `pip2` 또는 `pip3` 같은 방식으로 사용하는게 좋습니다. 
+
+또한 `set -x -e` 를 사용했는데, 이는 추후 디버깅시에 어떤 명령어를 사용했는지를 로깅시에 파악하기 좋습니다. <br>
+해당 명령어가 없다면 출력된 output만 있고, 어떤 명령어가 사용됐는지 안 보입니다. 
+
 {% highlight bash %}
 #!/bin/bash
+set -x -e
 aws s3 cp s3://data-emr-tutorial/bootstrap/requirements.txt ./
-sudo pip3 install --upgrade pip
+sudo pip3 install -U --upgrade pip
 pip3 install -U -r requirements.txt
 {% endhighlight %}
 
@@ -138,8 +146,9 @@ Tutorial 에서는 `r3.xlarge` 를 사용합니다. <br>
 
 
 
+# 2. 
 
-## 1.7 Notebook
+# 1.7 Notebook
 
 Amazon EMR 좌측 메뉴에서 `노트북`을 선택후 노트북 생성을 합니다. <br>
 기존 클러스터 누르고, 위에서 만든 클러스터를 선택합니다. 
