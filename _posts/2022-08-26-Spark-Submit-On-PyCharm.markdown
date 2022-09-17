@@ -17,7 +17,7 @@ File -> Settings -> Plugins ->  `big data tools` 검색후 .. <br>
 
 <img src="{{ page.asset_path }}spark-on-pycharm-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-## 1.2 Configure Local Submit
+## 1.2 Configure Remote Submit
 
 Run -> Edit Configurations 
 

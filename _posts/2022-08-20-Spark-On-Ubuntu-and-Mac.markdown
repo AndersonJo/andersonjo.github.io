@@ -14,3 +14,4 @@ tags: ['emr']
 ```bash
 sudo apt install default-jdk scala git -y
 ```
+
