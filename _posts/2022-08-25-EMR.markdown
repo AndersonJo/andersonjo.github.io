@@ -12,9 +12,9 @@ tags: ['hadoop']
 
 ## 1.1 Install Dependencies
 
-{% highlight bash %}
+```bash 
 $ pip install pyspark[all]
-{% endhighlight %}
+```
 
 
 ## 1.2 AWS Preparation 
@@ -60,7 +60,7 @@ EMR 버젼에 따라서 pip-3.4 또는 pip-3.6 등등 모두 다른 버젼을 �
 또한 `set -x -e` 를 사용했는데, 이는 추후 디버깅시에 어떤 명령어를 사용했는지를 로깅시에 파악하기 좋습니다. <br>
 해당 명령어가 없다면 출력된 output만 있고, 어떤 명령어가 사용됐는지 안 보입니다. 
 
-{% highlight bash %}
+```bash
 #!/bin/bash
 set -x -e
 
@@ -71,7 +71,7 @@ sudo yum install -y jq
 aws s3 cp s3://data-emr-tutorial/bootstrap/requirements.txt ./
 sudo pip3 install -U --upgrade pip
 pip3 install -U -r requirements.txt
-{% endhighlight %}
+```
 
 
 
@@ -81,17 +81,17 @@ pip3 install -U -r requirements.txt
 이유는 다른 버젼이라면 sage-maker 와 충돌이 날 수 있는데 에러가 나면.. bootstrap 에서 에러가 나고.. 전체 클러스터가 떨어진다<br>
 EMR-6.7.0 기준이다.
 
-{% highlight bash %}
+```bash
 pandas
 numpy
 matplotlib
 pyspark==2.3.4
-{% endhighlight %}
+```
 
 
 ## 1.5 Upload files
 
-{% highlight bash %}
+```bash
 # 복사 / s3:// 반드시 있어야 함
 $ aws s3 cp mcdonalds_dataset.csv s3://data-emr-tutorial/data/
 $ aws s3 cp emr_bootstrap.sh s3://data-emr-tutorial/bootstrap/
@@ -99,7 +99,7 @@ $ aws s3 cp requirements.txt s3://data-emr-tutorial/bootstrap/
 
 # 확인 / 끝에 slash 꼭 붙여줘야 함 / s3:// 로 시작 안해도 됨
 $ aws s3 ls data-emr-tutorial/
-{% endhighlight %}
+```
 
 
 
@@ -126,7 +126,7 @@ AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 �
 
 <img src="{{ page.asset_path }}emr-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-Tutorial 에서는 `m4.xlarge` 를 사용합니다. (최소 16Gib 메모리가 필요. 그 이하면 클러스터 떠러짐) <br> 
+Tutorial 에서는 `m4.xlarge` 를 사용합니다. (최소 16Gib 메모리가 필요. 그 이하면 클러스터 떨어짐) <br> 
 또한 100Gb root device EBS volume 을 사용합니다.<br>
 기본 10Gb를 사용시 용량문제로 bootstrap error 가 나옵니다.
 
@@ -149,6 +149,12 @@ Tutorial 에서는 `m4.xlarge` 를 사용합니다. (최소 16Gib 메모리가 �
 마지막으로 EC2 키 페어를 설정합니다. 
 
 <img src="{{ page.asset_path }}emr-07.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+
+
+
 
 
 
