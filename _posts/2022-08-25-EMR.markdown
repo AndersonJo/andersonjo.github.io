@@ -110,6 +110,7 @@ AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 �
 
 - Hadoop
 - `JupyterHub`
+- `JupyterEnterpriseGateway` - 추후 Notebook 사용시 필요
 - `Spark`
 - `Zeppelin`
 - `Hue`
@@ -120,7 +121,7 @@ AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 �
 
 <img src="{{ page.asset_path }}emr-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-Tutorial 에서는 `r3.xlarge` 를 사용합니다. <br> 
+Tutorial 에서는 `m4.xlarge` 를 사용합니다. (최소 16Gib 메모리가 필요. 그 이하면 클러스터 떠러짐) <br> 
 또한 100Gb root device EBS volume 을 사용합니다.<br>
 기본 10Gb를 사용시 용량문제로 bootstrap error 가 나옵니다.
 
