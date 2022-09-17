@@ -63,6 +63,11 @@ EMR 버젼에 따라서 pip-3.4 또는 pip-3.6 등등 모두 다른 버젼을 �
 {% highlight bash %}
 #!/bin/bash
 set -x -e
+
+# update and install some useful yum packages
+sudo yum install -y jq
+
+# Install Python packages
 aws s3 cp s3://data-emr-tutorial/bootstrap/requirements.txt ./
 sudo pip3 install -U --upgrade pip
 pip3 install -U -r requirements.txt
@@ -147,9 +152,18 @@ Tutorial 에서는 `m4.xlarge` 를 사용합니다. (최소 16Gib 메모리가 �
 
 
 
-# 2. 
+# 2. EMR Studio
 
-# 1.7 Notebook
+## 2.
+
+
+
+
+
+
+
+
+# 2.1 Notebook
 
 Amazon EMR 좌측 메뉴에서 `노트북`을 선택후 노트북 생성을 합니다. <br>
 기존 클러스터 누르고, 위에서 만든 클러스터를 선택합니다. 
