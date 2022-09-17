@@ -1,7 +1,10 @@
 ---
-layout: post title:  "ElasticSearch Reference"
-date:   2022-04-02 01:00:00 categories: "elasticsearch"
-asset_path: /assets/images/ tags: ['kafka', 'elasticsearch', 'connector']
+layout: post 
+title:  "ElasticSearch Reference"
+date:   2022-04-02 01:00:00 
+categories: "elasticsearch"
+asset_path: /assets/images/ 
+tags: ['kafka', 'elasticsearch', 'connector']
 ---
 
 # ElasticSearch Reference
