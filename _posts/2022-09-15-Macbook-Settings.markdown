@@ -95,3 +95,10 @@ $ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
 
 
 설정이 완료된 이후, 컴퓨터 재시작 필요.
+
+
+## 1.3 그외 터미널 설정
+
+- Terminal -> Settings -> Advanced -> Bell
+  - Visual Bell 체크 박스를 uncheck 으로 만듭니다. 
+
