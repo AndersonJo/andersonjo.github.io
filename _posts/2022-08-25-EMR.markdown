@@ -194,6 +194,96 @@ Tutorial 에서는 `m4.xlarge` 를 사용합니다. (최소 16Gib 메모리가 �
 
 
 
+# 2. PySpark
+
+## 2.1 Configure Hadoop
+
+먼저 EMR의 마스터 서버의 주소를 알아냅니다. 
+
+<img src="{{ page.asset_path }}emr-30.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+이후 `core-site.xml` 그리고 `yarn-site.xml` 에서 주소를 넣어야 합니다.
+아래와 같이 수정하되, 위에서 복사한 마스터 주소를 치환해서 넣습니다.
+
+```bash
+$ cd ~/app/hadoop/etc/hadoop
+```
+
+**core-site.xml**
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+<property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://ec2-3-35-132-11.ap-northeast-2.compute.amazonaws.com</value>
+</property>
+</configuration>
+```
+
+**yarn-site.xml**
+
+```xml
+<?xml version="1.0"?>
+<configuration>
+<property>
+    <name>yarn.resourcemanager.address</name>
+    <value>ec2-3-35-132-11.ap-northeast-2.compute.amazonaws.com:8032</value>
+</property>
+<property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>ec2-3-35-132-11.ap-northeast-2.compute.amazonaws.com</value>
+</property>
+</configuration>
+```
+
+**hdfs-site.xml**
+
+```bash
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+<property>
+    <name>dfs.permissions.superusergroup</name>
+    <value>hdfsadmingroup</value>
+    <description>The name of the group of super-users.</description>
+</property>
+</configuration>
+```
+
+**~/.bashrc**
+
+```bash
+# Java
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=$PATH:$JAVA_HOME/bin
+
+# Hadoop
+export HADOOP_HOME=/home/anderson/app/hadoop
+export PATH=$PATH:$HADOOP_HOME/bin
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
+```
+
+
+추가적으로 마스터 서버에 들어가서 다음을 해줍니다.  
+
+```bash
+$ sudo usermod -G hdfsadmingroup -a root
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
