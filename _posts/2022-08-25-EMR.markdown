@@ -160,7 +160,45 @@ Tutorial 에서는 `m4.xlarge` 를 사용합니다. (최소 16Gib 메모리가 �
 
 # 2. EMR Studio
 
-## 2.
+## 2.1 Create EMR Studio
+
+먼저 EMR Studio 에서 Create Studio 버튼을 눌러서 다음과 같이 생성합니다.
+
+ - Studio name: emr-studio
+ - VPC: EMR과 동일한 VPC 선택 
+ - subnets: EMR과 동일한 subnets 선택
+ - Security and access: Default security group
+ - Authentication: AWS Identity and Access Management (IAM)
+ - Service role: EMR_Notebooks_DefaultRole
+ - Workspace storage: 저장할 S3 위치 지정
+
+<img src="{{ page.asset_path }}emr-studio-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+<img src="{{ page.asset_path }}emr-studio-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+<img src="{{ page.asset_path }}emr-studio-03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+<img src="{{ page.asset_path }}emr-studio-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+EMR Studio 생성이 완료되고 해당 studio를 누르면 detail page 화면에서 링크를 찾을 수 있습니다. <br>
+해당 링크를 누릅니다.
+
+<img src="{{ page.asset_path }}emr-studio-05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+## 2.2 Create EMR Workspace
+
+EMR Studio 안으로 들어오면 보이는 화면입니다. <br>
+여기서 workspace를 생성할 수 있습니다. <br>
+Create Workspace 버튼을 누릅니다. 
+
+<img src="{{ page.asset_path }}emr-workspace-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+아래와 같이 workspace 를 생성하되, 반드시 advanced configuration 을 열고 `Attach Workspace to an EMR cluster` 를 선택합니다. 
+
+<img src="{{ page.asset_path }}emr-workspace-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+<img src="{{ page.asset_path }}emr-workspace-03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
 
 
 
