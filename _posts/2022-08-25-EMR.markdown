@@ -211,6 +211,8 @@ $ cd ~/app/hadoop/etc/hadoop
 
 **core-site.xml**
 
+`hdfs://<마스터 퍼블릭 DNS>` 형태로 value 태그에 넣어주면 됩니다.
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -223,6 +225,8 @@ $ cd ~/app/hadoop/etc/hadoop
 ```
 
 **yarn-site.xml**
+
+
 
 ```xml
 <?xml version="1.0"?>
@@ -239,6 +243,7 @@ $ cd ~/app/hadoop/etc/hadoop
 ```
 
 **hdfs-site.xml**
+
 
 ```bash
 <?xml version="1.0" encoding="UTF-8"?>
