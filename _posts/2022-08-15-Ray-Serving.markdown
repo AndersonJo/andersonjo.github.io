@@ -23,7 +23,7 @@ $ pip install ray[serve]
 ```python
 from ray import serve
 from starlette.requests import Request
-from transformers import AutoTokenizer, AutoModelForCausalLM, M2M100ForConditionalGeneration, M2M100Tokenizer
+from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
 
 @serve.deployment(num_replicas=2, ray_actor_options={"num_cpus": 0.5, "num_gpus": 0})
