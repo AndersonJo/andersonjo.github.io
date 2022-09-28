@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Kubernetes - Cluster Scaler"
-date:   2022-08-15 01:00:00
+date:   2020-09-07 01:00:00
 categories: "kubernetes"
 asset_path: /assets/images/
 tags: ['hpa', 'ray', 'pod', 'scaling']
