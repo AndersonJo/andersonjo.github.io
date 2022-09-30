@@ -4,7 +4,7 @@ title:  "Ray Serving on Kubernetes"
 date:   2022-08-15 01:00:00
 categories: "ml-ops"
 asset_path: /assets/images/
-tags: ['ray', 'kubernetes']
+tags: ['ray', 'kubernetes', 'translation', 'huggingface']
 ---
 
 # 1. Ray Serve

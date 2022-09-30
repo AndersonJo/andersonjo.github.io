@@ -10,13 +10,26 @@ tags: ['brew']
 
 # 1. Basic Configuration
 
+
+## 1.1 잠지기 방지 설정
+
+노트북을 덮어도 꺼지지 않도록 설정하는 방법
+
+```bash
+# 잠자기 방지 설정 세팅
+$ sudo pmset -c disablesleep 1
+
+# 노트북 닫으면 정상적으로 꺼지도록 설정
+$ sudo pmset -c disablesleep 0
+```
+
 ## 1.1 Terminal & Brew & Bash
 
 **Brew 설치**
 
 {% highlight bash %}
 # Brew 설치
-$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 $ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.profile
 $ eval "$(/opt/homebrew/bin/brew shellenv)"
 
