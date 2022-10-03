@@ -43,7 +43,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$PATH:$JAVA_HOME/bin
 
 # Hadoop
-export HADOOP_HOME=/home/anderson/app/hadoop
+export HADOOP_HOME=$HOME/app/hadoop
 export PATH=$PATH:$HADOOP_HOME/bin
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
@@ -60,7 +60,9 @@ Hadoop 3.3.4
 
 ## 1.3 AWS Preparation 
 
-EC2 KeyPair 를 미리 만들어놔야 합니다. 
+- EC2 KeyPair 를 미리 만들어놔야 합니다.
+- `aws sts get-caller-identity` 사용해서 접속이 잘 되는지도 확인합니다.
+
 
 
 ## 1.4 S3 Bucket 
