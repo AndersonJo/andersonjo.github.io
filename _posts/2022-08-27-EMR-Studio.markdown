@@ -72,16 +72,9 @@ IAM -> Roles -> Create Role
 2. AmazonS3FullAccess
 
 
+# 2. EMR Studio
 
-
-## 1.2 Preparation  
-
-1. notebook을 저장할 S3 repository 와 notebook 디렉토리를 만듭니다.  
-
-
-
-
-## 3.3 Create EMR Studio
+## 2.1 Create EMR Studio
 
 먼저 EMR Studio 에서 Create Studio 버튼을 눌러서 다음과 같이 생성합니다.
 
@@ -114,7 +107,7 @@ EMR Studio 생성이 완료되고 해당 studio를 누르면 detail page 화면�
 <img src="{{ page.asset_path }}emr-studio-05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
-## 3.4 Add a user to EMR Studio
+## 2.2 Add a user to EMR Studio
 
 Iam Identity Center 에서 만든 Anderson 유저를 추가해줘야 합니다. 
 
@@ -128,7 +121,7 @@ Iam Identity Center 에서 만든 Anderson 유저를 추가해줘야 합니다.
 
 
 
-## 3.5 EMR Workspace
+## 2.3 EMR Workspace
 
 EMR Studio 안으로 들어오면 보이는 화면입니다. <br>
 여기서 workspace를 생성할 수 있습니다. <br>
@@ -150,7 +143,7 @@ Create Workspace 버튼을 누릅니다.
 
 
 
-# 2.1 Notebook
+# 3. Notebook
 
 Amazon EMR 좌측 메뉴에서 `노트북`을 선택후 노트북 생성을 합니다. <br>
 기존 클러스터 누르고, 위에서 만든 클러스터를 선택합니다. 
