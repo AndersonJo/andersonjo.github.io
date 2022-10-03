@@ -127,14 +127,9 @@ EMR Studio 안으로 들어오면 보이는 화면입니다. <br>
 여기서 workspace를 생성할 수 있습니다. <br>
 Create Workspace 버튼을 누릅니다. 
 
-<img src="{{ page.asset_path }}emr-workspace-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
-
 아래와 같이 workspace 를 생성하되, 반드시 advanced configuration 을 열고 `Attach Workspace to an EMR cluster` 를 선택합니다. 
 
-<img src="{{ page.asset_path }}emr-workspace-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
-
-<img src="{{ page.asset_path }}emr-workspace-03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
-
+<img src="{{ page.asset_path }}emr-workspace-05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
 
