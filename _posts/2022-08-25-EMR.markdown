@@ -451,9 +451,9 @@ $ sudo usermod -G hdfsadmingroup -a root
 
 
 
-# 2. EMR Studio
+# 3. EMR Studio
 
-## 2.1 Iam Identity Center
+## 3.1 Iam Identity Center
 
 EMR은 `IAM Authentication Mode` 그리고 `IAM Identity Center Authentication Mode` 두가지로 운영이 가능합니다. 
 
@@ -471,7 +471,7 @@ Group은 만들어도 되고 안해도 되고.. 맘대로..
 
 
 
-## 2.1 Create EMR Studio
+## 3.1 Create EMR Studio
 
 먼저 EMR Studio 에서 Create Studio 버튼을 눌러서 다음과 같이 생성합니다.
 
@@ -486,6 +486,11 @@ Group은 만들어도 되고 안해도 되고.. 맘대로..
 <img src="{{ page.asset_path }}emr-studio-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 <img src="{{ page.asset_path }}emr-studio-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+꽤 중요한 부분인데, `AWS Single Sign-On (SSO)` 를 선택하고, 그 아래 옵션은 다음과 같이 설정합니다. 
+
+ - Service role: `EMR_DefaultRole`
+ - User role: `EMR_DefaultRole`
 
 <img src="{{ page.asset_path }}emr-studio-03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
