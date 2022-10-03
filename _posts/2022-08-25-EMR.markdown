@@ -78,7 +78,7 @@ Amazon EMR은 S3를 사용해서 데이터를 저장하고, 연산을 합니다.
 
 
 
-## 1.6 Bootstrap (EMR-6.7.0 기준)
+## 1.5 Bootstrap (EMR-6.7.0 기준)
 
 클러스터안의 모든 노드들이 동일한 패키지를 갖을 수 있도록 하기 위해서 bootstrap 파일을 만들어 줍니다.
 
@@ -125,7 +125,7 @@ pyspark==2.3.4
 ```
 
 
-## 1.7 Upload files
+## 1.6 Upload files
 
 ```bash
 # 복사 / s3:// 반드시 있어야 함
@@ -139,7 +139,7 @@ $ aws s3 ls data-emr-tutorial/
 
 
 
-## 1.8 Create a Cluster on EMR
+## 1.7 Create a Cluster on EMR
 
 AWS EMR 서비스를 들어온 다음에 Create Cluster를 누르면 다음과 같은 화면이 보입니다.<br> 
 `고급 옵션으로 이동` or `Go to advanced options`을 누른후..
@@ -196,6 +196,12 @@ j-AZAL77EINX2B
 
 $ aws emr describe-cluster --cluster-id j-AZAL77EINX2B
 ```
+
+
+
+
+
+
 
 
 
