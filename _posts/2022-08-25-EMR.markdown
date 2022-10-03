@@ -467,7 +467,10 @@ Iam Identity Center -> Users -> Create
 <img src="{{ page.asset_path }}emr-iam-ideneity-center-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 나머지는 전부다 Next 버튼 누르고 완료하면 됩니다.<br>
-Group은 만들어도 되고 안해도 되고.. 맘대로.. 
+Group은 만들어도 되고 안해도 되고.. 맘대로..<br>
+이후 **이메일 확인해서 인증**해야 합니다. 
+
+**중요한 부분은 이것만 만들어서 끝이 아니고, 아래에 EMR Studio를 생성후, 여기서 만든 유저를 다시 추가 해야 합니다.**
 
 
 ## 3.2 Preparation  
@@ -508,7 +511,22 @@ EMR Studio 생성이 완료되고 해당 studio를 누르면 detail page 화면�
 
 <img src="{{ page.asset_path }}emr-studio-05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-## 2.2 Create EMR Workspace
+
+## 3.4 Add a user to EMR Studio
+
+Iam Identity Center 에서 만든 Anderson 유저를 추가해줘야 합니다. 
+
+<img src="{{ page.asset_path }}emr-studio-add-user.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+<img src="{{ page.asset_path }}emr-studio-add-user-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+이후 이름으로 인증 (Anderson 으로 인증.. 이메일이 아니라..) 하고 나면 Workspace Dashboard 가 보입니다.
+
+
+
+
+
+## 3.5 EMR Workspace
 
 EMR Studio 안으로 들어오면 보이는 화면입니다. <br>
 여기서 workspace를 생성할 수 있습니다. <br>
