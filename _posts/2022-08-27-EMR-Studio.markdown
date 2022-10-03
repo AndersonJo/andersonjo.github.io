@@ -52,11 +52,12 @@ IAM -> Roles -> Create Role
 - Role Name: `emr-studio-user-role`
 
 생성이후에 emr-studio-role을 누르고 `Add Permissions` -> `Attach Policies` 를 눌러서 더 추가 합니다.<br>
-최종적으로 3개가 추가되야 합니다. 
+최종적으로 4개가 추가되야 합니다. 
 
 1. AmazonElasticMapReduceRole
 2. AmazonS3FullAccess
 3. AmazonEMRFullAccessPolicy_v2
+4. AmazonEC2FullAccess
 
 <img src="{{ page.asset_path }}emr-studio-23.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
@@ -102,9 +103,7 @@ IAM -> Roles -> Create Role
 <img src="{{ page.asset_path }}emr-studio-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 EMR Studio 생성이 완료되고 해당 studio를 누르면 detail page 화면에서 링크를 찾을 수 있습니다. <br>
-해당 링크를 누릅니다.
-
-<img src="{{ page.asset_path }}emr-studio-05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+EMR -> EMR Studio (emr-studio 방금 만든것) -> URL 클릭하면 studio 화면으로 이동
 
 
 ## 2.2 Add a user to EMR Studio
