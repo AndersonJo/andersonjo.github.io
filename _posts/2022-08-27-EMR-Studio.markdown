@@ -141,13 +141,3 @@ Create Workspace 버튼을 누릅니다.
 
 
 
-
-
-
-
-# 3. Notebook
-
-Amazon EMR 좌측 메뉴에서 `노트북`을 선택후 노트북 생성을 합니다. <br>
-기존 클러스터 누르고, 위에서 만든 클러스터를 선택합니다. 
-
-<img src="{{ page.asset_path }}emr-08.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
