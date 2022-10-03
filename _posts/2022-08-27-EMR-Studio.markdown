@@ -34,7 +34,7 @@ Group은 만들어도 되고 안해도 되고.. 맘대로..<br>
 
 
 
-## 1.2 EMR Studio Service Role
+## 1.2 EMR Studio User Role
 
 먼저 Role 을 생성합니다
 
@@ -47,7 +47,7 @@ IAM -> Roles -> Create Role
 
 나머지는 다 넘기고 아래와 같이 몇가지만 설정합니다. 
 
-- Role Name: `emr-studio-service-role`
+- Role Name: `emr-studio-user-role`
 
 생성이후에 emr-studio-role을 누르고 `Add Permissions` -> `Attach Policies` 를 눌러서 더 추가 합니다.<br>
 최종적으로 3개가 추가되야 합니다. 
@@ -73,12 +73,11 @@ IAM -> Roles -> Create Role
 
 먼저 EMR Studio 에서 Create Studio 버튼을 눌러서 다음과 같이 생성합니다.
 
- - Studio name: emr-studio
+ - Studio name: `emr-studio`
  - VPC: EMR과 동일한 VPC 선택 
  - subnets: EMR과 동일한 subnets 선택
  - Security and access: Default security group
- - Authentication: AWS Identity and Access Management (IAM)
- - Service role: EMR_Notebooks_DefaultRole
+ - Authentication: `AWS Identity and Access Management (IAM)`
  - Workspace storage: 저장할 S3 위치 지정
 
 <img src="{{ page.asset_path }}emr-studio-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
