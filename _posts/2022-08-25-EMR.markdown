@@ -76,13 +76,6 @@ Amazon EMR은 S3를 사용해서 데이터를 저장하고, 연산을 합니다.
 - ACL: ACL 비활성화됨(권장)
 
 
-## 1.5 CSV Data
-
-
-데이터는 [맥도날드 데이터](https://www.kaggle.com/datasets/thedevastator/mcdonalds-ice-cream-machines-broken-timeseries)를
-사용합니다.<br>
-데이터를 로컬 컴퓨터에 다운로드 받습니다.
-
 
 
 ## 1.6 Bootstrap (EMR-6.7.0 기준)
@@ -136,7 +129,6 @@ pyspark==2.3.4
 
 ```bash
 # 복사 / s3:// 반드시 있어야 함
-$ aws s3 cp mcdonalds_dataset.csv s3://data-emr-tutorial/data/
 $ aws s3 cp emr_bootstrap.sh s3://data-emr-tutorial/bootstrap/
 $ aws s3 cp requirements.txt s3://data-emr-tutorial/bootstrap/
 
@@ -212,7 +204,22 @@ $ aws emr describe-cluster --cluster-id j-AZAL77EINX2B
 일반적으로 spark-submit 을 통해서 마스터 서버로 job을 보내게 되는데, <br> 
 EMR 에서는 spark-submit이 아니라 `aws emr add-steps` 를 통해서 job을 실행합니다.
 
-## 2.1 Mcdonald Python Code
+
+
+## 2.1 Mcdonald Data
+
+
+데이터는 [맥도날드 데이터](https://www.kaggle.com/datasets/thedevastator/mcdonalds-ice-cream-machines-broken-timeseries)를
+사용합니다.<br>
+데이터를 로컬 컴퓨터에 다운로드 받습니다.
+
+```bash
+# 맥도날드 데이터 받기
+$ wget https://raw.githubusercontent.com/AndersonJo/code-snippet/master/002-Pyspark/macdonald/mcdonalds_dataset.csv
+```
+
+
+## 2.2 Mcdonald Python Code
 
 `mcdonald.py`
 
@@ -281,12 +288,9 @@ Chicago,False,95
 ```
 
 
-## 2.2 Upload Files to S3
+## 2.3 Upload Files to S3
 
 ```bash
-# 맥도날드 데이터 받기
-$ wget https://raw.githubusercontent.com/AndersonJo/code-snippet/master/002-Pyspark/macdonald/mcdonalds_dataset.csv
-
 # 업로드 
 $ EMR_S3=data-emr-tutorial
 $ aws s3 cp mcdonalds_dataset.csv s3://${EMR_S3}/data/ 
