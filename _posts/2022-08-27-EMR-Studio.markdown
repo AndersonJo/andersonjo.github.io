@@ -66,11 +66,12 @@ IAM -> Roles -> Create Role
 
 ## 1.3 EMR Studio Service Role 
 
-기본적으로 `EMR_Notebooks_DefaultRole` 이 있으면 됩니다.<br>
-해당 Role안에는 다음의 권한이 들어 있습니다. (만약 없으면 이거 role 생성하면 됨) 
+위와 동일하게 만들되 이름은 `emr-studio-service-role` 로 만듭니다. <br>
+최종 권한은 다음이 있으면 됩니다.  
 
 1. AmazonElasticMapReduceEditorsRole
 2. AmazonS3FullAccess
+3. AmazonEC2FullAccess
 
 
 # 2. EMR Studio
