@@ -496,6 +496,9 @@ Group은 만들어도 되고 안해도 되고.. 맘대로..
  - Service role: `EMR_Notebooks_DefaultRole`
  - User role: `EMR_Notebooks_DefaultRole`
 
+>> `EMR_Notebooks_DefaultRole` 에는  AmazonElasticMapReduceEditorsRole 그리고 AmazonS3FullAccess 가 있기 때문에, <br>
+>> EMR 그리고 S3 둘다 접근이 가능합니다. 
+
 <img src="{{ page.asset_path }}emr-studio-03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 <img src="{{ page.asset_path }}emr-studio-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
