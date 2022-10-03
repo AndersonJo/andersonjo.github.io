@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Spark Submit on Pycharm"
-date:   2022-08-25 01:00:00
+date:   2022-09-01 01:00:00
 categories: "spark"
 asset_path: /assets/images/
 tags: ['hadoop', 'emr']
