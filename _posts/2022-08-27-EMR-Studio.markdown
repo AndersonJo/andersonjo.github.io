@@ -34,7 +34,7 @@ Group은 만들어도 되고 안해도 되고.. 맘대로..<br>
 
 
 
-## 1.2 Role
+## 1.2 EMR Studio Service Role
 
 먼저 Role 을 생성합니다
 
@@ -47,9 +47,7 @@ IAM -> Roles -> Create Role
 
 나머지는 다 넘기고 아래와 같이 몇가지만 설정합니다. 
 
-- Role Name: `emr-studio-role`
-
-<img src="{{ page.asset_path }}emr-studio-21.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+- Role Name: `emr-studio-service-role`
 
 생성이후에 emr-studio-role을 누르고 `Add Permissions` -> `Attach Policies` 를 눌러서 더 추가 합니다.<br>
 최종적으로 3개가 추가되야 합니다. 
