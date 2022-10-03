@@ -453,6 +453,24 @@ $ sudo usermod -G hdfsadmingroup -a root
 
 # 2. EMR Studio
 
+## 2.1 Iam Identity Center
+
+EMR은 `IAM Authentication Mode` 그리고 `IAM Identity Center Authentication Mode` 두가지로 운영이 가능합니다. 
+
+
+먼저 IAM Identity Center 로 가서 생성을 하면 다음과 같은 화면이 보입니다. 
+
+<img src="{{ page.asset_path }}emr-iam-identity-center.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+Iam Identity Center -> Users -> Create
+
+<img src="{{ page.asset_path }}emr-iam-ideneity-center-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+나머지는 전부다 Next 버튼 누르고 완료하면 됩니다.<br>
+Group은 만들어도 되고 안해도 되고.. 맘대로.. 
+
+
+
 ## 2.1 Create EMR Studio
 
 먼저 EMR Studio 에서 Create Studio 버튼을 눌러서 다음과 같이 생성합니다.
