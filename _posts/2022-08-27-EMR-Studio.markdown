@@ -62,8 +62,6 @@ IAM -> Roles -> Create Role
 <img src="{{ page.asset_path }}emr-studio-23.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
-
-
 ## 1.3 EMR Studio Service Role 
 
 위와 동일하게 만들되 이름은 `emr-studio-service-role` 로 만듭니다. <br>
@@ -72,6 +70,18 @@ IAM -> Roles -> Create Role
 1. AmazonElasticMapReduceEditorsRole
 2. AmazonS3FullAccess
 3. AmazonEC2FullAccess
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # 2. EMR Studio
@@ -93,15 +103,12 @@ IAM -> Roles -> Create Role
 
 꽤 중요한 부분인데, `AWS Single Sign-On (SSO)` 를 선택하고, 그 아래 옵션은 다음과 같이 설정합니다. 
 
- - Service role: `EMR_Notebooks_DefaultRole`
+ - Service role: `emr-studio-user-role`
  - User role: `emr-studio-user-role`
 
->> `EMR_Notebooks_DefaultRole` 에는  AmazonElasticMapReduceEditorsRole 그리고 AmazonS3FullAccess 가 있기 때문에, <br>
->> EMR 그리고 S3 둘다 접근이 가능합니다. 
 
 <img src="{{ page.asset_path }}emr-studio-creation-authenticaion-role.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-<img src="{{ page.asset_path }}emr-studio-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 EMR Studio 생성이 완료되고 해당 studio를 누르면 detail page 화면에서 링크를 찾을 수 있습니다. <br>
 EMR -> EMR Studio (emr-studio 방금 만든것) -> URL 클릭하면 studio 화면으로 이동
