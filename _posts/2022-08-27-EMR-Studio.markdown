@@ -97,7 +97,7 @@ IAM -> Roles -> Create Role
 >> `EMR_Notebooks_DefaultRole` 에는  AmazonElasticMapReduceEditorsRole 그리고 AmazonS3FullAccess 가 있기 때문에, <br>
 >> EMR 그리고 S3 둘다 접근이 가능합니다. 
 
-<img src="{{ page.asset_path }}emr-studio-03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+<img src="{{ page.asset_path }}emr-studio-creation-authenticaion-role.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 <img src="{{ page.asset_path }}emr-studio-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
