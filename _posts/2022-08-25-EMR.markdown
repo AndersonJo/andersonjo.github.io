@@ -194,6 +194,151 @@ Tutorial 에서는 `m4.xlarge` 를 사용합니다. (최소 16Gib 메모리가 �
 <img src="{{ page.asset_path }}emr-07.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
+확인하기 위해서 다음의 명령어로 Cluster 정보를 찾아봅니다.<br>
+Cluster ID 부분에는 `j-AZAL77EINX2B` 같은 Cluster ID를 넣습니다. 
+
+```bash
+# 실행중인것 보고싶으면 `--cluster-states RUNNING` 으로 하면 됨
+$ aws emr list-clusters --cluster-states WAITING | jq -r .Clusters[0].Id
+j-AZAL77EINX2B
+
+$ aws emr describe-cluster --cluster-id j-AZAL77EINX2B
+```
+
+
+
+# 2. EMR Steps
+
+일반적으로 spark-submit 을 통해서 마스터 서버로 job을 보내게 되는데, <br> 
+EMR 에서는 spark-submit이 아니라 `aws emr add-steps` 를 통해서 job을 실행합니다.
+
+## 2.1 Check Connection Code
+
+`mcdonald.py`
+
+```python
+from argparse import Namespace, ArgumentParser
+
+from pyspark.sql import SparkSession
+
+
+def init() -> Namespace:
+    parser = ArgumentParser()
+    parser.add_argument('--source', default='mcdonalds_dataset.csv')
+    parser.add_argument('--output', default='output.csv')
+    args = parser.parse_args()
+    return args
+
+
+def main():
+    args = init()
+
+    data_source = args.source
+    data_output = args.output
+    print('source:', data_source)
+    print('output:', data_output)
+
+    spark = (SparkSession
+             .builder
+             .appName('Macdonald Broken Machine')
+             .config('spark.driver.maxResultSize', '1g')
+             .getOrCreate())
+    spark.sparkContext.setLogLevel('WARN')
+
+    df = (spark.read
+          .option('header', 'true')
+          .csv(data_source))
+    df.createOrReplaceTempView('df')
+
+    query = r'''
+    select city, is_broken, count(*) as cnt from df
+    group by city, is_broken
+    order by 3 DESC
+    limit 10
+    '''
+    result_df = spark.sql(query)
+    (result_df
+     .repartition(1)  # spark nodes의 갯수에 따라서 여러개의 파일이 만들어지는데, repartition(1)로 하나로 묶을수 있다
+     .write
+     .option('header', 'true')
+     .csv(data_output))
+    print(result_df.show())
+
+
+if __name__ == '__main__':
+    main()
+```
+
+정상 작동하는지 체크하기 위해서 다음을 실행합니다. 
+
+```bash
+$ python mcdonald.py
+$ cat output.csv/part-*.csv
+city,is_broken,cnt
+Houston,False,105
+Chicago,False,95
+<생략>
+```
+
+
+## 2.2 Upload Jobs to S3
+
+```bash
+# 맥도날드 데이터 받기
+$ wget https://raw.githubusercontent.com/AndersonJo/code-snippet/master/002-Pyspark/macdonald/mcdonalds_dataset.csv
+
+# 업로드 
+$ EMR_S3=data-emr-tutorial
+$ aws s3 cp mcdonalds_dataset.csv s3://${EMR_S3}/data/ 
+$ aws s3 cp mcdonald.py s3://${EMR_S3}/code/
+```
+
+## 2.3 Run Step
+
+```bash
+$ EMR_SPARK_CLUSTER_ID=$(aws emr list-clusters --cluster-states WAITING | jq -r .Clusters[0].Id)
+$ EMR_SPARK_APP_NAME="My Spark Test"
+$ EMR_SPARK_SCRIPT=s3://${EMR_S3}/code/mcdonald.py
+$ EMR_SPARK_SOURCE=s3://${EMR_S3}/data/mcdonalds_dataset.csv
+$ EMR_SPARK_OUTPUT=s3://${EMR_S3}/data/output.csv
+
+# 기존 output 삭제
+$ aws s3 rm --recursive ${EMR_SPARK_OUTPUT}
+
+# EMR Run mcdonald.py 
+$ aws emr add-steps \
+    --cluster-id=${EMR_SPARK_CLUSTER_ID} \
+    --steps Type=Spark,Name="${EMR_SPARK_APP_NAME}",ActionOnFailure=CONTINUE,Args=[${EMR_SPARK_SCRIPT},--source,${EMR_SPARK_SOURCE},--output,${EMR_SPARK_OUTPUT}]
+```
+
+아래와 같은 결과가 나옵니다. 
+
+```json
+{
+    "StepIds": [
+        "s-1B2QJB1RNMP3"
+    ]
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # 2. PySpark
@@ -280,9 +425,6 @@ export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
 ```bash
 $ sudo usermod -G hdfsadmingroup -a root
 ```
-
-
-
 
 
 
