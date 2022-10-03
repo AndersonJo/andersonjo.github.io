@@ -15,13 +15,13 @@ tags: ['hadoop', 'spark']
 
 ## 1.1 Iam Identity Center
 
-EMR은 `IAM Authentication Mode` 그리고 `IAM Identity Center Authentication Mode` 두가지로 운영이 가능합니다. 
+EMR은 `IAM Authentication Mode` 그리고 `IAM Identity Center Authentication Mode` 두가지로 운영이 가능합니다.<br>
+쉽게 이야기 하면.. 
 
+- IAM Authentication Mode: 외부 인증앱 사용
+- IAM Identity Center Authentication Mode: AWS 에서 제공하는 IAM Identity Center 사용해서 인증 가능. <- 이게 쉬움
 
-먼저 IAM Identity Center 로 가서 생성을 하면 다음과 같은 화면이 보입니다. 
-
-<img src="{{ page.asset_path }}emr-iam-identity-center.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
-
+그래서 본문에서는 후자를 사용할 것이고, 아래와 같이 생성합니다.<br>
 Iam Identity Center -> Users -> Create
 
 <img src="{{ page.asset_path }}emr-iam-ideneity-center-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
@@ -51,10 +51,14 @@ IAM -> Roles -> Create Role
 
 <img src="{{ page.asset_path }}emr-studio-21.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-생성이후에 emr-studio-role을 누르고 `Add Permissions` -> `Attach Policies` 를 눌러서 더 추가 합니다.
+생성이후에 emr-studio-role을 누르고 `Add Permissions` -> `Attach Policies` 를 눌러서 더 추가 합니다.<br>
+최종적으로 3개가 추가되야 합니다. 
 
+1. AmazonElasticMapReduceRole
+2. AmazonS3FullAccess
+3. AmazonEMRFullAccessPolicy_v2
 
-
+<img src="{{ page.asset_path }}emr-studio-23.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
 
