@@ -36,7 +36,9 @@ Group은 만들어도 되고 안해도 되고.. 맘대로..<br>
 
 ## 1.2 EMR Studio User Role
 
-먼저 Role 을 생성합니다
+원래는 개개인에 대한 권한을 부여해야 되지만, <br>
+단순화하기 위해서 EMR Studio 를 사용하는 모든 유저에게<br> 
+아래와 같은 동일한 권한을 부여하도록 Role 을 생성합니다. 
 
 IAM -> Roles -> Create Role
 
@@ -58,6 +60,16 @@ IAM -> Roles -> Create Role
 
 <img src="{{ page.asset_path }}emr-studio-23.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
+
+
+
+## 1.3 EMR Studio Service Role 
+
+기본적으로 `EMR_Notebooks_DefaultRole` 이 있으면 됩니다.<br>
+해당 Role안에는 다음의 권한이 들어 있습니다. (만약 없으면 이거 role 생성하면 됨) 
+
+1. AmazonElasticMapReduceEditorsRole
+2. AmazonS3FullAccess
 
 
 
@@ -87,7 +99,7 @@ IAM -> Roles -> Create Role
 꽤 중요한 부분인데, `AWS Single Sign-On (SSO)` 를 선택하고, 그 아래 옵션은 다음과 같이 설정합니다. 
 
  - Service role: `EMR_Notebooks_DefaultRole`
- - User role: `EMR_Notebooks_DefaultRole`
+ - User role: `emr-studio-user-role`
 
 >> `EMR_Notebooks_DefaultRole` 에는  AmazonElasticMapReduceEditorsRole 그리고 AmazonS3FullAccess 가 있기 때문에, <br>
 >> EMR 그리고 S3 둘다 접근이 가능합니다. 
