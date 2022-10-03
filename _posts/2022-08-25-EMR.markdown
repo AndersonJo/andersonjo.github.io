@@ -212,7 +212,7 @@ $ aws emr describe-cluster --cluster-id j-AZAL77EINX2B
 일반적으로 spark-submit 을 통해서 마스터 서버로 job을 보내게 되는데, <br> 
 EMR 에서는 spark-submit이 아니라 `aws emr add-steps` 를 통해서 job을 실행합니다.
 
-## 2.1 Check Connection Code
+## 2.1 Mcdonald Python Code
 
 `mcdonald.py`
 
@@ -281,7 +281,7 @@ Chicago,False,95
 ```
 
 
-## 2.2 Upload Jobs to S3
+## 2.2 Upload Files to S3
 
 ```bash
 # 맥도날드 데이터 받기
@@ -321,6 +321,9 @@ $ aws emr add-steps \
 }
 ```
 
+결과는 AWS Console 에서 보는게 빠릅니다. 
+
+<img src="{{ page.asset_path }}emr-mcdonald.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
 
