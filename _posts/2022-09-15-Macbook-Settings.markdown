@@ -113,15 +113,23 @@ $ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
 
 ## 1.3 그외 터미널 설정
 
+**터미널 벨 끄기**
+
 - Terminal -> Settings -> Advanced -> Bell
   - Visual Bell 체크 박스를 uncheck 으로 만듭니다. 
 
 
 
-## 1.3 Default Terminal as VIM
+**Default Terminal as VIM**
 
 `~/.bash_profile` 을 열고 다음을 추가 합니다. <br>
 
 ```bash
 export EDITOR=/usr/bin/vim
+```
+
+**반복 키가 안눌리는 문제 해결**
+
+```bash
+$ defaults write -g ApplePressAndHoldEnabled -bool false
 ```
