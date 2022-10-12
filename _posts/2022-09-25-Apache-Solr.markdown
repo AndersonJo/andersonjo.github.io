@@ -46,6 +46,14 @@ $ ./bin/solr stop -all
 $ rm -rf example/cloud/
 ```
 
+만약 custom으로 collection을 만들었다면.. 삭제는.. 
+
+```bash
+$ rm -rf server/solr/<collection name>/
+```
+
+이후 재시작합니다.
+
 # 2. References 
 
 ## 2.1 Server 
