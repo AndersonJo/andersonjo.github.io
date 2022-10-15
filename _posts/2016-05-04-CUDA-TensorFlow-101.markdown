@@ -21,13 +21,13 @@ tags: ['CUDA', 'GTX960', 'Nvidia', 'Ubuntu', 'format']
 ### Check devices
 
 현재 그래픽 카드 모델을 알고 싶을때는...
-{% highlight bash %}
+```bash
 lspci -vnn | grep -i VGA -A 12
-{% endhighlight %}
+```
 
 어떤 드라이버를 설치해야 되는지는 다음의 명령어로 알수 있습니다. 
 
-{% highlight bash %}
+```bash
 $ ubuntu-drivers devices
 vendor   : NVIDIA Corporation
 model    : GP104 [GeForce GTX 1070]
@@ -38,7 +38,7 @@ driver   : nvidia-driver-430 - third-party free
 driver   : nvidia-driver-440 - third-party free recommended
 driver   : nvidia-driver-390 - third-party free
 driver   : xserver-xorg-video-nouveau - distro free builtin
-{% endhighlight %}
+```
 
 위에서 보면, `nvidia-driver-440`을 추천하고 있습니다. <br>
 apt로 설치하면 됩니다. 
@@ -50,59 +50,61 @@ apt로 설치하면 됩니다.
 
 ### Install Dependencies
 
-{% highlight bash %}
+```bash
 sudo apt-get install linux-headers-generic
 sudo apt-get install libglu1-mesa libxi-dev libxmu-dev gcc build-essential
-{% endhighlight %}
+```
 
 
 ### Install Nvidia Driver
 
 먼저 graphic-driver PPA를 추가합니다.
 
-{% highlight bash %}
+```bash
 sudo add-apt-repository ppa:graphics-drivers
 sudo apt update
-{% endhighlight %}
+```
 
 아래의 명령어로 Nvidia driver를 자동으로 설치합니다.
 
-{% highlight bash %}
+```bash
 sudo ubuntu-drivers autoinstall
-{% endhighlight %}
+```
 
 만약 수동으로 설치를 하고자 한다면, 위에서 확인한 Nvidia driver version을 사용해서 설치를 할 수도 있습니다.<br>
 (아래의 xxx부분을 확인된 버젼으로 변경해줘야 합니다. xxx그대로 사용하지 마세요. <br>
 현재 글쓰는 시점에서 GTX-1070의 가장 최신 버젼은 440이네요. 즉 `sudo apt install nvidia-driver-440` )
 
-{% highlight bash %}
-sudo apt install nvidia-driver-xxx
-{% endhighlight %}
+```bash
+$ sudo apt install nvidia-common
+$ sudo apt install nvidia-driver-xxx
+$ sudo apt install nvidia-settings
+```
 
 ### Disable Nouveau 
 
 기존 우분투에서 지원하는 그래픽 드라이버를 제거합니다.<br>
 Nvidia 그래픽 드라이버와 서로 충돌이 나면서 이후 문제가 생기는 것을 방지 합니다.
 
-{% highlight bash %}
+```bash
 sudo vi  /etc/modprobe.d/nouveau-blacklist.conf 
-{% endhighlight %}
+```
 
 `/etc/modprobe.d/nouveau-blacklist.conf` 에 아래의 내용을 넣습니다. 
 
-{% highlight bash %}
+```bash
 blacklist nouveau
 blacklist lbm-nouveau
 options nouveau modeset=0
 alias nouveau off
 alias lbm-nouveau off
-{% endhighlight %}
+```
 
 이후 다음의 명령어로 부팅을 업데이트 해줍니다.
 
-{% highlight bash %}
+```bash
 sudo update-initramfs -u
-{% endhighlight %}
+```
 
 이후 reboot 시킵니다.
 
@@ -110,7 +112,7 @@ sudo update-initramfs -u
 
 가장 쉬운 방법은 nvidia-smi로 체크하는 것입니다.
 
-{% highlight bash %}
+```bash
 $ nvidia-smi
 
 Fri Jan 24 23:20:34 2020       
@@ -135,7 +137,7 @@ Fri Jan 24 23:20:34 2020
 |    0      2082      G   ...rson/apps/pycharm-2019.3.2/jbr/bin/java    14MiB |
 |    0      2343      G   ...uest-channel-token=16905822469259145173   158MiB |
 +-----------------------------------------------------------------------------+
-{% endhighlight %}
+```
 
 
 
@@ -144,15 +146,15 @@ Fri Jan 24 23:20:34 2020
 
 ### Install CUDA Toolkit
 
-{% highlight bash %}
+```bash
 sudo apt install nvidia-cuda-toolkit
-{% endhighlight %}
+```
 
 확인은 nvcc를 사용합니다.
 
-{% highlight bash %}
+```bash
 nvcc -V
-{% endhighlight %}
+```
 
 
 ### Install cuDNN
@@ -166,7 +168,7 @@ nvcc -V
 
 다운로드 받은 cuDNN의 구조는 다음과 같습니다. 
 
-{% highlight bash %}
+```bash
 ./cuda/
 ├── include
 │   └── cudnn.h
@@ -176,25 +178,25 @@ nvcc -V
 │   ├── libcudnn.so.7.6.5
 │   └── libcudnn_static.a
 └── NVIDIA_SLA_cuDNN_Support.txt
-{% endhighlight %}
+```
 
-{% highlight bash %}
+```bash
 tar zxvf cudnn-10.1-linux-x64-v7.6.5.32.tgz
 chmod 644 cuda/include/*
 sudo cp -P ./cuda/lib64/* /usr/lib/cuda/lib64/
 sudo cp ./cuda/include/cudnn.h /usr/lib/cuda/include/
-{% endhighlight %}
+```
 
 ### .bashrc 설정
 
 이후 .bashrc에 다음을 설정합니다. 
 
-{% highlight bash %}
+```bash
 # CUDA & CUDNN
 export CUDAHOME=/usr/lib/cuda
 export PATH=$PATH:/usr/lib/cuda/bin:/usr/lib/cuda/include
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDAHOME/lib64:$CUDAHOME/lib:/usr/local/lib
-{% endhighlight %}
+```
 
 설정뒤 한번은 `sudo ldconfig` 를 해줍니다.
 
@@ -203,18 +205,18 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDAHOME/lib64:$CUDAHOME/lib:/usr/local
 
 매우 쉽습니다.
 
-{% highlight bash %}
+```bash
 sudo pip3 install tensorflow-gpu keras
-{% endhighlight %}
+```
 
 설치 확인은 다음과 같이 합니다.
 
-{% highlight python %}
+```python
 import tensorflow as tf
 tf.config.list_physical_devices('GPU')
 
 #  [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
-{% endhighlight %}
+```
 
 
 
@@ -242,7 +244,7 @@ Operations 들은 op 또는 ops로 쓸수 있으며, 하나의 수학적 공식�
 
 
 
-{% highlight python %}
+```python
 %pylab inline
 import tensorflow as tf
 import numpy as np
@@ -255,14 +257,14 @@ session = tf.Session()
 result = session.run(product_matrix)
 session.close()
 print result # [[25 32] [52 68]]
-{% endhighlight %}
+```
 
 이때 GPU가 여러대일경우 선택해서 처리를 할 수 있습니다.
 
-{% highlight python %}
+```python
 with tf.device("/gpu:1"):
     result = session.run(product_matrix)
-{% endhighlight %}
+```
 
 
 * **/cpu:0**: The CPU of your machine.
@@ -273,16 +275,16 @@ with tf.device("/gpu:1"):
 
 먼저 TensorFlow Server를 각각의 Cluster machines들에서 띄워놓습니다.
 
-{% highlight python %}
+```python
 with tf.Session("grpc://example.org:2222") as sess:
   # Calls to sess.run(...) will be executed on the cluster.
   ...
-{% endhighlight %}
+```
 
 
 ### Variables
 
-{% highlight python %}
+```python
 # update -> state += one
 state = tf.Variable(0, name='counter')
 one = tf.constant(1)
@@ -308,7 +310,7 @@ with tf.Session() as sess:
 1
 2
 3
-{% endhighlight %}
+```
 
 데이터를 가져오기 위해서는 (Fetch), sess.run() 을 실행하면 됩니다.
 
@@ -317,7 +319,7 @@ with tf.Session() as sess:
 
 tf.placeholder() 를 사용해서 sess.run()시에 어떤 arguments값으로 데이터를 전달 할 수 있습니다.
 
-{% highlight python %}
+```python
 input1 = tf.placeholder(tf.float32)
 input2 = tf.placeholder(tf.float32)
 output = tf.mul(input1, input2)
@@ -327,13 +329,13 @@ with tf.Session() as sess:
 
 # output:
 # [array([ 14.], dtype=float32)]
-{% endhighlight %}
+```
 
 
 tf.placeholder(tf.float32, [2, 4]) 이렇게 2 dimensional arrays 로 만들었습니다.<br>
 이경우 matrix는 다음과 같이 만들수 있습니다. [[1,2,3,4], [5,6,7,8]]
 
-{% highlight python %}
+```python
 d = tf.placeholder(tf.float32, [2, 4])
 output = tf.transpose(d)
 with tf.Session() as sess:
@@ -344,24 +346,24 @@ with tf.Session() as sess:
 #         [ 2.,  6.],
 #         [ 3.,  7.],
 #         [ 4.,  8.]], dtype=float32)]
-{% endhighlight %}
+```
 
 
 ### GPU 메모리 제한 두기
 
 서버가 multi-user environment이라면, 반드시 allow_growth=True를 써줘서 메모리를 효율적으로 사용해야 합니다.
 
-{% highlight python %}
+```python
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.4, allow_growth=True)
 with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
     pass
-{% endhighlight %}
+```
 
 **TFLearn** 에서는 다음과 같이 합니다.
 
-{% highlight python %}
+```python
 tflearn.config.init_graph(gpu_memory_fraction=0.4, allow_growth=True)
-{% endhighlight %}
+```
 
 
 
