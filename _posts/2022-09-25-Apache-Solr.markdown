@@ -17,78 +17,93 @@ Reference: [Apache Solr Reference Guide](https://solr.apache.org/guide/solr/late
 - Binary release 를 다운받습니다. (본문에서는 9.0 기준입니다.)
 - 압축풀고 끝. 
 
-## 1.2 Starting Solr 
+
+
+
+# 2. Solr 서버 실행/중지 
+
+## 2.1 Solr 서버 실행
+
+두가지 방법으로 실행 가능 합니다.<br> 
+1. Standalone Mode -> 다른 옵션 없이 `./bin/solr start` 해줘도 됩니다 
+2. Solr Cloud Mode -> 그냥 `-c` 옵션 붙여주고 Zookeeper 연결 시켜주면 됩니다.  
+
+
+
+- `./bin/solr start`
+  - `-p 8983` : port 지정
+  - `-s example/node1/solr` : Solr home directory 지정 (아래에 collection이 생성됨)
+  - `-c` : Solr Cloud Mode 실행 (embedded zookeeper 까지 실행)
+- Local Solr Console: [http://localhost:8983/solr/](http://localhost:8983/solr/)
+
+일반적인 테스트용 local 실행은 **standalone mode** 도 충분 합니다. 
 
 ```bash
-# 서버 실행
+# 최소 JAVA 11 이 필요합니다. 
 $ cd solr-9.0.0
 $ JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
 $ ./bin/solr start
-
-# 서버 실행 확인
-$ ./bin/solr status
 ```
 
-솔라 콜솔에 접속합니다. 
-
-[http://localhost:8983/solr/](http://localhost:8983/solr/)
-
-## 1.3 Stop Solr
+**Solr Cloud Mode**의 경우는 embedded zookeeper 가 열리고, 두번째 열때는 zookeeper 까지 연결 시켜야 합니다.<br>
 
 ```bash
-# 서버 멈추기
+$ mkdir -p example/node1/solr
+$ mkdir -p example/node2/solr
+
+# Node 1
+$ ./bin/solr start -c -p 8983 -s example/node1/solr
+$ ./bin/solr start -c -p 7574 -s example/node2/solr -z localhost:9983
+
+# 두개의 노드가 켜져 있는 것 확인 가능
+$ ./bin/solr status
+
+# 서버 모두 내림
 $ ./bin/solr stop -all
 ```
 
-튜토리얼 처음으로 돌리고 싶으면.. 
+## 2.2 Restart
 
-```bash
-$ rm -rf example/cloud/
-```
+- `./bin/solr restart`
 
-만약 custom으로 collection을 만들었다면.. 삭제는.. 
 
-```bash
-$ rm -rf server/solr/<collection name>/
-```
+## 2.2 Solr 서버 중지/삭제
 
-이후 재시작합니다.
+- 서버 중지
+  - `./bin/solr stop -all`
+- 데이터까지 삭제
+  - `rm -rf server/solr/<collection name>/`
 
-# 2. References 
 
-## 2.1 Server 
+# 3. Solr References 
 
-**Server Start**<br>
-- `-c`: collection 이름
-- `-s`: shards 갯수
-- `-rf`: replicas 갯수
+## 3.1 Collection
+
+Collection을 만들게 되면 따로 지정하지 않으면 일반적으로 `server/solr/<Collection>` 위치에 저장이 됩니다.<br>
+또한 해당 디렉토리 안에 각종 설정 정보들이 함께 생성이 됩니다. 
+
+**Standalone Mode**
+
+- Collections 생성/삭제
+    - `./bin/solr create -c <Collection>`
+    - `./bin/solr delete -c <Collection>`
+
+
+**Cloud Mode**<br>
+- ` bin/solr create_collection`
+  - `-c`: collection 이름
+  - `-s`: shards 갯수
+  - `-rf`: replicas 갯수
 
 ```bash
 $ bin/solr create_collection -c films -s 2 -rf 2
-
 ```
 
+## 3.2 Managed-schema or schema.xml
 
-**Restart Example**<br>
-두번째부터는 Zookeeper 에 연결시켜야 함
+이전 버젼에서는 schema.xml 이라고 했으며, Solr 7 이후로는 managed-schema.xml 을 사용합니다.<br>
 
-```bash
-# Node 1
-$ ./bin/solr start -c -p 8983 -s example/cloud/node1/solr
-
-# Node 2
-$ ./bin/solr start -c -p 7574 -s example/cloud/node2/solr -z localhost:9983
-```
-
-## 2.2 Collection
-
-```bash
-# 만들기
-$ ./bin/solr create -c <Collection>
-
-# 삭제
-$ ./bin/solr delete -c <Collection>
-```
+- `server/solr/<Collection>/conf/managed-schema.xml` 
 
 
 
