@@ -4,7 +4,7 @@ title:  "PyEnv & Jupyterlab"
 date:   2022-08-06 01:00:00
 categories: "python"
 asset_path: /assets/images/
-tags: ['virtualenv']
+tags: ['virtualenv', 'format']
 ---
 
 # 1. Installation 
