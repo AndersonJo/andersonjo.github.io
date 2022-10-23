@@ -21,26 +21,36 @@ tags: ['RVM', 'JAVA', '.bash.rc', 'format', 'my.cnf', 'Atom']
 
 ## 1.1 Locale Setup
 
-{% highlight bash %}
+```bash
 sudo locale-gen ko_KR.UTF-8
-{% endhighlight %}
+```
 
 ## 1.2 32bit Libraries (Optional)
 GTX960 Driver를 설치하기전, 32bit 라이브러리를 설치해줍니다. <br>
 해당 라이브러리는 또한 Android Studio사용시 설치 가능하게 해줍니다. 
 
-{% highlight bash%}
+```bash
 sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 lib32z1-dev
-{% endhighlight %}
+```
 
 
-## 1.3 Oracle Java 
+## 1.3 Java 
 
-{% highlight bash%}
+**Default JDK**
+
+```bash
+$ sudo apt install default-jdk
+```
+
+
+
+**Oracle Java**
+
+```bash
 sudo add-apt-repository ppa:linuxuprising/java
 sudo apt-get update
 sudo apt-get install oracle-java13-installer
-{% endhighlight %}
+```
 
 ## 1.4 CapsLock <->  한글키 변경 (Optional)
 
@@ -52,49 +62,24 @@ xev 를 통해서 키를 눌러보면서 keycode 그리고 키 이름을 알 수
 
 CapsLock 그리고 한영키를 서로 바꾸려면 다음과 같이 합니다.
 
-{% highlight bash %}
+```bash
 xmodmap -e "keycode 66 = Hangul"
 xmodmap -e "keycode 108 = Caps_Lock"
-{% endhighlight %}
+```
 
 
 ## 1.5 벼루 (Optional)
 
-한글 104키로 해야 함
+**한글 104키**로 해야 함
 
-{% highlight bash %}
+```bash
 sudo apt-get install uim uim-byeoru`
 uim-pref-gtk
-{% endhighlight %}
-sni
-Alt키 에러시 다음과 같이 합니다.
-
-{% highlight bash %}
-sudo vi /usr//share/X11/xkb/symbols/altwin
-{% endhighlight %}
-
-다음 부분을 comment out 합니다. (삭제 시켜줍니다.)
-{% highlight bash %}
-//    key <RALT> { type[Group1] = "TWO_LEVEL",
-//                symbols[Group1] = [ Alt_R, Meta_R ] };
-{% endhighlight %}
-
-Text Entry에서 Korea (101/104 key compatible)을 추가시켜줍니다.<br>
-다음의 파일들을 모두 삭제시킵니다.
-
-{% highlight bash %}
-sudo rm -fv /var/lib/xkb/*
-{% endhighlight %}
-
-리부트 필요
-
-{% highlight bash %}
-sudo reboot
-{% endhighlight %}
+```
 
 ## 1.6 Libraries 
 
-{% highlight bash%}
+```bash
 # Sound Equalizer
 sudo apt install pulseeffects  # Sound Equalizer for Ubuntu 20.04
 sudo apt install -y lsp-plugins
@@ -104,7 +89,7 @@ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblc
 
 ### Ruby Image Libraries (Optional)
 sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead jpegoptim
-{% endhighlight %}
+```
 
 
 
@@ -113,7 +98,8 @@ sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead 
 .bashrc 파일에 추가
 *하둡, CUDA, Android, Java, Spark설정 모두 들어가있기 때문에 따로 설정 필요합니다.*
 
-{% highlight bash%}
+```bash
+# Pretty Visualization
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 
@@ -123,40 +109,39 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 # export PS1='\[\033[00;36m\]$(hostname) \u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
 # Java
-export JAVA_HOME=/usr/lib/jvm/java-13-oracle
-unset JAVA_TOOL_OPTIONS
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
 
 # CUDA
 export CUDAHOME=/usr/local/cuda
 export PATH=$PATH:$CUDAHOME/bin
 export LD_LIBRARY_PATH=$CUDAHOME/lib64:/lib
-{% endhighlight %}
+```
 
 ## 1.8 Increase Watch Limit
 
 /etc/sysctl.conf 파일에다가 다음을 추가합니다.<br>
 [watches-limlit][watches-limlit]
 
-{% highlight bash %}
+```bash
 fs.inotify.max_user_watches = 524288
-{% endhighlight %}
+```
 
 
-{% highlight bash %}
+```bash
 sudo sysctl -p
-{% endhighlight %}
+```
 
 ## 1.9 개발자 폰트 설치
 
 나눔고딕 그리고 D2Coding 을 설치합니다. 
 
-{% highlight bash %}
+```bash
 wget http://cdn.naver.com/naver/NanumFont/fontfiles/NanumFont_TTF_ALL.zip
 unzip NanumFont_TTF_ALL.zip
 
 wget https://github.com/naver/d2codingfont/releases/download/VER1.3.2/D2Coding-Ver1.3.2-20180524.zip
 unzip D2Coding-Ver1.3.2-20180524.zip
-{% endhighlight %}
+```
 
 
 
@@ -164,49 +149,49 @@ unzip D2Coding-Ver1.3.2-20180524.zip
 
 ## 2.1 Zapret 
 
-{% highlight bash %}
+```bash
 git clone https://github.com/bol-van/zapret.git
 cd zapret
 sh ./install_easy.sh
 
 sudo service zapret start
-{% endhighlight %}
+```
 
 
 ## 2.2 Ruby IRC (Optional)
 
 ~ 위치에 .irbrc 파일에 다음을 저장합니다.
 
-{% highlight ruby %}
+```ruby
 require 'irb/completion'
 require 'map_by_method'
 require 'what_methods'
 require 'pp'
 IRB.conf[:AUTO_INDENT]=true
-{% endhighlight %}
+```
 
 ## 2.3 RVM (Optional)
 
-{% highlight bash %}
+```bash
 gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 \curl -sSL https://get.rvm.io | bash -s stable
-{% endhighlight %}
+```
 
 특정 버젼을 자동 실행합니다.
-{% highlight bash %}
+```bash
 bash -l -c 'rvm use ruby-dev-2.1.0'
-{% endhighlight %}
+```
 
 ## 2.4 SBT
 
 [Installing SBT on Linux][Installing SBT on Linux]를 참고.
 
-{% highlight bash %}
+```bash
 echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
 sudo apt-get update
 sudo apt-get install sbt
-{% endhighlight %}
+```
 
 
 ## 2.5 Gradle 
@@ -214,9 +199,9 @@ sudo apt-get install sbt
 ~/.gradle/gradle.properties 에 다음을 추가시켜줍니다.
  
  
-{% highlight bash %}
+```bash
 org.gradle.daemon=true
-{% endhighlight %}
+```
 
 
 
@@ -227,30 +212,30 @@ org.gradle.daemon=true
 ## 2.6 Postgres
 
 설치..
-{% highlight bash %}
+```bash
 sudo apt-get install postgresql-client
 sudo apt-get install postgresql postgresql-contrib
 apt-cache search postgres
-{% endhighlight %}
+```
 
 postgres 패스워드 변경
-{% highlight text %}
+```bash
 sudo -u postgres psql postgres
 \password postgres
-{% endhighlight %}
+```
 
 peer -> md5 로 고친다.
 
-{% highlight bash %}
+```bash
 sudo vi /etc/postgresql/9.4/main/pg_hba.conf
 local   all             postgres                                md5
 local   all             all                                     md5
 sudo service postgresql restart
-{% endhighlight %}
+```
 
 ## 2.7 MySQL
 
-{% highlight text %}
+```bash
 sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 
 [mysqld_safe]
@@ -260,7 +245,7 @@ default-character-set=utf8
 collation-server = utf8_unicode_ci
 init-connect='SET NAMES utf8'
 character-set-server = utf8
-{% endhighlight %}
+```
 
 ## 2.8 Oracle Client
 
@@ -270,12 +255,12 @@ character-set-server = utf8
 * oracle-instantclinet-devel-.rpm
 * oracle-instantclinet-sqlplus-.rpm
 
-{% highlight bash %}
+```bash
 sudo apt-get install alien
 sudo apt-get install libaio1
 sudo alien -i oracle-*
 
-{% endhighlight %}
+```
 
 
 [c.sublime]: {{ page.asset_path }}c.sublime-build
@@ -289,7 +274,7 @@ sudo alien -i oracle-*
 Postman Linux 버젼을 설치후, `~/.local/share/applications/postman.desktop` 에 파일을 만들고 다음을 넣습니다. <br>
 Exec, Icon 은 설치된 Postman의 위치를 설정하면 됩니다.
 
-{% highlight bash %}
+```bash
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
@@ -303,4 +288,4 @@ Type=Application
 Categories=Network;
 MimeType=x-scheme-handler/tg;
 X-Desktop-File-Install-Version=0.22
-{% endhighlight %}
+```
