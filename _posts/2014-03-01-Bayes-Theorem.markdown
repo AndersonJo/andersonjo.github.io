@@ -107,7 +107,7 @@ $$ P(A|B) = \frac{P(A\ \text{and}\ B)}{P(B)} = \frac{P(A \cap B)}{P(B)} = \frac{
 | 아침 고기        | 16 | 24 | 40 |
 | Total        | 20 | 30 | 50 |
 
-$$ P(Deb | Short) = \frac{P(Deb \cap 한식)}{P(Short)} = \frac{\frac{4}{50}}{ \frac{10}{50}} = \frac{2}{5} = 0.4 $$
+$$ P(Deb | 아침 한식) = \frac{P(Deb \cap 한식)}{P(아침 한식)} = \frac{\frac{4}{50}}{ \frac{10}{50}} = \frac{2}{5} = 0.4 $$
 
 
 
