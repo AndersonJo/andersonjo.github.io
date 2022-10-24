@@ -99,15 +99,15 @@ $$ P(A|B) = \frac{P(A\ \text{and}\ B)}{P(B)} = \frac{P(A \cap B)}{P(B)} = \frac{
 
 ### Example 1
 
-Short Time Warm-up을 갖었을때 Deb이 이길 확률은?
+`아침 한식`을 먹었을때  Deb이 이길 확률은?
 
 | Warm-up Time | Deb Wins | Bob Wins | Total |
 |:-------------|:---------|:---------|:------|
-| Short | 4 | 6 | 10 |
-| Long  | 16 | 24 | 40 |
-| Total | 20 | 30 | 50 |
+| 아침 한식        | 4 | 6 | 10 |
+| 아침 고기        | 16 | 24 | 40 |
+| Total        | 20 | 30 | 50 |
 
-$$ P(Deb | Short) = \frac{P(Deb \cap Short)}{P(Short)} = \frac{\frac{4}{50}}{ \frac{10}{50}} = \frac{2}{5} = 0.4 $$
+$$ P(Deb | Short) = \frac{P(Deb \cap 한식)}{P(Short)} = \frac{\frac{4}{50}}{ \frac{10}{50}} = \frac{2}{5} = 0.4 $$
 
 
 
