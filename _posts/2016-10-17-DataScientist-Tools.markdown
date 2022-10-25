@@ -14,13 +14,26 @@ tags: ['format', 'Jupyter', 'Scipy', 'Numpy']
 ## 1.1 Dependencies
 
 ```bash
-$ sudo apt install nodejs npm
+$ sudo apt install nodejs npm cmake
 ```
 
 ## 1.1 Basic Data Scientist Tools
 
+Basic Libraries 
+
 ```bash
 $ pip install --upgrade pip numpy pandas sklearn matplotlib
+```
+
+LightGBM
+
+```bash
+$ git clone --recursive https://github.com/microsoft/LightGBM
+$ cd LightGBM
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make -j4
 ```
 
 ## 1.2 Jupyter 
