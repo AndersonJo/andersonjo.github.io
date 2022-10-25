@@ -11,6 +11,12 @@ tags: ['format', 'Jupyter', 'Scipy', 'Numpy']
 
 # 1. Python Libraries 
 
+## 1.1 Dependencies
+
+```bash
+$ sudo apt install nodejs npm
+```
+
 ## 1.1 Basic Data Scientist Tools
 
 ```bash
