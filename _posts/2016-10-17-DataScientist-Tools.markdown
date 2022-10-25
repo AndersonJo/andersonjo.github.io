@@ -22,18 +22,7 @@ $ sudo apt install nodejs npm cmake
 Basic Libraries 
 
 ```bash
-$ pip install --upgrade pip numpy pandas sklearn matplotlib
-```
-
-LightGBM
-
-```bash
-$ git clone --recursive https://github.com/microsoft/LightGBM
-$ cd LightGBM
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make -j4
+$ pip install --upgrade pip numpy pandas sklearn matplotlib scikit-plot lightgbm
 ```
 
 ## 1.2 Jupyter 
