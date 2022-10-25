@@ -26,7 +26,9 @@ $ pip install --upgrade pip numpy pandas sklearn matplotlib
 ## 1.2 Jupyter 
 
 ```bash
-$ pip install jupyterlab
+# Jupyter Lab
+$ pip install jupyterlab black isort jupyterlab-code-formatter
+$ jupyter server extension enable --py jupyterlab_code_formatter
 
 # PyENV -> 버젼 찾고 커널 생성
 $ pyenv versions
