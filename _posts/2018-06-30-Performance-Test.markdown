@@ -174,8 +174,9 @@ ROC curve 그래프는 세로축을 True Positive Rate (Sensitivity or Recall) �
 
 ![ROC Curve]({{ page.asset_path }}roc-example1.png)
 
+- TPR이 높고, FPR은 낮을수록 좋은거 입니다.
 
-보는 방법은 매우 간단합니다. TPR이 높고, FPR은 낮을수록 좋은거 입니다.<br>
+
 
 > TPR과 FPR은 서로 반비례적인 관계에 있습니다.
 
@@ -185,3 +186,5 @@ ROC curve 그래프는 세로축을 True Positive Rate (Sensitivity or Recall) �
 ROC curve의 밑면적을 계산한 값입니다.
 
 ![AUC]({{ page.asset_path }}auc-example.png)
+
+
