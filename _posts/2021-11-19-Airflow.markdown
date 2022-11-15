@@ -21,13 +21,16 @@ tags: []
 먼저 dependencies를 설치 합니다.
 
 ```bash
+# 무조건 설치
+sudo apt install libpq-dev
+
 # MariaDB 사용시
-sudo apt-get install mariadb-server
-sudo apt-get install libmariadbclient-dev
+sudo apt install mariadb-server libmariadb-dev
+sudo apt install mariadb-client
 
 # MySQL 사용시
 sudo apt-get install mysql-server
-sudo apt-get install libmysqlclient-dev
+sudo apt install libmariadb-dev
 ```
 
 ```bash
@@ -45,12 +48,12 @@ Apache Airflow의 관리자는 오픈된 환경으로 열어두었지만, <br>
 [providers](https://airflow.apache.org/docs/apache-airflow-providers/packages-ref.html) 도 참고 합니다.
 
 ```bash
-AIRFLOW_HOME=~/airflow
-AIRFLOW_VERSION=2.2.2
-PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
-CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
-PROVIDERS="async,postgres,gcp,google,google_auth,amazon,mysql,redis,elasticsearch,ssh,http,apache-hdfs,docker,kubernetes,cncf-kubernetes,jdbc,ocbc,mongo,slack"
-pip install "apache-airflow[${PROVIDERS}]==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+$ AIRFLOW_VERSION=2.4.3
+$ PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
+$ CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
+$ PROVIDERS="async,postgres,gcp,google,google_auth,amazon,mysql,redis,elasticsearch,ssh,http,apache-hdfs,docker,kubernetes,cncf-kubernetes,jdbc,ocbc,mongo,slack"
+$ pip install "apache-airflow[${PROVIDERS}]==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+
 
 # 그냥 다 설치 .. ㅎㅎ (그냥 왠만하면 필요한것만 설치할 것.. 너무 많아...)
 pip install 'apache-airflow[all]'
