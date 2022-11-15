@@ -20,7 +20,7 @@ tags: []
 
 먼저 dependencies를 설치 합니다.
 
-{% highlight bash %}
+```bash
 # MariaDB 사용시
 sudo apt-get install mariadb-server
 sudo apt-get install libmariadbclient-dev
@@ -28,13 +28,13 @@ sudo apt-get install libmariadbclient-dev
 # MySQL 사용시
 sudo apt-get install mysql-server
 sudo apt-get install libmysqlclient-dev
-{% endhighlight %}
+```
 
-{% highlight bash %}
+```bash
 pip install --upgrade mysqlclient
 pip install --upgrade mysql-connector-python
 pip install --upgrade paramiko plyvel
-{% endhighlight %}
+```
 
 Apache Airflow는 일종의 앱이기도 하면서, 라이브러리이기도 합니다. <br> 
 라이브러리는 dependencies 를 열어놓고, 앱의 경우는 고정시켜놓습니다. <br>
@@ -44,7 +44,7 @@ Apache Airflow의 관리자는 오픈된 환경으로 열어두었지만, <br>
 이것을 방지하기 위해서 constraint file을 따로 만들어서 안정화된 버젼을 관리중입니다.<br>
 [providers](https://airflow.apache.org/docs/apache-airflow-providers/packages-ref.html) 도 참고 합니다.
 
-{% highlight bash %}
+```bash
 AIRFLOW_HOME=~/airflow
 AIRFLOW_VERSION=2.2.2
 PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
@@ -54,7 +54,7 @@ pip install "apache-airflow[${PROVIDERS}]==${AIRFLOW_VERSION}" --constraint "${C
 
 # 그냥 다 설치 .. ㅎㅎ (그냥 왠만하면 필요한것만 설치할 것.. 너무 많아...)
 pip install 'apache-airflow[all]'
-{% endhighlight %}
+```
 
 
 
@@ -66,35 +66,35 @@ production환경에서는 변경이 필요하며, [링크](https://airflow.apach
 본문에서는 MariaDB 또는 MySQL 기반의 backend를 정리했습니다.<br>
 `sudo vi /etc/mysql/mariadb.conf.d/50-server.cnf` 로 다음과 같이 추가 합니다.
 
-{% highlight sql %}
+```sql
 [mysqld]
 explicit_defaults_for_timestamp = 1
-{% endhighlight %}
+```
 
 수정후 `sudo systemctl restart mariadb` 재시작 합니다.
 
-{% highlight sql %}
+```sql
 CREATE DATABASE airflow CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 CREATE USER 'airflow'@'localhost' IDENTIFIED BY 'airflow';
 GRANT ALL PRIVILEGES ON airflow.* TO 'airflow'@'localhost';
 GRANT ALL PRIVILEGES ON airflow.* TO 'airflow'@'%';
 FLUSH PRIVILEGES;
 SHOW DATABASES;
-{% endhighlight %}
+```
 
 
 `airflow.cfg` 파일을 수정합니다.
 
-{% highlight bash %}
+```bash
 cd ~/airflow/
 vi airflow.cfg
-{% endhighlight %}
+```
 
 sql_alchemy_conn 을 수정합니다.<br>
 `mysql+mysqldb://<user>:<password>@<host>[:<port>]/<dbname>?charset=utf8` 형식으로 만듭니다.<br>
 끝에 `?charset=utf8` 넣었는데.. 안넣으면 제 경우는 에러가 발생했습니다. 
 
-{% highlight bash %}
+```bash
 # sql_alchemy_conn = sqlite:////home/anderson/airflow/airflow.db
 sql_alchemy_conn = mysql+mysqldb://airflow:airflow@localhost:3306/airflow?charset=utf8
 
@@ -103,7 +103,7 @@ load_examples = False
 
 # Rest API Authentication 변경
 auth_backend = airflow.api.auth.backend.basic_auth
-{% endhighlight %}
+```
 
 
 
@@ -113,7 +113,7 @@ auth_backend = airflow.api.auth.backend.basic_auth
 
 ## 1.3 Initialize DB and Webserver
 
-{% highlight  bash %}
+```bash
 # 예제 없이 설치
 export AIRFLOW__CORE__LOAD_EXAMPLES=False
 airflow db init
@@ -127,21 +127,21 @@ airflow users create \
     --password admin
 
 airflow webserver --port 8080
-{% endhighlight %}
+```
 
 기본 예제를 불러오지 않을려면 airflow.cfg 에서 아래처럼 수정합니다. 
 
-{% highlight  bash %}
+```bash
 load_examples = False
-{% endhighlight %}
+```
 
 
 
 스케쥴러 실행은 다음과 같이 합니다.
 
-{% highlight  bash %}
+```bash
 airflow scheduler
-{% endhighlight %}
+```
 
 
 
@@ -149,13 +149,13 @@ airflow scheduler
 
 PyCharm 에서 바로 사용 가능 합니다.
 
-{% highlight python %}
+```python
 if __name__ == "__main__":
     from airflow.utils.state import State
 
     dag.clear(dag_run_state=State.NONE)
     dag.run()
-{% endhighlight %}
+```
 
 
 
@@ -232,7 +232,7 @@ if __name__ == "__main__":
 `~/airflow/dags/my_dag.py` 에 작성합니다. 
 
 
-{% highlight python %}
+```python
 from datetime import timedelta, datetime
 
 from airflow import DAG
@@ -280,12 +280,12 @@ with DAG('my_dag',
                       bash_command=templated_command,
                       params={'my_param': 'Parameter I passed in'})
     t1 >> [t2, t3]
-{% endhighlight %}
+```
 
 
 기본적인 명령어
 
-{% highlight bash %}
+```bash
 # 치트 리스트 
 $ airflow cheat-sheet
 
@@ -303,4 +303,4 @@ $ airflow tasks list my_dag --tree
 # DAG 실행해보기
 $ airflow dags test [dag name] [execution date]
 $ airflow dags test my_dag now
-{% endhighlight %}
+```
