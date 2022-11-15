@@ -72,17 +72,23 @@ production환경에서는 변경이 필요하며, [링크](https://airflow.apach
 ```sql
 [mysqld]
 explicit_defaults_for_timestamp = 1
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
 ```
 
-수정후 `sudo systemctl restart mariadb` 재시작 합니다.
+수정후 `sudo systemctl restart mariadb` 재시작 합니다.<br>
+admin 으로 `sudo mysql` 이렇게 접속해서 다음을 실행합니다.<br>
+실행전 `airflow_pass` 부분의 패스워드 변경이 필요합니다. 
 
 ```sql
-CREATE DATABASE airflow CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-CREATE USER 'airflow'@'localhost' IDENTIFIED BY 'airflow';
-GRANT ALL PRIVILEGES ON airflow.* TO 'airflow'@'localhost';
-GRANT ALL PRIVILEGES ON airflow.* TO 'airflow'@'%';
+CREATE DATABASE airflow CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'airflow' IDENTIFIED BY 'airflow_password';
+GRANT ALL PRIVILEGES ON airflow.* TO 'airflow';
 FLUSH PRIVILEGES;
 SHOW DATABASES;
+
+
 ```
 
 
@@ -99,7 +105,7 @@ sql_alchemy_conn 을 수정합니다.<br>
 
 ```bash
 # sql_alchemy_conn = sqlite:////home/anderson/airflow/airflow.db
-sql_alchemy_conn = mysql+mysqldb://airflow:airflow@localhost:3306/airflow?charset=utf8
+sql_alchemy_conn = mysql+mysqldb://airflow:airflow_password@localhost:3306/airflow?charset=utf8
 
 # 샘플 데이터 설치 여부
 load_examples = False
