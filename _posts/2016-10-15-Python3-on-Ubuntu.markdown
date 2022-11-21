@@ -104,17 +104,8 @@ source test/bin/activate
 너무 느려서 -v 옵션을 꼭 붙이는게 좋습니다. (개 오래 걸림)
 
 {% highlight bash %}
-sudo apt-get install graphviz
-sudo pip3 install -v numpy scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz
-pip install --upgrade jupyterlab mpl-interactions[jupyter]
+$ sudo apt-get install graphviz
+$ pip install -v numpy scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz
+$ pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
+$ jupyter server extension enable --py jupyterlab_code_formatter
 {% endhighlight %}
-
-**Ipython & Jupyter**
-
-{% highlight bash %}
-sudo pip3 install ipython[all]
-sudo pip3 install --upgrade ipywidgets jupyter_contrib_nbextensions autopep8 isort
-sudo jupyter nbextension enable --py --sys-prefix widgetsnbextension
-jupyter contrib nbextension install --user
-{% endhighlight %}
-
