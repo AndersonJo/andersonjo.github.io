@@ -7,9 +7,9 @@ asset_path: /assets/images/
 tags: ['pyspark', 'parquet', 'csv', 'sql', 'mariadb']
 ---
 
-# 1. PySpark ETL
+# 1. CSV to Parquet
 
-# 1.1 Default Initialization
+## 1.1 Default Initialization
 
 ```python
 from matplotlib import pylab as plt
