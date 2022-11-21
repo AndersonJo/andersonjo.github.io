@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "EMR Studio"
-date:   2022-08-27 01:00:00
+title: "EMR Studio"
+date:  2022-08-27 01:00:00
 categories: "spark"
 asset_path: /assets/images/
 tags: ['hadoop', 'spark']

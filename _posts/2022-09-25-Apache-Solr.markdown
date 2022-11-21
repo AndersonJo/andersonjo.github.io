@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Apache Solr"
-date:   2022-09-25 01:00:00
+title: "Apache Solr"
+date:  2022-09-25 01:00:00
 categories: "solr"
 asset_path: /assets/images/
 tags: ['java']
