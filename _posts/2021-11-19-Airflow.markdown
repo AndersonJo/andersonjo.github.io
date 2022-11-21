@@ -1,119 +1,129 @@
 ---
-layout: post 
-title:  "Airflow 101"
-date:   2021-11-19 01:00:00 
-categories: "airflow"
-asset_path: /assets/images/ 
-tags: []
+layout: post title:  "Airflow 101"
+date:   2021-11-19 01:00:00 categories: "airflow"
+asset_path: /assets/images/ tags: []
 ---
 
 <header>
     <img src="{{ page.asset_path }}airflow_01.png" class="center img-responsive img-rounded img-fluid">
 </header>
 
-
 # 1. Installation
 
-## 1.1 Installing Airflow 
+## 1.1 Installing Airflow
 
-[Installing from PyPi](https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html) 문서를 보면서 설치합니다.
+[Installing from PyPi](https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html) 문서를
+보면서 설치합니다.
 
 먼저 dependencies를 설치 합니다.
 
-{% highlight bash %}
+```bash
+# 무조건 설치
+sudo apt install libpq-dev
+
 # MariaDB 사용시
-sudo apt-get install mariadb-server
-sudo apt-get install libmariadbclient-dev
+sudo apt install mariadb-server libmariadb-dev
+sudo apt install mariadb-client
 
 # MySQL 사용시
 sudo apt-get install mysql-server
-sudo apt-get install libmysqlclient-dev
-{% endhighlight %}
+sudo apt install libmariadb-dev
+```
 
-{% highlight bash %}
+```bash
 pip install --upgrade mysqlclient
 pip install --upgrade mysql-connector-python
 pip install --upgrade paramiko plyvel
-{% endhighlight %}
+```
 
-Apache Airflow는 일종의 앱이기도 하면서, 라이브러리이기도 합니다. <br> 
+Apache Airflow는 일종의 앱이기도 하면서, 라이브러리이기도 합니다. <br>
 라이브러리는 dependencies 를 열어놓고, 앱의 경우는 고정시켜놓습니다. <br>
-Apache Airflow의 관리자는 오픈된 환경으로 열어두었지만, <br> 
-이 경우 간혹 잘못된 dependency 또는 업데이트로 인해서 설치가 안 될 수도 있습니다. 
+Apache Airflow의 관리자는 오픈된 환경으로 열어두었지만, <br>
+이 경우 간혹 잘못된 dependency 또는 업데이트로 인해서 설치가 안 될 수도 있습니다.
 
 이것을 방지하기 위해서 constraint file을 따로 만들어서 안정화된 버젼을 관리중입니다.<br>
 [providers](https://airflow.apache.org/docs/apache-airflow-providers/packages-ref.html) 도 참고 합니다.
 
-{% highlight bash %}
-AIRFLOW_HOME=~/airflow
-AIRFLOW_VERSION=2.2.2
-PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
-CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
-PROVIDERS="async,postgres,gcp,google,google_auth,amazon,mysql,redis,elasticsearch,ssh,http,apache-hdfs,docker,kubernetes,cncf-kubernetes,jdbc,ocbc,mongo,slack"
-pip install "apache-airflow[${PROVIDERS}]==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+```bash
+$ AIRFLOW_VERSION=2.4.3
+$ PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
+$ CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
+$ PROVIDERS="async,postgres,gcp,google,google_auth,amazon,mysql,redis,elasticsearch,ssh,http,apache-hdfs,docker,kubernetes,cncf-kubernetes,jdbc,ocbc,mongo,slack"
+$ pip install "apache-airflow[${PROVIDERS}]==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+
 
 # 그냥 다 설치 .. ㅎㅎ (그냥 왠만하면 필요한것만 설치할 것.. 너무 많아...)
 pip install 'apache-airflow[all]'
-{% endhighlight %}
-
-
+```
 
 ## 1.2 Setting Up Database Backend
 
 기본적으로 Airflow는 SqlLite를 사용합니다.<br>
-production환경에서는 변경이 필요하며, [링크](https://airflow.apache.org/docs/apache-airflow/2.2.2/howto/set-up-database.html#setting-up-a-mysql-database)를 참조합니다.
+production환경에서는 변경이
+필요하며, [링크](https://airflow.apache.org/docs/apache-airflow/2.2.2/howto/set-up-database.html#setting-up-a-mysql-database)를
+참조합니다.
 
 본문에서는 MariaDB 또는 MySQL 기반의 backend를 정리했습니다.<br>
 `sudo vi /etc/mysql/mariadb.conf.d/50-server.cnf` 로 다음과 같이 추가 합니다.
 
-{% highlight sql %}
+```sql
 [mysqld]
 explicit_defaults_for_timestamp = 1
-{% endhighlight %}
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+max_allowed_packet=16M
 
-수정후 `sudo systemctl restart mariadb` 재시작 합니다.
+# 8 hours
+wait_timeout = 28800
+# 8 hours
+interactive_timeout = 28800
+```
 
-{% highlight sql %}
-CREATE DATABASE airflow CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-CREATE USER 'airflow'@'localhost' IDENTIFIED BY 'airflow';
-GRANT ALL PRIVILEGES ON airflow.* TO 'airflow'@'localhost';
-GRANT ALL PRIVILEGES ON airflow.* TO 'airflow'@'%';
-FLUSH PRIVILEGES;
-SHOW DATABASES;
-{% endhighlight %}
+수정후 `sudo systemctl restart mariadb` 재시작 합니다.<br>
+admin 으로 `sudo mysql` 이렇게 접속해서 다음을 실행합니다.<br>
+실행전 `airflow_pass` 부분의 패스워드 변경이 필요합니다.
 
+```sql
+CREATE
+DATABASE airflow CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE
+USER 'airflow' IDENTIFIED BY 'airflow_password';
+GRANT ALL PRIVILEGES ON airflow.* TO
+'airflow';
+FLUSH
+PRIVILEGES;
+SHOW
+DATABASES;
+
+
+```
 
 `airflow.cfg` 파일을 수정합니다.
 
-{% highlight bash %}
+```bash
 cd ~/airflow/
 vi airflow.cfg
-{% endhighlight %}
+```
 
 sql_alchemy_conn 을 수정합니다.<br>
 `mysql+mysqldb://<user>:<password>@<host>[:<port>]/<dbname>?charset=utf8` 형식으로 만듭니다.<br>
-끝에 `?charset=utf8` 넣었는데.. 안넣으면 제 경우는 에러가 발생했습니다. 
+끝에 `?charset=utf8` 넣었는데.. 안넣으면 제 경우는 에러가 발생했습니다.
 
-{% highlight bash %}
+```bash
 # sql_alchemy_conn = sqlite:////home/anderson/airflow/airflow.db
-sql_alchemy_conn = mysql+mysqldb://airflow:airflow@localhost:3306/airflow?charset=utf8
+sql_alchemy_conn = mysql+mysqldb://airflow:airflow_password@localhost:3306/airflow?charset=utf8
 
 # 샘플 데이터 설치 여부
 load_examples = False
 
 # Rest API Authentication 변경
 auth_backend = airflow.api.auth.backend.basic_auth
-{% endhighlight %}
-
-
-
-
-
-
+```
 
 ## 1.3 Initialize DB and Webserver
 
-{% highlight  bash %}
+```bash
 # 예제 없이 설치
 export AIRFLOW__CORE__LOAD_EXAMPLES=False
 airflow db init
@@ -127,73 +137,41 @@ airflow users create \
     --password admin
 
 airflow webserver --port 8080
-{% endhighlight %}
+```
 
-기본 예제를 불러오지 않을려면 airflow.cfg 에서 아래처럼 수정합니다. 
+기본 예제를 불러오지 않을려면 airflow.cfg 에서 아래처럼 수정합니다.
 
-{% highlight  bash %}
+```bash
 load_examples = False
-{% endhighlight %}
-
-
+```
 
 스케쥴러 실행은 다음과 같이 합니다.
 
-{% highlight  bash %}
+```bash
 airflow scheduler
-{% endhighlight %}
+```
 
-
-
-## 1.4 Debug Executor 
+## 1.4 Debug Executor
 
 PyCharm 에서 바로 사용 가능 합니다.
 
-{% highlight python %}
+```python
 if __name__ == "__main__":
     from airflow.utils.state import State
 
     dag.clear(dag_run_state=State.NONE)
     dag.run()
-{% endhighlight %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 # 2. Example
 
-## 2.1 Settings 
+## 2.1 Settings
 
-대부분의 설정할 내용들은 `~/airflow/airflow.cfg`  에 모두 있습니다. 
+대부분의 설정할 내용들은 `~/airflow/airflow.cfg`  에 모두 있습니다.
 
 **주요 세팅**
- - `dags_folder` = /home/anderson/airflow/dags  # DAG 위치를 지정합니다.
 
-
+- `dags_folder` = /home/anderson/airflow/dags # DAG 위치를 지정합니다.
 
 **Concurrency Settings**
 
@@ -203,36 +181,18 @@ if __name__ == "__main__":
 | dag_concurrency     | AIRFLOW__CORE__DAG_CONCURRENCY             | 16            |
 | worker_concurrency  | AIRFLOW__CELERY__WORKER_CONCURRENCY        | 16            |
 | parsing_processes   | AIRFLOW__SCHEDULER__PARSING_PROCESSES      | 2             |
-| max_active_runs_per_dag | 	AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG	| 16       |
+| max_active_runs_per_dag |    AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG    | 16       |
 
 - **parallelism** : 동시 실행 가능한 tasks 숫자. task 가 queue에 걸려 있으면 증가 시킬 필요 있음
 - **dag_concurrency** : DAG당 실행시킬수 있는 태스크의 갯수. 리소스가 충분한데도 실행이 안되면 dag_concurrency 증가 필요 있음
 - **worker_concurrency** : Maximum Celery Worker 를 가르킴
-- **parsing_processes** : Threads 갯수. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- **parsing_processes** : Threads 갯수.
 
 ## 2.2 Example
 
-`~/airflow/dags/my_dag.py` 에 작성합니다. 
+`~/airflow/dags/my_dag.py` 에 작성합니다.
 
-
-{% highlight python %}
+```python
 from datetime import timedelta, datetime
 
 from airflow import DAG
@@ -280,12 +240,11 @@ with DAG('my_dag',
                       bash_command=templated_command,
                       params={'my_param': 'Parameter I passed in'})
     t1 >> [t2, t3]
-{% endhighlight %}
-
+```
 
 기본적인 명령어
 
-{% highlight bash %}
+```bash
 # 치트 리스트 
 $ airflow cheat-sheet
 
@@ -303,4 +262,4 @@ $ airflow tasks list my_dag --tree
 # DAG 실행해보기
 $ airflow dags test [dag name] [execution date]
 $ airflow dags test my_dag now
-{% endhighlight %}
+```

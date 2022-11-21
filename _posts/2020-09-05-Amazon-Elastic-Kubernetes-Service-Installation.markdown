@@ -247,8 +247,27 @@ NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   74m
 {% endhighlight %}
 
+
 - Trouble Shooting: [Unauthorized or access denied Error (kubectl)](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html#unauthorized) 
+위와 같은 에러가 나올시 `aws configure` 해서 root 계정이 아닌, 해당 user 계정으로 로그인한다
+
  
+## 3.5 Amazon EBS CSI Driver 
+
+반드시 설치해야 하는 툴이며, 현재 AWS EKS의 정책이 변경이 되서, 직접 설치해줘야 한다.<br>
+EBS CSI Driver 가 있어야지, persistent volume 요청시 pending이 걸리지 않고, 디스크를 자동 생성하고 만들어주게 된다. <br>
+먼저 `cat ~/.aws/credentials` 해서 AWS ACCESS KEY ID 그리고 AWS SECRET ACCESS KEY 값을 알아내고 실행
+
+```bash
+$ kubectl create secret generic aws-secret \
+    --namespace kube-system \
+    --from-literal "key_id=${AWS_ACCESS_KEY_ID}" \
+    --from-literal "access_key=${AWS_SECRET_ACCESS_KEY}"
+    
+$ kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.13"
+```
+
+
 ## 3.5 Upgrade amazon-vpc-cni-k8s (to 1.7)
 
 - [cni upgrade 하는 방법 AWS 문서](https://docs.aws.amazon.com/eks/latest/userguide/cni-upgrades.html)
