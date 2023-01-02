@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Google Colab"
-date:   2022-01-01 01:00:00
+date:   2023-01-01 01:00:00
 categories: "google-colab"
 asset_path: /assets/images/
 tags: []
