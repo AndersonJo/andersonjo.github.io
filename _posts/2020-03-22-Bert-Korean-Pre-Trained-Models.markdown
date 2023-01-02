@@ -18,6 +18,7 @@ tags: ['kobert']
 
 # 2. Datasets
 
-| Name                                                    | Type                  | Description                                             | 
-|:--------------------------------------------------------|:----------------------|:--------------------------------------------------------|
-| [SNLI Dataset](https://nlp.stanford.edu/projects/snli/) | Sentence Similarity   | 2개의 영어 문장이 있고, contradiction, neutral, entailment 로 나눔  |
+| Name                                                                   | Type                 | Description                                            | 
+|:-----------------------------------------------------------------------|:---------------------|:-------------------------------------------------------|
+| [SNLI Dataset Corpus](https://nlp.stanford.edu/projects/snli/)         | Sentence Similarity  | 2개의 영어 문장이 있고, contradiction, neutral, entailment 로 나눔 |
+| [The Multi-Genre NLI Corpus](https://cims.nyu.edu/~sbowman/multinli/)  | Sentence Similarity  | 2개의 영어 문장이 있고, contradiction, neutral, entailment 로 나눔 |
