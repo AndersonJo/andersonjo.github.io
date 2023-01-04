@@ -1,0 +1,92 @@
+---
+layout: post
+title:  "KoBERT"
+date:   2023-01-02 01:00:00
+categories: "nlp"
+asset_path: /assets/images/
+tags: []
+---
+
+# 1. Tokenizer
+
+## 1.1 Download Tokenizer
+
+```python
+import os
+from pathlib import Path
+from tempfile import gettempdir
+
+import boto3
+from botocore import UNSIGNED
+from botocore.client import Config
+
+def download_tokenizer():
+    bucket = "skt-lsl-nlp-model"
+    key = "KoBERT/tokenizers/kobert_news_wiki_ko_cased-1087f8699e.spiece"
+    cache_path = Path(gettempdir()) / "kobert" / "kobert-news-wiki.spiece"
+    
+    # Download the file
+    if not cache_path.parent.exists():
+        os.makedirs(cache_path.parent)
+    
+    if cache_path.exists():
+        return str(cache_path)
+        
+    s3 = boto3.client(
+        "s3",
+        aws_access_key_id=None,
+        aws_secret_access_key=None,
+        config=Config(signature_version=UNSIGNED),
+    )
+
+    with open(cache_path, 'wb') as f:
+        s3.download_fileobj(bucket, key, f)
+    return str(cache_path)
+    
+tokenizer_path = download_tokenizer()
+print('Downloaded Tokenizer Path:', tokenizer_path)
+```
+
+## 1.2 Load a sentencepiece 
+
+```python
+import sentencepiece as stp
+
+sp = stp.SentencePieceProcessor(model_file=tokenizer_path)
+
+print('Encode         :', sp.Encode('치킨은 맛있다'))
+print('EncodeAsIds    :', sp.EncodeAsIds('치킨은 맛있다'))
+print('EncodeAsPieces :', sp.EncodeAsPieces('치킨은 맛있다'))
+print('Decode         :', sp.Decode(sp.Encode('치킨')))
+```
+
+```text
+Encode         : [4617, 7576, 7086, 1967, 7143]
+EncodeAsIds    : [4617, 7576, 7086, 1967, 7143]
+EncodeAsPieces : ['▁치', '킨', '은', '▁맛', '있다']
+Decode         : 치킨
+```
+
+
+## 1.3 Load a sentencepiece by GluonNLP
+
+```python
+import gluonnlp as gnlp
+
+vocab = nlp.vocab.BERTVocab.from_sentencepiece(tokenizer_path, padding_token='[PAD]')
+tokenizer = nlp.data.BERTSPTokenizer(tokenizer_path, vocab, lower=False)
+
+tokens = tokenizer('치킨은 맛있다')
+ids = tokenizer.convert_tokens_to_ids(tokens)
+decodes = vocab.to_tokens(ids)
+
+print('EncodeAsPieces:', tokens)
+print('EncodeAsIds   :', ids)
+print('Decode        :', decodes)
+```
+
+```text
+EncodeAsPieces: ['▁치', '킨', '은', '▁맛', '있다']
+EncodeAsIds   : [4617, 7576, 7086, 1967, 7143]
+Decode        : ['▁치', '킨', '은', '▁맛', '있다']
+```
