@@ -91,10 +91,31 @@ EncodeAsIds   : [4617, 7576, 7086, 1967, 7143]
 Decode        : ['▁치', '킨', '은', '▁맛', '있다']
 ```
 
+# 2. Transforms
 
-# 2. KoBERT
+https://nlp.gluon.ai/api/modules/data.html
 
-## Loading KoBERT
+## 2.1 BERTSentenceTransform
+
+```python
+max_len = 64 # 문장의 길이
+pad = True
+pair = True
+print('tokenizer:', type(tokenizer))
+
+transform = nlp.data.BERTSentenceTransform(
+    tokenizer, # gluonnlp.data.transforms.BERTSPTokenizer
+    max_seq_length=max_len, 
+    pad=pad, 
+    pair=pair
+)
+```
+
+
+
+# 3. KoBERT
+
+## 3.1 Loading KoBERT
 
 ```python
 from transformers import BertModel
