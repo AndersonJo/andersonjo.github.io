@@ -90,3 +90,27 @@ EncodeAsPieces: ['▁치', '킨', '은', '▁맛', '있다']
 EncodeAsIds   : [4617, 7576, 7086, 1967, 7143]
 Decode        : ['▁치', '킨', '은', '▁맛', '있다']
 ```
+
+
+# 2. KoBERT
+
+## Loading KoBERT
+
+```python
+from transformers import BertModel
+
+def download_kobert():
+    bucket = "skt-lsl-nlp-model"
+    key = "KoBERT/models/kobert_v1.zip"
+    zip_path = _download(bucket, key, "kobert_v1.zip")
+    zip_path = Path(zip_path)
+    zipf = ZipFile(zip_path)
+    zipf.extractall(path=zip_path.parent)
+    
+    model_path = zip_path.parent / 'kobert_from_pretrained'
+    bertmodel = BertModel.from_pretrained(model_path, return_dict=False)
+    return bertmodel
+
+
+bert = download_kobert()
+```
