@@ -77,6 +77,11 @@ stp.SentencePieceTrainer.train(
 
 **텍스트 한개의 경우**
 
+ - sentencepiece.Encode(text) 는 EncodeAsIds 와 동일
+ - sentencepiece.EncodeAsIds(text) -> [12, 14, 2, 3, ...]
+ - sentencepiece.EncodeAsPieces(text) -> ['▁잼있', '고', '▁신나', '는', ...]
+ - sentencepiece.Encode(encoded_text) -> "잼있고 신나는 ..."
+
 {% highlight python %}
 sp = stp.SentencePieceProcessor()
 sp.load(str(model_prefix_path.with_suffix(".model")))
