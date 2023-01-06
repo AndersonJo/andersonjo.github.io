@@ -116,11 +116,12 @@ transform = gnlp.data.BERTSentenceTransform(
     pair=False,
 )
 
-token_ids, valid_length, segment_ids = transform(["하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 그를 믿는 자마다 멸망하지 않고 영생을 얻게 하려 하심이라"])
+text = "하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 그를 믿는 자마다 멸망하지 않고 영생을 얻게 하려 하심이라"
+token_ids, valid_length, segment_ids = transform([text])
 print('[token_ids]\n', token_ids)
 print('\n[valid_length]\n', valid_length)
 print('\n[segment_ids]\n', segment_ids)
-print('\n[segment_ids]\n', tokenizer.vocab.to_tokens(token_ids.tolist()))
+print('\n[id -> token]\n', tokenizer.vocab.to_tokens(token_ids.tolist()))
 ```
 
 ```python
@@ -138,7 +139,7 @@ print('\n[segment_ids]\n', tokenizer.vocab.to_tokens(token_ids.tolist()))
  [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
 
-[segment_ids]
+[id -> token]
  ['[CLS]', '▁하나', '님', '이', '▁세상을', '▁이처럼', '▁사랑', '하', '사', '▁독', '생', '자를', '▁주', '셨', '으니', '▁이는', '▁그', '를', '▁', '믿', '는', '▁자', '마다', '▁', '멸', '망', '하지', '▁않고', '▁영', '생', '을', '▁', '얻', '게', '▁', '하려', '▁하', '심', '이라', '[SEP]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]']
 ```
 
