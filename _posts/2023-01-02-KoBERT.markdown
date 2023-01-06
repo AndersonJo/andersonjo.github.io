@@ -15,23 +15,23 @@ tags: []
 import os
 from pathlib import Path
 from tempfile import gettempdir
+from zipfile import ZipFile
 
 import boto3
 from botocore import UNSIGNED
 from botocore.client import Config
 
-def download_tokenizer():
-    bucket = "skt-lsl-nlp-model"
-    key = "KoBERT/tokenizers/kobert_news_wiki_ko_cased-1087f8699e.spiece"
-    cache_path = Path(gettempdir()) / "kobert" / "kobert-news-wiki.spiece"
-    
+
+def _download(bucket: str, key: str, target):
+    cache_path = Path(gettempdir()) / "kobert" / target
+
     # Download the file
     if not cache_path.parent.exists():
         os.makedirs(cache_path.parent)
-    
+
     if cache_path.exists():
         return str(cache_path)
-        
+
     s3 = boto3.client(
         "s3",
         aws_access_key_id=None,
@@ -39,12 +39,19 @@ def download_tokenizer():
         config=Config(signature_version=UNSIGNED),
     )
 
-    with open(cache_path, 'wb') as f:
+    with open(cache_path, "wb") as f:
         s3.download_fileobj(bucket, key, f)
     return str(cache_path)
-    
+
+
+def download_tokenizer():
+    bucket = "skt-lsl-nlp-model"
+    key = "KoBERT/tokenizers/kobert_news_wiki_ko_cased-1087f8699e.spiece"
+    return _download(bucket, key, "kobert-news-wiki.spiece")
+
+
 tokenizer_path = download_tokenizer()
-print('Downloaded Tokenizer Path:', tokenizer_path)
+print("Downloaded Tokenizer Path:", tokenizer_path)
 ```
 
 ## 1.2 Load a sentencepiece 
@@ -52,12 +59,12 @@ print('Downloaded Tokenizer Path:', tokenizer_path)
 ```python
 import sentencepiece as stp
 
-sp = stp.SentencePieceProcessor(model_file=tokenizer_path)
+tokenizer = stp.SentencePieceProcessor(model_file=tokenizer_path)
 
-print('Encode         :', sp.Encode('치킨은 맛있다'))
-print('EncodeAsIds    :', sp.EncodeAsIds('치킨은 맛있다'))
-print('EncodeAsPieces :', sp.EncodeAsPieces('치킨은 맛있다'))
-print('Decode         :', sp.Decode(sp.Encode('치킨')))
+print("Encode         :", tokenizer.Encode("치킨은 맛있다"))
+print("EncodeAsIds    :", tokenizer.EncodeAsIds("치킨은 맛있다"))
+print("EncodeAsPieces :", tokenizer.EncodeAsPieces("치킨은 맛있다"))
+print("Decode         :", tokenizer.Decode(tokenizer.Encode("치킨")))
 ```
 
 ```text
@@ -73,16 +80,20 @@ Decode         : 치킨
 ```python
 import gluonnlp as gnlp
 
-vocab = nlp.vocab.BERTVocab.from_sentencepiece(tokenizer_path, padding_token='[PAD]')
-tokenizer = nlp.data.BERTSPTokenizer(tokenizer_path, vocab, lower=False)
+vocab = gnlp.vocab.BERTVocab.from_sentencepiece(
+    tokenizer_path, padding_token="[PAD]"
+)
+tokenizer = gnlp.data.BERTSPTokenizer(tokenizer_path, vocab, lower=False)
+```
 
-tokens = tokenizer('치킨은 맛있다')
+```python
+tokens = tokenizer("치킨은 맛있다")
 ids = tokenizer.convert_tokens_to_ids(tokens)
 decodes = vocab.to_tokens(ids)
 
-print('EncodeAsPieces:', tokens)
-print('EncodeAsIds   :', ids)
-print('Decode        :', decodes)
+print("EncodeAsPieces:", tokens)
+print("EncodeAsIds   :", ids)
+print("Decode        :", decodes)
 ```
 
 ```text
@@ -98,19 +109,38 @@ https://nlp.gluon.ai/api/modules/data.html
 ## 2.1 BERTSentenceTransform
 
 ```python
-max_len = 64 # 문장의 길이
-pad = True
-pair = True
-print('tokenizer:', type(tokenizer))
-
-transform = nlp.data.BERTSentenceTransform(
-    tokenizer, # gluonnlp.data.transforms.BERTSPTokenizer
-    max_seq_length=max_len, 
-    pad=pad, 
-    pair=pair
+transform = gnlp.data.BERTSentenceTransform(
+    tokenizer,  # gluonnlp.data.transforms.BERTSPTokenizer
+    max_seq_length=64,  # 문장의 길이
+    pad=True,
+    pair=False,
 )
+
+token_ids, valid_length, segment_ids = transform(["하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 그를 믿는 자마다 멸망하지 않고 영생을 얻게 하려 하심이라"])
+print('[token_ids]\n', token_ids)
+print('\n[valid_length]\n', valid_length)
+print('\n[segment_ids]\n', segment_ids)
+print('\n[segment_ids]\n', tokenizer.vocab.to_tokens(token_ids.tolist()))
 ```
 
+```python
+[token_ids]
+ [   2 4928 5778 7096 2812 3748 2590 7782 6493 1725 6542 7158 4213 6604
+ 7076 3658 1185 6116  517 6266 5760 3886 6142  517 6202 6165 7819 3149
+ 3376 6542 7088  517 6869 5400  517 7806 4924 6745 7101    3    1    1
+    1    1    1    1    1    1    1    1    1    1    1    1    1    1
+    1    1    1    1    1    1    1    1]
+
+[valid_length]
+ 40
+
+[segment_ids]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+[segment_ids]
+ ['[CLS]', '▁하나', '님', '이', '▁세상을', '▁이처럼', '▁사랑', '하', '사', '▁독', '생', '자를', '▁주', '셨', '으니', '▁이는', '▁그', '를', '▁', '믿', '는', '▁자', '마다', '▁', '멸', '망', '하지', '▁않고', '▁영', '생', '을', '▁', '얻', '게', '▁', '하려', '▁하', '심', '이라', '[SEP]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]']
+```
 
 
 # 3. KoBERT
