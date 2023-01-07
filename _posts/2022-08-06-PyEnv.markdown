@@ -160,6 +160,20 @@ python -m ipykernel install --user --name 3.10.7 --display-name "PyEnv 3.10.7"
 - `--display-name`: Jupyter 에서 보여질 이름 지정
 
 
+## 4.3 Install data science libraries
+
+**Data Analytics Tools**<br>
+너무 느려서 -v 옵션을 꼭 붙이는게 좋습니다. (개 오래 걸림)
+
+{% highlight bash %}
+$ sudo apt-get install graphviz
+$ pip install -v numpy scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz
+$ pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
+$ jupyter server extension enable --py jupyterlab_code_formatter
+{% endhighlight %}
+
+
+
 ## 4.3 Run Jupyter Lab
 
 ```bash
