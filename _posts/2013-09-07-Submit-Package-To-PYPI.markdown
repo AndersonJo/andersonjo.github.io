@@ -17,9 +17,9 @@ tags: ['setup.py']
     </div>
 </header>
 
-# Configuration
+# 1. Configuration
 
-### 먼저 할일
+## 1.1 먼저 할일
 
 다음의 PyPI Package 웹싸이트에서 가입을 합니다.<br>
 [https://pypi.org/](https://pypi.org/)
@@ -32,7 +32,7 @@ sudo pip3 install twine wheel
 
 
 
-### setup.py
+## 1.2 setup.py
 
 다음은 setup.py의 예제 입니다. <br>
 실제 pewsql 이라는 제가 만든 Python package의 설정입니다.
@@ -54,21 +54,30 @@ setup(
         "Topic :: Scientific/Engineering :: Information Analysis"
     ],
     install_requires=['pony', 'pandas', 'numpy', 'psycopg2'],
+    entry_points={
+        'console_scripts': ['command=package.python_file:function']
+    },
+    scripts=['package.python_file'],
     python_requires='>=3',
     author='anderson',
     author_email='a141890@gmail.com',
     description='Analytics Tools for RDBMS',
-    keywords=['sql', 'analytics']
+    keywords=['sql', 'analytics'],
 )
 {% endhighlight %}
 
-* **package**: 실제 package가 사용하는 디렉토리 이름과 동일해야 합니다.
-* **url**: 보통 GIT 주소
-* **license**: 개인적으로 MIT
-* **classifiers**: [Classifiers 총 정리](https://pypi.python.org/pypi?%3Aaction=list_classifiers) 를 참고합니다. package를 분류하는데 사용됩니다.
-* **install_requires**: Package를 사용하기 위해서 필요한 최소한의 dependencies.
+- **package**: 실제 package가 사용하는 디렉토리 이름과 동일해야 합니다.
+- **url**: 보통 GIT 주소
+- **license**: 개인적으로 MIT
+- **classifiers**: [Classifiers 총 정리](https://pypi.python.org/pypi?%3Aaction=list_classifiers) 를 참고합니다. package를 분류하는데 사용됩니다.
+- **install_requires**: Package를 사용하기 위해서 필요한 최소한의 dependencies.
+- **entry_points.console_scripts**:
+  - 어디에서든지 파이썬 함수를 실행할 수 있도록 도와줌 
+  - `command`: 실행 명령어. 예를 들어 `tycoon` 이라고 적으면, 어디서든지 'tycoon' 실행시 파이썬 함수가 실행
+  - `package.python_file:function` : 실행할 함수 위치
+- **scripts**: entry_points 에서 설정한 파이썬 파일을 추가하면 됨
 
-### setup.cfg
+## 1.3 setup.cfg
 
 PyPI에 REAME파일이 어디 있는지 알려줍니다.
 
@@ -78,67 +87,7 @@ description-file = README.md
 {% endhighlight %}
 
 
-### MANIFEST.in
-
-{% highlight text %}
-# Include the license file
-include LICENSE.txt
-
-# Include the data files
-# recursive-include data *
-{% endhighlight %}
-
-### LICENSE.txt
-
-다음은 MIT License 기본 형태 입니다.<br>
-아래 <year> 그리고 <copyright holders> 를 바꿔주면 됩니다. (예: 2017 Anderson)
-
-{% highlight text %}
-Copyright (c) <year> <copyright holders>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-{% endhighlight %}
-
-
-### .gitignore (optional)
-
-추가적으로 다음과 같이  .gitignore 문서를 설정할 수 있습니다.
-
-{% highlight text %}
-# Project
-.cache
-.idea
-
-# Package
-dist
-build
-*.egg-info
-MANIFEST
-
-# Python
-*.pyc
-{% endhighlight %}
-
-
-
-
-# Development Mode
+# 2. Development Mode
 
 프로젝트의 설치 그리고 테스트를 해볼 필요가 있습니다.<br>
 다음의 명령어는 실제로 설치를 진행하며, install_requires에 있는 라이브러리들을 non-editable mode로 설치합니다.<br>
@@ -151,9 +100,9 @@ sudo pip3 install -e .
 
 
 
-# Packaging Your Project
+# 3. Packaging Your Project
 
-### Source Distribution
+## 3.1 Source Distribution
 
 아래의 명령어로 distribute한후, pip로 설치하면 build과정을 거치게 됩니다. (설치가 느려짐)
 
@@ -162,7 +111,7 @@ python3.6 setup.py sdist
 {% endhighlight %}
 
 
-### Wheel
+## 3.2 Wheel
 
 wheel로 설치시에는 sdist처럼 build과정을 거치지 않고 바로 설치가 됨으로 빠릅니다. 즉 built package.<br>
 wheel을 사용시 몇가지 옵션이 있습니다.
@@ -181,9 +130,9 @@ universal=1
 {% endhighlight %}
 
 
-# Uploading Your Package to PyPI
+# 4. Uploading Your Package to PyPI
 
-### ~/.pypirc
+## 4.1 ~/.pypirc
 
 **~/.pypirc** 파일을 생생한후 다음을 설정합니다.
 
@@ -204,7 +153,7 @@ chmod 600 ~/.pypirc
 {% endhighlight %}
 
 
-### Uploading Your Distributions
+## 4.2 Uploading Your Distributions
 
 {% highlight bash %}
 twine upload dist/*
@@ -212,7 +161,7 @@ twine upload dist/*
 
 [https://pypi.org](https://pypi.org/) 에 들어가서 확인합니다.
 
-### References
+## 4.3 References
 
 1. [https://github.com/pypa/sampleproject](https://github.com/pypa/sampleproject) 에서 예제를 볼 수 있습니다.
 2. [https://packaging.python.org/tutorials/distributing-packages/#initial-files](https://packaging.python.org/tutorials/distributing-packages/#initial-files) 에서 Package 설치에 관한 공식 문서를 볼 수 있습니다.
