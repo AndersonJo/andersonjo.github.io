@@ -11,9 +11,10 @@ tags: ['kobert', 'electra', 'tokenizer', 'sentencepiece']
 
 ## KoBERT
 
-- [Cosine Similarity 를 fine-tuning 없이 해보기](https://github.com/AndersonJo/nlp-anderson/blob/master/301%20KoBERT/01%20Cosine%20Similarity%20without%20fine%20tuning.ipynb)
+- [Cosine Similarity 를 fine-tuning 없이 해보기 - KoBERT](https://github.com/AndersonJo/nlp-anderson/blob/master/301%20KoBERT/01%20Cosine%20Similarity%20without%20fine%20tuning.ipynb)
   - fine tuning 없이 두개의 문장을 넣고 얼마나 일치하는지 알아본 실험
   - 결론적으로는 fine tuning 은 반드시 필요하다
+- [Cosine Similarity 를 fine-tuning 없이 해보기 - KoELECTRA](https://colab.research.google.com/drive/13MBMoxQkDZW5f5WKBPWYEyvECLEQ2-O3?usp=sharing)
 
 
 # 2. Tokenizer Quick Reference
