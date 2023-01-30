@@ -4,7 +4,7 @@ title:  "Personal experiments in BERT"
 date:   2023-01-02 01:00:00
 categories: "nlp"
 asset_path: /assets/images/
-tags: ['kobert', 'electra', 'tokenizer', 'sentencepiece']
+tags: ['kobert', 'electra', 'koelectra', 'tokenizer', 'sentencepiece']
 ---
 
 # 1. 여러가지 실험
@@ -105,3 +105,22 @@ print('\n[id -> token]\n', tokenizer.vocab.to_tokens(token_ids.tolist()))
 [id -> token]
  ['[CLS]', '▁하나', '님', '이', '▁세상을', '▁이처럼', '▁사랑', '하', '사', '▁독', '생', '자를', '▁주', '셨', '으니', '▁이는', '▁그', '를', '▁', '믿', '는', '▁자', '마다', '▁', '멸', '망', '하지', '▁않고', '▁영', '생', '을', '▁', '얻', '게', '▁', '하려', '▁하', '심', '이라', '[SEP]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]', '[PAD]']
 ```
+
+
+# 4. KoELECTRA
+
+## 4.1 Encoder output 꺼내기
+
+```python
+from transformers import ElectraForSequenceClassification
+device = torch.device("cpu")
+model = ElectraForSequenceClassification.from_pretrained("monologg/koelectra-base-v3-discriminator").to(device)
+
+activation = {}
+def get_activation(name):
+    def hook(model, input, output):
+        activation[name] = output.detach()
+    return hook
+getattr(model.electra.encoder.layer, '11').output.register_forward_hook(get_activation('output'))
+```
+
