@@ -4,7 +4,7 @@ title:  "PyArrow"
 date:   2023-02-05 01:00:00
 categories: "data-engineering"
 asset_path: /assets/images/
-tags: ['parquet', 'spark']
+tags: ['parquet', 'spark', 'pytorch']
 ---
 
 
@@ -12,14 +12,15 @@ tags: ['parquet', 'spark']
 
 대용량 데이터를 처리하다보면 주로 Spark에서 나온 Parquet 파일을 다루는 일이 많습니다.<br> 
 이런 데이터를 통해서 모델을 학습시키게 되는데, 워낙 데이터 사이즈가 크다 보니 데이터를 모두 메모리에 올려서 사용하는 방법은 적절하지 않습니다. <br> 
-예를 들어 시스템에 메모리가 수천 기가바이트가 아닌 이상 Pandas 또는 Numpy를 통해 인메모리로 모두 올리는 것인 매우 비효율적입니다.
-본문에서는 PyArrow 의 주요 기능들에 대해서 레퍼런스 형태로 빠르게 설명하도록 하겠습니다. <br> 
-응용은 여러분의 몫입니다. 
+예를 들어 시스템에 메모리가 수천 기가바이트가 아닌 이상 Pandas 또는 Numpy를 통해 인메모리로 모두 올리는 것인 매우 비효율적입니다.<br>
+본문에서는 PyArrow 의 주요 기능들에 대해서 레퍼런스 형태로 빠르게 설명하도록 하겠습니다. 
 
 
-# 2. PyArrow
 
-## 2.1 ParquetDataset
+
+# 2 ParquetDataset
+
+## 2.1 Basic Usage
 
 ParquetDataset 은 다음의 특징을 갖고 있습니다. 
 
@@ -54,3 +55,23 @@ fragments    : [<pyarrow.dataset.ParquetFileFragment path=./data/dt=20230101/use
 files rows   : [1000]
 column size  : 14
 ```
+
+## 2.2 Iteration
+
+왜 이렇게 해야하냐하면.. 데이터 사이즈가 크기 때문입니다. <br> 
+그냥 쉽게  pandas 로 불러올 수가 없기 때문입니다. 
+
+ - to_pandas() 함수 사용해서 pandas 로 꺼낼 수 있습니다. 
+ - [Fragment Wiki](https://arrow.apache.org/docs/python/generated/pyarrow.dataset.Fragment.html)
+
+```python
+dataset = ParquetDataset('./data', use_legacy_dataset=False)
+
+for frag in dataset.fragments:
+    for batch in frag.to_batches():
+        df = batch.to_pandas()
+        
+        print('num rows    :', batch.num_rows)
+        print('Pandas shape:', df.shape)
+```
+
