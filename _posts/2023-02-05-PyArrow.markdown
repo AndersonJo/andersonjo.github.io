@@ -1,0 +1,56 @@
+---
+layout: post
+title:  "PyArrow"
+date:   2023-02-05 01:00:00
+categories: "data-engineering"
+asset_path: /assets/images/
+tags: ['parquet', 'spark']
+---
+
+
+# 1. Introduction
+
+대용량 데이터를 처리하다보면 주로 Spark에서 나온 Parquet 파일을 다루는 일이 많습니다.<br> 
+이런 데이터를 통해서 모델을 학습시키게 되는데, 워낙 데이터 사이즈가 크다 보니 데이터를 모두 메모리에 올려서 사용하는 방법은 적절하지 않습니다. <br> 
+예를 들어 시스템에 메모리가 수천 기가바이트가 아닌 이상 Pandas 또는 Numpy를 통해 인메모리로 모두 올리는 것인 매우 비효율적입니다.
+본문에서는 PyArrow 의 주요 기능들에 대해서 레퍼런스 형태로 빠르게 설명하도록 하겠습니다. <br> 
+응용은 여러분의 몫입니다. 
+
+
+# 2. PyArrow
+
+## 2.1 ParquetDataset
+
+ParquetDataset 은 다음의 특징을 갖고 있습니다. 
+
+1. 모든 데이터를 인메모리로 올리지 않음 (아래 Pyarrow size 보면 64이고, Pandas는 692,478)
+2. 디렉토리 지정시 Partition된 데이터를 한꺼번에 가져옴 (그 안에 dt=20230101 디렉토리 모두 읽음)
+3. fragments 통해서 각 파일의 메타정보를 꺼낼수 있음 (row 갯수)
+4. schema 통해서 어떤 컬럼들이 있는지 확인 가능
+
+```python
+from pyarrow.parquet import ParquetDataset
+
+dataset = ParquetDataset('./data', use_legacy_dataset=False)
+df = pd.read_parquet('./data')
+
+file_rows = [frag.count_rows() for frag in dataset.fragments]
+
+print('Pandas shape :', df.shape)
+print('Pandas  size :', sys.getsizeof(df))
+print('Pyarrow size :', sys.getsizeof(dataset))
+print('files        :', dataset.files)
+print('fragments    :', dataset.fragments)
+print('files rows   :', file_rows)
+print('column size  :', len(dataset.schema))
+```
+
+```bash
+Pandas shape : (1000, 14)
+Pandas  size : 692478
+Pyarrow size : 64
+files        : ['./data/dt=20230101/userdata.parquet']
+fragments    : [<pyarrow.dataset.ParquetFileFragment path=./data/dt=20230101/userdata.parquet partition=[dt=20230101]>]
+files rows   : [1000]
+column size  : 14
+```
