@@ -29,10 +29,27 @@ ParquetDataset 은 다음의 특징을 갖고 있습니다.
 3. fragments 통해서 각 파일의 메타정보를 꺼낼수 있음 (row 갯수)
 4. schema 통해서 어떤 컬럼들이 있는지 확인 가능
 
+주요 parameters
+ - `filters`: rows 를 필터링 할 수 있음!! 매우 유용<br>
+   ```python
+   ('x', '=', 0)
+   ('y', 'in', ['a', 'b', 'c'])
+   ('z', 'not in', {'a','b'})
+   ```
+ - `memory_map`: source가 file path 인 경우, memory_map 사용시 performance 증가 함
+ - `coerce_int96_timestamp_unit`: INT96 으로 저장된 timestamp 를 특정 resolution으로 변환 ('ms')
+ - `metadata_nthreads`: 메타데이터 읽을때 쓰레드 갯수를 지정하며, 특히 partitioned dataset 읽을 때 속도 증가 (현재 `use_legacy_dataset` 사용시 지원 안됨)
+ - `use_legacy_dataset`: false 을 경우 새로운 Arrow Dataset API 를 사용함 -> `filters` 사용 가능하게 해줌
+ 
+
+예제 코드
+
 ```python
 from pyarrow.parquet import ParquetDataset
 
-dataset = ParquetDataset('./data', use_legacy_dataset=False)
+dataset = ParquetDataset('./data',
+                         memory_map=True,                         
+                         use_legacy_dataset=False)
 df = pd.read_parquet('./data')
 
 file_rows = [frag.count_rows() for frag in dataset.fragments]
@@ -70,8 +87,19 @@ dataset = ParquetDataset('./data', use_legacy_dataset=False)
 for frag in dataset.fragments:
     for batch in frag.to_batches():
         df = batch.to_pandas()
+        row = batch.take(pa.array([0]))  # 특정 row 를 꺼낼 수 있음
         
         print('num rows    :', batch.num_rows)
         print('Pandas shape:', df.shape)
+        print(row['gender'])
 ```
 
+```bash
+num rows    : 1000
+Pandas shape: (1000, 13)
+[
+  "Female"
+]
+	registration_dttm	id	first_name	last_name	email	gender	ip_address	cc	country	birthdate	salary	title	comments
+0	2016-02-03 07:55:29	1	Amanda	Jordan	ajordan0@com.com	Female	1.197.201.2	6759521864920116	Indonesia	3/8/1971	49756.53	Internal Auditor	1E+02
+```
