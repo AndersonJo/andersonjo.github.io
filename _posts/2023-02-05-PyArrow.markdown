@@ -129,3 +129,8 @@ for frag in dataset.fragments:
 pf = ParquetFile(frag.path)
 table = pf.read_row_group(0)
 ```
+
+
+## 2.3 Pytorch Dataset
+
+[링크](https://github.com/AndersonJo/code-snippet/blob/master/006-pyarrow/pyarrow_torch.py) 에 위의 예제를 사용한 코드를 넣어놨습니다.
