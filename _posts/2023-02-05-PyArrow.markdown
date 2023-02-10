@@ -76,7 +76,10 @@ column size  : 14
 ## 2.2 Iteration
 
 왜 이렇게 해야하냐하면.. 데이터 사이즈가 크기 때문입니다. <br> 
-그냥 쉽게  pandas 로 불러올 수가 없기 때문입니다. 
+그냥 쉽게  pandas 로 불러올 수가 없기 때문입니다.<br>
+`frag.to_batches()` 사용시 batch iteration 을 할 수 있고, 
+이때 중요한 건 `batch` 는 실제로 데이터를 읽어온 객체 입니다. 따라서 해당 배치 사이즈 만큼의 데이터가 메모리에 올라가게 됩니다.<br>
+따라서 순차적 읽기에는 해당 iteration을 사용해서 처리시 효과적으로 처리 가능하나.. random access 가 필요할 시에는 문제가 발생 할 수 있습니다.
 
  - to_pandas() 함수 사용해서 pandas 로 꺼낼 수 있습니다. 
  - [Fragment Wiki](https://arrow.apache.org/docs/python/generated/pyarrow.dataset.Fragment.html)
@@ -102,4 +105,19 @@ Pandas shape: (1000, 13)
 ]
 	registration_dttm	id	first_name	last_name	email	gender	ip_address	cc	country	birthdate	salary	title	comments
 0	2016-02-03 07:55:29	1	Amanda	Jordan	ajordan0@com.com	Female	1.197.201.2	6759521864920116	Indonesia	3/8/1971	49756.53	Internal Auditor	1E+02
+```
+
+위에서 설명한대로, 좀 더 random access 가 필요하다고 한다면.. 저라면 array안에 메타 정보를 넣어놓고..<br>
+binary search 를 통해서 문제를 해결하겠습니다.
+
+```python
+idx = 0
+parquet_indices = []
+for frag in dataset.fragments:
+    parquet_file = ParquetFile(frag.path)
+    for i, row_group in enumerate(frag.row_groups):
+        start_idx = idx
+        end_idx = idx + row_group.num_rows
+        parquet_indices.append((i, start_idx, end_idx, parquet_file, row_group.id, row_group.num_rows))
+        idx += row_group.num_rows
 ```
