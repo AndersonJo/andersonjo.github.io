@@ -7,9 +7,131 @@ asset_path: /assets/images/
 tags: ['pyspark', 'parquet', 'csv', 'sql', 'mariadb']
 ---
 
-# 1. CSV to Parquet
+# 1. Installation
 
-## 1.1 Default Initialization
+## 1. Installing PySpark
+
+<img src="{{ page.asset_path }}spark_install.png" class="center img-responsive img-rounded img-fluid">
+
+다운로드 받고 설치하면 됩니다.<br>
+이후 동일한 버젼의 (3.3.2) pyspark 를 설치합니다. 
+
+```bash
+$ pip install pyspark==3.3.2
+```
+
+이후 .bashrc 또는 .bash_profile 등에 spark를 설치한 위치를 설정합니다.<br>
+copy & paste 하지말고, spark를 
+
+```bash
+export SPARK_HOME=/home/anderson/app/spark-3.3.2-bin-hadoop3
+export PATH=$PATH:$SPARK_HOME/bin
+export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH
+export PATH=$SPARK_HOME/python:$PATH
+```
+
+
+# 1. Parquet 
+
+## 1.1 Loading & Sampling
+
+```python
+from pyspark.sql import SparkSession
+
+spark = (
+    SparkSession.builder.master("local[*]")
+    .appName("Sales")
+    .config("spark.ui.port", "4050")
+    .enableHiveSupport()
+    .getOrCreate()
+)
+
+data = spark.read.parquet('./data')
+print('Data Row Sie:', data.count())
+data.sample(0.001).toPandas()
+```
+
+## 1.2 Temporary View Table
+
+```python
+data.createOrReplaceTempView("users")
+
+sql = """
+SELECT * FROM users
+WHERE salary >= 200000
+"""
+users = spark.sql(sql)
+users.toPandas()
+```
+
+
+## 1.3 Create Hive Table
+
+```python
+spark.sql("CREATE DATABASE IF NOT EXISTS anderson")
+spark.sql("USE anderson")
+
+(
+    data.write.mode("overwrite")
+    .partitionBy("country")
+    .format("parquet")
+    .saveAsTable("users")
+)
+
+spark.sql("select * from anderson.users").sample(0.001).toPandas()
+```
+
+이렇게 생성하면 아래와 같은 구조로 테이블이 생성됩니다.
+
+```bash
+./spark-warehouse
+└── anderson.db
+    └── users
+        ├── country=%22Bonaire
+        │   └── part-00000-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+        ├── country=Afghanistan
+        │   ├── part-00000-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+        │   ├── part-00001-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+        │   ├── part-00002-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+        │   ├── part-00003-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+        │   └── part-00004-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+        ├── country=Aland Islands
+        │   └── part-00000-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+        ├── country=Albania
+        │   ├── part-00000-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+        │   ├── part-00001-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
+```
+
+## 1.4 Save as parquet files 
+
+```python
+(
+    data.write.mode("overwrite")
+    .partitionBy("country")
+    .format("parquet")
+    .save("users")
+)
+```
+
+아래와 같은 형식으로 생성됩니다. 
+
+```bash
+./users
+├── country=%22Bonaire
+│   └── part-00000-31286881-2130-4a6f-9183-d6e8eeaa1c77.c000.snappy.parquet
+├── country=Afghanistan
+│   ├── part-00000-31286881-2130-4a6f-9183-d6e8eeaa1c77.c000.snappy.parquet
+│   ├── part-00001-31286881-2130-4a6f-9183-d6e8eeaa1c77.c000.snappy.parquet
+│   ├── part-00002-31286881-2130-4a6f-9183-d6e8eeaa1c77.c000.snappy.parquet
+│   ├── part-00003-31286881-2130-4a6f-9183-d6e8eeaa1c77.c000.snappy.parquet
+│   └── part-00004-31286881-2130-4a6f-9183-d6e8eeaa1c77.c000.snappy.parquet
+├── country=Aland Islands
+│   └── part-00000-31286881-2130-4a6f-9183-d6e8eeaa1c77.c000.snappy.parquet
+```
+
+# 2. CSV to Parquet
+
+## 2.1 Default Initialization
 
 ```python
 from matplotlib import pylab as plt
@@ -20,11 +142,12 @@ spark = (
     SparkSession.builder.master("local[*]")
     .appName("Sales")
     .config("spark.ui.port", "4050")
+    # .enableHiveSupport()
     .getOrCreate()
 )
 ```
 
-## 1.2 Read CSV
+## 2.2 Read CSV
 
 ```python
 from pyspark.sql import types as t
@@ -48,7 +171,7 @@ data.limit(3).toPandas()
 ```
 
 
-## 1.3 Missing Values
+## 2.3 Missing Values
 
 ```python
 from pyspark.sql import functions as F
@@ -86,7 +209,7 @@ data = filter_missing_values(data)
 display_missing_count(data)
 ```
 
-## 1.4 GroupBy 
+## 2.4 GroupBy 
 
 ```python
 fig, ax = plt.subplots(1, figsize=(4, 3))
@@ -102,7 +225,7 @@ fig, ax = plt.subplots(1, figsize=(4, 3))
 <img src="{{ page.asset_path }}pyspark-game-genre.png" class="img-responsive img-rounded img-fluid">
 
 
-## 1.5 SQL Query
+## 2.5 SQL Query
 
 ```python
 query = """
@@ -116,7 +239,7 @@ ORDER BY Year
 df = spark.sql(query).toPandas()
 ```
 
-## 1.5 Write to Parquet 
+## 2.5 Write to Parquet 
 
 `sales.parquet` 디렉토리가 생성됩니다. 
 
