@@ -11,7 +11,7 @@ tags: ['pyspark', 'parquet', 'csv', 'sql', 'mariadb']
 
 ## 1. Installing PySpark
 
-<img src="{{ page.asset_path }}spark_install.png" class="center img-responsive img-rounded img-fluid">
+<img src="{{ page.asset_path }}spark-install.png" class="center img-responsive img-rounded img-fluid">
 
 다운로드 받고 설치하면 됩니다.<br>
 이후 동일한 버젼의 (3.3.2) pyspark 를 설치합니다. 
