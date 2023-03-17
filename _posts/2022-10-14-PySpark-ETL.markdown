@@ -21,7 +21,8 @@ $ pip install pyspark==3.3.2
 ```
 
 이후 .bashrc 또는 .bash_profile 등에 spark를 설치한 위치를 설정합니다.<br>
-copy & paste 하지말고, 아래 내용을 수정해서 사용합니다. 
+copy & paste 하지말고, 아래 내용을 수정해서 사용합니다.<br>
+핵심은 파이썬 뭘 써도 상관없는데 pyspark 버젼은 동일해야 하며, 아래의 환경 설정이 제대로 설정되어 있어야 합니다. 
 
 ```bash
 export SPARK_HOME=/home/anderson/app/spark-3.3.2-bin-hadoop3
