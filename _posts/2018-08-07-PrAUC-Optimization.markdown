@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "AUC & PrAUC Threshold Optimization"
+title:  "AUC & PRAUC Threshold Optimization"
 date:   2018-07-07 01:00:00
 categories: "machine-learning"
 asset_path: /assets/images/
