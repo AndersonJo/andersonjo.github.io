@@ -47,8 +47,7 @@ J &= TPR - FPR
 $$ \text{Maximize}(TPR - FPR) $$
 
 
-
-## Optimal Threshold for imbalanced data in ROC Curve
+## Geometric Mean
 
 Geometric Mean 을 사용하는 경우 `Sensitivity - Specificity` 를 합니다. 
 
@@ -57,6 +56,21 @@ $$ \text{Maximize}(sqrt(TPR - (1-FPR))) $$
 누군가는 Imbalanced Data 에서 성능이 좋다고 하는데.. <br>
 제 실험 결과에서는 그닥 좋지 않습니다.<br>
 
+
+## F-Measure  (For Imbalanced Dataset)
+
+Imbalanced Data 에서 threshold 를 찾을때 F-Measure (F1-Score 와 동일한거) 를 주로 사용합니다. 
+
+$$ F-Measure = 2 \time \frac{Precision \time Recall}{ Precision + Recall} $$
+
+## Recall + Precision (For Imbalanced Dataset)
+
+요것도 어느정도는 괜찮게 나왔습니다.<br> 
+사실 책에 있는 방법은 아니고.. 그냥 실험을 해봤는데, ACC 자체에 있어서는 F-Measure 보다는 좋았습니다. <br>
+하지만 당연히 F1-Score 로 따지면 좀 떨어지고요.<br>
+회사에서 한번 적용해 보는 것도 좋을듯 하네요. 
+
+$$ Recall + Precision $$ 
 
 
 
