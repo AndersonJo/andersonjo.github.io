@@ -201,9 +201,7 @@ Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델�
 
 - F1-score 그리고 F-Measure 는 공식은 동일합니다. (그런데 살짝 서로 다르네요)
 - 결과적으로 F-Measure만 사용해도 괜찮을듯 합니다. 
-- ARGMAX(Recall - Precision) 방식은 안 좋습니다. 
-- ARGMAX(G-Means) 방식도 안 좋습니다. 
-
+- ARGMAX(Recall - Precision) 방식은 안 좋습니다. (이런 방식은 없습니다. 한번 해봤어요)
 
 ```python
 from sklearn.metrics import precision_recall_curve
