@@ -300,3 +300,59 @@ plot.legend(loc="lower left")
 ```
 
 <img src="{{ page.asset_path }}prauc-image04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+## 특정 Threshold 에서의 AUC
+
+정확하게 이런 방법은 ML책에 나오는 방법은 아닙니다. <br>
+그래서 이런 지표에 대한 이름도 딱히 없습니다. <br> 
+지난번 Baysian 공식을 엮으로 엮어서 casuality analysis 한것 처럼 우린 그냥 수식을 이용해서 문제를 해결할 뿐입니다.<br> 
+
+특정 threshold 를 걸어주게되면, 이미 특정 threshold 기준으로 probability가 고정이 됩니다. <br>
+이 기준을 해당 기준을 갖고서 AUC를 구했을때의 지표입니다.
+
+예제는 다음과 같습니다. 
+- target_threshold=0.3 : 해당 0.3 PRAUC 에서 F1-Score의 optimal threshold 입니다. 
+- target_threshold=0.9 : 그냥 임의로 정한 값입니다. (비교를 위해서)
+
+0.3 threshold의 경우는 AUC 0.7140이 나옵니다. <br>
+0.9 threshold의 경우는 AUC 0.6253이 나옵니다. 
+
+이런 방식을 사용해서 모델간의 성능을 비교하기도 합니다. <br>
+다만.. 위에서 이야기 했듯이 공식적으로 있는 건 아니기 때문에 뭐라고 해야 할지 모르겠네요. 
+
+```python
+precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
+
+# F-Measure (F1-Score)
+fscores = 2 * (precision * recall) / (precision + recall)
+idx1 = np.argmax(fscores)
+
+
+# Plot
+roc_auc = auc(recall, precision)
+fig, plot = plt.subplots(1, figsize=(8, 6))
+plot.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
+plot.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
+
+
+# Threshold 0.3 에서의 AUC
+target_threshold = 0.3
+precision, recall, thresholds = precision_recall_curve(y_test, y_prob >= target_threshold)
+plot.plot(recall, precision, color='blue', label=f"Target Threshold {target_threshold} | AUC={auc(recall, precision):.4f}")
+
+# Threshold 0.9 에서의 AUC
+target_threshold = 0.9
+precision, recall, thresholds = precision_recall_curve(y_test, y_prob >= target_threshold)
+plot.plot(recall, precision, color='purple', label=f"Target Threshold {target_threshold} | AUC={auc(recall, precision):.4f}")
+
+
+plot.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
+
+plot.set_xlabel("Recall")
+plot.set_ylabel("Precision")
+plot.set_title(f"ROC Curve")
+plot.legend(loc="lower left")
+```
+
+<img src="{{ page.asset_path }}prauc-image05.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
