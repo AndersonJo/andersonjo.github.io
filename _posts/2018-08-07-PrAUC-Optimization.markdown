@@ -196,7 +196,13 @@ print()
 PRAUC 는 precision, recall둘다 바라보며, 특히 precision은 모델이 positive라고 예측한 것들 중에서<br> 
 positive를 얼마나 잘 맞췄는지 보기 때문에 class 1 에대한 평가를 잘 할 수 있습니다. 
 
-Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델은 positive class 에 대해서 잘 분류한다는 것을 볼 수 있습니다. 
+Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델은 positive class 에 대해서 잘 분류한다는 것을 볼 수 있습니다.<br>
+코드 설명을 좀 하면.. 
+
+- F1-score 그리고 F-Measure 는 공식은 동일합니다. (그런데 살짝 서로 다르네요)
+- 결과적으로 F-Measure만 사용해도 괜찮을듯 합니다. 
+- ARGMAX(Recall - Precision) 방식은 안 좋습니다. 
+- ARGMAX(G-Means) 방식도 안 좋습니다. 
 
 
 ```python
@@ -243,3 +249,5 @@ plt.ylabel("Precision")
 plt.title(f"ROC Curve")
 plt.legend()
 ```
+
+<img src="{{ page.asset_path }}prauc-image03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
