@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "AUC & PrAUC Optimization"
+title:  "AUC & PrAUC Threshold Optimization"
 date:   2018-07-07 01:00:00
-categories: "statistics"
+categories: "machine-learning"
 asset_path: /assets/images/
 tags: ['auc', 'roc', 'curve', 'sensitivity', 'performance', 'ggplot']
 ---
