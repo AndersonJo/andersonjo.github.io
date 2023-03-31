@@ -134,11 +134,14 @@ from sklearn.metrics import (
     roc_curve,
 )
 
+
 def make_mark(_idx, color, label):
     _max_threshold = thresholds[_idx]
     _acc = accuracy_score(y_test, y_prob >= _max_threshold)
     _f1 = f1_score(y_test, y_prob >= _max_threshold)
-    label = label + f" | t={_max_threshold:.4f} | acc={_acc:.2f} | f1={_f1:.4f}"
+    _precision = precision_score(y_test, y_prob >= max_threshold)
+    _recall = recall_score(y_test, y_prob >= max_threshold)
+    label = f"{label:8} | t:{_max_threshold:.4f} | acc:{_acc:.2f} | f1={_f1:.4f}"
     plt.plot(fpr[_idx], tpr[_idx], marker="o", markersize=10, color=color, label=label)
 
 
@@ -169,18 +172,18 @@ scores = [f1_score(y_test, y_prob > t) for t in thresholds]
 idx3 = np.argmax(scores)
 
 
-plt.subplots(1, figsize=(7, 6))
+plt.subplots(1, figsize=(8, 6))
 plt.plot(fpr, tpr, label=f"Classifier (AUC={roc_auc:.4f})")
 plt.plot([0, 1], [0, 1], "k--", label=f"Baseline  (AUC=0.5)")
 
 make_mark(idx1, "blue", f"TPR-FPR")
 make_mark(idx2, "yellow", "G-Mean")
-make_mark(idx3, "cyan", "F1")
+make_mark(idx3, "cyan", "F1Score")
 
 plt.xlabel("False Positive Rate")
 plt.ylabel("True Positive Rate")
 plt.title(f"ROC Curve")
-plt.legend()
+plt.legend(loc="lower right")
 print()
 ```
 
@@ -207,12 +210,14 @@ Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델�
 ```python
 from sklearn.metrics import precision_recall_curve
 
+
 def make_mark(_idx, color, label):
     _max_threshold = thresholds[_idx]
     _acc = accuracy_score(y_test, y_prob >= _max_threshold)
     _f1 = f1_score(y_test, y_prob >= _max_threshold)
-    label = label + f" | t={_max_threshold:.4f} | acc={_acc:.4f} | f1={_f1:.4f}"
+    label = f"{label:18} | t:{_max_threshold:.4f} | acc:{_acc:.2f} | f1={_f1:.4f}"
     plt.plot(recall[_idx], precision[_idx], marker="o", markersize=10, color=color, label=label)
+
 
 precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
 
@@ -234,7 +239,7 @@ idx4 = np.argmax(recall + precision)
 max_threshold = thresholds[idx1]
 
 
-plt.subplots(1, figsize=(7, 6))
+plt.subplots(1, figsize=(8, 6))
 plt.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
 plt.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
 
@@ -247,7 +252,7 @@ make_mark(idx4, "purple", f"Recall + Precision")
 plt.xlabel("Recall")
 plt.ylabel("Precision")
 plt.title(f"ROC Curve")
-plt.legend(loc='lower left')
+plt.legend(loc="lower left")
 ```
 
 <img src="{{ page.asset_path }}prauc-image03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
