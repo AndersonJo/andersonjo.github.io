@@ -49,7 +49,7 @@ $$ \text{Maximize}(TPR - FPR) $$
 
 ## Geometric Mean
 
-Geometric Mean 을 사용하는 경우 `Sensitivity - Specificity` 를 합니다. 
+G-Mean (Geometric Mean 을 사용하는 경우 `Sensitivity - Specificity` 를 합니다. 
 
 $$ \text{Maximize}(sqrt(TPR - (1-FPR))) $$
 
@@ -156,7 +156,7 @@ def make_mark(_idx, color, label):
     _precision = precision_score(y_test, y_prob >= max_threshold)
     _recall = recall_score(y_test, y_prob >= max_threshold)
     label = f"{label:8} | t:{_max_threshold:.4f} | acc:{_acc:.2f} | f1={_f1:.4f}"
-    plt.plot(fpr[_idx], tpr[_idx], marker="o", markersize=10, color=color, label=label)
+    plot.plot(fpr[_idx], tpr[_idx], marker="o", markersize=10, color=color, label=label)
 
 
 # ROC AUC
@@ -186,18 +186,18 @@ scores = [f1_score(y_test, y_prob > t) for t in thresholds]
 idx3 = np.argmax(scores)
 
 
-plt.subplots(1, figsize=(8, 6))
-plt.plot(fpr, tpr, label=f"Classifier (AUC={roc_auc:.4f})")
-plt.plot([0, 1], [0, 1], "k--", label=f"Baseline  (AUC=0.5)")
+fig, plot = plt.subplots(1, figsize=(8, 6))
+plot.plot(fpr, tpr, label=f"Classifier (AUC={roc_auc:.4f})")
+plot.plot([0, 1], [0, 1], "k--", label=f"Baseline  (AUC=0.5)")
 
 make_mark(idx1, "blue", f"TPR-FPR")
 make_mark(idx2, "yellow", "G-Mean")
 make_mark(idx3, "cyan", "F1Score")
 
-plt.xlabel("False Positive Rate")
-plt.ylabel("True Positive Rate")
-plt.title(f"ROC Curve")
-plt.legend(loc="lower right")
+plot.set_xlabel("False Positive Rate")
+plot.set_ylabel("True Positive Rate")
+plot.set_title(f"ROC Curve")
+plot.legend(loc="lower right")
 print()
 ```
 
@@ -230,7 +230,7 @@ def make_mark(_idx, color, label):
     _acc = accuracy_score(y_test, y_prob >= _max_threshold)
     _f1 = f1_score(y_test, y_prob >= _max_threshold)
     label = f"{label:18} | t:{_max_threshold:.4f} | acc:{_acc:.2f} | f1={_f1:.4f}"
-    plt.plot(recall[_idx], precision[_idx], marker="o", markersize=10, color=color, label=label)
+    plot.plot(recall[_idx], precision[_idx], marker="o", markersize=10, color=color, label=label)
 
 
 precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
@@ -253,9 +253,9 @@ idx4 = np.argmax(recall + precision)
 max_threshold = thresholds[idx1]
 
 
-plt.subplots(1, figsize=(8, 6))
-plt.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
-plt.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
+fig, plot = plt.subplots(1, figsize=(8, 6))
+plot.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
+plot.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
 
 make_mark(idx1, "red", f"F-Measure")
 make_mark(idx2, "cyan", f"F1-Score")
@@ -263,10 +263,45 @@ make_mark(idx3, "blue", f"Recall - Precision")
 make_mark(idx4, "purple", f"Recall + Precision")
 
 
-plt.xlabel("Recall")
-plt.ylabel("Precision")
-plt.title(f"ROC Curve")
-plt.legend(loc="lower left")
+plot.set_xlabel("Recall")
+plot.set_ylabel("Precision")
+plot.set_title(f"ROC Curve")
+plot.legend(loc="lower left")
 ```
 
 <img src="{{ page.asset_path }}prauc-image03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+## Threshold Tuning
+
+그냥 모델 하나 있고.. 뭐가 best threshold 인지 빠르게? 찾으려고 할때.. 다음의 방식을 사용할수 있으며..<br> 
+그냥 computation 이 많이 들어가긴 하는데.. 뭐.. 그닥 차이가.. <br>
+방식은 그냥 thresholds 리스트 만들어 놓고.. 하나하나 다 F1-Score 매기는 것 입니다. 
+좀 무식하긴 해도 잘 되요. 
+
+```python
+from sklearn.metrics import f1_score
+
+def make_mark(_idx, color, label):
+    _max_threshold = thresholds[_idx]
+    _acc = accuracy_score(y_test, y_prob >= _max_threshold)
+    _f1 = f1_score(y_test, y_prob >= _max_threshold)
+    label = f"{label:18} | t:{_max_threshold:.4f} | acc:{_acc:.2f} | f1={_f1:.4f}"
+    plt.plot(thresholds[_idx], scores[_idx], marker="o", markersize=10, color=color, label=label)
+
+
+thresholds = np.arange(0, 1, 0.001)
+scores = [f1_score(y_test, y_prob >= t) for t in thresholds]
+idx = np.argmax(scores)
+
+fig, plot = plt.subplots(1, figsize=(8, 6))
+plot.plot(thresholds, scores)
+
+make_mark(idx, 'blue', 'F1-Score')
+
+plot.set_xlabel('Thresholds')
+plot.set_ylabel('F-Measure')
+plot.legend()
+```
+
+<img src="{{ page.asset_path }}prauc-image04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
