@@ -351,7 +351,7 @@ plot.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
 
 plot.set_xlabel("Recall")
 plot.set_ylabel("Precision")
-plot.set_title(f"ROC Curve")
+plot.set_title(f"PRAUC Curve & Target Threshold")
 plot.legend(loc="lower left")
 ```
 
