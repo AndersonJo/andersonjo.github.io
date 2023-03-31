@@ -178,16 +178,13 @@ idx2 = np.argmax(gmeans)
 max_threshold = thresholds[idx2]
 
 
-# AUC (위의 roc_auc_score 과 동일)
-roc_auc = auc(fpr, tpr)
-
 # F1 Scores
 scores = [f1_score(y_test, y_prob > t) for t in thresholds]
 idx3 = np.argmax(scores)
 
 
 fig, plot = plt.subplots(1, figsize=(8, 6))
-plot.plot(fpr, tpr, label=f"Classifier (AUC={roc_auc:.4f})")
+plot.plot(fpr, tpr, label=f"Classifier (AUC={auc(fpr, tpr):.4f})")
 plot.plot([0, 1], [0, 1], "k--", label=f"Baseline  (AUC=0.5)")
 
 make_mark(idx1, "blue", f"TPR-FPR")
@@ -222,7 +219,7 @@ Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델�
 - ARGMAX(Recall + Precision) 또한 F1-Score 입장에서 보면.. 그닥 좋지 않습니다. 하지만 ACC 자체에서는 가장 높네요. 
 
 ```python
-from sklearn.metrics import precision_recall_curve, auc
+from sklearn.metrics import auc, precision_recall_curve
 
 
 def make_mark(_idx, color, label):
@@ -249,9 +246,8 @@ idx3 = np.argmax(recall + precision)
 max_threshold = thresholds[idx1]
 
 
-roc_auc = auc(recall, precision)
 fig, plot = plt.subplots(1, figsize=(8, 6))
-plot.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
+plot.plot(recall, precision, label=f"Classifier (AUC={auc(recall, precision):.4f})")
 plot.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
 
 make_mark(idx1, "red", f"F-Measure")
