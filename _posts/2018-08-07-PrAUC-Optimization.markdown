@@ -222,7 +222,7 @@ Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델�
 - ARGMAX(Recall + Precision) 또한 F1-Score 입장에서 보면.. 그닥 좋지 않습니다. 하지만 ACC 자체에서는 가장 높네요. 
 
 ```python
-from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import precision_recall_curve, auc
 
 
 def make_mark(_idx, color, label):
@@ -240,27 +240,23 @@ precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
 fscores = 2 * (precision * recall) / (precision + recall)
 idx1 = np.argmax(fscores)
 
-# F1 Scores
-scores = [f1_score(y_test, y_prob > t) for t in thresholds]
-idx2 = np.argmax(scores)
-
 # recall - precision Optimal Threshold
-idx3 = np.argmax(recall - precision)
+idx2 = np.argmax(recall - precision)
 max_threshold = thresholds[idx1]
 
 # recall - precision Optimal Threshold
-idx4 = np.argmax(recall + precision)
+idx3 = np.argmax(recall + precision)
 max_threshold = thresholds[idx1]
 
 
+roc_auc = auc(recall, precision)
 fig, plot = plt.subplots(1, figsize=(8, 6))
 plot.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
 plot.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
 
 make_mark(idx1, "red", f"F-Measure")
-make_mark(idx2, "cyan", f"F1-Score")
-make_mark(idx3, "blue", f"Recall - Precision")
-make_mark(idx4, "purple", f"Recall + Precision")
+make_mark(idx2, "blue", f"Recall - Precision")
+make_mark(idx3, "purple", f"Recall + Precision")
 
 
 plot.set_xlabel("Recall")
@@ -294,14 +290,17 @@ thresholds = np.arange(0, 1, 0.001)
 scores = [f1_score(y_test, y_prob >= t) for t in thresholds]
 idx = np.argmax(scores)
 
+
+roc_auc = auc(thresholds, scores)
 fig, plot = plt.subplots(1, figsize=(8, 6))
-plot.plot(thresholds, scores)
+plot.plot(thresholds, scores, label=f"Classifier (AUC={roc_auc:.4f})")
 
 make_mark(idx, 'blue', 'F1-Score')
 
+plot.set_title(f"Threshold Tuning")
 plot.set_xlabel('Thresholds')
 plot.set_ylabel('F-Measure')
-plot.legend()
+plot.legend(loc="lower left")
 ```
 
 <img src="{{ page.asset_path }}prauc-image04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
