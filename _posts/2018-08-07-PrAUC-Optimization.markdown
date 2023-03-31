@@ -202,6 +202,7 @@ Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델�
 - F1-score 그리고 F-Measure 는 공식은 동일합니다. (그런데 살짝 서로 다르네요)
 - 결과적으로 F-Measure만 사용해도 괜찮을듯 합니다. 
 - ARGMAX(Recall - Precision) 방식은 안 좋습니다. (이런 방식은 없습니다. 한번 해봤어요)
+- ARGMAX(Recall + Precision) 또한 F1-Score 입장에서 보면.. 그닥 좋지 않습니다. 하지만 ACC 자체에서는 가장 높네요. 
 
 ```python
 from sklearn.metrics import precision_recall_curve
@@ -215,31 +216,38 @@ def make_mark(_idx, color, label):
 
 precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
 
-# recall - precision Optimal Threshold
-idx1 = np.argmax(recall - precision)
-max_threshold = thresholds[idx1]
 
 # F-Measure (F1-Score)
 fscores = 2 * (precision * recall) / (precision + recall)
-idx2 = np.argmax(fscores)
+idx1 = np.argmax(fscores)
 
-# F1 Scores (요건 실제로는 안써도 되요. 그냥 실험)
+# F1 Scores
 scores = [f1_score(y_test, y_prob > t) for t in thresholds]
-idx3 = np.argmax(scores)
+idx2 = np.argmax(scores)
+
+# recall - precision Optimal Threshold
+idx3 = np.argmax(recall - precision)
+max_threshold = thresholds[idx1]
+
+# recall - precision Optimal Threshold
+idx4 = np.argmax(recall + precision)
+max_threshold = thresholds[idx1]
 
 
 plt.subplots(1, figsize=(7, 6))
 plt.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
 plt.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
 
-make_mark(idx1, "blue", f"Recall - Precision")
-make_mark(idx2, "red", f"F-Measure")
-make_mark(idx3, "cyan", f"F1-Score")
+make_mark(idx1, "red", f"F-Measure")
+make_mark(idx2, "cyan", f"F1-Score")
+make_mark(idx3, "blue", f"Recall - Precision")
+make_mark(idx4, "purple", f"Recall + Precision")
+
 
 plt.xlabel("Recall")
 plt.ylabel("Precision")
 plt.title(f"ROC Curve")
-plt.legend()
+plt.legend(loc='lower left')
 ```
 
 <img src="{{ page.asset_path }}prauc-image03.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
