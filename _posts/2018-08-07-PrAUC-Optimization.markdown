@@ -221,18 +221,13 @@ precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
 idx1 = np.argmax(recall - precision)
 max_threshold = thresholds[idx1]
 
-# G-Means Optimal Threshold
-gmeans = np.sqrt(tpr * (1 - fpr))
-idx2 = np.argmax(gmeans)
-max_threshold = thresholds[idx2]
-
 # F-Measure (F1-Score)
 fscores = 2 * (precision * recall) / (precision + recall)
-idx3 = np.argmax(fscores)
+idx2 = np.argmax(fscores)
 
 # F1 Scores
 scores = [f1_score(y_test, y_prob > t) for t in thresholds]
-idx4 = np.argmax(scores)
+idx3 = np.argmax(scores)
 
 
 plt.subplots(1, figsize=(7, 6))
@@ -240,9 +235,8 @@ plt.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
 plt.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
 
 make_mark(idx1, "blue", f"Recall - Precision")
-make_mark(idx2, "yellow", f"G-Means")
-make_mark(idx3, "red", f"F-Measure")
-make_mark(idx4, "cyan", f"F1-Score")
+make_mark(idx2, "red", f"F-Measure")
+make_mark(idx3, "cyan", f"F1-Score")
 
 plt.xlabel("Recall")
 plt.ylabel("Precision")
