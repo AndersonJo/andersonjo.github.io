@@ -223,7 +223,7 @@ max_threshold = thresholds[idx1]
 fscores = 2 * (precision * recall) / (precision + recall)
 idx2 = np.argmax(fscores)
 
-# F1 Scores
+# F1 Scores (요건 실제로는 안써도 되요. 그냥 실험)
 scores = [f1_score(y_test, y_prob > t) for t in thresholds]
 idx3 = np.argmax(scores)
 
