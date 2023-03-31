@@ -121,6 +121,7 @@ y_prob = model.predict_proba(x_test)[:, 1]
 
 ## ROC AUC & Optimal Threshold
 
+
 ```python
 from sklearn.metrics import (
     RocCurveDisplay,
@@ -168,8 +169,8 @@ scores = [f1_score(y_test, y_prob > t) for t in thresholds]
 idx3 = np.argmax(scores)
 
 
-plt.subplots(1, figsize=(6, 5))
-plt.plot(fpr, tpr, marker=".", label=f"Classifier (AUC={roc_auc:.4f})")
+plt.subplots(1, figsize=(7, 6))
+plt.plot(fpr, tpr, label=f"Classifier (AUC={roc_auc:.4f})")
 plt.plot([0, 1], [0, 1], "k--", label=f"Baseline  (AUC=0.5)")
 
 make_mark(idx1, "blue", f"TPR-FPR")
@@ -184,3 +185,61 @@ print()
 ```
 
 <img src="{{ page.asset_path }}prauc-image02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+## PRAUC Optimal Threshold
+
+기본적으로 Precision Recall Curve 는 오직 positive 에서의 성능을 주요한 결정 요소로 바라봅니다.<br> 
+따라서 imbalanced data 의 경우는 PRAUC Curve 를 사용하는게 모델 평가에 더 적절합니다. 
+
+예를 들어서 0:90% 그리고 1:10% 클래스인 상황에서, 모델이 전부다 0이라고 하면, Accuracy는 90%가 됩니다. <br> 
+PRAUC 는 precision, recall둘다 바라보며, 특히 precision은 모델이 positive라고 예측한 것들 중에서<br> 
+positive를 얼마나 잘 맞췄는지 보기 때문에 class 1 에대한 평가를 잘 할 수 있습니다. 
+
+Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델은 positive class 에 대해서 잘 분류한다는 것을 볼 수 있습니다. 
+
+
+```python
+from sklearn.metrics import precision_recall_curve
+
+def make_mark(_idx, color, label):
+    _max_threshold = thresholds[_idx]
+    _acc = accuracy_score(y_test, y_prob >= _max_threshold)
+    _f1 = f1_score(y_test, y_prob >= _max_threshold)
+    label = label + f" | t={_max_threshold:.4f} | acc={_acc:.4f} | f1={_f1:.4f}"
+    plt.plot(recall[_idx], precision[_idx], marker="o", markersize=10, color=color, label=label)
+
+precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
+
+# recall - precision Optimal Threshold
+idx1 = np.argmax(recall - precision)
+max_threshold = thresholds[idx1]
+
+# G-Means Optimal Threshold
+gmeans = np.sqrt(tpr * (1 - fpr))
+idx2 = np.argmax(gmeans)
+max_threshold = thresholds[idx2]
+
+# F-Measure (F1-Score)
+fscores = 2 * (precision * recall) / (precision + recall)
+idx3 = np.argmax(fscores)
+
+# F1 Scores
+scores = [f1_score(y_test, y_prob > t) for t in thresholds]
+idx4 = np.argmax(scores)
+
+
+plt.subplots(1, figsize=(7, 6))
+plt.plot(recall, precision, label=f"Classifier (AUC={roc_auc:.4f})")
+plt.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
+
+make_mark(idx1, "blue", f"Recall - Precision")
+make_mark(idx2, "yellow", f"G-Means")
+make_mark(idx3, "red", f"F-Measure")
+make_mark(idx4, "cyan", f"F1-Score")
+
+plt.xlabel("Recall")
+plt.ylabel("Precision")
+plt.title(f"ROC Curve")
+plt.legend()
+```
