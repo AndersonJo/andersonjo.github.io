@@ -61,7 +61,7 @@ $$ \text{Maximize}(sqrt(TPR - (1-FPR))) $$
 
 Imbalanced Data 에서 threshold 를 찾을때 F-Measure (F1-Score 와 동일한거) 를 주로 사용합니다. 
 
-$$ F-Measure = 2 \time \frac{Precision \time Recall}{ Precision + Recall} $$
+$$ F-Measure = 2 \times \frac{Precision \times Recall}{ Precision + Recall} $$
 
 ### Recall + Precision (For Imbalanced Dataset)
 
