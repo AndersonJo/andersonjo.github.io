@@ -73,7 +73,7 @@ xmodmap -e "keycode 108 = Caps_Lock"
 **한글 104키**로 해야 함
 
 ```bash
-sudo apt-get install uim uim-byeoru`
+sudo apt-get install uim uim-byeoru
 uim-pref-gtk
 ```
 

@@ -176,7 +176,7 @@ $ jupyter kernelspec remove <kernel_name>
 
 {% highlight bash %}
 $ sudo apt-get install graphviz
-$ pip install -v numpy scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz
+$ pip install -v numpy scikit-learn scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz 
 $ pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
 $ jupyter server extension enable --py jupyterlab_code_formatter
 {% endhighlight %}
