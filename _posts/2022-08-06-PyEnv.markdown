@@ -169,7 +169,26 @@ $ jupyter kernelspec remove <kernel_name>
 - `--display-name`: Jupyter 에서 보여질 이름 지정
 
 
-## 4.3 Install data science libraries
+
+## 4.3 보안 설정
+
+jupyterlab에서 node.js 를 사용하는데.. 이때 package 설치시 또는 `jupyter lab build` 해야 할때 에러가 날 수 있습니다.<br>
+회사 보안상의 이유로 막혀있는 경우 npm 그리고 pip 에서 회사에 등록된 certificate 을 등록시켜줘야 합니다.<br>
+아래에서 `/etc/ssl/cert.pem` 은 변경해줘야 합니다. 
+
+```bash
+# PIP 에서 certificate 등록
+$ pip config set global.cert /etc/ssl/cert.pem
+$ pip config list
+
+# NPM 에 등록
+$ npm config set cafile /etc/ssl/cert.pem 
+
+```
+
+
+
+## 4.4 Install data science libraries
 
 **Data Analytics Tools**<br>
 너무 느려서 -v 옵션을 꼭 붙이는게 좋습니다. (개 오래 걸림)
@@ -183,7 +202,8 @@ $ jupyter server extension enable --py jupyterlab_code_formatter
 
 
 
-## 4.3 Run Jupyter Lab
+
+## 4.5 Run Jupyter Lab
 
 ```bash
 $ jupyter lab
