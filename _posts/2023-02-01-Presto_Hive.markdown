@@ -97,3 +97,6 @@ FROM <db>.<table_name>
     JOIN temp_table2 c on a.id = c.id;
 ```
 
+실행하고 나서 s3 를 보면.. temporary directory 가 만들어짐.. <br>
+예를 들어서 `.hive-staging_hive_2023-02-01_12-34-45_1234567890-12345` 이런 temporary 디렉토리가 만들어지고..<br>
+완료가 되면 `dt=20230201` 같은 디렉토리로 변경이 됨.
