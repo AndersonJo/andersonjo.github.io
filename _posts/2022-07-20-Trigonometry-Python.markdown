@@ -129,3 +129,12 @@ Python에서는 math.atan2(y, x) -> radian 을 사용합니다.
 > math.atan2( 0,  1)  # 0
 > math.atan2( 0,  0)  # 0
 {% endhighlight %}  
+ 
+ 
+## 1.4 각도를 알아내려 할때 - arcsin, acrcos, arctan
+ 
+<img src="{{ page.asset_path }}trigonometry-arc.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
+
+| Formula                                      | Example                             | 
+|:---------------------------------------------|:------------------------------------|
+| $$ \arcsin(\sin \theta) = \arcsin( y / r) $$ | $$ \arcsin( 1 / 2) = 30^{\circ} $$  |
