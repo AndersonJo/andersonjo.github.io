@@ -131,10 +131,15 @@ Python에서는 math.atan2(y, x) -> radian 을 사용합니다.
 {% endhighlight %}  
  
  
-## 1.4 각도를 알아내려 할때 - arcsin, acrcos, arctan
+## 1.4 내각(interior angle)을 알고 싶을때 - arcsin, acrcos, arctan
+
+그림상에서 내각(interior angle)이란 30도 있는 부분을 말합니다. <br>
+세 변중에서 두 변의 길이를 알때 역함수를 사용하면 **내각의 각도**를 계산할 수 있습니다.
  
 <img src="{{ page.asset_path }}trigonometry-arc.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
 
-| Formula                                      | Example                             | 
-|:---------------------------------------------|:------------------------------------|
-| $$ \arcsin(\sin \theta) = \arcsin( y / r) $$ | $$ \arcsin( 1 / 2) = 30^{\circ} $$  |
+| Formula                                      | Example                                     | Python                                         |
+|:---------------------------------------------|:--------------------------------------------|:-----------------------------------------------|
+| $$ \arcsin(\sin \theta) = \arcsin( y / r) $$ | $$ \arcsin( 1 / 2) = 30^{\circ} $$          | math.degrees(math.asin(1/2)) = 30              |
+| $$ \arccos(\cos \theta) = \arccos( x / r) $$ | $$ \arccos( \sqrt(3) / 2) = 30^{\circ} $$   | math.degrees(math.acos(math.sqrt(3) / 2)) = 30 |
+| $$ \arctan(\tan \theta) = \arctan( y / x) $$ | $$ \arctan( 1 / \sqrt(3) ) = 30^{\circ} $$  | math.degrees(math.atan(1 / math.sqrt(3))) = 30 |               
