@@ -98,3 +98,19 @@ array([[0.000182, 0.000602, 0.000214, 0.000582],
        [0.000513, 0.000052, 0.000895, 0.000348],
        [0.000484, 0.000960, 0.000140, 0.000403]], dtype=float32)
 {% endhighlight %}
+
+## 2.4 Pycharm Code Inspection 이 update 안될때.. 
+
+아마도 해당 파일안에 "한글"이 분명히 있을 것이다.<br>
+그리고 typo 에러가 나는데.. pycharm이 멍청한게.. typo 난건 난거고.. 그 다음 에러난것에 대해서.. 업데이트가 되야 하는데..<br>  
+한글에서 typo 에러가 나면 간혹.. code inspection 업데이트가 안되는 케이스가 발견된다.<br>
+옛날 버젼도 아니고.. PyChamr 2023 년도 professional 정식판에서 발생하는 문제이다.<br> 
+꽤나 오랜시간동안 이런 문제가 발생했는데.. 아직도 고쳐지지 않고 있다. <br> 
+특히 윈도우 환경에서 이런 문제가 특히 발생한다. (Ubuntu 에서는 발생하지 않는다..)<br> 
+이유는 모른다.. 그냥 피곤하고.. 바쁜데.. 돈까지 내가며 쓰는 툴에서 이런 문제가 발생해서 개 짜증나는데.. 고쳐주지를 않는다.<br>
+해결 방법은 comment 에서의 한글 typo는 꺼 버리면 문제는 해결된다. 
+
+보이는 것처럼 process comments 부분을 꺼버린다. 
+
+<img src="{{ page.asset_path }}code-inspection-comment.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
