@@ -3,7 +3,7 @@ layout: post
 title:  "Deep Learning - Backpropagation"
 date:   2017-01-07 01:00:00
 categories: "artificial-intelligence"
-asset_path: /assets/posts2/TensorFlow/
+asset_path: /assets/images/TensorFlow/
 tags: ['Artificial-Intelligence']
 
 ---

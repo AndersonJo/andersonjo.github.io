@@ -3,7 +3,7 @@ layout: post
 title:  "Pytorch Getting Started"
 date:   2017-04-01 01:00:00
 categories: "pytorch"
-asset_path: /assets/posts2/Pytorch/
+asset_path: /assets/images/Pytorch/
 tags: ['Pytorch']
 
 ---

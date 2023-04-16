@@ -3,7 +3,7 @@ layout: post
 title:  "Transfer Learning in Pytorch"
 date:   2017-05-13 01:00:00
 categories: "artificial-intelligence"
-asset_path: /assets/posts2/Pytorch/
+asset_path: /assets/images/Pytorch/
 tags: ['Pytorch']
 
 ---

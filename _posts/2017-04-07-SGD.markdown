@@ -3,7 +3,7 @@ layout: post
 title:  "[Optimizer] Vanilla & Stochastic Gradient Descent"
 date:   2017-04-08 01:00:00
 categories: "artificial-intelligence"
-asset_path: /assets/posts2/Optimizer/
+asset_path: /assets/images/Optimizer/
 tags: ['Loss', 'Cost', 'Objective', 'Numpy', 'Scipy', 'Pytorch']
 
 ---

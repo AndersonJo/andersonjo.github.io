@@ -3,7 +3,7 @@ layout: post
 title:  "Generative Adversarial Network"
 date:   2017-04-15 01:00:00
 categories: "artificial-intelligence"
-asset_path: /assets/posts2/AI/
+asset_path: /assets/images/AI/
 tags: ['GAN', 'Pytorch', 'cross-entropy']
 
 ---

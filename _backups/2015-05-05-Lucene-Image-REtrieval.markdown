@@ -3,7 +3,7 @@ layout: post
 title:  "Elasticsearch - Lucene Image REtrieval"
 date:   2015-11-04 01:00:00
 categories: "elastic"
-asset_path: /assets/posts2/Elasticsearch/
+asset_path: /assets/images/Elasticsearch/
 tags: ['LIRE']
 ---
 <header>

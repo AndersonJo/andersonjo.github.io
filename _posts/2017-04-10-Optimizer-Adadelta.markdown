@@ -3,7 +3,7 @@ layout: post
 title:  "[Optimizer] Adadelta"
 date:   2017-04-10 01:00:00
 categories: "artificial-intelligence"
-asset_path: /assets/posts2/Optimizer/
+asset_path: /assets/images/Optimizer/
 tags: ['Loss', 'Cost', 'Objective', 'Numpy', 'Scipy']
 
 ---

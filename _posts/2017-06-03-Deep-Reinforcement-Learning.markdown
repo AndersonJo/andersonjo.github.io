@@ -3,7 +3,7 @@ layout: post
 title:  "Deep Reinforcement Learning"
 date:   2017-06-03 01:00:00
 categories: "artificial-intelligence"
-asset_path: /assets/posts2/Pytorch/
+asset_path: /assets/images/Pytorch/
 tags: ['DQN']
 
 ---

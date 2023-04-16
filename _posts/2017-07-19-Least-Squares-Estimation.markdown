@@ -3,7 +3,7 @@ layout: post
 title:  "Ordinary Least Sqaures Estimation"
 date:   2017-07-16 01:00:00
 categories: "statistics"
-asset_path: /assets/posts2/statistics/
+asset_path: /assets/images/statistics/
 tags: ['regression', 'ols', 'ordinary-least-squares']
 
 ---

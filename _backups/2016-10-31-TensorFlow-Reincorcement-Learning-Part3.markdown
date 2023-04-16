@@ -3,7 +3,7 @@ layout: post
 title:  "TensorFlow - Deep Reinforcement Learning Part 3"
 date:   2016-10-31 01:00:00
 categories: "tensorflow"
-asset_path: /assets/posts2/TensorFlow/
+asset_path: /assets/images/TensorFlow/
 tags: ['OpenAI', 'Neon', 'format']
 
 ---

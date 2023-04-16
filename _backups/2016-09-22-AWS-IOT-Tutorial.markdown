@@ -3,7 +3,7 @@ layout: post
 title:  "AWS IOT Tutorial"
 date:   2016-09-22 01:00:00
 categories: "aws"
-asset_path: /assets/posts2/AWS/
+asset_path: /assets/images/AWS/
 tags: ['MQTT', 'Socket']
 
 ---

@@ -3,7 +3,7 @@ layout: post
 title:  "한글 NLP with Python"
 date:   2016-12-28 01:00:00
 categories: "NLP"
-asset_path: /assets/posts2/Language/
+asset_path: /assets/images/Language/
 tags: ['KoNLPy']
 
 ---

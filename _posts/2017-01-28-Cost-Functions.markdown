@@ -3,7 +3,7 @@ layout: post
 title:  "Cost Functions"
 date:   2017-01-07 01:00:00
 categories: "artificial-intelligence"
-asset_path: /assets/posts2/AI/
+asset_path: /assets/images/AI/
 tags: ['objective-function']
 
 ---

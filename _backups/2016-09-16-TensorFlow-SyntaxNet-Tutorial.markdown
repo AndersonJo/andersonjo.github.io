@@ -3,7 +3,7 @@ layout: post
 title:  "TensorFlow - SyntaxNet Tutorial"
 date:   2016-09-16 01:00:00
 categories: "tensorflow"
-asset_path: /assets/posts2/TensorFlow/
+asset_path: /assets/images/TensorFlow/
 tags: ['Python', 'NLU', 'NLP']
 
 ---

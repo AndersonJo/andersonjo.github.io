@@ -3,7 +3,7 @@ layout: post
 title:  "OpenCV with Python"
 date:   2016-09-07 01:00:00
 categories: "vision"
-asset_path: /assets/posts2/OpenCV/
+asset_path: /assets/images/OpenCV/
 tags: ['Python', 'SIFT', 'LSH', 'Locality Sensitivity Hashing']
 
 ---

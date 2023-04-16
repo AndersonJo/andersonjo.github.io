@@ -3,7 +3,7 @@ layout: post
 title:  "Apche Ignite"
 date:   2016-08-31 01:00:00
 categories: "in-memory-platform"
-asset_path: /assets/posts2/Ignite/
+asset_path: /assets/images/Ignite/
 tags: ['MapReduce', 'Spark']
 
 ---

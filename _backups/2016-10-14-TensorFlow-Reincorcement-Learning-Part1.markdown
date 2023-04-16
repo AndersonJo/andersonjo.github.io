@@ -3,7 +3,7 @@ layout: post
 title:  "TensorFlow - Deep Reinforcement Learning Part 1"
 date:   2016-10-14 01:00:00
 categories: "tensorflow"
-asset_path: /assets/posts2/TensorFlow/
+asset_path: /assets/images/TensorFlow/
 tags: ['game', 'deep Q-network']
 
 ---
