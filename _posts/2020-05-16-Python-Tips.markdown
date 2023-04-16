@@ -4,7 +4,7 @@ title:  "별것 아닌 문제에 대한 소소한 꿀팁"
 date:   2020-05-16 01:00:00
 categories: "etc"
 asset_path: /assets/images/
-tags: ['encoding', 'utf-8', 'unicode', 'nfd', 'nfc']
+tags: ['encoding', 'utf-8', 'unicode', 'nfd', 'nfc', 'codeinspection', 'pycharm', '한글']
 ---
 
 <header>
