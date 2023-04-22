@@ -34,7 +34,7 @@ http://localhost:7860/
 
 # 2. 유용한 모델
 
-| Category         | Model                                                                                                                                               | Description |
-|:-----------------|:----------------------------------------------------------------------------------------------------------------------------------------------------|:------------|
-| Stable Diffusion | [chilloutmix_NiPrunedFp32Fix.safetensors(https://civitai.com/models/6424/chilloutmix)                                                               |             |
-|                  | [yaeMikoRealistic_yaemikoMixed](https://huggingface.co/SakerLy/yaeMikoRealistic_yaemikoMixed/blob/main/yaeMikoRealistic_yaemikoMixed.safetensors)   |             | 
+| Category         | Model                                                                                                                                             | Description |
+|:-----------------|:--------------------------------------------------------------------------------------------------------------------------------------------------|:------------|
+| Stable Diffusion | [chilloutmix_NiPrunedFp32Fix.safetensors](https://civitai.com/models/6424/chilloutmix)                                                            |             |
+|                  | [yaeMikoRealistic_yaemikoMixed](https://huggingface.co/SakerLy/yaeMikoRealistic_yaemikoMixed/blob/main/yaeMikoRealistic_yaemikoMixed.safetensors) |             | 
