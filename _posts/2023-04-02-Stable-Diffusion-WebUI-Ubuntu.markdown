@@ -34,7 +34,13 @@ http://localhost:7860/
 
 # 2. 유용한 모델
 
-| Category         | Model                                                                                                                                             | Description |
-|:-----------------|:--------------------------------------------------------------------------------------------------------------------------------------------------|:------------|
-| Stable Diffusion | [chilloutmix_NiPrunedFp32Fix.safetensors](https://civitai.com/models/6424/chilloutmix)                                                            |             |
-|                  | [yaeMikoRealistic_yaemikoMixed](https://huggingface.co/SakerLy/yaeMikoRealistic_yaemikoMixed/blob/main/yaeMikoRealistic_yaemikoMixed.safetensors) |             | 
+설치할 위치
+
+- Stable Diffusion: stable-diffusion-webui/models/Stable-diffusion 
+- Embedding: stable-diffusion-webui/embeddings
+
+| Category         | Model                                                                                                       | Description                          |
+|:-----------------|:------------------------------------------------------------------------------------------------------------|:-------------------------------------|
+| Stable Diffusion | [chilloutmix_NiPrunedFp32Fix.safetensors](https://civitai.com/models/6424/chilloutmix)                      |                                      |
+| Lola             | [KoreanDollLikeness (v2.0)](https://civitai.com/models/26124/koreandolllikeness-v20)                        | `<lora:koreanDollLikeness_v20:0.66>` |
+| Embeddings       | [Deep Negative V1.x](https://civitai.com/models/4629/deep-negative-v1x)                                     |                                      |
