@@ -149,53 +149,43 @@ from sklearn.metrics import (
 )
 
 
-def make_mark(_idx, color, label):
-    _max_threshold = thresholds[_idx]
-    _acc = accuracy_score(y_test, y_prob >= _max_threshold)
-    _f1 = f1_score(y_test, y_prob >= _max_threshold)
-    _precision = precision_score(y_test, y_prob >= max_threshold)
-    _recall = recall_score(y_test, y_prob >= max_threshold)
-    label = f"{label:8} | t:{_max_threshold:.4f} | acc:{_acc:.2f} | f1={_f1:.4f}"
-    plot.plot(fpr[_idx], tpr[_idx], marker="o", markersize=10, color=color, label=label)
-
-
-# ROC AUC
-lr_auc = roc_auc_score(y_test, y_prob)
-print("Logistic: ROC AUC=%.3f" % (lr_auc))
-
-
-# ROC Curve
-fpr, tpr, thresholds = roc_curve(y_test, y_prob)
-
-# TPR - FPR Optimal Threshold
-idx1 = np.argmax(tpr - fpr)
-max_threshold = thresholds[idx1]
-
-
-# G-Means Optimal Threshold
-gmeans = np.sqrt(tpr * (1 - fpr))
-idx2 = np.argmax(gmeans)
-max_threshold = thresholds[idx2]
-
-
-# F1 Scores
-scores = [f1_score(y_test, y_prob > t) for t in thresholds]
-idx3 = np.argmax(scores)
-
-
+def calculate_roc(y_true, y_prob, plot, label, method=None):
+    fpr, tpr, thresholds = roc_curve(y_true, y_prob)
+    
+    # TPR - FPR Optimal Threshold
+    if method == 'gmean':
+        gmeans = np.sqrt(tpr * (1 - fpr))
+        max_idx = np.argmax(gmeans)
+        max_threshold = thresholds[max_idx]
+    elif method == 'diff':
+        max_idx = np.argmax(tpr - fpr)
+        max_threshold = thresholds[max_idx]
+    else:
+        max_idx = np.argmax(tpr - fpr)
+        max_threshold = thresholds[max_idx]
+    
+    # Other Metrics at the max_threshold
+    auc_ = auc(fpr, tpr)
+    acc_ = accuracy_score(y_true, y_prob >= max_threshold)
+    f1_ = f1_score(y_true, y_prob >= max_threshold)
+    
+    plot.plot(fpr, tpr, label=f"{label} | auc:{auc_:.4f})")
+    plot.plot(fpr[max_idx], tpr[max_idx], marker="o", markersize=10, 
+              label=f'{label} | max_threshold: {max_threshold}')
+    
+    print(f'{label} | max_threshold: {max_threshold}')
+    
+    
 fig, plot = plt.subplots(1, figsize=(8, 6))
-plot.plot(fpr, tpr, label=f"Classifier (AUC={auc(fpr, tpr):.4f})")
-plot.plot([0, 1], [0, 1], "k--", label=f"Baseline  (AUC=0.5)")
+calculate_roc(y_test, y_prob, plot, 'Logistic Regression')
 
-make_mark(idx1, "blue", f"TPR-FPR")
-make_mark(idx2, "yellow", "G-Mean")
-make_mark(idx3, "cyan", "F1Score")
-
+plot.plot([0, 1], [0, 1], "k--", label=f"Baseline | auc:0.5")
 plot.set_xlabel("False Positive Rate")
 plot.set_ylabel("True Positive Rate")
 plot.set_title(f"ROC Curve")
 plot.legend(loc="lower right")
-print()
+
+
 ```
 
 <img src="{{ page.asset_path }}prauc-image02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
@@ -221,40 +211,52 @@ Recall 값이 작은 상황에서도, 높은 precision을 보인다면, 모델�
 ```python
 from sklearn.metrics import auc, precision_recall_curve
 
+def calculate_prauc(y_true, y_prob, plot, label, method=[]):
+    from collections.abc import Iterable
+    
+    def point_optimal_threshold(name):
+        
+        # Other Metrics at the max_threshold
+        
+        acc_ = accuracy_score(y_true, y_prob >= max_threshold)
+        f1_ = f1_score(y_test, y_prob >= max_threshold)
 
-def make_mark(_idx, color, label):
-    _max_threshold = thresholds[_idx]
-    _acc = accuracy_score(y_test, y_prob >= _max_threshold)
-    _f1 = f1_score(y_test, y_prob >= _max_threshold)
-    label = f"{label:18} | t:{_max_threshold:.4f} | acc:{_acc:.2f} | f1={_f1:.4f}"
-    plot.plot(recall[_idx], precision[_idx], marker="o", markersize=10, color=color, label=label)
+        plot.plot(recall[max_idx], precision[max_idx], marker="o", markersize=10, 
+              label=f'{label} | {name:5} | optimal threshold: {max_threshold}')
+        
+    
+    if not isinstance(method, Iterable):
+        method = [method]
+        
+    precision, recall, thresholds = precision_recall_curve(y_true, y_prob)
+    auc_ = auc(recall, precision)
+    plot.plot(recall, precision, label=f"{label} | auc:{auc_:.4f})")
+    
+    # Optimize the thesholds
+    print(method)
+    if 'diff' in method:
+        print('aa')
+        max_idx = np.argmax(recall - precision)
+        max_threshold = thresholds[max_idx]
+        point_optimal_threshold('diff')
+        
+    if 'plus' in method :
+        max_idx = np.argmax(recall + precision)
+        max_threshold = thresholds[max_idx]
+        point_optimal_threshold('plus')
+        
+    if 'f1' in method:
+        fscores = 2 * (precision * recall) / (precision + recall)
+        max_idx = np.argmax(fscores)
+        max_threshold = thresholds[max_idx]
+        point_optimal_threshold('f1')
+        
+    
+fig, plot = plt.subplots(1, figsize=(10, 8))
+calculate_prauc(y_test, y_prob, plot, 'Logistic Regression', method=('diff', 'plus', 'f1'))
 
 
-precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
-
-
-# F-Measure (F1-Score)
-fscores = 2 * (precision * recall) / (precision + recall)
-idx1 = np.argmax(fscores)
-
-# recall - precision Optimal Threshold
-idx2 = np.argmax(recall - precision)
-max_threshold = thresholds[idx1]
-
-# recall - precision Optimal Threshold
-idx3 = np.argmax(recall + precision)
-max_threshold = thresholds[idx1]
-
-
-fig, plot = plt.subplots(1, figsize=(8, 6))
-plot.plot(recall, precision, label=f"Classifier (AUC={auc(recall, precision):.4f})")
 plot.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
-
-make_mark(idx1, "red", f"F-Measure")
-make_mark(idx2, "blue", f"Recall - Precision")
-make_mark(idx3, "purple", f"Recall + Precision")
-
-
 plot.set_xlabel("Recall")
 plot.set_ylabel("Precision")
 plot.set_title(f"ROC Curve")
@@ -274,29 +276,33 @@ plot.legend(loc="lower left")
 ```python
 from sklearn.metrics import f1_score
 
-def make_mark(_idx, color, label):
-    _max_threshold = thresholds[_idx]
-    _acc = accuracy_score(y_test, y_prob >= _max_threshold)
-    _f1 = f1_score(y_test, y_prob >= _max_threshold)
-    label = f"{label:18} | t:{_max_threshold:.4f} | acc:{_acc:.2f} | f1={_f1:.4f}"
-    plt.plot(thresholds[_idx], scores[_idx], marker="o", markersize=10, color=color, label=label)
-
-
-thresholds = np.arange(0, 1, 0.001)
-scores = [f1_score(y_test, y_prob >= t) for t in thresholds]
-idx = np.argmax(scores)
-
-
-roc_auc = auc(thresholds, scores)
-fig, plot = plt.subplots(1, figsize=(8, 6))
-plot.plot(thresholds, scores, label=f"Classifier (AUC={roc_auc:.4f})")
-
-make_mark(idx, 'blue', 'F1-Score')
+def calculate_threshold_tuning(y_true, y_prob, plot, label):
+    thresholds = np.arange(0, 1, 0.001)
+    scores = [f1_score(y_true, y_prob >= t) for t in thresholds]
+    max_idx = np.argmax(scores)
+    max_threshold = thresholds[max_idx]
+    
+    # Main line
+    auc_ = auc(thresholds, scores)
+    plot.plot(thresholds, scores, label=f"{label} | auc:{auc_:.4f}")
+    
+    # Other metrics
+    acc_ = accuracy_score(y_true, y_prob >= max_threshold)
+    f1_ = f1_score(y_true, y_prob >= max_threshold)
+    optimal_msg = f"{label:18} | acc:{acc_:.2f} | f1={f1_:.4f}"
+    plt.plot(thresholds[max_idx], scores[max_idx], marker="o", markersize=10, 
+             label=f'{optimal_msg}')
+    
+    
+    
+fig, plot = plt.subplots(1, figsize=(10, 8))
+calculate_threshold_tuning(y_test, y_prob, plot, 'Logistic Regression')
 
 plot.set_title(f"Threshold Tuning")
-plot.set_xlabel('Thresholds')
-plot.set_ylabel('F-Measure')
+plot.set_xlabel("Thresholds")
+plot.set_ylabel("F-Measure")
 plot.legend(loc="lower left")
+
 ```
 
 <img src="{{ page.asset_path }}prauc-image04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
