@@ -233,7 +233,6 @@ def calculate_prauc(y_true, y_prob, plot, label, method=[]):
     plot.plot(recall, precision, label=f"{label} | auc:{auc_:.4f})")
     
     # Optimize the thesholds
-    print(method)
     if 'diff' in method:
         print('aa')
         max_idx = np.argmax(recall - precision)
