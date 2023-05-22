@@ -211,6 +211,7 @@ $ vi ~/.jupyter/jupyter_lab_config.py
 
 # 다음과 같이 수정 한다
 c.ServerApp.iopub_data_rate_limit = 10000000000  
+c.ServerApp.iopub_msg_rate_limit = 10000000000
 ```
 
 ```bash
