@@ -201,9 +201,17 @@ $ jupyter server extension enable --py jupyterlab_code_formatter
 {% endhighlight %}
 
 
+## 4.5 Jupyter Lab
 
+다음과 같이 설정합니다.
 
-## 4.5 Run Jupyter Lab
+```bash
+$ jupyter lab --generate-config
+$ vi ~/.jupyter/jupyter_lab_config.py
+
+# 다음과 같이 수정 한다
+c.ServerApp.iopub_data_rate_limit = 10000000000  
+```
 
 ```bash
 $ jupyter lab

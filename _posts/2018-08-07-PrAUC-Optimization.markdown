@@ -258,7 +258,7 @@ calculate_prauc(y_test, y_prob, plot, 'Logistic Regression', method=('diff', 'pl
 plot.plot([0, 1], [1, 0], "k--", label=f"Baseline  (AUC=0.5)")
 plot.set_xlabel("Recall")
 plot.set_ylabel("Precision")
-plot.set_title(f"ROC Curve")
+plot.set_title(f"Precision Recall Curve")
 plot.legend(loc="lower left")
 ```
 
@@ -273,7 +273,7 @@ plot.legend(loc="lower left")
 좀 무식하긴 해도 잘 되요. 
 
 ```python
-from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score, auc, f1_score, precision_recall_curve
 
 def calculate_threshold_tuning(y_true, y_prob, plot, label):
     thresholds = np.arange(0, 1, 0.001)
