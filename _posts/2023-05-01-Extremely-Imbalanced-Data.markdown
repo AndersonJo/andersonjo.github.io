@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Imbalanced Data Training with PrAUC"
+title:  "Extremely Imbalanced Data Training"
 date:   2023-05-01 01:00:00
 categories: "machine-learning"
 asset_path: /assets/images/
