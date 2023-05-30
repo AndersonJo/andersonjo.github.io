@@ -21,12 +21,14 @@ tags: []
 
 | Model               | Method        | Accuracy | Precision | Recall | F1 Score | PrAUC  | Description                                   |
 |:--------------------|:--------------|:---------|:----------|:-------|:---------|:-------|:----------------------------------------------|
-| Logistic Regression |               | 0.8963   | 0.909     | 0.0021 | 0.0042   | 0.2436 | class_weight 주던 말던 동일함                        |
+| Logistic Regression |               | 0.8963   | 0.909     | 0.0021 | 0.0042   | 0.2436 | High Accuracy and Low Recall                  |
+| Logistic Regression | class weight  | 0.8963   | 0.909     | 0.0021 | 0.0042   | 0.2436 | class_weight 주던 말던 동일함                        |
 | Logistic Regression | UnderSampling | 0.6158   | 0.1464    | 0.5595 | 0.2321   | 0.2227 | PrAUC 가 그냥 돌릴때보다도 적음. 웃기네                     |
 | Decision Tree       |               | 0.9192   | 0.7497    | 0.3328 | 0.4631   | 0.5187 | max_depth 조절에 따라 다름                           |
 | Decision Tree       | UnderSampling | 0.8301   | 0.3459    | 0.7142 | 0.4660   | 0.4847 | PrAUC 가 그냥 돌릴때보다 더 적음.                        |
-| LightGBM            |               | 0.9258   | 0.8338    | 0.3565 | 0.4995   | 0.6625 | n_estimators=400 / 학습 1초도 안걸림                 |
-| LightGBM            | UnderSampling | 0.89     | 0.479     | 0.6789 | 0.5617   | 0.6428 | n_estimators=400 / 학습 1초도 안걸림                 |
+| LightGBM            |               | 0.9255   | 0.8247    | 0.3595 | 0.5008   | 0.6565 | n_estimators=400 / 학습 1초도 안걸림                 |
+| LightGBM            | class weight  | 0.9258   | 0.8338    | 0.3565 | 0.4995   | 0.6625 | LightGBM은 class weight 조정 하나 안하나 비슷함          |
+| LightGBM            | UnderSampling | 0.89     | 0.479     | 0.6789 | 0.5617   | 0.6428 | PrAUC가 그냥 돌릴때보다도 못함                           |
 | Deep Learning       |               | 0.9242   | 0.8436    | 0.3315 | 0.4760   | 0.5301 | 7.2K params / 그냥 돌림                           |
 | Deep Learning       | class weight  | 0.8727   | 0.4394    | 0.8184 | 0.5718   | 0.6785 | 7.2K params / class weight adjusted 8.633 사용  |
 | Deep Learning       | UnderSampling | 0.8885   | 0.4767    | 0.7508 | 0.5832   | 0.6007 | 딥러닝에서도 PrAUC 가 낮게 나옴                          |
