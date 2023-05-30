@@ -12,16 +12,26 @@ tags: []
 - [Code](https://github.com/AndersonJo/machine-learning/blob/master/121%20Imbalanced%20Model/imbalanced.ipynb)
 
 
-## Result 
+## Result
 
-| Model                        | Accuracy | Precision | Recall | F1 Score | PrAUC  | Description                                   |
-|:-----------------------------|:---------|:----------|:-------|:---------|:-------|:----------------------------------------------|
-| Logistic Regression          | 0.8963   | 0.909     | 0.0021 | 0.0042   | 0.2436 | class_weight 주던 말던 동일함                        |
-| Decision Tree                | 0.9192   | 0.7497    | 0.3328 | 0.4631   | 0.5187 | max_depth 조절에 따라 다름                           |
-| LightGBM                     | 0.9258   | 0.8338    | 0.3565 | 0.4995   | 0.6625 | n_estimators=400 / 학습 1초도 안걸림                 |
-| Deep Learning                | 0.9242   | 0.8436    | 0.3315 | 0.4760   | 0.5301 | 7.2K params / 그냥 돌림                           |
-| Deep Learning (class weight) | 0.8727   | 0.4394    | 0.8184 | 0.5718   | 0.6785 | 7.2K params / class weight adjusted 8.633 사용  |
-| Transformer (class weight)   | 0.8816   | 0.4594    | 0.7908 | 0.5812   | 0.6903 | 12.8k params / class weight adjusted 8.633 사용 |
+- 10% 미만의 Imbalanced Dataset 에서는 UnderSampling 이 독약이 될 수 있다. 
+- Mild 한 상황의 Imbalanced Dataset에서는 데이터 손실이 너무 크지 않아서 효과가 있을수 있지만, 극단적으로 적은 상황에서는 UnderSampling 이 작동을 안한다. 
+- 이유는 단순하다. 데이터 손실 때문이다. 
+- 괜찮게 쓸만한 방법이 class weight 를 조정하는 것이다. 
+
+| Model               | Method        | Accuracy | Precision | Recall | F1 Score | PrAUC  | Description                                   |
+|:--------------------|:--------------|:---------|:----------|:-------|:---------|:-------|:----------------------------------------------|
+| Logistic Regression |               | 0.8963   | 0.909     | 0.0021 | 0.0042   | 0.2436 | class_weight 주던 말던 동일함                        |
+| Logistic Regression | UnderSampling | 0.6158   | 0.1464    | 0.5595 | 0.2321   | 0.2227 | PrAUC 가 그냥 돌릴때보다도 적음. 웃기네                     |
+| Decision Tree       |               | 0.9192   | 0.7497    | 0.3328 | 0.4631   | 0.5187 | max_depth 조절에 따라 다름                           |
+| Decision Tree       | UnderSampling | 0.8301   | 0.3459    | 0.7142 | 0.4660   | 0.4847 | PrAUC 가 그냥 돌릴때보다 더 적음.                        |
+| LightGBM            |               | 0.9258   | 0.8338    | 0.3565 | 0.4995   | 0.6625 | n_estimators=400 / 학습 1초도 안걸림                 |
+| LightGBM            | UnderSampling | 0.89     | 0.479     | 0.6789 | 0.5617   | 0.6428 | n_estimators=400 / 학습 1초도 안걸림                 |
+| Deep Learning       |               | 0.9242   | 0.8436    | 0.3315 | 0.4760   | 0.5301 | 7.2K params / 그냥 돌림                           |
+| Deep Learning       | class weight  | 0.8727   | 0.4394    | 0.8184 | 0.5718   | 0.6785 | 7.2K params / class weight adjusted 8.633 사용  |
+| Deep Learning       | UnderSampling | 0.8885   | 0.4767    | 0.7508 | 0.5832   | 0.6007 | 딥러닝에서도 PrAUC 가 낮게 나옴                          |
+| Transformer         | class weight  | 0.8816   | 0.4594    | 0.7908 | 0.5812   | 0.6903 | 12.8k params / class weight adjusted 8.633 사용 |
+| Transformer         | UnderSampling | 0.8704   | 0.4324    | 0.7938 | 0.5598   | 0.6655 | Accuracy, PrAUC 둘다 잘 안나옴                      |
 
 
 **Logistic Regression**<br>
