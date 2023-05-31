@@ -33,7 +33,7 @@ export PATH=$SPARK_HOME/python:$PATH
 
 # 2. Connection
 
-## 2.1 Hive Connection
+## 2.1 ~~Hive Connection~~ (안되는듯 함)
 
 사실 가장 자연스럽게 연결 가능한 것이 Hive입니다. Spark 와 찰떡궁합.<br>
 필요한 것은 `.enableHiveSupport()` 를 하면 되고, 그외 정보는 `hive-site.xml` 에 설정하면 됩니다. <br>
@@ -52,8 +52,7 @@ spark.sql("USE <database>")
 spark.sql("SELECT * FROM <table>").show()
 ```
 
-**hive-site.xml** 은 다음과 같이 설정합니다. 
-ㅙㅈ 
+**hive-site.xml** 은 다음과 같이 설정합니다.
 
 
 ## 2.2 Presto Connection
