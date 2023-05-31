@@ -31,10 +31,67 @@ export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zi
 export PATH=$SPARK_HOME/python:$PATH
 ```
 
+# 2. Connection
 
-# 1. Parquet 
+## 2.1 Hive Connection
 
-## 1.1 Loading & Sampling
+사실 가장 자연스럽게 연결 가능한 것이 Hive입니다. Spark 와 찰떡궁합.<br>
+필요한 것은 `.enableHiveSupport()` 를 하면 되고, 그외 정보는 `hive-site.xml` 에 설정하면 됩니다. <br>
+
+
+```python
+from pyspark.sql import SparkSession
+
+spark = (SparkSession
+         .builder
+         .appName("Python Spark SQL Hive integration example")
+         .enableHiveSupport()
+         .getOrCreate())
+
+spark.sql("USE <database>")
+spark.sql("SELECT * FROM <table>").show()
+```
+
+**hive-site.xml** 은 다음과 같이 설정합니다. 
+ㅙㅈ 
+
+
+## 2.2 Presto Connection
+
+아래와 같이 JDBC 로 Presto 에 연결하는 방법이 있을수 있습니다.<br>
+문제는 Spark에서 지원안하는 Presto Types들이 있는데, ARRAY, MAP, ROW 등이며, 이 경우 데이터를 가져오는데 에러가 날수 있습니다.<br> 
+또한 실행시 테이블 전체를 가져오는 `.option("dbtable", "shcema.table")` 방식을 사용하던가 또는 .. <br> 
+`.option("query", sql)` 을 사용하는 방법.. 둘중에 하나를 하면 됩니다. 
+
+```python
+from pyspark.sql import SparkSession
+
+# SparkSession 생성
+spark = (SparkSession.builder
+         .appName("Presto JDBC Example")
+         .config("spark.jars", "/path/to/presto-jdbc-350.jar")
+         .getOrCreate())
+
+sql = '''
+select user_id, name, age, height from db.users
+'''
+
+# Presto 테이블 읽기
+df = (spark.read
+      .format("jdbc")
+      .option("url", "jdbc:presto://presto-databse-url.com:443/hive")
+      # .option('query', sql)
+      .option("dbtable", "your_schema.test_table")
+      .option("driver", "com.facebook.presto.jdbc.PrestoDriver")
+      .option("user", "user_id")
+      .option("password", "password")
+      .load())
+```
+
+
+# 3. Parquet 
+
+## 3.1 Loading & Sampling
 
 ```python
 from pyspark.sql import SparkSession
@@ -52,7 +109,7 @@ print('Data Row Sie:', data.count())
 data.sample(0.001).toPandas()
 ```
 
-## 1.2 Temporary View Table
+## 3.2 Temporary View Table
 
 ```python
 data.createOrReplaceTempView("users")
@@ -66,7 +123,7 @@ users.toPandas()
 ```
 
 
-## 1.3 Create Hive Table
+## 3.3 Create Hive Table
 
 ```python
 spark.sql("CREATE DATABASE IF NOT EXISTS anderson")
@@ -103,7 +160,7 @@ spark.sql("select * from anderson.users").sample(0.001).toPandas()
         │   ├── part-00001-82e73039-7913-48a0-beef-c2317978be87.c000.snappy.parquet
 ```
 
-## 1.4 Save as parquet files 
+## 3.4 Save as parquet files 
 
 ```python
 (
@@ -130,9 +187,9 @@ spark.sql("select * from anderson.users").sample(0.001).toPandas()
 │   └── part-00000-31286881-2130-4a6f-9183-d6e8eeaa1c77.c000.snappy.parquet
 ```
 
-# 2. CSV to Parquet
+# 4. CSV to Parquet
 
-## 2.1 Default Initialization
+## 4.1 Default Initialization
 
 ```python
 from matplotlib import pylab as plt
@@ -148,7 +205,7 @@ spark = (
 )
 ```
 
-## 2.2 Read CSV
+## 4.2 Read CSV
 
 ```python
 from pyspark.sql import types as t
@@ -172,7 +229,7 @@ data.limit(3).toPandas()
 ```
 
 
-## 2.3 Missing Values
+## 4.3 Missing Values
 
 ```python
 from pyspark.sql import functions as F
@@ -210,7 +267,7 @@ data = filter_missing_values(data)
 display_missing_count(data)
 ```
 
-## 2.4 GroupBy 
+## 4.4 GroupBy 
 
 ```python
 fig, ax = plt.subplots(1, figsize=(4, 3))
@@ -226,7 +283,7 @@ fig, ax = plt.subplots(1, figsize=(4, 3))
 <img src="{{ page.asset_path }}pyspark-game-genre.png" class="img-responsive img-rounded img-fluid">
 
 
-## 2.5 SQL Query
+## 4.5 SQL Query
 
 ```python
 query = """
@@ -240,7 +297,7 @@ ORDER BY Year
 df = spark.sql(query).toPandas()
 ```
 
-## 2.5 Write to Parquet 
+## 4.6 Write to Parquet 
 
 `sales.parquet` 디렉토리가 생성됩니다. 
 
