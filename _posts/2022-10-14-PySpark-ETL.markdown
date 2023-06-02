@@ -93,15 +93,20 @@ df = (spark.read
 ## 3.1 Loading & Sampling
  
  - **spark.sql.warehouse.dir**: hive-warehouse 디렉트로에 실제 database 그리고 테이블이 들어감
- - **spark.driver.extraJavaOptions -Dderby.system.home**: metastore_db 안에 데이터베이스 이름, 테이블등등의 데이터가 들어감 
+ - **spark.driver.extraJavaOptions -Dderby.system.home**: metastore_db 안에 데이터베이스 이름, 테이블등등의 데이터가 들어감
+ - **spark.driver.memory**: Driver 메모리 설정
+ - **spark.executor.memory**: Executor 메모리 설정
 
 ```python
 from pyspark.sql import SparkSession
 
 spark = (
-    SparkSession.builder.master("local[*]")
-    .appName("Sales")
+    SparkSession.builder
+    .master("local[*]")
+    .appName("Spark Test")
     .config("spark.ui.port", "4050")
+    .config('spark.driver.memory', '4G')
+    .config('spark.executor.memory', '16G')
     .config('spark.sql.warehouse.dir', '/Users/anderson/hive-warehouse')
     .config('spark.driver.extraJavaOptions', '-Dderby.system.home=/Users/anderson/metastore_db')
     .enableHiveSupport()
@@ -111,8 +116,12 @@ spark = (
 spark.sql('show databases').toPandas()
 spark.sql('use anderson_db')
 spark.sql('select current_database()').toPandas()
+```
 
 
+읽기
+
+```
 data = spark.read.parquet('./data')
 print('Data Row Sie:', data.count())
 data.sample(0.001).toPandas()
