@@ -91,6 +91,9 @@ df = (spark.read
 # 3. Parquet 
 
 ## 3.1 Loading & Sampling
+ 
+ - **spark.sql.warehouse.dir**: hive-warehouse 디렉트로에 실제 database 그리고 테이블이 들어감
+ - **spark.driver.extraJavaOptions -Dderby.system.home**: metastore_db 안에 데이터베이스 이름, 테이블등등의 데이터가 들어감 
 
 ```python
 from pyspark.sql import SparkSession
@@ -99,9 +102,16 @@ spark = (
     SparkSession.builder.master("local[*]")
     .appName("Sales")
     .config("spark.ui.port", "4050")
+    .config('spark.sql.warehouse.dir', '/Users/anderson/hive-warehouse')
+    .config('spark.driver.extraJavaOptions', '-Dderby.system.home=/Users/anderson/metastore_db')
     .enableHiveSupport()
     .getOrCreate()
 )
+
+spark.sql('show databases').toPandas()
+spark.sql('use anderson_db')
+spark.sql('select current_database()').toPandas()
+
 
 data = spark.read.parquet('./data')
 print('Data Row Sie:', data.count())
@@ -123,6 +133,9 @@ users.toPandas()
 
 
 ## 3.3 Create Hive Table
+
+ - `saveAsTable('테이블이름')` 을 해줘야지 hive-warehouse 에 실제 데이터가 저장이 됨. 
+ - `save('저장 경로')`: 으로 저장하게 되면 그냥 해당 경로로 저장이 되며 hive-warehouse 에 저장이 되는게 아님.  
 
 ```python
 spark.sql("CREATE DATABASE IF NOT EXISTS anderson")
