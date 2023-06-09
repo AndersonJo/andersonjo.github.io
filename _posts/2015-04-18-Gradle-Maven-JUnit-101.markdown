@@ -71,7 +71,12 @@ Build하는데 들어가는 bootstrapping이나 기타등등을 메모리에 계
 **~/.gradle/gradle.properties** 의 파일안에 다음을 집어넣고 저장합니다.
 
 {% highlight bash %}
+org.gradle.jvmargs=-Xmx12G -Xms6G
 org.gradle.daemon=true
+org.gradle.parallel=true
+org.gradle.configureondemand=true
+org.gradle.caching=true
+org.gradle.upToDateChecks.enabled=true
 {% endhighlight %}
 
 

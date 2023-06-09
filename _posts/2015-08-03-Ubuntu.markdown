@@ -164,7 +164,12 @@ sudo service zapret start
  
  
 ```bash
+org.gradle.jvmargs=-Xmx12G -Xms6G
 org.gradle.daemon=true
+org.gradle.parallel=true
+org.gradle.configureondemand=true
+org.gradle.caching=true
+org.gradle.upToDateChecks.enabled=true
 ```
 
 
