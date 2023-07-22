@@ -163,3 +163,18 @@ ax = sns.heatmap(
 
 
 <img src="{{ page.asset_path }}cohort-retention-heatmap.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+## line plot 
+
+특정 날짜만을 보고 싶으면 다음과 같이 할수도 있습니다.
+
+```python
+df = retention_count[pd.to_datetime(retention_count.index) == '2010-11-29']
+ax = sns.lineplot(df.values.reshape(-1))
+ax.set_title('2010-11-29')
+ax.grid()
+```
+
+
+<img src="{{ page.asset_path }}cohort-retention-line.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
