@@ -21,7 +21,7 @@ tags: []
 
 해당 문서에서는 잔존률 분석인 Cohort Retention Analysis 를 계산하는 방법을 적습니다. 
 
-# Pandas 
+# Pandas Implementation
 
 ## Data 
 
