@@ -102,16 +102,16 @@ def calculate_weekly_retention(data, costomer_col, date_col):
     data["CohortWeek"] = data[date_col].apply(lambda x: iso_to_gregorian(x.year, x.week, 1))
     data["CohortFirstWeek"] = data.groupby(costomer_col).CohortWeek.transform("min")
     data["CohortIndex"] = (data.CohortWeek - data.CohortFirstWeek).dt.days
-
+    
     retention = (
         data.groupby(["CohortFirstWeek", "CohortIndex"])
-        .CustomerID.apply(pd.Series.nunique)
+        [costomer_col].apply(pd.Series.nunique)
         .reset_index()
-        .rename({"CohortFirstWeek": "Cohort Week"}, axis=1)
     )
-    retention_count = retention.pivot_table(index="Cohort Week", columns="CohortIndex", values="CustomerID")
-    retention = cc.divide(retention_count.iloc[:, 0], axis=0).round(3)
+    retention_count = retention.pivot_table(index="CohortFirstWeek", columns="CohortIndex", values=costomer_col)
+    retention = retention_count.divide(retention_count.iloc[:, 0], axis=0).round(3)
     return retention_count, retention
+
 
 
 retention_count, retention = calculate_weekly_retention(
@@ -178,3 +178,34 @@ ax.grid()
 
 
 <img src="{{ page.asset_path }}cohort-retention-line.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+# Daily Retention 
+
+- 일별로 유저를 추적하면, 그 그룹양이 적다. 
+
+```python
+from datetime import date, datetime, timedelta
+
+def calculate_daily_retention(data, costomer_col, date_col):
+    data["CohortDay"] = data[date_col].apply(lambda x: x.date())
+    data["CohortFirstDay"] = data.groupby(costomer_col).CohortDay.transform("min")
+    data["CohortIndex"] = (data.CohortDay - data.CohortFirstDay).dt.days
+    
+    retention = (
+        data.groupby(["CohortFirstDay", "CohortIndex"])
+        [costomer_col].apply(pd.Series.nunique)
+        .reset_index()
+    )
+    retention_count = retention.pivot_table(index="CohortFirstDay", columns="CohortIndex", values=costomer_col)
+    retention = retention_count.divide(retention_count.iloc[:, 0], axis=0).round(3)
+    return retention_count, retention
+
+
+retention_count, retention = calculate_daily_retention(
+    data, costomer_col="CustomerID", date_col="InvoiceDate"
+)
+
+display(retention.iloc[-10:, :10])
+display(retention_count.iloc[-10:, :10])
+```
