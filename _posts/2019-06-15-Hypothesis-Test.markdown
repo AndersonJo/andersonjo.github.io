@@ -884,7 +884,22 @@ chi square statistic: 8.455522488460222
 ## 5.3 Chi Square Test in Scipy
 
 Scipy를 사용하면 매우 쉽게 해결할 수 있습니다.<br>
-chi2_contingency 함수를 사용하고, contingency table을 넣으면 끝입니다.
+먼저 빈도테이블 (contingency table) 을 생성해야 합니다.<br>
+예제에서는 테이블을 직접 만들었지만, 실무에서는 [pd.crosstab](https://pandas.pydata.org/docs/reference/api/pandas.crosstab.html) 을 사용해서 만들면 편합니다.
+
+```python
+columns = ['빅맥', '1955버거', '맥윙', '기타']
+index = ['남자', '여자']
+data = [[1045, 872, 354, 80],
+        [913, 819, 253, 64]]
+df = pd.DataFrame(data, columns=columns, index=index)
+df
+```
+
+<img src="{{ page.asset_path }}hypothesis-chi-contingency-table.png" class="img-responsive img-rounded img-fluid">
+
+chi2_contingency 함수를 사용하고, contingency table을 넣으면 끝입니다.<br>
+(이때 테스트 하고자 하는 그룹만 넣으면 됩니다. 예제에서는 남자, 여자 2개지만, 여러개의 AB Test Groups 이 존재시, 2개씩 넣어서 테스트 합니다.)
 
 {% highlight python %}
 from scipy.stats import chi2_contingency
