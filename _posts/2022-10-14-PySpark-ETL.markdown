@@ -25,10 +25,9 @@ copy & paste 하지말고, 아래 내용을 수정해서 사용합니다.<br>
 핵심은 파이썬 뭘 써도 상관없는데 pyspark 버젼은 동일해야 하며, 아래의 환경 설정이 제대로 설정되어 있어야 합니다. 
 
 ```bash
-export SPARK_HOME=/home/anderson/app/spark-3.3.2-bin-hadoop3
-export PATH=$PATH:$SPARK_HOME/bin
-export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH
-export PATH=$SPARK_HOME/python:$PATH
+export SPARK_HOME=/home/anderson/app/spark
+export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.7-src.zip:$PYTHONPATH
+export PATH=$SPARK_HOME/bin:$SPARK_HOME/python:$PATH
 ```
 
 # 2. Connection
