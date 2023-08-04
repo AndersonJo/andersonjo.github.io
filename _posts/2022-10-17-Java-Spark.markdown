@@ -142,7 +142,7 @@ only showing top 20 rows
 ```
 
 
-### 2.2.3 Filter 함수
+### 2.2.3 Dataset - Filter 함수
 
 아래코드처럼 column 을 지정해서 데이터를 가져올 수 있습니다. 
 
