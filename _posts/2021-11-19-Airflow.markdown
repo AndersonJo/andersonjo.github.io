@@ -1,7 +1,10 @@
 ---
-layout: post title:  "Airflow 101"
-date:   2021-11-19 01:00:00 categories: "airflow"
-asset_path: /assets/images/ tags: []
+layout: post 
+title:  "Airflow 101"
+date:   2021-11-19 01:00:00 
+categories: "airflow"
+asset_path: /assets/images/ 
+tags: []
 ---
 
 <header>
