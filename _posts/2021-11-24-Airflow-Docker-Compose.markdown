@@ -82,3 +82,30 @@ $ ./airflow.sh info
 $ ./airflow.sh bash
 $ ./airflow.sh python
 ```
+
+
+## Airflow Docker Build
+
+airflow docker 를 수정하거나, 새로운 python package 또는 apt package를 추가해야 할때 docker 를 새로 만들어야 합니다. <br> 
+다음은 예제 코드로서 certificate 문제까지 해결한 것입니다. <br>
+`/etc/ssl/cert.pem` 을 통해서 certificate이 필요한 것으로 가정했고, 빌드전 복사해놔야 합니다. <br>
+필요한 파일은 다음과 같습니다. 
+
+ - requirements.txt
+ - cert.pem (/etc/ssl/cert.pem 에서 복사합니다.)
+ - DockerFile (아래와 같이 만듭니다)
+
+```yaml
+FROM apache/airflow:2.7.0
+USER root
+COPY cert.pem /etc/ssl/cert.pem
+COPY requirement.txt
+RUN apt-get update && apt-get install -y ca-certificates
+RUN update-ca-certificates
+USER airflow
+RUN pip config set global.cert /etc/ssl/cert.pem
+RUN pip install --no-cache-dir \
+  --trusted-host pypi.python.org \
+  --trusted-host pypi.org \
+  -r /requirements.txt
+```
