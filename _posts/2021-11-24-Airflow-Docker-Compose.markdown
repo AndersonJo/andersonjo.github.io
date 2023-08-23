@@ -45,6 +45,9 @@ $ docker compose up
 초기 ID, 비번은 둘다 airflow.
 
 
+## PyCharm 설정은 다음과 같이 합니다.
+
+<img src="{{ page.asset_path }}airflow-docker-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
 
@@ -108,4 +111,54 @@ RUN pip install --no-cache-dir \
   --trusted-host pypi.python.org \
   --trusted-host pypi.org \
   -r /requirements.txt
+```
+
+
+## XCom - Data between tasks
+
+XCom은 tasks 사이에 작은 데이터 또는 메타 데이터를 서로 교환할수 있도록 해줍니다.<br>
+다음의 특징을 갖고 있습니다. 
+
+- pull, push 를 사용하며, 실제 데이터는 데이터베이스에 저장이 됩니다. (Postgre)
+- task 에서 리턴시, 해당 값은 자동으로 XCom 으로 push가 됩니다. (특히 PythonOperator)
+- 데이터 베이스에 따라서 XCom사용시 용량 제한이 걸려 있습니다. 
+  - Postgres: 1Gb
+  - SQLite: 2Gb
+  - MySQL: 64KB
+- Custom XCom 사용시 Airflow Database 뿐만 아니라, S3, GCS, HDFS 까지도 사용 가능합니다.
+
+다음은 XCom 예제 입니다.
+
+```python
+from airflow.decorators import dag, task
+from airflow.models import Param
+from airflow.operators.empty import EmptyOperator
+from pendulum import datetime
+
+default_args = {"start_date": datetime(2021, 1, 1)}
+
+
+@dag(schedule="@daily", default_args=default_args, catchup=False,
+     params={'name': Param('Anderson', type='string', description='Customer Name'),
+             'age': Param(30, type='integer', description='Customer Age')})
+def xcom_taskflow_dag():
+    start_task = EmptyOperator(task_id='start_task')
+
+    @task
+    def get_customer_name(**kwargs):
+        params = kwargs['params']
+        name = params['name']
+        age = params['age']
+        return {'customer_name': name, 'age': age}
+
+    @task
+    def print_customer_name(**kwargs):
+        customer = kwargs['customer']
+        print('Customer Name:', customer['customer_name'])
+        print('Customer Age :', customer['age'])
+
+    start_task >> print_customer_name(customer=get_customer_name())
+
+
+xcom_taskflow_dag()
 ```
