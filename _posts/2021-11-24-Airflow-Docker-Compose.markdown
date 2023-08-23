@@ -45,7 +45,7 @@ $ docker compose up
 초기 ID, 비번은 둘다 airflow.
 
 
-## PyCharm 설정은 다음과 같이 합니다.
+## PyCharm 설정
 
 <img src="{{ page.asset_path }}airflow-docker-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
