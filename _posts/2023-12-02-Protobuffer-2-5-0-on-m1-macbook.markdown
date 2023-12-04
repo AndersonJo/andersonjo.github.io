@@ -46,4 +46,5 @@ $ ./configure
 $ make
 $ make check
 $ sudo make install
+$ protoc --version
 ```
