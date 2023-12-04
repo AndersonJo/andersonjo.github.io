@@ -93,8 +93,9 @@ $ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
 {
     "\UF729"  = moveToBeginningOfLine:; // home
     "\UF72B"  = moveToEndOfLine:; // end
-    "$\UF729" = moveToBeginningOfLineAndModifySelect햐ㅡion:; // shift-home
+    "$\UF729" = moveToBeginningOfLineAndModifySelection:; // shift-home
     "$\UF72B" = moveToEndOfLineAndModifySelection:; // shift-end
+    "@\U007F"  = deleteWordBackward:; // cmd + backspace
 }
 {% endhighlight %}
 
