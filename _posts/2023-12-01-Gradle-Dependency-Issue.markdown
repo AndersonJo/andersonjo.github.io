@@ -20,6 +20,28 @@ tags: []
     - 예를 들어서 mysql-connector-java 같은 경우 런타임시 실제 접속할때 사용하게 되며, 코딩할때는 JDBC API 를 통해서 코드를 컴파일 합니다.
 
 
+
+## 1.2 Dependency Configuration
+
+특정 dependency 를 제외 시키는 것은 다음과 같이 할 수 있습니다. <br>
+포인트 부분은 버젼에서 `.*` 이렇게 적어서 모든 버젼을 다 제외시키게 만들었습니다. 
+
+```
+shadowJar {
+    archiveBaseName.set('my-dependency-example')
+    archiveClassifier.set("incredible-ai")
+
+    dependencies {
+        exclude(dependency('org.spark-project.hive:hive-exec:.*'))
+    }
+
+    setZip64(true)
+}
+```
+
+
+
+
 # 2. How to Inspect Shadow Jar File
 
 ## 2.1 Java Decompiler Project
@@ -30,7 +52,18 @@ https://java-decompiler.github.io/
 | How to               | Description                                                                                                                                                                         |
 |:---------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | spark version check  | `spark-version-info.properties` \n  <img src="{{ page.asset_path }}gradle-dependency-01.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333"> |
+| maven dependencies   | `/META-INF/maven` 디렉토리에서 dependencies 확인 가능합니다.                                                                                                                                     |
 
 
 
+## 2.2 IntelliJ Plugin - File Expander
+
+File -> Settings -> Plugins -> Search "File Expander" <br> 
+위와 같이 검색후 File Expander 를 다운로드 받습니다. 
+
+<img src="{{ page.asset_path }}jar-file-expander-intellij.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+아래와 같이 META-INF/maven 에서 설치된 dependencies 들을 확인 할 수 있습니다. 
+
+<img src="{{ page.asset_path }}jar-file-expander-intellij-02.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
