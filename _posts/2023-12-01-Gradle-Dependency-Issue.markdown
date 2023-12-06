@@ -21,7 +21,7 @@ tags: []
 
 
 
-## 1.2 Dependency Configuration
+## 1.2 Excluding Dependency
 
 특정 dependency 를 제외 시키는 것은 다음과 같이 할 수 있습니다. <br>
 포인트 부분은 버젼에서 `.*` 이렇게 적어서 모든 버젼을 다 제외시키게 만들었습니다. 
@@ -39,7 +39,21 @@ shadowJar {
 }
 ```
 
+"org.spark-project.hive" group 을 모두 exclude 하려면 다음과 같이 합니다. 
 
+
+```
+shadowJar {
+    archiveBaseName.set('my-dependency-example')
+    archiveClassifier.set("incredible-ai")
+
+    dependencies {
+        exclude(dependency('org.spark-project.hive::'))
+    }
+
+    setZip64(true)
+}
+```
 
 
 # 2. How to Inspect Shadow Jar File
