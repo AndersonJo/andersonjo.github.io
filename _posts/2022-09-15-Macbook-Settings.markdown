@@ -134,3 +134,70 @@ export EDITOR=/usr/bin/vim
 ```bash
 $ defaults write -g ApplePressAndHoldEnabled -bool false
 ```
+
+# 2. Python Library Installation
+
+## 2.1 Preparation
+
+이건 개인 설정이기 때문에, 상황에 따라 다를 수 있습니다. <br>
+일단 **XCode**를 설치 합니다. 
+
+```bash
+brew install qt5
+brew install openblas
+
+# Optional
+brew install apache-arrow
+brew install zmq
+```
+
+
+## 2.2 PIP Configuration for Security
+
+pip 보안 설정을 해줍니다. 
+
+```bash
+mkdir ~/.pip
+vi ~/.pip/pip.conf
+```
+
+아래와 같이 붙여 넣습니다. 
+
+```yaml
+[global]
+trusted-host = pypi.python.org
+               pypi.org
+               files.pythonhosted.org
+  
+# Replace cert value 
+# cert = /etc/ssl/cert.pem
+cert = /etc/ssl/cert.pem
+```
+
+
+## 2.2 Install Python Libraries
+
+특히 M1 이라면 설치전 다음 명령어 실행이 필요합니다. 
+
+```bash
+# Numpy 설치시 필요한 명령어 입니다. (한번만 실행하면 되며, bashrc 같은 곳에 넣을 필요 없습니다.)
+export OPENBLAS=$(/opt/homebrew/bin/brew --prefix openblas)
+export CFLAGS="-falign-functions=8 ${CFLAGS}"
+
+pip install -v numpy scikit-learn scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz 
+pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
+jupyter server extension enable --py jupyterlab_code_formatter
+```
+
+## 2.3 Jupyter Kernel 설정 
+
+```bash
+# 리스트 출력
+$ jupyter kernelspec list
+
+# 등록
+$ python -m ipykernel install --user --name 3.10.7 --display-name "PyEnv 3.10.7"
+
+# 삭제 
+$ jupyter kernelspec remove <kernel_name> 
+```
