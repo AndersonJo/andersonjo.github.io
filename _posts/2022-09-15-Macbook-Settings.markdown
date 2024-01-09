@@ -137,14 +137,18 @@ $ defaults write -g ApplePressAndHoldEnabled -bool false
 
 # 2. Python Library Installation
 
+> **매우 중요** <br>
+> scipy는 M1 에서 Python 3.8 부터 지원이 됩니다. 
+> Python 3.7 그 이하는 scipy 가 설치가 안됩니다. 
+
+
 ## 2.1 Preparation
 
 이건 개인 설정이기 때문에, 상황에 따라 다를 수 있습니다. <br>
 일단 **XCode**를 설치 합니다. 
 
 ```bash
-brew install qt5
-brew install openblas
+brew install qt5 openblas gfortran
 
 # Optional
 brew install apache-arrow
@@ -184,7 +188,7 @@ cert = /etc/ssl/cert.pem
 export OPENBLAS=$(/opt/homebrew/bin/brew --prefix openblas)
 export CFLAGS="-falign-functions=8 ${CFLAGS}"
 
-pip install -v numpy scikit-learn scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz 
+pip install -v numpy scikit-learn matplotlib ipython pandas pydot-ng graphviz 
 pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
 jupyter server extension enable --py jupyterlab_code_formatter
 ```
@@ -196,7 +200,7 @@ jupyter server extension enable --py jupyterlab_code_formatter
 $ jupyter kernelspec list
 
 # 등록
-$ python -m ipykernel install --user --name 3.10.7 --display-name "PyEnv 3.10.7"
+$ python -m ipykernel install --user --name 3.10.13 --display-name "PyEnv 3.10.13"
 
 # 삭제 
 $ jupyter kernelspec remove <kernel_name> 
