@@ -135,7 +135,7 @@ export EDITOR=/usr/bin/vim
 $ defaults write -g ApplePressAndHoldEnabled -bool false
 ```
 
-# 2. Python Library Installation
+# 2. Python & Spark
 
 > **매우 중요** <br>
 > scipy는 M1 에서 Python 3.8 부터 지원이 됩니다. 
@@ -154,6 +154,7 @@ brew install qt5 openblas gfortran
 brew install apache-arrow
 brew install zmq
 ```
+
 
 
 ## 2.2 PIP Configuration for Security
@@ -179,21 +180,27 @@ cert = /etc/ssl/cert.pem
 ```
 
 
-## 2.2 Install Python Libraries
+## 2.3 Install Python & Libraries
 
 특히 M1 이라면 설치전 다음 명령어 실행이 필요합니다. 
 
 ```bash
+# Python 설치 (원하는 버젼으로 수정)
+pyenv install 3.10.13
+pyenv global 3.10.13
+
 # Numpy 설치시 필요한 명령어 입니다. (한번만 실행하면 되며, bashrc 같은 곳에 넣을 필요 없습니다.)
-export OPENBLAS=$(/opt/homebrew/bin/brew --prefix openblas)
+export OPENBLAS=$(brew --prefix openblas)
 export CFLAGS="-falign-functions=8 ${CFLAGS}"
 
-pip install -v numpy scikit-learn matplotlib ipython pandas pydot-ng graphviz 
+pip install --upgrade pip setuptools wheel
+pip install -v numpy scikit-learn 
+pip install --upgrade matplotlib ipython pandas pydot-ng graphviz 
 pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
 jupyter server extension enable --py jupyterlab_code_formatter
 ```
 
-## 2.3 Jupyter Kernel 설정 
+## 2.4 Jupyter Kernel 설정 
 
 ```bash
 # 리스트 출력
@@ -204,4 +211,30 @@ $ python -m ipykernel install --user --name 3.10.13 --display-name "PyEnv 3.10.1
 
 # 삭제 
 $ jupyter kernelspec remove <kernel_name> 
+```
+
+
+## 2.5 Spark
+
+[https://spark.apache.org/downloads.html](https://spark.apache.org/downloads.html) 들어가서 최신 spark를 다운로드 받습니다. 
+
+```bash
+$ wget https://dlcdn.apache.org/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
+$ tar -xvf spark-3.5.0-bin-hadoop3.tgz
+$ mv spark-3.5.0-bin-hadoop3 ~/app/spark-3.5.0-bin-hadoop3
+
+# pyspark 설치 
+$ cd ~/app/spark-3.5.0-bin-hadoop3/python
+$ python setup.py install 
+
+# Log 설정
+$ cd ~/app/spark-3.5.0-bin-hadoop3/conf
+$ mv log4j2.properties.template  log4j2.properties
+$ vi log4j2.properties 
+``` 
+
+아래와 같이 log4j2.properties 를 수정합니다. 
+
+```bash
+rootLogger.level = ERROR
 ```
