@@ -7,7 +7,9 @@ asset_path: /assets/images/
 tags: []
 ---
 
-# 1. Introduction 
+# 1. LightGBM with huge parquet dataset
+
+## 1.1 Introduction
 
 LightGBM 아주 좋은 모델입니다. <br> 
 제가 가장 최애하는 모델중의 하나입니다. <br> 
@@ -21,9 +23,19 @@ LightGBM 아주 좋은 모델입니다. <br>
 전체코드는 [Continuous Learning Code](https://github.com/AndersonJo/machine-learning/blob/master/302%20LightGBM/01%20Continuous%20Learning.ipyn)를 참고해주세요. 
 
 
+## 1.2 Summary
+
+
+batch learning 을 하게 되었을때의 인싸이트
+
+- epoch 반드시 해야 합니다. 즉 같은 데이터를 여러번 학습 시키는 것이 꼭 필요합니다. 
+- epoch, num_boost_round 값이 클수록 원래 LGBMClassifier 만큼 수준으로 올라옵니다.
+- 즉 LGBMClassifier 으로 학습하면 장점은 겁나 빠르고, 최적화 시키기가 매우 쉽습니다. 
+- batch learning 을 하게 되면, LGBMClassifier <- 이걸 쓴것보다는 결과가 더 좋게 나오기 어렵습니다. 조금 더 떨어지는 경향이 있습니다. 
+- 하지만 데이터 사이즈가 크면 선택 권한이 없죠. 
+
+
 # 2. Code Implementation
-
-
 
 ## 2.1 PrAUC 
 
