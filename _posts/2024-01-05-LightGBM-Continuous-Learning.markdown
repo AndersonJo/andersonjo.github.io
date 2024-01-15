@@ -230,6 +230,14 @@ plot.set_title(f"Precision Recall Curve")
 plot.legend(loc="lower left")
 ```
 
+
+```yaml
+Accuracy : 0.9231666666666667
+Precision: 0.8784270285239546
+Recall   : 0.30452174469583027
+F1 Score : 0.45225987358015307
+```
+
 <img src="{{ page.asset_path }}lightgbm-parquet-prauc.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
