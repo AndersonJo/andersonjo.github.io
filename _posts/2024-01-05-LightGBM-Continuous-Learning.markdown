@@ -201,6 +201,15 @@ for epoch in tqdm(range(5), desc='epoch'):
                               keep_training_booster=True)
 ```
 
+
+**저장된 모델 불러오기**
+
+```python
+model_path = 'model.txt'
+model = lgb.Booster(model_file=model_path)
+```
+
+
 **Evaluation**
 
 ```python
@@ -246,10 +255,11 @@ F1 Score : 0.45225987358015307
 - importance_type
   - auto: default value 
   - gain: 전체 gain을 얼마나 얻었는지로 판단
-  - split: 몇번이나 features가 모델에서 사용되었는지로 판단 
+  - split: 몇번이나 features가 모델에서 사용되었는지로 판단
+- ignore_zero: 기본값은 True이고, False 로 하게 되면 전혀 사용안된 features 들 까지도 뽑을 수 있습니다. 
 
 ```python
-lgb.plot_importance(model, importance_type='gain', figsize=(7, 5), title='gain feature importance')
+lgb.plot_importance(model, importance_type='gain', figsize=(7, 5), ignore_zero=False, title='gain feature importance')
 ```
 
 <img src="{{ page.asset_path }}lightgbm-feature-importance.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
