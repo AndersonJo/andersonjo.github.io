@@ -56,6 +56,7 @@ for key in dataset.keys():
 | --character_coverage | default is 0.9995                                                                                                                                                |
 | --model_type         | unigram (default), bpe, char, word (word 사용시 pretokenized 되 있어야 합니다.)                                                                                            |
 | --num_threads        | unigram 에서만 작동합니다.                                                                                                                                               |
+| --byte_fallback=True | 
 
 > Jupyter Notebook 에서 실행시키면, logging이 보이지 않습니다. <br> 
 > 따라서 python 파일 따로 만들어서 실행시키는 것을 추천합니다. (notebook 에서는 심지어 멈추기 까지 합니다.)
@@ -85,6 +86,7 @@ spm.SentencePieceTrainer.train(
     bos_piece="<s>",
     eos_piece="</s>",
     user_defined_symbols="<sep>,<cls>,<mask>",
+    byte_fallback=True,
     num_threads=16
 )
 ```
@@ -104,6 +106,7 @@ spm.SentencePieceTrainer.train(
     " --bos_id=2 --bos_piece=<s> "  # begin of sequence
     " --eos_id=3 --eos_piece=</s> "  # end of sequence
     " --user_defined_symbols=<sep>,<cls>,<mask> "
+    " --byte_fallback=true "
     " --num_threads=16 "
 )
 ```
