@@ -48,14 +48,14 @@ for key in dataset.keys():
 
 ## Train
 
-| Option               | Description                                                                                                                                                  |
-|:---------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| --input              | , (comma) 로 구분되는 파일 위치를 넣으면 됩니다. (ex. "A.txt,B.txt,C.txt"). 또한 SentencePiece는 NFKC 로 normalize 하기 때문에 따로 tokenizer, normalizer 또는 preprocessor 를 돌릴필요가 없습니다. |
-| --model_prefix       | model name prefix                                                                                                                                            |
-| --vocab_size         | e.g. 8000, 16000 or 32000                                                                                                                                    |
-| --character_coverage | default is 0.9995                                                                                                                                            |
-| --model_type         | unigram (default), bpe, char, word (word 사용시 pretokenized 되 있어야 합니다.)                                                                                        |
-| --num_threads        | unigram 에서만 작동합니다.                                                                                                                                           |
+| Option               | Description                                                                                                                                                      |
+|:---------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --input              | , (comma) 로 구분되는 파일 위치를 넣으면 됩니다. (ex. "A.txt,B.txt,C.txt"). <br>또한 SentencePiece는 NFKC 로 normalize 하기 때문에 따로 tokenizer, normalizer 또는 preprocessor 를 돌릴필요가 없습니다. |
+| --model_prefix       | model name prefix                                                                                                                                                |
+| --vocab_size         | e.g. 8000, 16000 or 32000                                                                                                                                        |
+| --character_coverage | default is 0.9995                                                                                                                                                |
+| --model_type         | unigram (default), bpe, char, word (word 사용시 pretokenized 되 있어야 합니다.)                                                                                            |
+| --num_threads        | unigram 에서만 작동합니다.                                                                                                                                               |
 
 > Jupyter Notebook 에서 실행시키면, logging이 보이지 않습니다. <br> 
 > 따라서 python 파일 따로 만들어서 실행시키는 것을 추천합니다. (notebook 에서는 심지어 멈추기 까지 합니다.)
@@ -69,6 +69,29 @@ corpus = ",".join([str(x) for x in data_path.glob("*.txt")])
 vocab_size = 31900
 model_prefix = "sp-bpt-nsmc"
 
+spm.SentencePieceTrainer.train(
+    input=corpus,
+    model_prefix=model_prefix,
+    vocab_size=vocab_size,
+    model_type="bpe",
+    max_sentence_length=500000,
+    character_coverage=1.0,
+    pad_id=0,
+    unk_id=1,
+    bos_id=2,
+    eos_id=3,
+    pad_piece="<pad>",
+    unk_piece="<unk>",
+    bos_piece="<s>",
+    eos_piece="</s>",
+    user_defined_symbols="<sep>,<cls>,<mask>",
+    num_threads=16
+)
+```
+
+또는 다음과 같이 실행합니다. 
+
+```python
 spm.SentencePieceTrainer.train(
     f"--input={corpus} "
     f"--model_prefix={model_prefix} "
