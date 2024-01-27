@@ -2,9 +2,9 @@
 layout: post
 title:  "Nvidia Driver on Ubuntu"
 date:   2024-01-09 01:00:00
-categories: "format"
+categories: "nvidia"
 asset_path: /assets/images/
-tags: []
+tags: ['format']
 ---
 
 ## Uninstalling Nvidia Driver
