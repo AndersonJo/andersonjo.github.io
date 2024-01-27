@@ -11,8 +11,8 @@ tags: ['format']
 
 ```bash
 $ sudo apt-get remove --purge 'nvidia-.*'
-$ sudo apt-get install ubuntu-desktop
 $ sudo apt-get autoremove
+$ sudo apt-get install ubuntu-desktop
 $ sudo rm /etc/X11/xorg.conf
 $ sudo nvidia-uninstall
 ```
@@ -37,5 +37,6 @@ $ sudo ubuntu-drivers list --gpgpu
 ```bash
 $ sudo apt install nvidia-common
 $ sudo apt install nvidia-driver-xxx
+$ sudo apt install nvidia-dkms-xxx
 $ sudo apt install nvidia-settings
 ```
