@@ -37,8 +37,13 @@ $ sudo ubuntu-drivers list --gpgpu
 이후 설치 합니다. 
 
 ```bash
+# 커널 설치
+$ sudo apt install linux-headers-$(uname -r)
+
+# Nvidia 드라이버 설치
+# xxx 부분은 예를 들어서 "525"
 $ sudo apt install nvidia-common
-$ sudo apt install nvidia-driver-xxx
 $ sudo apt install nvidia-dkms-xxx
+$ sudo apt install nvidia-driver-xxx
 $ sudo apt install nvidia-settings
 ```
