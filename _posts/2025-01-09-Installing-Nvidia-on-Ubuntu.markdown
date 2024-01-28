@@ -10,8 +10,8 @@ tags: ['format']
 ## Uninstalling Nvidia Driver
 
 ```bash
-$ sudo apt-get remove --purge 'nvidia-.*'
-$ sudo apt-get remove --purge 'cuda-.*'
+$ sudo apt-get remove --purge 'nvidia.*'
+$ sudo apt-get remove --purge 'cuda.*'
 $ sudo apt-get autoremove
 $ sudo apt autoclean
 $ sudo apt-get install ubuntu-desktop
