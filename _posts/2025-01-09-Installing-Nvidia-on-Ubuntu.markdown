@@ -25,7 +25,12 @@ $ sudo nvidia-uninstall
 
 ```bash
 $ modinfo $(find /usr/lib/modules -name nvidia.ko)
+
+# apt 로 확인
+$ sudo apt --installed list | grep nvidia-driver
 ```
+
+
 
 ## Installing Nvidia Driver 
 
