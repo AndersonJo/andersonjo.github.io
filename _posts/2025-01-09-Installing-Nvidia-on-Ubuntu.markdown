@@ -11,7 +11,9 @@ tags: ['format']
 
 ```bash
 $ sudo apt-get remove --purge 'nvidia-.*'
+$ sudo apt-get remove --purge 'cuda-.*'
 $ sudo apt-get autoremove
+$ sudo apt autoclean
 $ sudo apt-get install ubuntu-desktop
 $ sudo rm /etc/X11/xorg.conf
 $ sudo nvidia-uninstall
