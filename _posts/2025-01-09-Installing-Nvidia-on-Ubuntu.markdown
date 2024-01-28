@@ -7,6 +7,16 @@ asset_path: /assets/images/
 tags: ['format']
 ---
 
+## Prerequisite
+
+- Ubuntu 설치시에 update 하지 않는 것도 방법 (깔고나서 에러 나면. linux-headers 가 문제)
+- Secure Boot 모드는 disabled 시켜놓자 (설치할때 password 넣으라고 하는데 귀찮음)
+
+```bash
+$ sudo apt install make gcc vim openssl
+
+```
+
 ## Uninstalling Nvidia Driver
 
 ```bash

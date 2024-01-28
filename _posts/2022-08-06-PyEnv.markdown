@@ -12,7 +12,7 @@ tags: ['virtualenv', 'format']
 Dependencies 는 다음과 같습니다.
 
 {% highlight bash %}
-$ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev
+$ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev lzma liblzma-dev libbz2-dev  
 {% endhighlight %}
 
 PyEnv 설치는 다음과 같이 합니다. 
