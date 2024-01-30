@@ -43,6 +43,23 @@ SELECT *
 FROM temp_table
 ```
 
+## 3. show create table 
+
+select 문에서 나온 테이블을 생성 쿼리를 만들기 위해서 먼저 그냥 샘플로 테이블을 만들어 줍니다. 
+
+```sql
+CREATE TABLE haha.table
+AS
+    SELECT * FROM example\
+```
+
+이후에 다음과 같은 명령어로 create table 생성 쿼리를 얻을 수 있습니다. 
+
+```sql
+SHOW CREATE TABLE haha.table
+```
+
+
 
 # 2. Hive Quick References 
 
