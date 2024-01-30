@@ -13,7 +13,7 @@ tags: ['format']
 - Secure Boot 모드는 disabled 시켜놓자 (설치할때 password 넣으라고 하는데 귀찮음)
 
 ```bash
-$ sudo apt install make gcc vim openssl
+$ sudo apt install make gcc vim openssl libgoogle-perftools4 libtcmalloc-minimal4 
 
 ```
 
