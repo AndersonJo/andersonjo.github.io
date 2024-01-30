@@ -134,7 +134,8 @@ explode 과 posexplode 차이는 다음과 같습니다.
 
 이렇게 있을때.. 
 - explode: ('math', 20), ('math', 30), ('math', 60), ('english', 20), ('english', 30) ... 이렇게 모든 조합이 나갈수 있습니다. 
-- posexplode: explode 와 동일합니다. 다만 where 에서 subject_table.idx = score_table.idx 로 필터링 걸면 동일한 순서만 리턴하도록 만들 수 있습니다. 
+- posexplode: explode 와 동일합니다. 다만 where 에서 subject_table.idx = score_table.idx 로 필터링 걸면 동일한 순서만 리턴하도록 만들 수 있습니다.
+  - 즉 필터 걸면: ('math', 20), ('english', 30), ('music', 60)  이렇게 만들 수 있습니다.
 
 
 ```sql
