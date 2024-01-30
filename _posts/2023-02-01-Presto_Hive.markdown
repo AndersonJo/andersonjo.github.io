@@ -137,7 +137,7 @@ explode 과 posexplode 차이는 다음과 같습니다.
 - posexplode: explode 와 동일합니다. 다만 where 에서 subject_table.idx = score_table.idx 로 필터링 걸면 동일한 순서만 리턴하도록 만들 수 있습니다. 
 
 
-```
+```sql
 SELECT 
     id, 
     subject_table.subject, 
@@ -147,8 +147,6 @@ FROM hive.class_score_table
     LATERAL VIEW posexplode(scores) score_table AS idx, score
 WHERE subject_table.idx = score_table.idx
 ```
-
-
 
 
 
