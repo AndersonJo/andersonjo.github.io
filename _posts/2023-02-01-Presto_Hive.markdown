@@ -63,7 +63,7 @@ SHOW CREATE TABLE haha.table
 
 # 2. Hive Quick References 
 
-## Create External Table 
+## 2.1 Create External Table 
 
 ```sql
 CREATE EXTERNAL TABLE IF NOT EXISTS haha.created_table
@@ -80,7 +80,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS haha.created_table
 
 ```
 
-## INSERT OVERWRITE TABLE
+## 2.2 INSERT OVERWRITE TABLE
 
 위에서 만든 테이블에 데이터를 넣으려면 다음과 같이 합니다.<br>
 `WITH` clause 는 때에 따라서 써도 되고 빼도 됩니다.  
@@ -117,3 +117,38 @@ FROM <db>.<table_name>
 실행하고 나서 s3 를 보면.. temporary directory 가 만들어짐.. <br>
 예를 들어서 `.hive-staging_hive_2023-02-01_12-34-45_1234567890-12345` 이런 temporary 디렉토리가 만들어지고..<br>
 완료가 되면 `dt=20230201` 같은 디렉토리로 변경이 됨.
+
+
+## 2.3 explode! and posexplode!
+
+예를 들어서 row 하나에 array가 존재할때 -> row 형태로 만들때는 explode 를 사용합니다. <br>
+explode 과 posexplode 차이는 다음과 같습니다. 
+
+- explode: 각각의 element 를 행 형태로 변형합니다. 
+- posexplode: 는 explode와 동일하지만 몇번째 idx 인지도 함께 반환합니다. 
+
+
+| id   | subjects                      | scores         | 
+|:-----|:------------------------------|:---------------|
+| 123  | ['math', 'english', 'music']  | [20, 30, 60]   |
+
+이렇게 있을때.. 
+- explode: ('math', 20), ('math', 30), ('math', 60), ('english', 20), ('english', 30) ... 이렇게 모든 조합이 나갈수 있습니다. 
+- posexplode: explode 와 동일합니다. 다만 where 에서 subject_table.idx = score_table.idx 로 필터링 걸면 동일한 순서만 리턴하도록 만들 수 있습니다. 
+
+
+```
+SELECT 
+    id, 
+    subject_table.subject, 
+    score_table.score
+FROM hive.class_score_table 
+    LATERAL VIEW posexplode(subjects) subject_table AS idx, subject
+    LATERAL VIEW posexplode(scores) score_table AS idx, score
+WHERE subject_table.idx = score_table.idx
+```
+
+
+
+
+
