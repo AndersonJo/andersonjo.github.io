@@ -3,19 +3,10 @@ layout: post
 title:  "Ubuntu Installation"
 date:   2015-08-03 02:00:00
 categories: "ubuntu"
-asset_path: /assets/posts/Ubuntu15.04/
+asset_path: /assets/images/
 tags: ['RVM', 'JAVA', '.bash.rc', 'format', 'my.cnf', 'Atom']
 
 ---
-
-<header>
-    <img src="{{ page.asset_path }}ubuntu.jpg" class="img-responsive img-rounded img-fluid">
-    <div style="text-align:right;"> 
-    <small>
-    Ubuntu로 주로 개발합니다. 서버, 안드로이드, 인공지능, 분석 기타등등.. 전부다.. 옛날에는 CentOS도 써봤는데.. 너무 불편한게 한두가지가 아니더군요.. Ubuntu가 갑 입니다.
-    </small>
-    </div>
-</header>
 
 # 1. My Personal Ubuntu Installation Guide
 
