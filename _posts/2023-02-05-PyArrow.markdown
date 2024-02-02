@@ -102,7 +102,23 @@ files rows   : [1000]
 column size  : 14
 ```
 
-## 2.2 Iteration
+
+
+## 2.2 Calculate total number of rows
+
+```python
+import pyarrow.parquet as pq
+
+dataset = pq.ParquetDataset('./data', use_legacy_dataset=False)
+total_rows = 0
+for frag in dataset.fragments:
+    for i, row_group in enumerate(frag.row_groups):
+        total_rows += row_group.num_rows
+
+print(total_rows)  # 전체 rows 갯수.
+```
+
+## 2.3 Pandas Iteration
 
 왜 이렇게 해야하냐하면.. 데이터 사이즈가 크기 때문입니다. <br> 
 그냥 쉽게  pandas 로 불러올 수가 없기 때문입니다.<br>
@@ -114,7 +130,9 @@ column size  : 14
  - [Fragment Wiki](https://arrow.apache.org/docs/python/generated/pyarrow.dataset.Fragment.html)
 
 ```python
-dataset = ParquetDataset('./data', use_legacy_dataset=False)
+import pyarrow.parquet as pq
+
+dataset = pq.ParquetDataset('./data', use_legacy_dataset=False)
 
 for frag in dataset.fragments:
     for batch in frag.to_batches():
@@ -136,30 +154,21 @@ Pandas shape: (1000, 13)
 0	2016-02-03 07:55:29	1	Amanda	Jordan	ajordan0@com.com	Female	1.197.201.2	6759521864920116	Indonesia	3/8/1971	49756.53	Internal Auditor	1E+02
 ```
 
-위에서 설명한대로, 좀 더 random access 가 필요하다고 한다면.. 저라면 array안에 메타 정보를 넣어놓고..<br>
-binary search 를 통해서 문제를 해결하겠습니다.
+
+## 2.4 Efficient Iteraration
+Python 으로 필요한 데이터만 꺼낼수도 있습니다.<br>
+대용량 데이터를 다룰때 특히 pandas 로 전부다 꺼내지 말고, 필요한것만 python 으로 불러오는게 더 효율적입니다. 
 
 ```python
-idx = 0
-parquet_indices = []
+import pyarrow.parquet as pq
+
+dataset = pq.ParquetDataset('./data', use_legacy_dataset=False)
+
 for frag in dataset.fragments:
-    parquet_file = ParquetFile(frag.path)
-    for i, row_group in enumerate(frag.row_groups):
-        start_idx = idx
-        end_idx = idx + row_group.num_rows
-        parquet_indices.append((i, start_idx, end_idx, parquet_file, row_group.id, row_group.num_rows))
-        idx += row_group.num_rows
+    for batch in frag.to_batches():
+        for i in range(batch.num_rows):
+            user_id = batch.column('user_id')[i].as_py()
+            name = batch.column('name')[i].as_py()
+            age = batch.column('age')[i].as_py()
+            print(user_id, name, age)
 ```
-
-나중에 binary search로 찾은뒤에 다음 예문처럼 꺼내 쓸수 있습니다.<br>
-포인트는 read_row_group 에서 row group 의 id를 사용시 parquet file의 일부분만 쪼개서 읽어 올 수 있습니다.
-
-```python
-pf = ParquetFile(frag.path)
-table = pf.read_row_group(0)
-```
-
-
-## 2.3 Pytorch Dataset
-
-[링크](https://github.com/AndersonJo/code-snippet/blob/master/006-pyarrow/pyarrow_torch.py) 에 위의 예제를 사용한 코드를 넣어놨습니다.
