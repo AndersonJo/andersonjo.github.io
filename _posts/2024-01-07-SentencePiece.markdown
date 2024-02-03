@@ -128,20 +128,28 @@ sp.load('sp-bpt-nsmc.model')
 example_sentence = '홍콩반점 짬뽕은 맛있다 하지만 오끽궁보다 못하다'
 
 # Encoding
-sp.Encode(example_sentence)
-sp.EncodeAsIds(example_sentence)
+sp.encode(example_sentence)
+sp.encode_as_ids(example_sentence)
 # [1786, 28852, 28749, 7137, 28719, 1278, 646, 515, 77, 30267, 29258, 114, 4830]
 
+# EOS & BOS 넣기
+# bos: 문장의 시작 토큰 (bos=2)
+# eos: 문장의 끝 토근 (eos=3)
+sp.encode(example_sentence, add_bos=True, add_eos=True)
+# [2, 1786, 28852, 28749, 7137, 28719, 1278, 646, 515, 77, 30267, 29258, 114, 4830, 3]
+
 # Tokenizing
-sp.EncodeAsPieces(example_sentence)
+sp.encode_as_pieces(example_sentence)
 # ['▁홍콩', '반', '점', '▁짬뽕', '은', '▁맛', '있다', '▁하지만', '▁오', '끽', '꾝', '보다는', '▁못하다']
 
 
 # Decoding
 encoded = [1786, 28852, 28749, 7137, 28719, 1278, 646, 515, 77, 30267, 29258, 114, 4830]
-sp.Decode(encoded)
-sp.DecodeIds(encoded)
+sp.decode(encoded)
+sp.decode_ids(encoded)
 # '홍콩반점 짬뽕은 맛있다 하지만 오끽궁보다 못하다'
+
+
 ```
 
 ## Token Information
