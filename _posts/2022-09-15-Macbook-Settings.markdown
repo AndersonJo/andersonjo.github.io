@@ -238,3 +238,14 @@ $ vi log4j2.properties
 ```bash
 rootLogger.level = ERROR
 ```
+
+## 2.6 Installing x86_64 brew package
+
+M1, M2, M3 사용하면 arm64 아키텍쳐가 기본값으로 사용이 됩니다.<br> 
+문제는 x86_64를 돌려야 할때가 있습니다. 이럴때는 x86_64 아키텍쳐 라이브러리를 설치하면 됩니다. 
+
+```bash
+$ arch -x86_64 /usr/local/bin/brew install <package name>
+```
+
+그냥 brew install 하게 되면 arm64 아키텍쳐 기반의 패키지가 설치가 됩니다. 
