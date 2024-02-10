@@ -136,7 +136,16 @@ $ pyenv uninstall venv3.10
 # 4. Create Kernelspec for PyEnv 
 
 
-## 4.1 Choose specific pyenv version 
+## 4.1 Install Essential Libraries
+
+```bash
+$ pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
+$ pip install --upgrade pandas numpy matplotlib ipython pydot-ng graphviz scikit-learn setuptools wheel
+
+```
+
+
+## 4.2 Choose specific pyenv version 
 
 먼저 특정 버젼의 pyenv 또는 virtualenv 를 선택합니다. 
 
@@ -149,7 +158,7 @@ $ pyenv versions
 ```
 
 
-## 4.2 Create Kernelspec
+## 4.3 Create Kernelspec
 
 ```bash
 # 리스트 출력
@@ -170,7 +179,7 @@ $ jupyter kernelspec remove <kernel_name>
 
 
 
-## 4.3 보안 설정
+## 4.4 보안 설정
 
 jupyterlab에서 node.js 를 사용하는데.. 이때 package 설치시 또는 `jupyter lab build` 해야 할때 에러가 날 수 있습니다.<br>
 회사 보안상의 이유로 막혀있는 경우 npm 그리고 pip 에서 회사에 등록된 certificate 을 등록시켜줘야 합니다.<br>
@@ -188,7 +197,7 @@ $ npm config set cafile /etc/ssl/cert.pem
 
 
 
-## 4.4 Install data science libraries
+## 4.5 Install data science libraries
 
 **Data Analytics Tools**<br>
 너무 느려서 -v 옵션을 꼭 붙이는게 좋습니다. (개 오래 걸림)
