@@ -140,8 +140,8 @@ $ pyenv uninstall venv3.10
 
 ```bash
 $ pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
-$ pip install --upgrade pandas numpy matplotlib ipython pydot-ng graphviz scikit-learn setuptools wheel
-
+$ pip install --upgrade pandas numpy matplotlib ipython pydot-ng graphviz scikit-learn setuptools wheel 
+$ pip install --upgrade lxml openpyxl pyarrow
 ```
 
 

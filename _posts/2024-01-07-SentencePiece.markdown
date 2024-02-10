@@ -56,7 +56,7 @@ for key in dataset.keys():
 | --character_coverage | default is 0.9995                                                                                                                                                |
 | --model_type         | unigram (default), bpe, char, word (word 사용시 pretokenized 되 있어야 합니다.)                                                                                            |
 | --num_threads        | unigram 에서만 작동합니다.                                                                                                                                               |
-| --byte_fallback=True | 
+| --byte_fallback=True | 이거 키면 모르는 단어 보면 byte token 으로 변경합니다. 
 
 > Jupyter Notebook 에서 실행시키면, logging이 보이지 않습니다. <br> 
 > 따라서 python 파일 따로 만들어서 실행시키는 것을 추천합니다. (notebook 에서는 심지어 멈추기 까지 합니다.)
