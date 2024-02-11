@@ -142,4 +142,33 @@ Python에서는 math.atan2(y, x) -> radian 을 사용합니다.
 |:---------------------------------------------|:--------------------------------------------|:-----------------------------------------------|
 | $$ \arcsin(\sin \theta) = \arcsin( y / r) $$ | $$ \arcsin( 1 / 2) = 30^{\circ} $$          | math.degrees(math.asin(1/2)) = 30              |
 | $$ \arccos(\cos \theta) = \arccos( x / r) $$ | $$ \arccos( \sqrt(3) / 2) = 30^{\circ} $$   | math.degrees(math.acos(math.sqrt(3) / 2)) = 30 |
-| $$ \arctan(\tan \theta) = \arctan( y / x) $$ | $$ \arctan( 1 / \sqrt(3) ) = 30^{\circ} $$  | math.degrees(math.atan(1 / math.sqrt(3))) = 30 |               
+| $$ \arctan(\tan \theta) = \arctan( y / x) $$ | $$ \arctan( 1 / \sqrt(3) ) = 30^{\circ} $$  | math.degrees(math.atan(1 / math.sqrt(3))) = 30 |
+
+
+## 1.5 Unit Circle
+
+- Unit Circle 에서 hypotenuse는 1이기 때문에, base(밑변)은 항상 cos이 되고 height(높이)는 항상 sin이 됩니다. <br>
+- 또한 tan = sin / cos = y/x 이며, 즉 slope 과 같다. 
+
+<img src="{{ page.asset_path }}unit-circle-trigonometric.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
+
+
+## Law of Cosine
+
+<img src="{{ page.asset_path }}law-of-cosines.png" class="img-responsive img-rounded img-fluid" style="border:1px solid #aaa;">
+
+
+$$ \begin{align} 
+a^2 &= b^2 + c^2 - 2bc \cos(A) \\
+b^2 &= a^2 + c^2 - 2ac \cos(B) \\
+c^2 &= a^2 + b^2 - 2ab \cos(C)
+\end{align} $$
+
+만약 C = 90 degree 라면 .. cos(90) = 0 이기 때문에 공식이 좀 달라짐.  
+
+$$ \begin{align} 
+c^2 &= a^2 + b^2 - 2ab \cos(90) \\
+    &= a^2 + b^2
+\end{align} $$
+./
+
