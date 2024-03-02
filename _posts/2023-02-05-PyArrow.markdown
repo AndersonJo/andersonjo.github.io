@@ -45,11 +45,27 @@ sudo apt install -y -V libparquet-dev # For Apache Parquet C++
 sudo apt install -y -V libparquet-glib-dev # For Apache Parquet GLib (C)
 ```
 
+# 2. Dataset
+
+## 2.1 Basic Iteration
+
+```python
+import pyarrow.dataset as ds
+
+dataset = ds.dataset('./data', format='parquet', partitioning=['dt'])
+print('n_rows:', dataset.count_rows())
+
+for batch in dataset.to_batches():
+    for i in range(batch.num_rows):
+        col0 = batch.column('col_0')[0].as_py()
+```
 
 
-# 2 ParquetDataset
+# 3 ParquetDataset
 
-## 2.1 Basic Usage
+## 3.1 Basic Usage
+
+**ParquetDataset 으로 로딩시, partition 이 안불러와집니다. 반드시 위의 ds.dataset 으로 데이터 처리하세요**
 
 ParquetDataset 은 다음의 특징을 갖고 있습니다. 
 
@@ -104,7 +120,7 @@ column size  : 14
 
 
 
-## 2.2 Calculate total number of rows
+## 3.2 Calculate total number of rows
 
 ```python
 import pyarrow.parquet as pq
@@ -118,7 +134,7 @@ for frag in dataset.fragments:
 print(total_rows)  # 전체 rows 갯수.
 ```
 
-## 2.3 Pandas Iteration
+## 3.3 Pandas Iteration
 
 왜 이렇게 해야하냐하면.. 데이터 사이즈가 크기 때문입니다. <br> 
 그냥 쉽게  pandas 로 불러올 수가 없기 때문입니다.<br>
@@ -155,7 +171,7 @@ Pandas shape: (1000, 13)
 ```
 
 
-## 2.4 Efficient Iteraration
+## 3.4 Efficient Iteraration
 Python 으로 필요한 데이터만 꺼낼수도 있습니다.<br>
 대용량 데이터를 다룰때 특히 pandas 로 전부다 꺼내지 말고, 필요한것만 python 으로 불러오는게 더 효율적입니다. 
 
