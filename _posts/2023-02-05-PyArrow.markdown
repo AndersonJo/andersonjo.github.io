@@ -56,8 +56,14 @@ dataset = ds.dataset('./data', format='parquet', partitioning=['dt'])
 print('n_rows:', dataset.count_rows())
 
 for batch in dataset.to_batches():
+    # Pandas
+    df = batch.to_pandas()
+    
+    # Pandas는 모든 데이터를 불러오는데, batch 에서 특정 column 만 불러올 수 있습니다.
     for i in range(batch.num_rows):
         col0 = batch.column('col_0')[0].as_py()
+
+        
 ```
 
 
