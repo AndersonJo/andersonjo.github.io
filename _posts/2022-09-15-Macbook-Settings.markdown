@@ -249,3 +249,19 @@ $ arch -x86_64 /usr/local/bin/brew install <package name>
 ```
 
 그냥 brew install 하게 되면 arm64 아키텍쳐 기반의 패키지가 설치가 됩니다. 
+
+## 2.7 Docker Build for x86 architecture
+
+Docker 빌드할때 X86 아키텍쳐 (인텔)로 빌드할수 있습니다.<br>
+물론 할수는 있긴 있는데, 정말 한 10배는 느려지는 느낌입니다. 
+
+그러니까 가급적 필요할때만 해야 합니다. 
+
+
+```bash
+$ docker build --platform linux/arm64 -t <tag-name>
+
+# 또는 
+$ docker buildx build --platform linux/arm64 -t <tag-name>
+```
+
