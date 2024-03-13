@@ -4,7 +4,7 @@ title: "Macbook - Personal Settings"
 date:  2022-09-15 01:00:00
 categories: "format"
 asset_path: /assets/images/
-tags: ['brew', 'arm64', 'x86_64']
+tags: ['brew', 'arm64', 'x86_64', 'intel', 'docker']
 ---
 
 
