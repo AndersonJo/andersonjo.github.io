@@ -194,3 +194,137 @@ for frag in dataset.fragments:
             age = batch.column('age')[i].as_py()
             print(user_id, name, age)
 ```
+
+## 3.5 PyTorch Dataset
+
+
+```python
+import random
+from bisect import bisect_right
+from typing import List, Iterator, Optional, Tuple
+
+import pandas as pd
+from pyarrow.dataset import ParquetFileFragment
+from pyarrow.lib import RecordBatch
+from pyarrow.parquet import ParquetDataset
+from torch.utils.data import Dataset
+
+
+class PyArrowDataset(Dataset):
+    """
+    Restriction
+     - Don't shuffle in Dataloader. this is for efficiency to precess large dataset.
+       If you need to shuffle, do it before this custom dataset. (like in SparkSQL)
+       But the algorithm supports random access.
+    """
+
+    def __init__(self, source: str, seed: int = 123):
+        self.source = source
+        self.seed = seed
+
+        # Pyarrow
+        self.dataset = ParquetDataset(source, use_legacy_dataset=False)
+        self.fragments: List[ParquetFileFragment] = self.dataset.fragments
+        self._batches: Iterator[RecordBatch] = None
+        self._batch: Optional[RecordBatch] = None
+
+        # Indexing meta information to make search faster
+        self._cumulative_n_rows: List[int] = []
+        self._batch_idx: int = 0
+
+        # Index
+        self._fragment_idx = 0
+
+        # Initialization
+        self._init()
+
+    def _init(self):
+        random.seed(self.seed)
+        # random.shuffle(self.fragments)
+
+        self._cumulative_n_rows = [frag.count_rows() for frag in self.fragments]
+        for i in range(1, len(self._cumulative_n_rows)):
+            self._cumulative_n_rows[i] += self._cumulative_n_rows[i - 1]
+
+    def _get_next(self, idx: int) -> Tuple[RecordBatch, int, int]:
+        def get_prev_cum_frag_size(_fragment_idx):
+            if _fragment_idx >= 1:
+                return self._cumulative_n_rows[_fragment_idx - 1]
+            return 0
+
+        # Calculate fragment idx
+        fragment_idx = self._fragment_idx
+        fragment_changed = False
+        _prev_size = get_prev_cum_frag_size(fragment_idx)
+        _cur_size = self._cumulative_n_rows[self._fragment_idx]
+        if (idx < _prev_size) or (idx >= _cur_size):
+            fragment_idx = bisect_right(self._cumulative_n_rows, idx)
+            assert fragment_idx < len(self.fragments)
+            # fragment_idx %= len(self.fragments)
+            fragment_changed = self._fragment_idx != fragment_idx
+            self._fragment_idx = fragment_idx
+            self._batch_idx = 0
+
+            if self._batches:
+                self._batches.clear()
+
+            del self._batches
+            del self._batch
+            self._batches = None
+            self._batch = None
+
+        # Calculate batch idx
+        _prev_size = get_prev_cum_frag_size(fragment_idx)
+        batch_idx = idx - _prev_size
+        batch_changed = batch_idx < self._batch_idx
+
+        # Calculate batches of the fragment
+        if self._batches is None or fragment_changed or batch_changed:
+            if self._batches:
+                self._batches.clear()
+
+            self.batches = self.fragments[fragment_idx].to_batches()
+            self._batch = None
+
+        if self._batch is None:
+            self._batch = next(self.batches)
+            self._batch_idx = 0
+
+        while True:
+            if self._batch_idx <= batch_idx < self._batch_idx + self._batch.num_rows:
+                break
+
+            self._batch_idx += self._batch.num_rows
+            self._batch = next(self.batches)
+
+        return self._batch, fragment_idx, batch_idx - self._batch_idx
+
+    def __del__(self):
+        if self.dataset:
+            self.dataset.clear()
+
+        if self.fragments:
+            self.fragments.clear()
+        del self.dataset
+        del self.fragments
+        del self._batches
+        del self._batch
+
+    def __len__(self):
+        return self._cumulative_n_rows[-1]
+
+    def __getitem__(self, idx):
+        batch, fragment_idx, batch_idx = self._get_next(idx)
+        return batch.column('idx')[batch_idx].as_py()
+```
+
+```python
+dataset = PyArrowDataset("./data")
+print(dataset[50000])
+print(dataset[5000])
+print(dataset[1])
+print(dataset[500000])
+print(dataset[151547])
+print(dataset[127])
+print(dataset[878])
+```
