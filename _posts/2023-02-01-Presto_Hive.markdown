@@ -10,7 +10,7 @@ tags: ['sql', 'table']
 
 # 1. Presto Quick References
 
-## Create Table ... AS SELECT
+## 1.1 Create Table ... AS SELECT
 
 ```sql
 CREATE TABLE IF NOT EXISTS schema.table_name
@@ -30,7 +30,7 @@ FROM temp_table
 ```
 
 
-## 2. INSERT INTO ... SELECT ...
+## 1.2 INSERT INTO ... SELECT ...
 
 ```sql
 INSERT INTO schema.table_name
@@ -43,7 +43,7 @@ SELECT *
 FROM temp_table
 ```
 
-## 3. show create table 
+## 1.3 show create table 
 
 select 문에서 나온 테이블을 생성 쿼리를 만들기 위해서 먼저 그냥 샘플로 테이블을 만들어 줍니다. 
 
@@ -58,6 +58,37 @@ AS
 ```sql
 SHOW CREATE TABLE haha.table
 ```
+
+
+## 1.4 LEFT JOIN UNNEST(array)
+
+CROSS JOIN 사용시 inner join 으로 join 되기 때문에 array 가 존재하지 않는 row의 경우는 사라지게 됩니다.<br>
+이것을 방지하려면 LEFT jOIN UNNEST 사용해야 합니다. <br> 
+아래 예제에서 cross join unnest 사용시 mike 는 사라지게 됩니다. 
+
+WITH ORDINALITY 사용시 ordinality_id 에 몇번째 array idx 인지가 들어가게 됩니다. 
+
+```sql
+select *
+from (VALUES ('Anderson', 'purhcase', ARRAY[10, 20, 30]),
+             ('Hi', 'view', ARRAY[50, 10, 30]),
+             ('Mike', null, null))
+        AS t(name, action, order_id)
+        LEFT JOIN UNNEST(order_id) WITH ORDINALITY AS T(order_id_, ordinality_id) ON TRUE;
+```
+
+아래와 같이 테이블이 만들어 집니다. <br>
+포인트는 Mike 가 살아 있습니다~ 
+
+| name     | action   | order_id |
+|:---------|:---------|:---------|
+| Anderson | purchase | 10       |
+| Anderson | purchase | 20       |
+| Anderson | purchase | 30       |
+| Hi       | view     | 50       |
+| Hi       | view     | 10       |
+| Hi       | view     | 30       |
+| Mike     | null     | null     |
 
 
 
