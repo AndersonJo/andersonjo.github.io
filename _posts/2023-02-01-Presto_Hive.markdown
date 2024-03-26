@@ -80,15 +80,15 @@ from (VALUES ('Anderson', 'purhcase', ARRAY[10, 20, 30]),
 아래와 같이 테이블이 만들어 집니다. <br>
 포인트는 Mike 가 살아 있습니다~ 
 
-| name     | action   | order_id |
-|:---------|:---------|:---------|
-| Anderson | purchase | 10       |
-| Anderson | purchase | 20       |
-| Anderson | purchase | 30       |
-| Hi       | view     | 50       |
-| Hi       | view     | 10       |
-| Hi       | view     | 30       |
-| Mike     | null     | null     |
+| name     | action   | order_id | ordinality_id |
+|:---------|:---------|:---------|:--------------|
+| Anderson | purchase | 10       | 1             |
+| Anderson | purchase | 20       | 2             |
+| Anderson | purchase | 30       | 3             |
+| Hi       | view     | 50       | 1             |
+| Hi       | view     | 10       | 2             |
+| Hi       | view     | 30       | 3             |
+| Mike     | null     | null     | null          |
 
 
 
