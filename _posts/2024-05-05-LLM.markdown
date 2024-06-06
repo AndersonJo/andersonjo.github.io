@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "Nvidia Driver on Ubuntu"
+date:   2024-01-09 01:00:00
+categories: "nvidia"
+asset_path: /assets/images/
+tags: ['format']
+---
+
+# Dataset 
+
+ - Korea Dataset
+   - [KoAlpaca-v1.1a](https://huggingface.co/datasets/beomi/KoAlpaca-v1.1a) 
+   - [KoCommercial Dataset](https://huggingface.co/datasets/MarkrAI/KoCommercial-Dataset)
+   - [HumanF-MarkrAI / WIKI QA Near dedup](https://huggingface.co/datasets/HumanF-MarkrAI/WIKI_QA_Near_dedup)
+   - [KorQuAD 1.0](https://korquad.github.io/category/1.0_KOR.html)
+   - [KorQuAD 2.0](https://korquad.github.io/)
+   - [AI HUB](https://www.aihub.or.kr/index.do)
+ 
