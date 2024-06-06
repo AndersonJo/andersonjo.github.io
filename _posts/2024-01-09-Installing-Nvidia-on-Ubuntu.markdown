@@ -171,3 +171,11 @@ sudo update-initramfs -u
 $ python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
 ```
 
+**Pytorch**
+
+```bash
+import torch
+x = torch.rand(5, 3)
+print(x)
+torch.cuda.is_available()
+```
