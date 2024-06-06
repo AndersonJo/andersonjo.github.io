@@ -13,7 +13,7 @@ tags: ['format']
 - Secure Boot 모드는 disabled 시켜놓자 (설치할때 password 넣으라고 하는데 귀찮음)
 
 ```bash
-$ sudo apt install make gcc vim openssl libgoogle-perftools4 libtcmalloc-minimal4 
+$ sudo apt install make gcc vim openssl libgoogle-perftools4 libtcmalloc-minimal4 g++ freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev
 $ sudo apt install linux-headers-generic
 $ sudo apt install libglu1-mesa libxi-dev libxmu-dev gcc build-essential
 ```
@@ -23,6 +23,7 @@ $ sudo apt install libglu1-mesa libxi-dev libxmu-dev gcc build-essential
 ```bash
 $ sudo apt-get remove --purge 'nvidia.*'
 $ sudo apt-get remove --purge 'cuda.*'
+$ sudo apt-get remove --purge 'libnvidia*'
 $ sudo apt-get autoremove
 $ sudo apt autoclean
 $ sudo apt-get install ubuntu-desktop
@@ -81,7 +82,8 @@ nvidia-driver-535-server-open, (kernel modules provided by linux-modules-nvidia-
 ```
 
 이후 설치 합니다. <br>
-2024년 6월 기준으로 520 에다가 CUDA Toolkit 11.8 이 잘 작동합니다. (Ubuntu 22.04)  
+2024년 6월 기준으로 **520** 에다가 CUDA Toolkit 11.8 이 잘 작동합니다. (Ubuntu 22.04)<br>
+545 아래는 에러가 났습니다. 
 
 ```bash
 # 커널 설치
@@ -105,22 +107,32 @@ $ dpkg --get-selections | grep cuda
 
 ## Installing CUDA Toolkit 11.8
 
-- [CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local)
+- [CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=runfile_local)
+  - 이때 중요한건 runfile (local) 을 선택해서 다운로드 받고 실행해야 합니다.
+  - 다른것 deb 로 실행시 에러가 납니다. 
 
 ```bash
-$ wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-$ sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-$ wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda-repo-ubuntu2204-11-8-local_11.8.0-520.61.05-1_amd64.deb
-$ sudo dpkg -i cuda-repo-ubuntu2204-11-8-local_11.8.0-520.61.05-1_amd64.deb
-$ sudo cp /var/cuda-repo-ubuntu2204-11-8-local/cuda-*-keyring.gpg /usr/share/keyrings/
-$ sudo apt-get update
-$ sudo apt-get -y install cuda
+$ wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run
+$ sudo sh cuda_11.8.0_520.61.05_linux.run
 ```
+
+실행후 메뉴 화면에서 오직 CUDA Toolkit 만 설치하도록 합니다. 
+
 
 ## Installing CuDNN
 
+ - [Download CuDNN](https://developer.nvidia.com/cudnn-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local)
 
 
+```bash
+$ wget https://developer.download.nvidia.com/compute/cudnn/9.1.1/local_installers/cudnn-local-repo-ubuntu2204-9.1.1_1.0-1_amd64.deb
+$ sudo dpkg -i cudnn-local-repo-ubuntu2204-9.1.1_1.0-1_amd64.deb
+$ sudo cp /var/cudnn-local-repo-ubuntu2204-9.1.1/cudnn-*-keyring.gpg /usr/share/keyrings/
+$ sudo apt-get update
+
+# 설치합니다. 
+$ sudo apt-get -y install cudnn-cuda-11
+```
 
 
 ## Disable Nouveau
