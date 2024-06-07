@@ -119,7 +119,7 @@ $ sudo sh cuda_11.8.0_520.61.05_linux.run
 실행후 메뉴 화면에서 오직 CUDA Toolkit 만 설치하도록 합니다. 
 
 
-## Installing CuDNN
+## Install CuDNN
 
  - [Download CuDNN](https://developer.nvidia.com/cudnn-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local)
 
@@ -132,6 +132,54 @@ $ sudo apt-get update
 
 # 설치합니다. 
 $ sudo apt-get -y install cudnn-cuda-11
+
+# 버젼 확인합니다. 
+$ nvcc --version
+Build cuda_11.5.r11.5/compiler.30672275_0
+```
+
+## Install Pytorch TensorRT
+
+ - [Installing TensorRT](https://pytorch.org/TensorRT/getting_started/installation.html)
+
+cuda 11.5 에는 다음을 설치 합니다. 
+```bash
+$ python -m pip install torch torch-tensorrt tensorrt --extra-index-url https://download.pytorch.org/whl/cu115
+```
+
+cuda 11.8 에는 다음을 설치 합니다.
+```bash
+$ python -m pip install torch torch-tensorrt tensorrt --extra-index-url https://download.pytorch.org/whl/cu118
+```
+
+잘 작동하는지 확인 합니다. 
+
+```python
+import torch
+import torch_tensorrt
+
+# 간단한 모델 정의 (스크립팅 가능)
+class SimpleModel(torch.nn.Module):
+    def forward(self, x):
+        return x + 1
+
+model = SimpleModel().cuda().eval()
+
+# JIT 스크립트 모듈로 변환
+scripted_model = torch.jit.script(model)
+
+# TensorRT 변환
+input_tensor = torch.randn((1, 3, 224, 224)).cuda()
+trt_model = torch_tensorrt.ts.compile(
+    scripted_model,
+    inputs=[torch_tensorrt.Input(input_tensor.shape)]
+)
+
+# 변환된 모델로 추론
+with torch.no_grad():
+    output = trt_model(input_tensor)
+
+print("TensorRT 변환 및 추론 성공:", output.shape)
 ```
 
 
