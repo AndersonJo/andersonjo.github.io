@@ -1,10 +1,10 @@
 ---
 layout: post
 title:  "LLM 101"
-date:   2024-05-05 01:00:00
-categories: "nvidia"
+date:   2024-05-01 01:00:00
+categories: "llm"
 asset_path: /assets/images/
-tags: ['format']
+tags: ['huggingface']
 ---
 
 # Dataset 
@@ -16,4 +16,6 @@ tags: ['format']
    - [KorQuAD 1.0](https://korquad.github.io/category/1.0_KOR.html)
    - [KorQuAD 2.0](https://korquad.github.io/)
    - [AI HUB](https://www.aihub.or.kr/index.do)
+   - [ShareGPT52K](https://huggingface.co/datasets/RyokoAI/ShareGPT52K)
+   - [ShareGPT Vicuna Unfiltered](https://huggingface.co/datasets/anon8231489123/ShareGPT_Vicuna_unfiltered)
  
