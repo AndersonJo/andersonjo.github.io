@@ -21,6 +21,29 @@ $ pip install bitsandbytes datasets accelerate peft trl
 
 # Quick Code
 
+## Import Libraries 
+
+```python
+import argparse
+import os
+import warnings
+
+import torch
+import transformers
+from accelerate import init_empty_weights, load_checkpoint_and_dispatch
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    GenerationConfig,
+    StoppingCriteria,
+    StoppingCriteriaList,
+)
+
+warnings.filterwarnings("ignore")
+torch.cuda.empty_cache()
+```
+
+
 ## Loading Model and Tokenizer
 
 ```python
