@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "LLM - YANOLJA EEVE Korean 10.8B v1.0"
-date:   2024-05-10 01:00:00
+date:   2024-04-10 01:00:00
 categories: "llm"
 asset_path: /assets/images/
 tags: ['huggingface']

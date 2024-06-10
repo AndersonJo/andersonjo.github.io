@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "LLM - KoAlpaca Llama 7b"
-date:   2024-05-11 01:00:00
+date:   2024-04-11 01:00:00
 categories: "llm"
 asset_path: /assets/images/
 tags: ['huggingface']
