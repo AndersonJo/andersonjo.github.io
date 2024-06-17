@@ -23,7 +23,7 @@ $ sudo pmset -c disablesleep 1
 $ sudo pmset -c disablesleep 0
 ```
 
-## 1.1 Terminal & Brew & Bash
+## 1.2 Terminal & Brew & Bash
 
 **Brew 설치**
 
@@ -78,7 +78,7 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
 
 
-## 1.2 키 바인딩 설정
+## 1.3 키 바인딩 설정
 
 **`HOME`, `END` 키를 줄의 처음, 끝으로 보내도록 설정**
  
@@ -112,7 +112,7 @@ $ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
 설정이 완료된 이후, 컴퓨터 재시작 필요.
 
 
-## 1.3 그외 터미널 설정
+## 1.4 그외 터미널 설정
 
 **터미널 벨 끄기**
 
@@ -179,10 +179,39 @@ trusted-host = pypi.python.org
 cert = /etc/ssl/cert.pem
 ```
 
+## 2.3 Install Prerequisites
+
+
+```bash
+brew install openblas gfortran lapack
+```
+
+~/.bash_profile 에 다음을 추가 합니다.
+
+```bash
+export# openblas
+export LDFLAGS="-L/usr/local/opt/openblas/lib"
+export CPPFLAGS="-I/usr/local/opt/openblas/include"
+export PKG_CONFIG_PATH="/usr/local/opt/openblas/lib/pkgconfig"
+
+# lapack
+export LDFLAGS="-L/usr/local/opt/lapack/lib"
+export CPPFLAGS="-I/usr/local/opt/lapack/include"
+export PKG_CONFIG_PATH="/usr/local/opt/lapack/lib/pkgconfig"
+```
+
+Python 에 기본적으로 필요한 라이브러리를 설치 합니다. 
+
+```bash
+pip install --upgrade pip wheel setuptools cython pybind11
+```
+
 
 ## 2.3 Install Python & Libraries
 
 특히 M1 이라면 설치전 다음 명령어 실행이 필요합니다. 
+
+
 
 ```bash
 # Python 설치 (원하는 버젼으로 수정)
