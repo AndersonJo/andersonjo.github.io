@@ -49,7 +49,7 @@ def calculate_prauc(y_true, y_prob, plot, label, method=[]):
         # Other Metrics at the max_threshold
 
         acc_ = accuracy_score(y_true, y_prob >= max_threshold)
-        f1_ = f1_score(y_test, y_prob >= max_threshold)
+        f1_ = f1_score(y_true, y_prob >= max_threshold)
 
         plot.plot(
             recall[max_idx],
