@@ -37,7 +37,7 @@ export PATH=$PATH:$CASSANDRA_HOME/bin
 ```
 
 Cassandra 실행도 시켜봅니다. 
-
+in
 ```
 $ cassandra -f
 ```
@@ -88,6 +88,15 @@ UN  127.0.0.1  205.33 KiB  16      100.0%            36cbcf5a-4753-4491-8fec-2dd
 desc keyspaces
 desc tables
 ```
+
+만약 CQLSH 버젼이 높고 -> 서버는 3.11.5 같은 낮은 버젼일 경우 desc 가 작동을 안합니다.<br> 
+이 경우에는 다음과 같은 명령어로 가능합니다. 
+
+```
+SELECT keyspace_name, table_name FROM system_schema.tables;
+```
+
+
 
 **KeySpace | Table 생성**
 
