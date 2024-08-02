@@ -98,7 +98,7 @@ SELECT keyspace_name, table_name FROM system_schema.tables;
 
 
 
-**KeySpace | Table 생성**
+**KeySpace or Table 생성**
 
 ```sql
 --  KeySpace 생성
@@ -191,6 +191,7 @@ public class SparkTest {
 			DataTypes.createStructField("married", DataTypes.BooleanType, false),
 			DataTypes.createStructField("created_at", DataTypes.TimestampType, false)
 		});
+
 
 		Timestamp timestamp = new Timestamp(new Date().getTime());
 		Dataset<Row> userData = spark.createDataFrame(Arrays.asList(
