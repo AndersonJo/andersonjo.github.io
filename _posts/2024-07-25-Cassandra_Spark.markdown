@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Cassandra"
+title:  "Cassandra + Spark"
 date:   2024-07-25 01:00:00
 categories: "cassandra"
 asset_path: /assets/images/
