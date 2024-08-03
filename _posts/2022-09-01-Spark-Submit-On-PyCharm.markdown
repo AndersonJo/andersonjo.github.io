@@ -77,6 +77,9 @@ File -> Settings -> Plugins ->  `big data tools` 검색후 .. <br>
 
 ## 1.4 Run SparkJob in debug mode
 
+- 이 방법으로 하면 실제 특정 Spark Version 을 돌릴수가 있습니다. 
+- 그냥 IntelliJ에서 돌릴수도 있는데, 그건 특정 Spark version을 사용하는게 아닙니다. 
+
 먼저 shadowJar 파일을 생성합니다. 
 
 ```
