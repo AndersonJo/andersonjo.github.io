@@ -123,6 +123,24 @@ WITH replication = {
 };
 ```
 
+
+## 2.3 JSON Select & Insert 
+
+특이하게도, JSON 형식으로 출력하거나, json을 insert 할 수도 있습니다.
+
+```sql
+SELECT JSON * FROM keyspace.table;
+```
+
+여기서 출력한 것을 복사한후, insert 할수도 있습니다. 
+
+```sql
+INSERT INTO keyspace.table JSON
+`<json string here>`;
+```
+
+
+
 # 3. Java + Spark Example
 
 ## 3.1 Gradle 
