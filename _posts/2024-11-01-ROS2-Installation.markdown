@@ -29,6 +29,15 @@ $ sudo apt install ros-foxy-desktop python3-argcomplete
 $ sudo apt install ros-dev-tools
 ```
 
+**.bashrc** 추가
+
+```bash
+# ROS2
+source /opt/ros/foxy/setup.bash
+```
+
+
+
 **Demo**: publisher 그리고 listener 를 체크하는 데모.<br> 
 이게 실행 잘 되면, C++ 그리고 Python API 둘다 잘 작동한다는 의미. 
 
