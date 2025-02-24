@@ -66,8 +66,12 @@ $ ros2 doctor --report
 **.bashrc** 추가
 
 ```bash
+$ vi ~/.bashrc
+```
+
+```bash
 # ROS2
-source /opt/ros/foxy/setup.bash
+source /opt/ros/jazzy/setup.bash
 ```
 
 
@@ -77,11 +81,9 @@ source /opt/ros/foxy/setup.bash
 
 ```bash
 
-$ source /opt/ros/foxy/setup.bash
 $ ros2 run demo_nodes_cpp talker
 
 # 터미널 새로 하나 열고, 다음을 실행
-$ source /opt/ros/foxy/setup.bash
 $ ros2 run demo_nodes_py listener
 ```
 
