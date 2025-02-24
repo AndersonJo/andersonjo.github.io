@@ -76,7 +76,7 @@ sudo apt install pulseeffects  # Sound Equalizer for Ubuntu 20.04
 sudo apt install -y lsp-plugins
 
 # Pillow Ubuntu Libraries 
-sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev
 
 ### Ruby Image Libraries (Optional)
 sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead jpegoptim
@@ -99,8 +99,11 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 # Hostname Version
 # export PS1='\[\033[00;36m\]$(hostname) \u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
-# Java
+# Java (Ubuntu 22.04)
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+
+# Java (Ubuntu 24.04)
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 
 # CUDA
 export CUDAHOME=/usr/local/cuda
@@ -147,7 +150,8 @@ $ sudo apt install conky-all
 $ vi ~/.conkyrc
 ```
 
-```yaml
+```bash
+{% raw %}
 conky.config = {
 	
 	update_interval = 1,
@@ -252,6 +256,7 @@ ${top name 8} $alignr ${top pid 8} ${top cpu 8}% ${top mem 8}%
 ${top name 9} $alignr ${top pid 9} ${top cpu 9}% ${top mem 9}%
 ${top name 10} $alignr ${top pid 10} ${top cpu 10}% ${top mem 10}%
 ]];
+{% endraw %}
 ```
 
 
