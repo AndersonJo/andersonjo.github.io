@@ -13,6 +13,11 @@ tags: []
 ## 1.1 ROS 2 version and Gazebo version
 
 아래의 테이블을 보고, version을 맞추는게 좋음.
+ - 내 설정
+   - Ubuntu: 24.04 
+   - Ros2: Jazzy (Ubuntu 24.04 에서 제공. 하위 버젼 설치 안됨)
+   - Gazebo: Harmonic
+
 
 | ROS 2 version | Gazebo version | Branch                                                        | Binaries hosted at                                                                                                                               | 
 |---------------|----------------|---------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------| 
@@ -45,10 +50,14 @@ $ sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key 
 # Repository 를 source list 에 추가
 $ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-# ROS 설치
+# ROS Tool 설치
 $ sudo apt update
-$ sudo apt install ros-foxy-desktop python3-argcomplete
 $ sudo apt install ros-dev-tools
+
+# ROS2 설치
+$ sudo apt update
+$ sudo apt upgrade
+$ sudo apt install ros-jazzy-desktop
 
 # 설치 확인
 $ ros2 doctor --report
@@ -95,11 +104,8 @@ $ sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/ke
 $ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
 $ sudo apt-get update
 
-# Ubuntu 24.04
-$ sudo apt-get install gz-ionic
-
-# Ubuntu 20.04
-$ sudo apt-get install gz-garden
+# Ubuntu 22.04 Harmonic
+$ sudo apt-get install gz-harmonic
 
 # 정상 작동 확인
 $ gz sim
@@ -108,10 +114,8 @@ $ gz sim
 이후 삭제는 이런 식으로
 
 ```bash
-$ sudo apt remove gz-garden && sudo apt autoremove
+$ sudo apt remove gz-harmonic && sudo apt autoremove
 ```
-
-정상 ㅈ
 
 
 
