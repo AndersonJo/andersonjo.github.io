@@ -80,6 +80,9 @@ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblc
 
 ### Ruby Image Libraries (Optional)
 sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead jpegoptim
+
+### 그외 
+sudo apt-get install vim git net-tools
 ```
 
 
@@ -239,8 +242,14 @@ ${swapbar 15}
 ${font sans-serif:bold:size=12}DISK USAGE ${hr 2}
 ${font sans-serif:normal:size=10}/ $alignc ${fs_used /} / ${fs_size /} $alignr ${fs_used_perc /}%
 ${fs_bar /}
-]];
 
+${font sans-serif:bold:size=12}NETWORK ${hr 2}
+${font sans-serif:normal:size=10}Download: ${downspeed enp14s0} kB/s
+${downspeedgraph enp14s0 000000 00ff00}
+${font sans-serif:normal:size=10}Upload:   ${upspeed enp14s0} kB/s
+${upspeedgraph enp14s0 000000 ff0000}
+
+]];
 {% endraw %}
 ```
 
