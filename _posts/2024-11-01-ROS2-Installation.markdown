@@ -14,53 +14,33 @@ tags: []
 
 아래의 테이블을 보고, version을 맞추는게 좋음.
  - 내 설정
-   - Ubuntu: 24.04
-   - Python 3.10.16 (그 이상 버젼 안됨. 정확하게 3.10 버젼)
+   - Ubuntu: 22.04 (다른 버젼 이래저래 힘듬. 정확하게 22.04)
+   - Python 3.12.9 
    - Ros2: Humble (Ubuntu 24.04 에서 제공. 하위 버젼 설치 안됨)
    - Gazebo: 
 
-
-| ROS 2 version | Gazebo version | Branch                                                        | Binaries hosted at                                                                                                                               | 
-|---------------|----------------|---------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------| 
-| Foxy          | Citadel        | [foxy](https://github.com/gazebosim/ros_gz/tree/foxy)         | https://packages.ros.org [^2]                                                                                                                    | 
-| Foxy          | Edifice        | [foxy](https://github.com/gazebosim/ros_gz/tree/foxy)         | only from source [^2]                                                                                                                            | 
-| Galactic      | Edifice        | [galactic](https://github.com/gazebosim/ros_gz/tree/galactic) | https://packages.ros.org [^2]                                                                                                                    | 
-| Galactic      | Fortress       | [galactic](https://github.com/gazebosim/ros_gz/tree/galactic) | only from source                                                                                                                                 | 
-| Humble        | Fortress       | [humble](https://github.com/gazebosim/ros_gz/tree/humble)     | https://packages.ros.org                                                                                                                         | 
-| Humble        | Garden         | [humble](https://github.com/gazebosim/ros_gz/tree/humble)     | [gazebo packages](https://gazebosim.org/docs/latest/ros_installation#gazebo-garden-with-ros-2-humble-iron-or-rolling-use-with-caution-)[^1] [^2] | 
-| Humble        | Harmonic       | [humble](https://github.com/gazebosim/ros_gz/tree/humble)     | [gazebo packages](https://gazebosim.org/docs/harmonic/ros_installation#-gazebo-harmonic-with-ros-2-humble-iron-or-rolling-use-with-caution-)[^1] | 
-| Iron          | Fortress       | [humble](https://github.com/gazebosim/ros_gz/tree/iron)       | https://packages.ros.org                                                                                                                         | 
-| Iron          | Garden         | [humble](https://github.com/gazebosim/ros_gz/tree/iron)       | only from source [^2]                                                                                                                            | 
-| Iron          | Harmonic       | [humble](https://github.com/gazebosim/ros_gz/tree/iron)       | only from source                                                                                                                                 | 
-| Jazzy         | Garden         | [ros2](https://github.com/gazebosim/ros_gz/tree/ros2)         | only from source [^2]                                                                                                                            | 
-| Jazzy         | Harmonic       | [jazzy](https://github.com/gazebosim/ros_gz/tree/jazzy)       | https://packages.ros.org                                                                                                                         | 
-| Rolling       | Garden         | [ros2](https://github.com/gazebosim/ros_gz/tree/ros2)         | only from source [^2]                                                                                                                            | 
-| Rolling       | Harmonic       | [ros2](https://github.com/gazebosim/ros_gz/tree/ros2)         | only from source                                                                                                                                 | 
-| Rolling       | Ionic          | [ros2](https://github.com/gazebosim/ros_gz/tree/ros2)         | https://packages.ros.org                                                                                                                         | 
-
-## 1.1 Install Ros2 on Ubuntu
+## 1.1 Install Ros2 Humble on Ubuntu 22.04
 
 
-Ubuntu 24.04 에서 Humble 설치 
-- Ubuntu 24.04는 noble인데, ROS2 Humble은 jammy 기준 패키지를 가져와야 하므로 위처럼 레포를 jammy로 지정
+Ubuntu 22.04 에서 Humble 설치 
+- 24.04, 20.04 다 안됨. 정확하게 22.04 에서 설치 됨. dependency 문제 생김
 
 ```bash
+$ sudo apt install software-properties-common
+$ sudo add-apt-repository universe
+
 # ROS 2 GPG key 등록
 $ sudo apt update && sudo apt install curl -y
 $ sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | sudo gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg
-
-$ sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null <<EOF
-deb [signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main
-EOF
-
-
-# ROS Tool 설치
-$ sudo apt update
-$ sudo apt install ros-dev-tools
+$ echo "deb [signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/ros2.list
 
 # ROS2 설치
 $ sudo apt update && sudo apt upgrade
 $ sudo apt install ros-humble-desktop
+
+# ROS Tool 설치
+$ sudo apt update
+$ sudo apt install ros-dev-tools
 
 # 설치 확인
 $ ros2 doctor --report
@@ -77,7 +57,7 @@ $ vi ~/.bashrc
 
 ```bash
 # ROS2
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 ```
 
 
@@ -101,34 +81,29 @@ $ ros2 run demo_nodes_py listener
 $ pip install colcon-common-extensions
 ```
 
-Franka 설치
-
-```
-$ mkdir -p ~/projects/ros-
-$ cd ~/projectscccccccc
-$ git clone https://github.com/frankaemika/franka_ros2.git
-```
 
 
-## 1.3 Install Gazebo
+
+
+## 1.3 Install Gazebo Fortress
 
 ```bash
-# dependencies
+
+
+# GPG key 등록
 $ sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
 $ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
 $ sudo apt-get update
-
-# Ubuntu 22.04 Harmonic
-$ sudo apt-get install gz-harmonic
+$ sudo apt-get install ignition-fortress
 
 # 정상 작동 확인
-$ gz sim
+$ ign gazebo --versions
 ```
 
 이후 삭제는 이런 식으로
 
 ```bash
-$ sudo apt remove gz-harmonic && sudo apt autoremove
+sudo apt remove ignition-fortress && sudo apt autoremove
 ```
 
 
@@ -152,32 +127,22 @@ $ sudo apt autoremove
 
 ```bash
 # 작업 공간 설정
+$ mkdir -p ~/projects/ros-arm-rl/src
 $ cd ~/projects/ros-arm-rl/src
 
-$ Move it 클론
-$ git clone https://github.com/ros-planning/moveit_resources.git
-$ git clone https://github.com/ros-planning/moveit2.git
+# MoveIt2 설치
+$ git clone -b humble https://github.com/ros-planning/moveit2.git
+$ git clone -b humble https://github.com/ros-planning/moveit_resources.git
 
-# dependencies 설치
-$ git clone https://github.com/ros-industrial/ros_industrial_cmake_boilerplate.git
-$ git clone https://github.com/ros2/ros_testing.git
+# Franka Emika 설치
+$ git clone https://github.com/frankaemika/libfranka.git
+$ git clone -b humble https://github.com/frankaemika/franka_ros2.git
 
-$ git clone https://github.com/ros-industrial/stomp.git
-$ git clone https://github.com/moveit/stomp_moveit.git
-$ git clone https://github.com/moveit/moveit_visual_tools.git
-$ git clone https://github.com/PickNikRobotics/graph_msgs.git
-
-# Moveit2 에서 사용하는 내부 툴 설치 (jazzy 에서 지원 안함)
-$ mkdir ament_cmake_google_benchmark && cd ament_cmake_google_benchmark
-$ git init && git remote add origin https://github.com/ament/ament_cmake.git
-$ git config core.sparseCheckout true
-$ echo "ament_cmake_google_benchmark" >> .git/info/sparse-checkout
-$ git pull origin rolling
 
 # Move it 2 설치
 $ cd ~/projects/ros-arm-rl
 $ source /opt/ros/jazzy/setup.bash
-$ colcon build --symlink-install --packages-skip moveit_planners_stomp moveit_planners
+$ colcon build --symlink-install
 ```
 
 
