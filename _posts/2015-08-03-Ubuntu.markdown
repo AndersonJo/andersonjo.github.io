@@ -43,21 +43,6 @@ sudo apt-get update
 sudo apt-get install oracle-java13-installer
 ```
 
-## 1.4 CapsLock <->  한글키 변경 (Optional)
-
-xev 를 통해서 키를 눌러보면서 keycode 그리고 키 이름을 알 수 있습니다.<br>
-개인 키보드는 다음과 같습니다.
-
- - capslock: keycode 66 (keysym 0xffe5, Caps_Lock)
- - 한영: keycode 108 (keysym 0xff31, Hangul)
-
-CapsLock 그리고 한영키를 서로 바꾸려면 다음과 같이 합니다.
-
-```bash
-xmodmap -e "keycode 66 = Hangul"
-xmodmap -e "keycode 108 = Caps_Lock"
-```
-
 
 ## 1.5 벼루 (Optional)
 
@@ -141,6 +126,16 @@ unzip D2Coding-Ver1.3.2-20180524.zip
 ```
 
 
+## 1.10 gnome-tweaks 
+
+```bash
+sudo apt install gnome-tweaks
+gnome-tweaks
+```
+
+이후 다음을 설정 
+ 
+ - Fonts -> Scaling Factor : 1.10 으로 증가
 
 # 2. Optional Installation
 
