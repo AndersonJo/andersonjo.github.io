@@ -8,14 +8,14 @@ tags: []
 ---
 
 
-# 1. Installation Ros2 Jazzy
+# 1. Installation Ros2 Hubble
 
 ## 1.1 ROS 2 version and Gazebo version
 
 아래의 테이블을 보고, version을 맞추는게 좋음.
  - 내 설정
    - Ubuntu: 22.04 (다른 버젼 이래저래 힘듬. 정확하게 22.04)
-   - Python 3.12.9 
+   - Python 3.10.16 (다른 버젼 안됨. 정확한 버젼) 
    - Ros2: Humble (Ubuntu 24.04 에서 제공. 하위 버젼 설치 안됨)
    - Gazebo: 
 
@@ -83,8 +83,6 @@ $ pip install colcon-common-extensions
 
 
 
-
-
 ## 1.3 Install Gazebo Fortress
 
 ```bash
@@ -110,7 +108,7 @@ sudo apt remove ignition-fortress && sudo apt autoremove
 ## 1.4 Uninstall on Ubuntu
 
 ```bash
-$ sudo apt remove ~nros-foxy-* && sudo apt autoremove
+$ sudo apt remove ~nros-humble-* && sudo apt autoremove
 
 # 다음 실행해서 삭제
 $ sudo rm /etc/apt/sources.list.d/ros2.list
@@ -121,9 +119,16 @@ $ sudo apt autoremove
 
 
 
-# 2. Move it and Frankaemika 
+# 2. MoveIt2 & Frankaemika
 
-## 2.1 Move it
+## 2.1 Install MoveIt2
+
+Dependencies 설치
+
+```bash
+$ pip install empy==3.3.4 numpy pandas lark-parser
+```
+
 
 ```bash
 # 작업 공간 설정
@@ -131,42 +136,77 @@ $ mkdir -p ~/projects/ros-arm-rl/src
 $ cd ~/projects/ros-arm-rl/src
 
 # MoveIt2 설치
-$ git clone -b humble https://github.com/ros-planning/moveit2.git
-$ git clone -b humble https://github.com/ros-planning/moveit_resources.git
-
-# Franka Emika 설치
-$ git clone https://github.com/frankaemika/libfranka.git
-$ git clone -b humble https://github.com/frankaemika/franka_ros2.git
-
-
-# Move it 2 설치
-$ cd ~/projects/ros-arm-rl
-$ source /opt/ros/jazzy/setup.bash
-$ colcon build --symlink-install
+git clone -b humble https://github.com/ros-planning/moveit2.git
+git clone -b humble https://github.com/ros-planning/moveit_msgs.git
+git clone -b humble https://github.com/ros-planning/moveit_resources.git
+git clone -b humble https://github.com/ros-planning/moveit_task_constructor.git
+git clone -b humble https://github.com/ros-planning/moveit2_tutorials.git
+git clone -b humble https://github.com/ros-planning/srdfdom.git
+git clone -b humble https://github.com/ros-controls/control_msgs.git
+git clone -b humble https://github.com/ros-controls/ros2_control.git
+git clone -b humble https://github.com/ros-controls/ros2_controllers.git
 ```
 
 
-## 2.1 Frankaemika
+```bash
+# 의존성 설치 & 빌드
+$ cd ..
+$ rosdep update
+$ rosdep install -y --from-paths src --ignore-src --rosdistro humble
+$ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+```
+
+
+```bash
+# MoveIt2 Demo 실행 -> RViz 가 실행되면 MoveIt2는 정상설치
+$ ros2 launch moveit_resources_panda_moveit_config demo.launch.py
+$ ros2 launch moveit2_tutorials demo.launch.py
+$ ros2 launch moveit_task_constructor_demo demo.launch.py
+```
+
+
+
+
+## 2.2 Install Franka Emika
 
 독일 팔 로봇
 
 ```bash
-$ pip install numpy pandas lark-parser
+# Franka Emika 설치
+$ cd src 
+$ git clone https://github.com/frankaemika/libfranka.git
+$ git clone -b humble https://github.com/frankaemika/franka_ros2.git
+```
 
-# 작업 공간 설정
-$ cd ~/projects/ros-arm-rl/src
-
-# Fran
-$ git clone https://github.com/frankaemika/franka_ros2.git
-$ git clone --recursive https://github.com/frankaemika/libfranka.git
+```bash
+# libfranka 별도 수동 컴파일 필요
 $ cd libfranka
+$ git submodule update --init
 $ mkdir build && cd build
-$ cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF
-$ cmake --build . --parallel $(nproc)
+$ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF ..
+$ cmake --build .
 $ sudo cmake --install .
+```
 
+```bash
+# franka_semantic_component_interface.hpp 파일 수정
+$ cd src/franka_ros2/franka_semantic_components/include/franka_semantic_components/
+$ vi franka_semantic_component_interface.hpp
+
+# #include "controller_interface/helpers.hpp" <- 이걸 찾아서 다음과 같이 수정 - 23번째줄
+#include "controller_interface/controller_interface.hpp"
+```
+
+```bash
+$ vi src/franka_ros2/franka_semantic_components/CMakeLists.txt
+
+```
+
+
+```bash
+# 의존성 설치 & 빌드
 $ cd ..
 $ rosdep update
-$ rosdep install --from-paths src --ignore-src -r -y
-$ colcon build --symlink-install
+$ rosdep install -y --from-paths src --ignore-src --rosdistro humble
+$ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
