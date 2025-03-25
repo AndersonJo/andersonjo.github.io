@@ -129,8 +129,8 @@ data.sample(0.001).toPandas()
 ## 3.2 ORC from Hive
 
 Presto나 Hive 에서 생성시 partition directories 뒤에 HIVE_UNION_SUBDIR_1, HIVE_UNION_SUBDIR_2 같은게 생기는 케이스가 있습니다.<br>
-이때 그냥 spark.read.table('blahblah') 하면 테이블 불러오는거 같은데 content 는 없을수 있습니다. 
-또한 저장하는 방식도 다른데 Spark ORC 로 읽으면 에러가 날수 있습니다.
+이때 그냥 spark.read.table('blahblah') 하면 테이블 불러오는거 같은데 content 는 없을수 있습니다. <br> 
+또한 저장하는 방식도 다른데 Spark ORC 로 읽으면 에러가 날수 있습니다.<br>
 
 이 경우 `spark.sql.hive.convertMetastoreOrc` 를 false 로 해줘야 합니다.
 
