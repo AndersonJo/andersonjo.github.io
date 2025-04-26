@@ -64,4 +64,14 @@ Bias Variance Decomposition 저 위의 공식이 나옴.
  - x축: $$ Recall = \frac{TP}{TP + FN} $$ (positive로 예측한것 중에 진짜 positive 비율)
  - y축: $$ Precision = \frac{TP}{TP + FP} $$ 
 
+해석
+ - recall: 실제 y=1 에서 모델이 positive를 맞춘 비율
+ - precision: 모델이 y_predict = 1 로 예측한것 중에 실제 맞춘 비율
+ - 관계
+   - recall 과 precision은 서로 trade-off 관계
+   - 모든 값을 y_predict = 1 로 예측시 recall 은 1이 나옴
+   - 엄청나게 확신갖는것만 y_predict = 1 로 예측시 precision은 높아짐 하지만 recall은 낮아짐 
+ - PrAUC 는 positive가 매우 적은 상황에서 accuracy 보다 더 신뢰 할수 있음. 
+  
+
 <img src="{{ page.asset_path }}prauc-graph.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
