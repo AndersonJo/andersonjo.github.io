@@ -9,7 +9,7 @@ tags: []
 
 # 1. Basic Interview Questions
 
-## 1.1 Bias - Variance Tradeoff 설명
+## 1.1 Bias - Variance Tradeoff
 
 - Bias: underfitting
 - Variance: Overfitting 
@@ -61,3 +61,7 @@ Bias Variance Decomposition 저 위의 공식이 나옴.
 
 ## 2.2 PrAUC
 
+ - x축: $$ Recall = \frac{TP}{TP + FN} $$ (positive로 예측한것 중에 진짜 positive 비율)
+ - y축: $$ Precision = \frac{TP}{TP + FP} $$ 
+
+<img src="{{ page.asset_path }}prauc-graph.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
