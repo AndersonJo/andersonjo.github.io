@@ -59,3 +59,5 @@ Bias Variance Decomposition 저 위의 공식이 나옴.
 
 <img src="{{ page.asset_path }}ROC-curves-and-area-under-curve-AUC.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
+## 2.2 PrAUC
+
