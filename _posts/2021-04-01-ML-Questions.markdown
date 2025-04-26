@@ -39,3 +39,23 @@ Bias Variance Decomposition 저 위의 공식이 나옴.
 
 # 2. ML Performance 
 
+## 2.1 ROC AUC
+
+**ROC**
+
+- ROC: Receiver Operating Characteristic curve 
+- X축: FPR (False Positive Rate) $$ FPR = \frac{FP}{FP + TN} $$
+- Y축: TPR (True Positive Rate) $$ TPR = \frac{TP}{TP + FN} $$ 
+- threshold 를 움직이면서 각각을 모두 계산하는 방법
+  - ex) threshold = 0.7 이면 0.7이상은 positive 이고, 이하는 negative 로 설정 
+
+**ROC AUC**
+
+ - ROC Curve 아래 면적 (Area Under Curve)
+ - 수치
+   - 0.5: 랜덤
+   - 1.0: 완벽 구분
+   - 0: 완전히 반대로 예측
+
+<img src="{{ page.asset_path }}ROC-curves-and-area-under-curve-AUC.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
