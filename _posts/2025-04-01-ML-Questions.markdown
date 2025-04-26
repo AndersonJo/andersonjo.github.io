@@ -75,3 +75,22 @@ Bias Variance Decomposition 저 위의 공식이 나옴.
   
 
 <img src="{{ page.asset_path }}prauc-graph.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+## 2.2 Precision@K and Recall@K
+
+- Precision@K (P@K)
+   - $$ Precision@K = \frac{\text{Top K 중 실제 구매한 상품 수}}{K} $$
+   - K: 상위 K 추천된 상품 수
+   - 유저가 실제 클릭/구매 확률이 높은지를 랭킹에서 보기 때문에 매우 중요
+ - Recall@K
+   - $$ Recall@K =  = \frac{\text{Top K 중 실제 구매한 상품 수}}{전체 구매 상품 갯수}  $$
+   - 유저가 리스트중에서 한개를 구매하는게 아니라 여러개 구매 가능시 중요
+   - 쿠팡이나 아마존은 아님
+ 
+
+## 2.3  mAP (Mean Average Precision)
+
+**Average Precision**
+
