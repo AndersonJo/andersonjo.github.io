@@ -7,6 +7,15 @@ asset_path: /assets/images/
 tags: []
 ---
 
+# VS Code Reference
+
+| Key                    | Description       |
+|:-----------------------|:------------------|
+| CTRL + SHIFT + P or F1 | 명령어를 찾아서 실행시킬수 있음 |
+| CTRL + `               | 터미널 창 오픈          |
+| CTRL + SHIFT + x       | extension 설치 및 관리 |
+
+
 # 1. Tutorial  
 
 ## 1.1 .devcontainer 설정
