@@ -44,7 +44,39 @@ sudo apt-get install oracle-java13-installer
 ```
 
 
-## 1.5 벼루 (Optional)
+## 1.5 Ibus Hangul 
+
+.Xmodmap 파일 생성후 다음을 추가
+
+```bash
+$ vi ~/.Xmodmap
+```
+
+```bash
+keycode 108 = Hangul
+```
+
+이후 Startup Applications 에서 다음을 추가
+
+- Name: Xmodmap
+- Command: xmodmap ~/.Xmodmap
+
+<img src="{{ page.asset_path }}xmodmap.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+```
+$ ibus-setup
+```
+
+1. Input Method >> Korean - Hangul 추가
+2. 
+
+<img src="{{ page.asset_path }}input-method-korean-hangul.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+## ~~1.5 벼루 (Optional)~~
 
 **한글 104키**로 해야 함
 
