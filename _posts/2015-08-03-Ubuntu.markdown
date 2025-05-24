@@ -56,13 +56,21 @@ $ vi ~/.Xmodmap
 keycode 108 = Hangul
 ```
 
-이후 Startup Applications 에서 다음을 추가
 
-- Name: Xmodmap
-- Command: xmodmap ~/.Xmodmap
+```bash
+$ mkdir -p ~/.config/autostart
+```
 
-<img src="{{ page.asset_path }}xmodmap.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
-
+```bash
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/xmodmap /home/$USER/.Xmodmap
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Apply Xmodmap
+Comment=Set custom keymap
+```
 
 
 ```
@@ -70,9 +78,9 @@ $ ibus-setup
 ```
 
 1. Input Method >> Korean - Hangul 추가
-2. Korean - Hangul >> Preferences >> Hangul 추가
+2. Korean - Hangul >> Preferences >> Korean - Korean (101/104-key compatible) 추가
 
-<img src="{{ page.asset_path }}input-method-korean-hangul.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+<img src="{{ page.asset_path }}input-method-korean-hangul-2.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 <img src="{{ page.asset_path }}ibus-setup-hangul-setup.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
