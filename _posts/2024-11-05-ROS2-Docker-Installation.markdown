@@ -11,9 +11,11 @@ tags: []
 
 | Key                    | Description       |
 |:-----------------------|:------------------|
+| CTRL + K + O           | 디렉토리를 오픈함         |
 | CTRL + SHIFT + P or F1 | 명령어를 찾아서 실행시킬수 있음 |
 | CTRL + `               | 터미널 창 오픈          |
-| CTRL + SHIFT + x       | extension 설치 및 관리 |
+| CTRL + SHIFT + X       | extension 설치 및 관리 |
+| CTRL + SHIFT + I       | Auto Formatting   |
 
 
 # 1. Tutorial  
