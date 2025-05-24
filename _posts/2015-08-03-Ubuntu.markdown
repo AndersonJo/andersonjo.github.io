@@ -70,11 +70,11 @@ $ ibus-setup
 ```
 
 1. Input Method >> Korean - Hangul 추가
-2. 
+2. Korean - Hangul >> Preferences >> Hangul 추가
 
 <img src="{{ page.asset_path }}input-method-korean-hangul.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
-
+<img src="{{ page.asset_path }}ibus-setup-hangul-setup.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 ## ~~1.5 벼루 (Optional)~~
 
