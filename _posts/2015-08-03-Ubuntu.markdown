@@ -76,6 +76,14 @@ $ ibus-setup
 
 <img src="{{ page.asset_path }}ibus-setup-hangul-setup.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
+
+다음을 실행해서 Hangul 이 나오는지 확인
+
+```bash
+$ xev | grep key
+```
+
+
 ## ~~1.5 벼루 (Optional)~~
 
 **한글 104키**로 해야 함
