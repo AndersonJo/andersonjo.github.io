@@ -110,5 +110,18 @@ L = CrossEntropy(o, y)
  - $$ abs( u - v ) $$ : element-wise 절대값 차이
  - $$ h \in \mathbb{R}^{3n \time k} $$ 3개의 vector를 concatenate 함 `torch.cat([u, v, torch.abs(u - v), dim=1)`
 
+이후에 Cross Entropy Loss 사용
 
 
+
+### 1.5.3 Triplet Loss
+
+$$ TripletLoss = max(\| s_a - s_p \| - \| s_a - s_n \| + \epsilon, 0) $$
+
+ - $$ s_a $$ : anchor 문장의 embedding 
+ - $$ s_p $$ : positive 문장의 embedding
+ - $$ s_n $$ : negative 문장의 embedding
+ - $$ \epsilon $$ : margin 이고 논문에서는 1로 설정
+
+직관적으로 해석하면 anchor와 positive는 최대한 가까워야 하고, ahchor와 negative 더 멀어야 함 <br>
+그것도 margin 만큼 차이가 나도록 만듬
