@@ -67,3 +67,48 @@ tags: []
    - Cosine Similarity: $$ cosine \left( f(x_1), f(x_2) \right) = \frac{ f(x_1) \dot f(x_2)}{ \| f(x_1) \| \| f(x_2) \| } $$
    - Euclid Distance: $$ \| f(x_1) - f(x_2) \|_2 $$
 
+
+## 1.5 Loss Functions 
+
+### 1.5.1 Cosine Similarity + MSE Loss (Regression Loss)
+
+$$ Loss = MSE(cos(u, v), label) $$
+
+Example 
+ - 문장 A: "The Cat is sleeping"
+ - 문장 B: "A feline is resting"
+ - label = 4.5/5 = 0.9
+ - cosine(u, v) 가 0.9에 맞도록 학습
+
+
+```python
+import torch
+import torch.nn.functional as F
+
+u = torch.randn(1, 768)  # sentence A
+v = torch.randn(1, 768)  # sentence B
+
+# Cosine similarity: [-1, 1]
+cos_sim = F.cosine_similarity(u, v)
+
+label = torch.tensor([0.85]) 
+mse_loss = F.mse_loss(cos_sim, label)
+print("MSE Loss:", mse_loss.item())
+```
+
+
+### 1.5.2 Classification Objective 
+
+$$ \begin{align} 
+h = \left[ u; v;; | u -v | \right]  \\
+o = softmax(W_t \dot h + b) \\
+L = CrossEntropy(o, y)
+\end{align} $$
+ 
+ - y 는 0, 1 같은 binary classification label
+ - $$ u, v \in  \mathbb{R}^n $$ : 두 문장의 embeddings
+ - $$ | u - v | $$ : element-wise 절대값 차이
+ - $$ h \in \mathbb{R}^{3n \time k} $$ 3개의 vector를 concatenate 함 `torch.cat([u, v, torch.abs(u - v), dim=1)`
+
+
+
