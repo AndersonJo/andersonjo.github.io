@@ -31,13 +31,13 @@ tags: []
 
 ## 1.2 BERT VS Sentence-BERT (SBERT)
 
-| Key                  | BERT                                                            | Setence-BERT (SBERT)                            |
-|:---------------------|:----------------------------------------------------------------|:------------------------------------------------|
-| input method         | 두 문장을 한 문장에 넣어서 입력 (Cross Encoder 방식) - "[CLS] A 문장 [SEP] B 문장" | 각 문장을 따로따로 입력 (Bi-Encoder)                      |
-| Embedding Generation | 토큰 단위 -> 즉 전체 문장 X (shape: [1, seq_len, 768])                   | 문장 전체를 하나의 벡터로 유지 (shape: [384,] <- 벡터 하나)      |
-| Performance          | Cross Encoder 방식이 더 정확함. 하지만 느리고, 트레이닝도 힘듬                      | 정확도가 꽤나 잘 유지, 매우 빠름, 특히 검색에서 좋음                 |
-| Architecture         | 단일 Transforemr                                                  | Siamese 또는 Triplet Network                      |
-| Usage                | Classification, QnA, NLI                                        | Similarity Search, Clustering, Recommendation   |
+| Key                  | BERT                                                              | Setence-BERT (SBERT)                            |
+|:---------------------|:------------------------------------------------------------------|:------------------------------------------------|
+| input method         | 두 문장을 한 문장에 넣어서 입력 \n(Cross Encoder 방식) - "[CLS] A 문장 [SEP] B 문장" | 각 문장을 따로따로 입력 (Bi-Encoder)                      |
+| Embedding Generation | 토큰 단위 -> 즉 전체 문장 아님 (shape: [1, seq_len, 768])                    | 문장 전체를 하나의 벡터로 유지 (shape: [384,] <- 벡터 하나)      |
+| Performance          | Cross Encoder 방식이 더 정확함. 하지만 느림                                   | 정확도가 꽤나 잘 유지, 매우 빠름, 특히 검색에서 좋음                 |
+| Architecture         | 단일 Transforemr                                                    | Siamese 또는 Triplet Network                      |
+| Usage                | Classification, QnA, NLI                                          | Similarity Search, Clustering, Recommendation   |
 
 
 ## 
