@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "ML Interview Questions"
+title:  "ML Basics Again"
 date:   2025-04-01 01:00:00
-categories: "interview-question"
+categories: "machine-learning"
 asset_path: /assets/images/
-tags: []
+tags: ['variance-tradeoff', 'rocauc', 'performance', 'prauc']
 ---
 
 # 1. Basic Interview Questions
