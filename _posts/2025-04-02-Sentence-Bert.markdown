@@ -64,6 +64,6 @@ tags: []
 수학적 정리
  - 동일한 신경만 f(x) 를 두번 사용
  - 유사도 계산
-   - Cosine Similarity: $$ cosine \left( f(x_1), f(x_2) \right) = \frac{ f(x_1) \dot f(x_2)}{ || f(x_1} || || f(x_2) || $$
-   - Euclid Distance: $$ || f(x_1) - f(x_2) ||_2 $$
+   - Cosine Similarity: $$ cosine \left( f(x_1), f(x_2) \right) = \frac{ f(x_1) \dot f(x_2)}{ \|\| f(x_1} \|\| \|\| f(x_2) \|\| $$
+   - Euclid Distance: $$ \|\| f(x_1) - f(x_2) \|\|_2 $$
 
