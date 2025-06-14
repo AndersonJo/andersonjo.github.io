@@ -107,7 +107,7 @@ L = CrossEntropy(o, y)
  
  - y 는 0, 1 같은 binary classification label
  - $$ u, v \in  \mathbb{R}^n $$ : 두 문장의 embeddings
- - $$ | u - v | $$ : element-wise 절대값 차이
+ - $$ \left| u - v \right| $$ : element-wise 절대값 차이
  - $$ h \in \mathbb{R}^{3n \time k} $$ 3개의 vector를 concatenate 함 `torch.cat([u, v, torch.abs(u - v), dim=1)`
 
 
