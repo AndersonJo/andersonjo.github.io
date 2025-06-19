@@ -101,7 +101,7 @@ tags: []
 
 논문에서는 Sentence-Pair Classification을 다음과 같이 설명합니다. 
 
-> For classification tasks, we feed the concatenation of u, v, and |u−v| into a classification layer
+> For classification tasks, we feed the concatenation of u, v, and \|u−v\| into a classification layer
 
 $$
 \begin{align}
