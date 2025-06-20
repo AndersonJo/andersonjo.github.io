@@ -44,7 +44,26 @@ sudo apt-get install oracle-java13-installer
 ```
 
 
-## 1.5 Ibus Hangul 
+## 1.5 FCITX5 Hangul
+
+
+```bash
+$ sudo apt install fcitx5 fcitx5-hangul fcitx5-config-qt fcitx5-configtool
+
+$ im-config -n fcitx5
+$ fcitx5-configtool
+```
+
+ - 아래 그림과 같이 설정합니다. 
+   - Hangul
+   - Keyboard - English (US)
+
+<img src="{{ page.asset_path }}fcitx5-configure.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+
+## 1.5 IBus Hangul
 
 .Xmodmap 파일 생성후 다음을 추가
 
