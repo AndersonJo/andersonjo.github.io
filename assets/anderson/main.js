@@ -65,11 +65,23 @@ app.factory('tools', ['$http', function ($http) {
         })
     };
 
+    var get_expertise = function (callback) {
+        var url = '/assets/anderson/expertise.csv';
+        return $http.get(url).then(function (response) {
+            var data = response.data.split('\n');
+            data = data.filter(function (value) {
+                return value.trim().length > 0;
+            });
+            callback(data);
+        })
+    };
+
 
     return {
         randint: randint,
         get_bible_statement: get_bible_statement,
-        get_fast_categories: get_fast_categories
+        get_fast_categories: get_fast_categories,
+        get_expertise: get_expertise
     }
 }]);
 
@@ -104,6 +116,11 @@ app.controller('AndersonPostContoller', ['$scope', '$location', '$route', 'tools
     // Set Fast Categories
     tools.get_fast_categories(function (data) {
         $scope.fast_categories = data;
+    });
+
+    // Set Expertise
+    tools.get_expertise(function (data) {
+        $scope.expertise = data;
     });
 
 }]);

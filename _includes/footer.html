@@ -1,22 +1,197 @@
 <footer class="site-footer">
-    <div class="wrap simple_profile">
-        <div class="row">
-            <div class="col-md-2">
-                <img src="/assets/images/baby.jpg">
+    <div class="wrap">
+        <div class="footer-content">
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <div class="profile-card">
+                    <div class="profile-image">
+                        <img src="/assets/images/baby.jpg" alt="Anderson Jo">
+                    </div>
+                    <div class="profile-info">
+                        <h2 class="profile-name">Anderson Jo</h2>
+                        <p class="profile-title">Machine Learning Engineer</p>
+                        <p class="profile-description">
+                            Passionate about AI, Deep Learning, and Big Data. 
+                            Exploring the frontiers of machine learning and sharing knowledge with the community.
+                        </p>
+                        <div class="profile-contact">
+                            <div class="contact-item">
+                                <i class="fa fa-envelope"></i>
+                                <a href="mailto:anderson.pytorch@gmail.com">anderson.pytorch@gmail.com</a>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fa fa-comment"></i>
+                                <span>Kakao: anderson52</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-8" style="vertical-align: top;">
-                <h2 style="margin-top:0px;">Anderson Jo</h2>
-                <span style="color:#990000">
-                ML/AI Engineer & Team Leader
-            </span>
-                <br>
-                Email: <i style="color:#0086B3">a141890@gmail.com</i><br>
-                Kakao Talk: <i style="color:#0086B3">anderson52</i><br>
+
+            <!-- Skills Section -->
+            <div class="skills-section" ng-controller="AndersonPostContoller">
+                <h3>Expertise</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag" ng-repeat="skill in expertise">{(skill)}</span>
+                </div>
             </div>
         </div>
 
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 Anderson Jo. All rights reserved. | I trust in the Lord Jesus Christ. God bless you.</p>
+        </div>
     </div>
-
-
 </footer>
+
+<style>
+.site-footer {
+    background: #f8f9fa;
+    color: #333;
+    padding: 3rem 0 1rem 0;
+    margin-top: 4rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Profile Section */
+.profile-section {
+    grid-column: 1;
+}
+
+.profile-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.profile-image img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e9ecef;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+}
+
+.profile-title {
+    font-size: 1rem;
+    color: #3498db;
+    margin: 0 0 0.75rem 0;
+    font-weight: 600;
+}
+
+.profile-description {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+    color: #6c757d;
+}
+
+.profile-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.contact-item i {
+    color: #3498db;
+    width: 16px;
+}
+
+.contact-item a {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-item a:hover {
+    color: #3498db;
+}
+
+/* Skills Section */
+.skills-section {
+    grid-column: 2;
+}
+
+.skills-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skill-tag {
+    background: #e9ecef;
+    color: #495057;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.skill-tag:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .profile-section,
+    .skills-section {
+        grid-column: 1;
+    }
+    
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
 
