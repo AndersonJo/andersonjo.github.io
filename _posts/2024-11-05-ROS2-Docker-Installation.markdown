@@ -4,8 +4,9 @@ title:  "ROS2 in Docker with VS Code - Installation"
 date:   2024-11-05 01:00:00
 categories: "robotistics"
 asset_path: /assets/images/
-tags: []
+tags: ['devcontainer', 'vscode']
 ---
+
 
 # VS Code Reference
 
@@ -16,6 +17,20 @@ tags: []
 | CTRL + `               | 터미널 창 오픈          |
 | CTRL + SHIFT + X       | extension 설치 및 관리 |
 | CTRL + SHIFT + I       | Auto Formatting   |
+
+
+**VSCode Settings**
+
+**Preferences: Open User Settings (JSON)**
+
+```json
+{
+  "workbench.tree.indent": 20
+}
+```
+
+
+
 
 
 # 1. Tutorial  
