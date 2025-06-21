@@ -8,7 +8,9 @@ tags: ['devcontainer', 'vscode']
 ---
 
 
-# VS Code Reference
+# 1. VSCode
+
+## 1.1 VS Code Reference
 
 | Key                    | Description       |
 |:-----------------------|:------------------|
@@ -19,7 +21,7 @@ tags: ['devcontainer', 'vscode']
 | CTRL + SHIFT + I       | Auto Formatting   |
 
 
-**VSCode Settings**
+## 1.2 VSCode Settings
 
 **Preferences: Open User Settings (JSON)**
 
@@ -30,6 +32,13 @@ tags: ['devcontainer', 'vscode']
 ```
 
 
+# 2. ROS2 
+
+## 2.1 GUI 테스트
+```bash
+$ sudo apt install x11-apps
+$ xeyes
+```
 
 
 
