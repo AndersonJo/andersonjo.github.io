@@ -12,6 +12,7 @@ tags: ['devcontainer', 'vscode']
 
 ## 1.1 VS Code Reference
 
+
 | Key                    | Description       |
 |:-----------------------|:------------------|
 | CTRL + K + O           | 디렉토리를 오픈함         |
@@ -19,6 +20,12 @@ tags: ['devcontainer', 'vscode']
 | CTRL + `               | 터미널 창 오픈          |
 | CTRL + SHIFT + X       | extension 설치 및 관리 |
 | CTRL + SHIFT + I       | Auto Formatting   |
+
+
+CTRL + P 누르고 아래 같다 붙이기, IntellIJ 처럼 사용 가능해짐
+```bash
+https://marketplace.visualstudio.com/items?itemName=k--kato.intellij-idea-keybindings
+```
 
 
 ## 1.2 VSCode Settings
