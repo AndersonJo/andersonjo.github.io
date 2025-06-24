@@ -54,6 +54,27 @@ $ im-config -n fcitx5
 $ fcitx5-configtool
 ```
 
+```bash
+# 다음을 실행후, 한글키를 눌러서 어떤 값이 나오는지 확인
+$ xev | grep key
+   state 0x18, keycode 108 (keysym 0xffea, Alt_R), same_screen YES,
+   
+   
+# 이후 다음처럼 수정
+$ vi ~/.Xmodmap
+```
+
+```bash
+keycode 108 = Hangul
+```
+
+이후 다음과 같이 실행
+```bash
+$ xmodmap ~/.Xmodmap
+```
+
+
+
  - 아래 그림과 같이 설정합니다. 
    - Hangul
    - Keyboard - English (US)
