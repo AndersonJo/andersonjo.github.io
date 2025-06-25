@@ -73,6 +73,25 @@ keycode 108 = Hangul
 $ xmodmap ~/.Xmodmap
 ```
 
+시작프로그램에 등록
+
+```bash
+$ vi ~/.config/autostart/xmodmap.desktop
+```
+
+xmodmap.desktop
+```bash
+[Desktop Entry]
+Type=Application
+Exec=xmodmap /home/anderson/.Xmodmap
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Xmodmap
+Comment=Load custom key mappings
+```
+
+
 
 
  - 아래 그림과 같이 설정합니다. 
