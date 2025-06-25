@@ -1,0 +1,46 @@
+---
+layout: post
+title: "SimCSE - Simple Constrastive Learning of Sentence Embeddings"
+date: 2025-05-01 01:00:00
+categories: "nlp"
+asset_path: /assets/images/
+tags: [ ]
+---
+
+# Sentence Bert
+
+| Key              | Value                            |
+|:-----------------|:---------------------------------|
+| Paper            | https://arxiv.org/abs/2104.08821 |
+| publication Date | 2021                             |
+
+# Problem
+
+- 기존 방식
+    - 기존 문방 embedding 방식은 문장간 의미적 유사도를 잘 반영하지 못했음
+    - 따라서 기존 방식은 data augmentation또는 복잡한 학습 전략 없이는 성능 한계가 있었음
+    - supervised 방식은 많은 labeled data가 필요했음
+- SimCSE
+    - SimCSE는 Dropout만 간단하게 사용해, data augmentation을 수행함
+    - constrastive learning을 통해서 문제를 해결
+
+# Summary of the Model
+
+- Unsupervised and Supervised (두가지 방식 모두 지원)
+- Unsupervised SimCSE
+    - 단순히 input sentence 자신을 dropout한 이후에 자기 자신을 예측 하는 방식
+        - 즉 동일한 문장을 pretrained model에 "두번" 넣은후 -> dropout -> 두개의 문장 embedding을 얻음
+        - 이렇게 얻은 두개의 embeddings은 positive pairs 로 간주됨
+        - 이후 동일한 mini batch내에서 다른 문장들은 "negatives" 로 간주함
+        - representation collapse에 강함
+            - 서로 다른 다양한 문장들이 동일한 embedding으로 수렴되는 현상
+            - Dimensional Collapse: embedding vectors들이 전체 embedding space가 아니라 특정한 저차원 공간에 "집중"되는 현상
+            - Representation Collapse: Vector Quantization 에서 주로 발생하는 현상으로, 특정한 클러스터 대표값으로 묶이면서, 다양한 패턴을 잃어버리는 현상
+            - Neural Collapse: 분류 문제에서, embeddings들이 같은 클래스의 대표값 (평균값)으로 수렴하는 현상
+- Supervised SimCSE
+    - NLI 데이터셋을 사용
+        - 기존 3-way classification (entailment, neutral, contradiction) 사용 대신에, entrailment pairs 를 positive pairs로 사용하였음
+        - 추가적으로 contradiction paris를 hard negative 로 사용했을때 성능이 더 향상되었음
+
+
+<img src="{{ page.asset_path }}simcse-model.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">

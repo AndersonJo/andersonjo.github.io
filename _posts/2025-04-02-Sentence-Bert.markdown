@@ -2,7 +2,7 @@
 layout: post
 title:  "Sentence Bert"
 date:   2025-04-02 01:00:00
-categories: "machine-learning"
+categories: "nlp"
 asset_path: /assets/images/
 tags: []
 ---
