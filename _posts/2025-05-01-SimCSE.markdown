@@ -7,7 +7,7 @@ asset_path: /assets/images/
 tags: [ ]
 ---
 
-# Sentence Bert
+# SimCSE - Simple Constrastive Learning of Sentence Embeddings
 
 | Key              | Value                            |
 |:-----------------|:---------------------------------|
@@ -44,3 +44,4 @@ tags: [ ]
 
 
 <img src="{{ page.asset_path }}simcse-model.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
