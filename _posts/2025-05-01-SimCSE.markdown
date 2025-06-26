@@ -45,3 +45,70 @@ tags: [ ]
 
 <img src="{{ page.asset_path }}simcse-model.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
+# Detailed Explanation
+
+## Constrastive Learning
+
+
+$$ L = -log \frac{e^{sim(h_i, h^+_i) / \tau }}{ \sum^N_{j=1} e^{sim(h_i, h_j) / \tau}} $$
+
+- $$ h_i, h^+_i $$ : positive pair (dropout으로 생성된 두개의 문장 embedding)
+- $$ sim(...) $$ : cosine similarity $$ \frac{h_i \cdot h^+_i}{||h_i|| \cdot ||h^+_i||} $$
+- $$ \tau $$ : temperature hyperparameter 보통 0~1 사이의 값이며 보통 0.05로 설정
+  - 낮은값 (0.05): 빠른 수렴이지만, 오버피팅 위험 가능성
+  - 높은값 (0.1): 느린 수렴이지만, 더 일반화된 표현을 학습할 수 있음
+
+
+```python
+def simcse_loss(self, z1, z2):
+    """
+    Compute SimCSE loss using InfoNCE
+    Args:
+        z1: [batch_size, hidden_size] - first representations
+        z2: [batch_size, hidden_size] - second representations (dropout augmented)
+    Returns:
+        loss: contrastive loss
+    """
+    # Normalize embeddings
+    z1 = F.normalize(z1, dim=-1)
+    z2 = F.normalize(z2, dim=-1)
+
+    # Concatenate z1 and z2
+    z = torch.cat([z1, z2], dim=0)  # [2*batch_size, hidden_size]
+    
+    # Compute similarity matrix
+    sim_matrix = torch.matmul(z, z.t()) / self.temp  # [2*batch_size, 2*batch_size]
+    
+    batch_size = z1.size(0)
+    
+    # Create labels for positive pairs
+    # For i-th sample in z1, its positive is (i+batch_size)-th sample in z2
+    # For i-th sample in z2, its positive is (i-batch_size)-th sample in z1
+    labels = torch.arange(2 * batch_size, device=z.device)
+    labels[:batch_size] += batch_size  # z1's positives are in z2
+    labels[batch_size:] -= batch_size  # z2's positives are in z1
+    
+    # Mask out diagonal (self-similarity)
+    mask = torch.eye(2 * batch_size, device=z.device).bool()
+    sim_matrix = sim_matrix.masked_fill(mask, -float('inf'))
+    
+    # Compute cross-entropy loss
+    loss = F.cross_entropy(sim_matrix, labels)
+    
+    return loss
+```
+
+```python
+    # Normalize embeddings
+    z1 = F.normalize(z1, dim=-1)
+    z2 = F.normalize(z2, dim=-1)
+
+    # Concatenate z1 and z2
+    z = torch.cat([z1, z2], dim=0)  # [2*batch_size, hidden_size]
+    
+    # Compute similarity matrix
+    sim_matrix = torch.matmul(z, z.t()) / self.temp  # [2*batch_size, 2*batch_size]
+```
+- F.normalize(z1, dim=-1) 는 벡터를 L2 norm으로 정규화 합니다. $$ \frac{z_i}{ \| z_i \|_2} $$
+  - z / torch.sqrt(z**2).sum()) 이것과 동일한 의미입니다.
+- L2 norm으로 정규화된 벡터는 서로 dot product (내적)을 계산하면, cosine similarity가 됩니다.
