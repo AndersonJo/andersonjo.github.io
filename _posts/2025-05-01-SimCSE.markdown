@@ -47,6 +47,45 @@ tags: [ ]
 
 # Detailed Explanation
 
+
+## Unsupervised SimCSE
+
+Unsupervised SimCSE는 label 없이도 문장 표현 학습이 가능한 방식으로, 아주 간단하면서도 효과적인 전략을 사용합니다.<br>
+방식은 다음과 같습니다
+
+> 동일한 문장을 dropout을 두번 적용하여 embedidngs 을 생성 -> 이 둘을 positive pair로 간주하여 constrastive learning을 수행
+
+
+```text
+1. 입력 문장 s
+          ↓
+2. 같은 sentence → encoder 통과 (dropout 적용)
+          ↓
+ ┌──────────────┐        ┌──────────────┐
+ │  z1 = BERT(s)│        │  z2 = BERT(s)│
+ │ (1st dropout)│        │ (2nd dropout)│
+ └──────────────┘        └──────────────┘
+          ↓                      ↓
+       Positive Pair: (z1, z2)  ←──────┐
+                                       │
+                                       │
+               Same sentence with different noise
+                                       │
+          ↓                            ↓
+3. 다른 문장들의 embedding은 모두 negative로 간주
+          ↓
+4. InfoNCE loss로 contrastive 학습 수행
+```
+
+이렇게 하는 이유는 예를 들어 image라면 crop, flip, rotation, distortion등으로 augmentation을 수행할 수 있지만,<br> 
+문장에서는 dropout이 가장 간단하면서도 효과적인 방법이기 때문입니다.<br>
+
+- 동일한 문장을 두 번 인코딩하면 dropout 때문에 서로 조금씩 다른 embedding이 나옴
+- 이 두 벡터가 positive pair가 되고,
+- 같은 배치에 있는 다른 문장 embedding들은 전부 negative pair로 간주
+- 이렇게 batch 내부에서만 positive/negative를 구성하여 학습
+
+
 ## Constrastive Learning
 
 
@@ -120,8 +159,6 @@ def simcse_loss(self, z1, z2):
     
     return loss
 ```
-
-
 
 
 
