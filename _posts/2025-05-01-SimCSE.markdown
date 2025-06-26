@@ -59,6 +59,23 @@ $$ L = -log \frac{e^{sim(h_i, h^+_i) / \tau }}{ \sum^N_{j=1} e^{sim(h_i, h_j) / 
   - 높은값 (0.1): 느린 수렴이지만, 더 일반화된 표현을 학습할 수 있음
 
 
+**cosine similarity 계산하는 부분**
+
+- F.normalize(z1, dim=-1) 는 벡터를 L2 norm으로 정규화 합니다. $$ \frac{z_i}{ \| z_i \|_2} $$
+  - z / torch.sqrt(z**2).sum()) 이것과 동일한 의미입니다.
+- L2 norm으로 정규화된 벡터는 서로 dot product (내적)을 계산하면, cosine similarity가 됩니다.
+
+
+**label 생성하는 부분**
+
+- z1: 문장 A, B, C, D → [z1[0], z1[1], z1[2], z1[3]]
+- z2: 위 문장 A, B, C, D 를 dropout해서 다시 만든 버전 → [z2[0], z2[1], z2[2], z2[3]]
+
+각 anchor embedding (row)에 대해<br>
+이 anchor의 정답 positive가 z의 몇 번째 위치에 있는지를 알려주는 label 배열을 만들기
+
+쉽게 말하면, 서로의 index를 맞추는 작업.
+
 ```python
 def simcse_loss(self, z1, z2):
     """
@@ -90,6 +107,11 @@ def simcse_loss(self, z1, z2):
     labels[batch_size:] -= batch_size  # z2's positives are in z1
     
     # Mask out diagonal (self-similarity)
+    # We don't want to compare a sample with itself
+    # tensor([[  -inf, 0.0000, 0.9939, 0.1104],
+    #    [0.0000,   -inf, 0.1104, 0.9939],
+    #    [0.9939, 0.1104,   -inf, 0.2195],
+    #    [0.1104, 0.9939, 0.2195,   -inf]])
     mask = torch.eye(2 * batch_size, device=z.device).bool()
     sim_matrix = sim_matrix.masked_fill(mask, -float('inf'))
     
@@ -99,17 +121,8 @@ def simcse_loss(self, z1, z2):
     return loss
 ```
 
-```python
-    # Normalize embeddings
-    z1 = F.normalize(z1, dim=-1)
-    z2 = F.normalize(z2, dim=-1)
 
-    # Concatenate z1 and z2
-    z = torch.cat([z1, z2], dim=0)  # [2*batch_size, hidden_size]
-    
-    # Compute similarity matrix
-    sim_matrix = torch.matmul(z, z.t()) / self.temp  # [2*batch_size, 2*batch_size]
-```
-- F.normalize(z1, dim=-1) 는 벡터를 L2 norm으로 정규화 합니다. $$ \frac{z_i}{ \| z_i \|_2} $$
-  - z / torch.sqrt(z**2).sum()) 이것과 동일한 의미입니다.
-- L2 norm으로 정규화된 벡터는 서로 dot product (내적)을 계산하면, cosine similarity가 됩니다.
+
+
+
+
