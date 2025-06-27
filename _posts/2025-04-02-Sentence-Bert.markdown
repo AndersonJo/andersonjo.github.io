@@ -28,7 +28,7 @@ tags: []
  - 따라서 매우 비효율적임
 
 
-# 2. Summary
+# 2. Introduction
 
 ## 2.1 BERT VS Sentence-BERT (SBERT)
 
@@ -42,7 +42,20 @@ tags: []
 
 
 
-## 2.1 Model 
+## 2.2 Siamese Network
+
+**Siamese Network (샴 네트워크)**는 두개 이상의 입력 (두 문장, 두 이미지)를 **동일한 모델**에 넣어 각각의 embedding을 만든후,
+두 embeddings 의 유사도를 계산하는 구조
+
+수학적 정리
+ - 동일한 신경만 f(x) 를 두번 사용
+ - 유사도 계산
+   - Cosine Similarity: $$ cosine \left( f(x_1), f(x_2) \right) = \frac{ f(x_1) \dot f(x_2)}{ \| f(x_1) \| \| f(x_2) \| } $$
+   - Euclid Distance: $$ \| f(x_1) - f(x_2) \|_2 $$
+
+
+
+## 2.3 Model Summary 
 
 <img src="{{ page.asset_path }}sbert-model.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
@@ -57,10 +70,9 @@ tags: []
  - Performance: Bi-Encoder 를 사용함으로서 빠른 유사도 계산 가능
 
 
-# 3. Model in Detail
+# 3. Model Forward
 
-
-## 3.1 Forward Triplet
+## 3.2 Forward Triplet
 
 ```python
     def forward_triplet(self, input_ids_a, attention_mask_a, 
@@ -203,21 +215,9 @@ self.pooling = nn.Linear(embedding_dim, embedding_dim) 입니다.
 
 
 
+# 4. Loss Functions
 
-## 3.3 Siamese Network
-
-**Siamese Network (샴 네트워크)**는 두개 이상의 입력 (두 문장, 두 이미지)를 **동일한 모델**에 넣어 각각의 embedding을 만든후,
-두 embeddings 의 유사도를 계산하는 구조
-
-수학적 정리
- - 동일한 신경만 f(x) 를 두번 사용
- - 유사도 계산
-   - Cosine Similarity: $$ cosine \left( f(x_1), f(x_2) \right) = \frac{ f(x_1) \dot f(x_2)}{ \| f(x_1) \| \| f(x_2) \| } $$
-   - Euclid Distance: $$ \| f(x_1) - f(x_2) \|_2 $$
-
-
-
-### 1.5.1 Cosine Similarity + MSE Loss (Regression Loss)
+### 4.1 Cosine Similarity + MSE Loss (Regression Loss)
 
 $$ Loss = MSE(cos(u, v), label) $$
 
@@ -244,7 +244,7 @@ print("MSE Loss:", mse_loss.item())
 ```
 
 
-### 1.5.2 Classification Objective 
+### 4.2 Classification Objective 
 
 $$ \begin{align} 
 h &= \left[ u; v;; | u -v | \right] \\
@@ -281,7 +281,7 @@ loss = criterion(logits, labels)
 ```
 
 
-### 1.5.3 Triplet Loss
+### 4.3 Triplet Loss
 
 $$ TripletLoss = max(\| s_a - s_p \| - \| s_a - s_n \| + \epsilon, 0) $$
 
