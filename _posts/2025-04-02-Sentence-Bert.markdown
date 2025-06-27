@@ -61,6 +61,7 @@ tags: []
 
 특징
  - BERT 또는 RoBERTa 에 적용 가능
+ - Supervised Model
  - Pooling 사용하여 fixed sized sentence embedding 생성
  - Pooling Method
    - CLS Pooling: last_hidden_state[:, 0, :] # shape (1, hidden_dim)
