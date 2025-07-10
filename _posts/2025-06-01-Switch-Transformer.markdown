@@ -142,11 +142,15 @@ Switch Transformer 를 배우기 전에, 먼저 Expert Capacity 개념을 이해
 
 예를 들어서 "Mixture of Experts is AWESOME" 이라는 문장이 Router를 거쳤을때, 특정 Expert 만 선택된다면 undertraining이 발생할수 있습니다.<br>
 
- - "Mixture" -> softmax(logits) -> [0.7, 0.1, 0.1, 0.1] -> Expert 1 선택
- - "of" -> softmax(logits) -> [0.8, 0.1, 0.0, 0.1] -> Expert 1 선택
- - "Experts" -> softmax(logits) -> [0.6, 0.1, 0.1, 0.2] -> Expert 1 선택
- - "is" -> softmax(logits) -> [0.5, 0.2, 0.1, 0.2] -> Expert 1 선택
- - "AWESOME" -> softmax(logits) -> [0.1, 0.1, 0.7, 0.1] -> Expert 3 선택
+```text
+Token      Softmax(logits)                  Selected Expert
+------------------------------------------------------------
+Mixture    [0.7, 0.1, 0.1, 0.1]             Expert 0
+of         [0.8, 0.1, 0.0, 0.1]             Expert 0
+Experts    [0.6, 0.1, 0.1, 0.2]             Expert 0
+is         [0.5, 0.2, 0.1, 0.2]             Expert 0
+AWESOME    [0.1, 0.1, 0.7, 0.1]             Expert 2
+```
 
 즉 어떤 expert가 선택 되느냐가 아니라, 얼마나 많이 특정 expert가 선택되느냐가 중요합니다.<br>
 해당 문제를 해결하기 위해서, Expert Capacity 개념이 도입되었습니다.<br>
@@ -199,6 +203,7 @@ $$ \text{Expert Capacity} = \left( \frac{100}{4} \times 1.0 \right) = 25 $$
 
 
 # Switch Transformer
+
 
 ## Switch Routing: Rethinking Mixture of Experts
 
@@ -316,4 +321,238 @@ class Router(nn.Module):
         load_balancing_loss = self.num_experts * torch.dot(fraction_tokens_per_expert, expert_probs)
         
         return expert_mask, load_balancing_loss
+```
+
+## Expert Capacity 
+
+
+# Implementation 
+
+여기서 전체 코드가 아닌 핵심이 되는 코드만 공유 합니다. 
+
+
+## Switch Transformer Model
+
+```text
+Input Tokens
+     │
+     ▼
+[Embedding Layer] ──► nn.Embedding(ntoken, d_model)
+     │
+     ▼
+[Positional Encoding] ──► PositionalEncoding(d_model, dropout)
+     │
+     ▼
+[Transformer Encoder Stack]
+     │
+     └─► (L layers of)
+           └─► [Multi-head Attention]
+           └─► [LayerNorm + Residual]
+           └─► [Switch FFN (MoE Layer)]
+               └─► Router → Expert selection
+               └─► Dispatch token to Expert
+               └─► Gather output
+           └─► [LayerNorm + Residual]
+     │
+     ▼
+[Final Linear Decoder] ──► nn.Linear(d_model, ntoken)
+     │
+     ▼
+Vocabulary Logits (for language modeling)
+```
+
+
+```python
+class SwitchTransformerLM(nn.Module):
+    def __init__(self, ntoken: int, d_model: int, nhead: int, d_ff: int, num_experts: int, num_layers: int,
+                 dropout: float = 0.5):
+        super().__init__()
+        self.model_type = 'Transformer'
+        self.d_model = d_model
+        self.encoder = nn.Embedding(ntoken, d_model)
+        self.pos_encoder = PositionalEncoding(d_model, dropout)
+
+        encoder_layer = SwitchTransformerEncoderLayer(d_model, nhead, d_ff, num_experts, dropout)
+        self.transformer_encoder = SwitchTransformerEncoder(encoder_layer, num_layers)
+
+        self.decoder = nn.Linear(d_model, ntoken)
+```
+
+## SwitchTransformer Encoder Layer  + MoE Layer
+
+```text
+Input: Token Hidden States (src)
+     │
+     ▼
+[Multi-Head Self-Attention]
+     │
+     ▼
+🟦 MoELayer  ← ← ← ← ← ← ← ← ← ← ← ← ← 🧠 핵심 포인트!
+     │
+     ├─► Router(x)
+     │     └─► Routing logits (W_r · x)
+     │     └─► Softmax → Top-1 Expert 선택
+     │     └─► expert_mask 생성 (one-hot)  
+     │
+     ├─► Capacity 계산 (token overflow 방지)
+     │
+     ├─► 각 Expert 별로:
+     │     └─ Token dispatch (x[expert_indices])
+     │     └─ Expert FFN 처리
+     │     └─ Output scatter to original positions
+     │
+     └─► 최종 Output (sparse computation 결과)
+             + Load Balancing Loss
+     ▼
+Dropout + Residual
+     ▼
+LayerNorm #2
+     ▼
+Output Hidden States, Load Balancing Loss
+```
+
+SwitchTransformerEncoderLayer 에서 가장 중요한 부분은 아래 코드이며,<br>
+기존 TransformerEncoderLayer와 MoELayer를 결합한 것입니다.<br>
+Attention 연산 후에 MoE layer를 적용하여, 각 토큰마다 다른 expert를 선택하고 처리합니다.<br>
+
+```python
+class SwitchTransformerEncoderLayer(nn.Module):
+    def __init__(self, d_model: int, nhead: int, d_ff: int, num_experts: int, dropout: float = 0.1) -> None:
+        super().__init__()
+        self.self_attn = nn.MultiheadAttention(d_model, nhead, dropout=dropout)
+        self.moe_layer = MoELayer(d_model, d_ff, num_experts)
+
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, src: Tensor,
+                src_mask: Optional[Tensor] = None,
+                src_key_padding_mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+        # Multi-head self-attention
+        src2 = self.self_attn(src, src, src, attn_mask=src_mask, key_padding_mask=src_key_padding_mask)[0]
+        src = src + self.dropout(src2)
+        src = self.norm1(src)
+
+        # MoE layer
+        src2, load_balancing_loss = self.moe_layer(src)
+        src = src + self.dropout(src2)
+        src = self.norm2(src)
+
+        return src, load_balancing_loss
+```
+
+
+## MoE Layer 
+
+```text
+Input (x): (batch_size, seq_len, d_model)
+   │
+   ▼
+Router (W_r · x → softmax → top-1 expert 선택)
+   │
+   ▼
+Expert Mask (one-hot): (batch_size, seq_len, num_experts)
+   │
+   ▼
+Flatten: x → (B×T, d_model), mask → (B×T, num_experts)
+   │
+   ▼
+for each expert i in num_experts:
+    - token 선택 (해당 expert로 라우팅된 것만)
+    - capacity 초과 시 overflow drop
+    - expert_i(input) → FFN 처리
+    - 결과를 final_output 에 다시 index_add
+
+   ▼
+Reshape: (B×T, d_model) → (batch_size, seq_len, d_model)
+
+Return: final_output, load_balancing_loss
+```
+
+
+
+```python
+
+class MoELayer(nn.Module):
+    """
+    The Mixture-of-Experts (MoE) layer, which replaces the FFN layer in a standard Transformer.
+    """
+    def __init__(self, d_model: int, d_ff: int, num_experts: int, capacity_factor: float = 1.25) -> None:
+        super().__init__()
+        self.d_model = d_model
+        self.num_experts = num_experts
+        self.capacity_factor = capacity_factor
+
+        self.router = Router(d_model, num_experts)
+        self.experts = nn.ModuleList([Expert(d_model, d_ff) for _ in range(num_experts)])
+        
+    def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
+        """
+        Example: Let's say we have:
+        - batch_size=2, seq_len=4, d_model=8, num_experts=2
+        - Input x: shape (2, 4, 8) - 2 sequences, each with 4 tokens of 8 dimensions
+        """
+        # x: (batch_size, seq_len, d_model)
+        # Example: x.shape = (2, 4, 8)
+        batch_size, seq_len, d_model = x.shape
+        
+        # Get the expert mask and load balancing loss from the router
+        # The router decides which expert should process each token
+        expert_mask, load_balancing_loss = self.router(x)
+        # expert_mask: (batch_size, seq_len, num_experts)
+        # Example: expert_mask.shape = (2, 4, 2)
+        #   expert_mask[0, 0, :] = [1, 0] means token 0 goes to expert 0
+        #   expert_mask[0, 1, :] = [0, 1] means token 1 goes to expert 1
+        
+        # Determine the capacity of each expert
+        capacity = int((seq_len / self.num_experts) * self.capacity_factor)
+        
+        # Reshape tensors for easier processing - flatten batch and sequence dimensions
+        x_flat = x.view(-1, d_model) # (batch_size * seq_len, d_model)
+        expert_mask_flat = expert_mask.view(-1, self.num_experts) # (batch_size * seq_len, num_experts)
+
+        # Initialize output tensor with zeros - same shape as flattened input
+        final_output = torch.zeros_like(x_flat)
+        # Example: final_output.shape = (8, 8)
+        
+        # Process each expert separately
+        for i, expert in enumerate(self.experts):
+            # Find which tokens should go to this expert (non-zero entries in the mask)
+            expert_indices = torch.where(expert_mask_flat[:, i] > 0)[0]
+            # Example for expert 0: expert_indices might be [0, 2, 4] (tokens 0, 2, 4)
+            # Example for expert 1: expert_indices might be [1, 3, 5, 6, 7] (tokens 1, 3, 5, 6, 7)
+            
+            # Apply capacity constraint - if too many tokens assigned, keep only the first 'capacity' tokens
+            if expert_indices.shape[0] > capacity:
+                expert_indices = expert_indices[:capacity]
+                # Example: if expert 1 has 5 tokens but capacity=2, keep only [1, 3]
+
+            # Process tokens assigned to this expert
+            if expert_indices.shape[0] > 0:
+                # Extract the tokens that should go to this expert
+                expert_input = x_flat[expert_indices]
+                # Example: if expert_indices=[1, 3], expert_input.shape = (2, 8)
+                
+                # Process the tokens through the expert network
+                expert_output = expert(expert_input)
+                # Example: expert_output.shape = (2, 8) - same as expert_input
+                
+                # Ensure dtype consistency
+                expert_output = expert_output.to(final_output.dtype)
+
+                # Place the expert's output back to the final output at the correct positions
+                # Switch Transformer uses exclusive routing: each token goes to exactly ONE expert
+                # So we use assignment (=) not addition (+=)
+                # Example: if expert_indices=[1, 3] and expert_output has 2 rows
+                #   final_output[1] = expert_output[0]  # Place expert's output for token 1
+                #   final_output[3] = expert_output[1]  # Place expert's output for token 3
+                for j, token_idx in enumerate(expert_indices):
+                    final_output[token_idx] = expert_output[j]
+
+        # Reshape back to original dimensions
+        final_output = final_output.view(batch_size, seq_len, d_model)
+        # Example: final_output.shape = (2, 4, 8) - back to original shape
+        
+        return final_output, load_balancing_loss
 ```
