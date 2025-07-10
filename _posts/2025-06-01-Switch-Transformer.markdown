@@ -197,6 +197,9 @@ $$ \text{Expert Capacity} = \left( \frac{100}{4} \times 1.0 \right) = 25 $$
 <img src="{{ page.asset_path }}capacity-factor-switch-transformer.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
+
+# Switch Transformer
+
 ## Switch Routing: Rethinking Mixture of Experts
 
 Switch Transformer 는 이러한 복잡한 Routing 알고리즘을 단순화 하면서, 더 높은 성능을 보여줍니다.<br>
@@ -209,5 +212,108 @@ Switch Transformer 는 이러한 복잡한 Routing 알고리즘을 단순화 하
 3. routing implementaion이 단순해집니다. 
 
 
+1번은 single expert만 선택하기 때문에, routing computation이 단순해집니다.<br>
+2번은 expert capacity에서 쉽게 말하면, dropped token이 발생하면서 연산량이 줄어들수 있습니다.<br>
+3번은 그냥 구현이 단순해집니다. 
 
 
+## Differentiable Load Balancing Loss
+
+$$
+\begin{align}
+P_i &= \frac{1}{T} \sum_{x \in \beta} p_i(x) \\
+fi &= \frac{1}{T} \sum_{x \in \beta} \mathbf{1} \{ argmax p(x) = i \} \\
+loss &= \alpha \cdot N \cdot \sum^N_{i=1} f_i \cdot P_i \\
+\end{align} $$
+
+- P_i
+  - $$ P_i (X) $$: token x가 expert i로 갈 확률. (softmax의 결과값)
+- f_i 
+  - T: batch안의 token 갯수
+  - argmax p(x): token x를 라우팅할때 선택된 expert의 index
+  - 쉽게 설명하면, batch 안의 token이 expert i로 라우팅 됐는지 비율
+  - 예를 들어서 batch안에 token이 100개가 있고, 그중에 20개가 expert i로 라우팅 됐다면, f_i = 0.2 가 됩니다.
+- loss
+  - a (alpha): scaling factor (hyperparameter 이며 보통 0.01로 설정)
+  - N: number of experts
+  - f_i: 실제 routing된 token 중에서 expert i에 할당된 비율 (fraction of tokens dispatched to expert i)
+  - P_i: expert i에 할당된 확률 총합 (평균)
+
+ 
+즉, 실제 token 분배 분포 f_i 와 router (softmax)의 분포 P_i 의 dot product를 계산 -> scaling 계수를 곱한것<br>
+f_i (token 분배 분포) 와 P_i (softmax의 분포)가 일치할수록 loss가 작아집니다.<br>
+(이때 gradient계산 할때 f 는 non-differentiable 이며, P는 differentiaible 입니다.)
+
+즉 다음은 "완벽히 균형 잡힌 상태 (ideal case)" 입니다. 
+
+```text
+Expert:       E1     E2     E3     E4
+f_i:          0.25   0.25   0.25   0.25   (실제 라우팅 분포)
+P_i:          0.25   0.25   0.25   0.25   (softmax 기대 확률)
+
+f_i * P_i:    0.0625 0.0625 0.0625 0.0625
+Sum(f ⋅ P):   0.25   (최소값!)
+```
+
+만약 편향된 상태가 된다면, 다음과 같습니다.
+
+```text
+Expert:       E1     E2     E3     E4
+f_i:          0.70   0.10   0.10   0.10   (거의 E1만 쓰임)
+P_i:          0.40   0.20   0.20   0.20   (softmax도 약간 E1 치우침)
+
+f_i * P_i:    0.28   0.02   0.02   0.02
+Sum(f ⋅ P):   0.34   (커짐 → loss ↑)
+```
+
+
+Router Implementation
+
+```python
+import torch
+import torch.nn.functional as F
+from torch import nn
+
+class Router(nn.Module):
+    """
+    The router module determines which expert each token is sent to.
+    It also computes the load balancing loss.
+    """
+    def __init__(self, d_model, num_experts):
+        super().__init__()
+        self.num_experts = num_experts
+        self.gate = nn.Linear(d_model, num_experts)
+
+    def forward(self, x):
+        # x: (batch_size, seq_len, d_model)
+        logits = self.gate(x)
+        # logits: (batch_size, seq_len, num_experts)
+        
+        # Get the top-1 expert for each token
+        top1_logits, top1_indices = logits.max(dim=-1)
+        # top1_indices: (batch_size, seq_len)
+        
+        # Create a one-hot encoding of the expert indices
+        # This will be used to dispatch tokens to the correct expert
+        expert_mask = F.one_hot(top1_indices, self.num_experts).float()
+        # expert_mask: (batch_size, seq_len, num_experts)
+        
+        # Calculate the load balancing loss
+        # This loss encourages all experts to be used equally.
+        
+        # Count how many tokens are sent to each expert
+        tokens_per_expert = expert_mask.sum(dim=(0, 1)) # (num_experts)
+        # Total number of tokens
+        total_tokens = x.size(0) * x.size(1)
+        
+        # Calculate the fraction of tokens sent to each expert
+        fraction_tokens_per_expert = tokens_per_expert / total_tokens
+        
+        # Calculate the expert probabilities from the logits
+        expert_probs = F.softmax(logits, dim=-1).mean(dim=(0, 1)) # (num_experts)
+        
+        # The load balancing loss is the dot product of these two quantities
+        load_balancing_loss = self.num_experts * torch.dot(fraction_tokens_per_expert, expert_probs)
+        
+        return expert_mask, load_balancing_loss
+```
