@@ -7,7 +7,7 @@ asset_path: /assets/images/
 tags: ['post-training', 'self-supervised', 'tools', 'api-calls', 'instruction-tuning']
 ---
 
-# 1. ToolFormer - Language Models Can Teach Themselves to Use Tools
+# 1. Introduction
 
 | Key              | Value                                |
 |:-----------------|:-------------------------------------|
@@ -36,7 +36,7 @@ ToolFormer는 최소한의 데모만으로 모델이 스스로 도구 사용을 
 - 계산기·검색·번역·캘린더 등 다양한 도구를 하나의 통일된 포맷으로 다룸
 
 
-# 1.2 Examples
+## 1.2 Examples
 
  - **계산기**: [Calculator(400 / 1400) → 0.29]
  - **QA**: [QA(“Who is the publisher of The New England Journal of Medicine?”) → Massachusetts Medical Society]
@@ -45,16 +45,23 @@ ToolFormer는 최소한의 데모만으로 모델이 스스로 도구 사용을 
 <img src="{{ page.asset_path }}toolformer_example.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
-# Mathematical Formulation
+## 1.3 Pipeline
 
-## Format & Notation
+<img src="{{ page.asset_path }}toolformer-pipeline.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+
+# 2. Mathematical Formulation
+
+## 2.1 Format & Notation
 
 - API 호출 표현: $$ c = (a_c, i_c) $$
   - a_c: API 이름 (예: Calculator, WikiSearch)
   - i_c: API arguments (예: 질의, 수식 등)
 
 위의 수식적 표현은 Tuple 로 이루어져 있습니다. (수학적 관점에서)<br>
-하지만 Language Model에서는 문자열 즉 Token Sequence 를 다룰수 있기 때문에 Tuple 같은 구조체를 다룰수 없습니다.
+하지만 Language Model에서는 문자열 즉 Token Sequence 를 다룰수 있기 때문에 Tuple 같은 구조체를 다룰수 없습니다.<br>
 따라서 $$ (a_c, i_c, r) $$ 같은 구조를 -> 일렬의 문자열로 바꿔야 합니다.<br> 
 이것을 논문에서는 **Linearized Sequence** 라고 부릅니다. 
 
@@ -69,15 +76,108 @@ $$
 여기서 <API> 는 special token입니다.
 
 
-## 후보 생성과 필터링
+## 2.2 Sampling API Calls
 
-- 원시 말뭉치 \(\mathbf{x} = (x_1, \dots, x_T)\) 에서 위치 \(i\) 와 API 후보들 \(\{c_i^1, \dots, c_i^K\}\) 를 샘플링합니다(소수의 데모를 담은 프롬프트로 in-context 생성).
-- 각 후보에 대해 API 를 실행해 결과 \(r\) 를 얻고, 결과를 포함한 텍스트 \(\mathbf{x}^{*}\) 를 구성합니다.
-- 다음 토큰 구간 \(\mathcal{W}_i = \{i+1, \dots, i+\tau\}\) 에 대한 NLL 감소가 충분한지 검사합니다.
 
-손실 비교 기준은 다음과 같습니다.
 
-$$
+
+## 2.2 후보 생성과 필터링
+
+1. **Prompt 를 만듬 (P(x))**
+  - 각 API 마다 prompt 템플릿을 만듬
+  - prompt는 모델한테 해당 텍스트 안에 API call을 생성하도록 힌트를 줌
+
+
+Question Answering API Prompt 예시
+
+```text
+Your task is to add calls to a Question Answering API to a piece of text.
+The questions should help you get information required to complete the text. 
+You can call the API by writing "[QA(question)]" where "question" is the
+question you want to ask. 
+
+Here are some examples of API calls:
+
+Input: Joe Biden was born in Scranton, Pennsylvania.
+Output: Joe Biden was born in [QA("Where was Joe Biden born?")] Scranton, [QA("In which state is Scranton?")] Pennsylvania.
+```
+
+Calculator API Prompt 예시
+
+```text
+Your task is to add calls to a Calculator API to a piece of text.
+The calls should help you get information required to complete the text. 
+You can call the API by writing "[Calculator(expression)]" 
+where "expression" is the expression to be computed. 
+
+Here are some examples of API calls:
+
+Input: The number in the next term is 18 + 12 x 3 = 54.
+Output: The number in the next term is 18 + 12 x 3 = [Calculator(18 + 12 * 3)] 54.
+```
+
+
+2. **API Call 위치 후보 찾기**
+ - Input Text의 i위치 마다, \<API\> 토큰이 나올 확률을 모델한테 계산
+ - $$ p_i = P_M (\langle \text{API} \rangle | P(x), x_{1:i-1}) $$
+ - 여기서 나온 확률이 특정 threshold 보다 크면, 해당 positions 을 들고 있음. 
+ - 관련 positions 이 너무 많으면 상위 K 개만 선택함
+
+
+다음은 예제 코드. (이렇게 돌리면 안됨. 그냥 예제)
+
+```python
+# ------------------------------
+# 1. Prompt P(x) 준비
+# ------------------------------
+text = "Joe Biden was born in Scranton, Pennsylvania."
+prompt = "Add helpful API calls to clarify this text:\n"  # P(x)
+inputs = tokenizer(prompt + text, return_tensors="pt").to(model.device)
+
+# ------------------------------
+# 2. 각 위치별로 <API> 시작 확률 계산
+# ------------------------------
+input_ids = inputs["input_ids"][0]  # shape: [seq_len]
+seq_len = input_ids.size(0)
+
+# special token 정의 (논문에서는 실제론 '[' 사용)
+API_START = tokenizer.convert_tokens_to_ids("[")
+
+threshold = 0.01
+top_k = 5
+
+api_probs = []
+with torch.no_grad():
+    for i in range(1, seq_len):  
+        prefix_ids = input_ids[:i].unsqueeze(0)  # prefix
+        outputs = model(prefix_ids)
+        logits = outputs.logits[:, -1, :]  # last token logits
+        probs = torch.softmax(logits, dim=-1)
+        p_api = probs[0, API_START].item()
+        api_probs.append((i, p_api))
+
+# threshold filtering + top-k
+candidates = [(i, p) for (i, p) in api_probs if p > threshold]
+candidates = sorted(candidates, key=lambda x: x[1], reverse=True)[:top_k]
+```
+
+
+3. **API 호출**
+
+여기서 전체 API 호출을 합니다.<br> 
+구현에 달려 있는 것이기 때문에, python 함수를 실행할지, API 를 호출할지, 다른 model 을 호출할지 등등 모두  자유
+
+
+4. **Filtering API Calls**
+
+
+- $$ \mathcal{L}_{\text{plain}} $$ : API 호출 없이, plain LM loss
+- $$ \mathcal{L}_{\text{aug}} $$ : API call + 결과를 포함한 LM Loss
+- $$ \Delta^{(i)} $$ : loss 의 개선 정도  
+  - $$ \Delta^{(i)} \gt 0 $$ : API Call 이 실제로 두움이 됨
+  - $$ \Delta^{(i)} \le 0 $$ : API Call 이 오히려 성능을 떨어뜨림
+
+ $$
 \begin{aligned}
 \mathcal{L}_{\text{plain}}^{(i)} &= - \sum_{t \in \mathcal{W}_i} \log p_\theta(x_t \mid x_{\le i}) \\
 \mathcal{L}_{\text{aug}}^{(i)} &= - \sum_{t \in \mathcal{W}_i} \log p_\theta(x_t \mid x_{\le i}, \mathbf{e}(c_i, r)) \\
@@ -85,7 +185,9 @@ $$
 \end{aligned}
 $$
 
-- 필터링: \(\Delta^{(i)} > \gamma\) 인 호출만 채택합니다(임계치 \(\gamma > 0\)).
+
+
+
 
 ## 최종 파인튜닝 목표
 
