@@ -58,15 +58,6 @@ ToolFormer는 최소한의 데모만으로 모델이 스스로 도구 사용을 
 따라서 $$ (a_c, i_c, r) $$ 같은 구조를 -> 일렬의 문자열로 바꿔야 합니다.<br> 
 이것을 논문에서는 **Linearized Sequence** 라고 부릅니다. 
 
-- e(c) = \<API\> $$ a_c(i_c) $$ \</API\>
-- e(c, r) = \<API\> $$ a_c(i_c) $$ -> r \</API\>
-
-여기서 <API> 는 special token입니다.
-
-
-## API 호출의 선형화 표현
-
-API 호출 c 와 결과 r 에 대해, 다음과 같이 특수 토큰으로 선형화합니다.
 
 $$
 \begin{aligned}
@@ -75,8 +66,8 @@ $$
 \end{aligned}
 $$
 
-- \( a_c \): API 이름 (예: Calculator, WikiSearch, MT, Calendar)
-- \( i_c \): API 인자(질의, 수식 등)
+여기서 <API> 는 special token입니다.
+
 
 ## 후보 생성과 필터링
 
