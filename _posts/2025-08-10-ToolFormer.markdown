@@ -45,15 +45,7 @@ ToolFormer는 최소한의 데모만으로 모델이 스스로 도구 사용을 
 <img src="{{ page.asset_path }}toolformer_example.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
-# 1.3 Idea
-
-- 모델이 텍스트 안에 API 호출을 삽입하고 결과까지 포함한 시퀀스로 학습하면, 모델은 다음 토큰 예측을 위해 도구 사용을 내재화합니다.
-- 호출이 유익한지 여부는 "결과를 삽입했을 때 다음 토큰 NLL 감소"로 판단합니다.
-- 어떤 API를 언제 호출할지는 모델이 스스로 배웁니다(특정 다운스트림 태스크로 제한되지 않음).
-
-
 # Mathematical Formulation
-
 
 ## Format & Notation
 
@@ -66,8 +58,8 @@ ToolFormer는 최소한의 데모만으로 모델이 스스로 도구 사용을 
 따라서 $$ (a_c, i_c, r) $$ 같은 구조를 -> 일렬의 문자열로 바꿔야 합니다.<br> 
 이것을 논문에서는 **Linearized Sequence** 라고 부릅니다. 
 
-- e(c) = <API> $$ a_c(i_c) $$ </API>
-- e(c, r) = <API> $$ a_c(i_c) $$ -> r </API>
+- e(c) = <API> $ a_c(i_c) $ </API>
+- e(c, r) = <API> $ a_c(i_c) $ -> r </API>
 
 여기서 <API> 는 special token입니다.
 
