@@ -52,7 +52,7 @@ ToolFormer는 최소한의 데모만으로 모델이 스스로 도구 사용을 
 
 
 
-# 2. Mathematical Formulation
+# 2. How it works 
 
 ## 2.1 Format & Notation
 
@@ -188,143 +188,25 @@ $$ \mathcal{L}_{\text{plain}}^{(i)} - \mathcal{L}_{\text{aug}}^{(i)} \ge \gamma_
 
 
 
+## 2.5 Model Finetuning After Sampling & Filtering
 
+이렇게 필터링된 API 호출들을 포함한 결과 \(\mathcal{C}^*\) 를 가지고, 모델을 파인튜닝합니다.<br>
+삽입 과정은 다음과 같이 합니다. 
 
+```text
+# Input text
+User: What’s the weather in Seoul today?
 
-## 최종 파인튜닝 목표
+# Internal API call
+[API CALL] weather_api("seoul", "today")
+[API_RESULT] {"temperature": "25°C", "condition": "Sunny"}
 
-필터링 후 API 호출이 삽입된 말뭉치 \(\mathcal{C}^*\) 에 대해, 표준 LM 목표를 학습합니다.
-
-$$
-\min_{\theta} \; \mathbb{E}_{\mathbf{x}^* \sim \mathcal{C}^*} \left[ - \sum_{t=1}^{|\mathbf{x}^*|} \log p_\theta\big(x_t^* \mid x_{<t}^*\big) \right]
-$$
-
-이때 \(\mathbf{x}^*\) 는 본문 토큰과 API 호출 토큰(결과 포함)이 인터리브된 시퀀스입니다. 모델은 API 호출 토큰의 문법, 어떤 API/인자를 쓸지, 결과로 이어지는 텍스트 예측까지 모두 학습하게 됩니다.
-
-
-# Training Pipeline
-
-1) In-context 후보 주석화: 소수의 데모로 프롬프트를 구성해, 말뭉치 텍스트에 API 호출 후보를 자동 삽입.
-2) 실행/필터: 후보 호출을 실제 실행하여 결과를 얻고, \(\Delta^{(i)}\) 기준으로 유익한 호출만 유지.
-3) 파인튜닝: 유지된 호출이 포함된 확장 말뭉치로 LM 파인튜닝.
-
-
-# Core PyTorch (concise)
-
-아래 코드는 핵심 아이디어를 담은 최소 스니펫입니다. 실제 프로덕션에서는 데이터 파이프라인, 안전한 샌드박스, 비동기 호출, batched loss 측정이 추가되어야 합니다.
-
-```python
-# Minimal, didactic snippet (PyTorch + HF Transformers)
-import torch
-from torch import nn
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from datetime import datetime
-import math
-import re
-
-SPECIAL_OPEN = "<API>"
-SPECIAL_CLOSE = "</API>"
-SPECIAL_ARROW = "->"
-
-class SafeCalculator:
-    allowed = re.compile(r"^[0-9\s\+\-\*/\(\)\.]+$")
-    @classmethod
-    def compute(cls, expr: str) -> str:
-        if not cls.allowed.match(expr):
-            return "NaN"
-        try:
-            return str(eval(expr, {"__builtins__": {}}, {}))
-        except Exception:
-            return "NaN"
-
-def execute_api(name: str, arg: str) -> str:
-    name = name.strip()
-    if name == "Calculator":
-        return SafeCalculator.compute(arg)
-    if name == "Calendar":
-        # Return an English string so the model learns to copy/use it
-        return datetime.utcnow().strftime("Today is %A, %B %d, %Y")
-    # Stubs for MT, WikiSearch etc.
-    return ""
-
-@torch.no_grad()
-def sequence_nll(model, tokenizer, text: str) -> float:
-    enc = tokenizer(text, return_tensors="pt")
-    enc = {k: v.to(model.device) for k, v in enc.items()}
-    out = model(**enc, labels=enc["input_ids"])  # mean CE over tokens
-    # Convert mean loss to token-summed NLL for fair window comparison
-    return out.loss.item() * enc["input_ids"].numel()
-
-def insert_api_call(text: str, i: int, api_name: str, api_arg: str, api_result: str) -> str:
-    call = f"{SPECIAL_OPEN} {api_name}({api_arg}) {SPECIAL_ARROW} {api_result} {SPECIAL_CLOSE}"
-    return text[:i] + call + text[i:]
-
-def delta_loss_for_call(model, tokenizer, text: str, i: int, api_name: str, api_arg: str, window: int = 32, gamma: float = 1.0):
-    # Baseline window: from i to i+window (approx by slicing raw text for simplicity)
-    base_segment = text[: i + window]
-    base_nll = sequence_nll(model, tokenizer, base_segment)
-
-    result = execute_api(api_name, api_arg)
-    aug_text = insert_api_call(text, i, api_name, api_arg, result)
-    aug_segment = aug_text[: i + len(result) + len(api_name) + len(api_arg) + 16 + window]
-    aug_nll = sequence_nll(model, tokenizer, aug_segment)
-
-    delta = base_nll - aug_nll
-    keep = (delta > gamma)
-    return keep, delta, result, aug_text
-
-class ToolformerFinetune:
-    def __init__(self, model_name: str = "gpt2"):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(model_name)
-        if self.tokenizer.pad_token is None:
-            self.tokenizer.pad_token = self.tokenizer.eos_token
-        self.model.resize_token_embeddings(len(self.tokenizer))
-        self.model.train()
-
-    def train_step(self, batch_texts):
-        enc = self.tokenizer(batch_texts, return_tensors="pt", padding=True)
-        enc = {k: v.to(self.model.device) for k, v in enc.items()}
-        out = self.model(**enc, labels=enc["input_ids"])  # standard LM loss on augmented texts
-        loss = out.loss
-        loss.backward()
-        return loss.item()
-
-# Example (pseudo):
-# corpus_text = "The number in the next term is 18 + 12 * 3 = 54."
-# i = corpus_text.find("18")
-# keep, delta, result, aug_text = delta_loss_for_call(
-#     model=ToolformerFinetune().model,
-#     tokenizer=ToolformerFinetune().tokenizer,
-#     text=corpus_text,
-#     i=i,
-#     api_name="Calculator",
-#     api_arg="18 + 12 * 3",
-#     window=32,
-#     gamma=0.1,
-# )
-# if keep:
-#     ToolformerFinetune().train_step([aug_text])
+# 다음과 같이 결과가 만들어 집니다. 
+<API> weather_api("seoul", "today") -> {"temperature": "25°C", "condition": "Sunny"} </API>
+ 
+# 위의 API 호출 결과를 LLM이 참조후에 최정 답변을 생성
+[Target Label] IT's 25°C and Sunny in Seoul today.
 ```
 
-설명
-- 위 스니펫은 (a) 호출 삽입, (b) API 실행, (c) 윈도우 기반 NLL 비교에 의한 필터링, (d) API 호출이 포함된 텍스트로의 표준 LM 파인튜닝 단계를 모두 축약 구현했습니다.
-- 실전에서는 문자 단위 슬라이싱 대신 토큰 경계 기반 윈도우, 배치 단위 측정, 후보 다중 샘플링과 임계치 스케줄링, API 별 포맷터/파서, 안전 샌드박싱을 추가합니다.
 
-
-# Inference Behavior (at test time)
-
-- 모델은 도구 호출 토큰을 예측할 수 있게 되며, 생성 중 필요하다고 판단되면 \(\langle \text{API} \rangle\) 토큰 시퀀스를 출력하는 경향을 학습합니다.
-- 운영 환경에서는 "모델이 호출 토큰을 생성하면 실제 API를 실행하고 결과를 프롬프트에 인라인 삽입"하는 루프를 구성하면 됩니다.
-
-
-# Notes
-
-- 학습 데이터는 도구 호출이 삽입된 원-코퍼스를 사용하므로, 모델의 일반적 언어 능력을 유지하면서 도구 사용을 내재화합니다.
-- 계산기/검색/번역/캘린더 등 서로 다른 API 를 동일한 프레임으로 학습할 수 있습니다.
-
-
-# Reference
-
-- Toolformer: Language Models Can Teach Themselves to Use Tools. `https://arxiv.org/pdf/2302.04761`
 
