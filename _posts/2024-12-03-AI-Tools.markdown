@@ -7,8 +7,9 @@ asset_path: /assets/images/
 tags: ['ollama', 'github-models', 'gh']
 ---
 
-# huggingface-cli
+# Hugging Face CLI
 
+### Huggine Face CLI
 
 ```bash
 # 다운로드 / 현재 huggingface-cli download 는 deprecated -> hf 사용
@@ -17,8 +18,12 @@ MODEL=meta-llama/Llama-3.2-3B-Instruct
 huggingface-cli download "$MODEL" --resume-download
 ```
 
+```bash
+huggingface-cli login
+```
 
-# HF CLI
+
+### HF CLI
 
 ```bash
 # 다운로드 (huggingface-cli download 는 deprecated -> hf 사용)
@@ -85,16 +90,6 @@ cat README.md | gh models run openai/gpt-4o-mini "summarize this text"
 gh models eval my_prompt.prompt.yml
 ```
 
-
-
-
-# Hugging Face CLI
-
-```bash
-# 로그인
-huggingface-cli login
-
-```
 
 
 # Llama.cpp
