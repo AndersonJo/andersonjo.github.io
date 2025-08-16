@@ -36,7 +36,7 @@ ToolFormer는 최소한의 데모만으로 모델이 스스로 도구 사용을 
  - **QA**: [QA(“Who is the publisher of The New England Journal of Medicine?”) → Massachusetts Medical Society]
  - **Wiki Search**: [WikiSearch(“BrownAct”) → The Ralph M. Brown Act is an act of the California State Legislature that guarantees the public's right to attend and participate in meetings of local legislative bodies.] 
 
-<img src="{{ page.asset_path }}toolformer_example" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+<img src="{{ page.asset_path }}toolformer_example.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
 # 1.3 Idea
