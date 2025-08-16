@@ -58,8 +58,8 @@ ToolFormer는 최소한의 데모만으로 모델이 스스로 도구 사용을 
 따라서 $$ (a_c, i_c, r) $$ 같은 구조를 -> 일렬의 문자열로 바꿔야 합니다.<br> 
 이것을 논문에서는 **Linearized Sequence** 라고 부릅니다. 
 
-- e(c) = <API> $ a_c(i_c) $ </API>
-- e(c, r) = <API> $ a_c(i_c) $ -> r </API>
+- e(c) = \<API\> $$ a_c(i_c) $$ \</API\>
+- e(c, r) = \<API\> $$ a_c(i_c) $$ -> r \</API\>
 
 여기서 <API> 는 special token입니다.
 
