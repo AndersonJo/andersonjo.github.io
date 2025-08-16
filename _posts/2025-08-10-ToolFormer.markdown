@@ -76,12 +76,8 @@ $$
 여기서 <API> 는 special token입니다.
 
 
+
 ## 2.2 Sampling API Calls
-
-
-
-
-## 2.2 후보 생성과 필터링
 
 1. **Prompt 를 만듬 (P(x))**
   - 각 API 마다 prompt 템플릿을 만듬
@@ -162,28 +158,34 @@ candidates = sorted(candidates, key=lambda x: x[1], reverse=True)[:top_k]
 ```
 
 
-3. **API 호출**
+## 2.3 API 호출
 
 여기서 전체 API 호출을 합니다.<br> 
 구현에 달려 있는 것이기 때문에, python 함수를 실행할지, API 를 호출할지, 다른 model 을 호출할지 등등 모두  자유
 
 
-4. **Filtering API Calls**
+## 2.4 Filtering API Calls
 
 
 - $$ \mathcal{L}_{\text{plain}} $$ : API 호출 없이, plain LM loss
 - $$ \mathcal{L}_{\text{aug}} $$ : API call + 결과를 포함한 LM Loss
 - $$ \Delta^{(i)} $$ : loss 의 개선 정도  
   - $$ \Delta^{(i)} \gt 0 $$ : API Call 이 실제로 두움이 됨
-  - $$ \Delta^{(i)} \le 0 $$ : API Call 이 오히려 성능을 떨어뜨림
+  - $$ \Delta^{(i)} \ge \gamma_f $$ : API Call 이 충분히 도움이 된다고 판단 -> 해당 API 호출을 유지
 
  $$
 \begin{aligned}
 \mathcal{L}_{\text{plain}}^{(i)} &= - \sum_{t \in \mathcal{W}_i} \log p_\theta(x_t \mid x_{\le i}) \\
 \mathcal{L}_{\text{aug}}^{(i)} &= - \sum_{t \in \mathcal{W}_i} \log p_\theta(x_t \mid x_{\le i}, \mathbf{e}(c_i, r)) \\
-\Delta^{(i)} &= \mathcal{L}_{\text{plain}}^{(i)} - \mathcal{L}_{\text{aug}}^{(i)}
+\Delta^{(i)} &= \mathcal{L}_{\text{plain}}^{(i)} - \mathcal{L}_{\text{aug}}^{(i)} \\
 \end{aligned}
 $$
+
+이중에서 Delta 값이 특정 threshold 이상인 것만 남김니다. 
+
+$$ \mathcal{L}_{\text{plain}}^{(i)} - \mathcal{L}_{\text{aug}}^{(i)} \ge \gamma_f $$
+
+
 
 
 
