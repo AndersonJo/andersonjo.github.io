@@ -210,3 +210,77 @@ User: What’s the weather in Seoul today?
 
 
 
+# 3. Implementation
+
+## 3.1 Open WebUI
+
+예제 구현 코드. 
+
+"dragon fire 343 는 몇이야?" 이런식으로 질문하면, 아래의 함수를 실행하고 답변을 줍니다. <br>
+답변은 테스트 용이기 때문에, 지정된 답변을 줍니다.
+
+
+```python
+"""
+title: Dragon Fire Bitcoin Analyzer
+author: Anderson
+description: A tool that analyzes Bitcoin's dragon fire intensity level
+version: 1.0.0
+license: MIT
+"""
+
+from typing import Optional
+
+# Optional manifest
+manifest = {
+    "title": "Dragon Fire Bitcoin Analyzer",
+    "author": "Anderson",
+    "version": "1.0.0",
+    "license": "MIT",
+    "description": "A tool that analyzes Bitcoin's dragon fire intensity level"
+}
+
+
+class Tools:
+    def __init__(self):
+        pass
+
+    def dragon_fire(
+        self, 
+        value: int,
+        __event_emitter__: Optional[object] = None
+    ) -> str:
+        """
+        Calculate dragon fire intensity by squaring the input value.
+        
+        Args:
+            value: Integer value to calculate dragon fire for
+            __event_emitter__: Optional event emitter for status updates
+        
+        Returns:
+            Dragon fire result with squared value
+        """
+        
+        if __event_emitter__:
+            __event_emitter__({
+                "type": "status",
+                "data": {"description": f"Calculating dragon fire for {value}...", "done": False}
+            })
+        
+        result = value ** 2
+        
+        if __event_emitter__:
+            __event_emitter__({
+                "type": "status",
+                "data": {"description": "Dragon fire calculation completed", "done": True}
+            })
+        
+        return f"dragon fire {result}"
+```
+
+아래는 실제로 돌려본 예제 입니다. 
+
+<img src="{{ page.asset_path }}dragon_fire_severity.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
