@@ -11,46 +11,11 @@ tags: ['sfpt', 'oracle']
 
 # Hot Keys
 
-| Title                | Hot Key                | Description                             |
-|:---------------------|:-----------------------|:----------------------------------------|
-| Run                  | Shift + F10            | Run current configuration               |
-| Debug                | Shift + F9             |  Debug current configuration            |
-| Run Current File     | Ctrl + Shift + F10     | Run the current file directly           |
-| Stop                 | Ctrl + F2              | Stop running process                    |
-| Step Over            | F8                     | Debug step over                         |
-| Step Into            | F7                     | Debug step into                         |
-| Step Out             | Shift + F8             | Debug step out                          |
-| Resume               | F9                     | Resume program in debug mode            |
-| Toggle Breakpoint    | Ctrl + F8              | Add/remove breakpoint                   |
-| Search Everywhere    | Double Shift           | Search files, classes, symbols, actions |
-| Find in Files        | Ctrl + Shift + F       | Search text in all files                |
-| Replace in Files     | Ctrl + Shift + R       | Replace text in all files               |
-| Go to File           | Ctrl + Shift + N       | Navigate to file by name                |
-| Go to Class          | Ctrl + N               | Navigate to class by name               |
-| Go to Symbol         | Ctrl + Alt + Shift + N | Navigate to symbol by name              |
-| Go to Declaration    | Ctrl + B               | Go to declaration of symbol             |
-| Go to Implementation | Ctrl + Alt + B         | Go to implementation                    |
-| Find Usages          | Alt + F7               | Find all usages of symbol               |
-| Reformat Code        | Ctrl + Alt + L         | Auto-format code                        |
-| Optimize Imports     | Ctrl + Alt + O         | Remove unused imports                   |
-| Comment Line         | Ctrl + /               | Toggle line comment                     |
-| Block Comment        | Ctrl + Shift + /       | Toggle block comment                    |
-| Duplicate Line       | Ctrl + D               | Duplicate current line                  |
-| Delete Line          | Ctrl + Y               | Delete current line                     |
-| Move Line Up         | Alt + Shift + Up       | Move line up                            |
-| Move Line Down       | Alt + Shift + Down     | Move line down                          |
-| Rename               | Shift + F6             | Rename symbol (refactor)                |
-| Extract Method       | Ctrl + Alt + M         | Extract selection to method             |
-| Extract Variable     | Ctrl + Alt + V         | Extract to variable                     |
-| Quick Documentation  | Ctrl + Q               | Show documentation popup                |
-| Parameter Info       | Ctrl + P               | Show parameter hints                    |
-| Terminal             | Alt + F12              | Open/focus terminal                     |
-| Project View         | Alt + 1                | Toggle project tool window              |
-| Version Control      | Alt + 9                | Toggle VCS tool window                  |
-| Recent Files         | Ctrl + E               | Show recent files                       |
-| Close Tab            | Ctrl + F4              | Close current editor tab                |
-| Navigate Back        | Ctrl + Alt + Left      | Go to previous location                 |
-| Navigate Forward     | Ctrl + Alt + Right     | Go to next location                     |
+| Category     | Title          | Hot Key            | Description         |
+|:-------------|:---------------|:-------------------|:--------------------|
+| Antigravity  | Open Command   | CTRL + SHIFT + P   |                     |
+|              | Terminal       | CTRL + `           | Open/focus terminal |
+
 
 # 2. Extensions
 
