@@ -8,6 +8,8 @@ tags: ['sfpt', 'oracle']
 ---
 
 
+ - 혹시 윈도우면, wsl --install 이걸로 우분투 사용 가능함. 이후 wsl 로 ubuntu 처럼 사용
+
 
 # 1. Hot Keys
 
@@ -20,10 +22,10 @@ tags: ['sfpt', 'oracle']
 
 ## 1.2 Command
 
-| Category | Command                      | Description          |
-|:---------|:-----------------------------|:---------------------|
-| Python   | Python: Select Interpreter   | 특정 버젼 Python 선택 가능   |
-
+| Category | Command                    | Description         |
+|:---------|:---------------------------|:--------------------|
+| Python   | Python: Select Interpreter | 특정 버젼 Python 선택     |
+|          | Python: Configure Test     | Pytest등의 test 툴을 선택 |
 
 
 
