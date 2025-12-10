@@ -54,7 +54,22 @@ tags: ['sfpt', 'oracle']
 
 # 2. Extensions
 
-## 2.1 FTP/SFTP/SSH Sync Tool
+## 2.1 Python Support in Antigravity
+
+Python 실행하고 하려면 해당 extensions 도 설치해야 함. <br>
+실제 Python을 설치하는게 아니라, Python을 실행할수 있도록 도와주는 extension 
+
+아래와 같이 검색
+
+```bash
+@category:debuggers Python
+```
+
+<img src="{{ page.asset_path }}antigravity-sftp-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+## 2.2 FTP/SFTP/SSH Sync Tool
 
 FTP/SFTP/SSH Sync 툴에서 + 를 클릭<br>
 여기서 해당 remote를 대표하는 이름을 적어 넣습니다.
@@ -85,7 +100,7 @@ SFTP 선택 (따로 FTP 21을 오픈할 필요없이 22번 SSH로 접속 가능)
 
 ```json
 {
-  "oracle": {
+  "oracle_server": {
     "type": "sftp",
     "host": "134.185.117.137",
     "port": 22,
