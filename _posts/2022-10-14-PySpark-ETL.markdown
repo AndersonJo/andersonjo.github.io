@@ -126,6 +126,35 @@ print('Data Row Sie:', data.count())
 data.sample(0.001).toPandas()
 ```
 
+## 3.2 ORC from Hive
+
+Presto나 Hive 에서 생성시 partition directories 뒤에 HIVE_UNION_SUBDIR_1, HIVE_UNION_SUBDIR_2 같은게 생기는 케이스가 있습니다.<br>
+이때 그냥 spark.read.table('blahblah') 하면 테이블 불러오는거 같은데 content 는 없을수 있습니다. <br> 
+또한 저장하는 방식도 다른데 Spark ORC 로 읽으면 에러가 날수 있습니다.<br>
+
+이 경우 `spark.sql.hive.convertMetastoreOrc` 를 false 로 해줘야 합니다.
+
+ - spark.sql.hive.convertMetastoreOrc = true : Spark ORC 사용
+ - spark.sql.hive.convertMetastoreOrc = false: Hive ORC 사용
+
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = (SparkSession.builder
+         .appName('PySpark Test')
+         .enableHiveSupport()
+         .getOrCreate())
+
+spark.conf.set('spark.sql.hive.convertMetastoreOrc', 'false')
+
+spark.read.table('my_db.user_action_table') \
+    .where(F.col('dt') == '20250325') \
+    .show(10, truncate=False)
+```
+
+
+
 ## 3.2 Temporary View Table
 
 ```python

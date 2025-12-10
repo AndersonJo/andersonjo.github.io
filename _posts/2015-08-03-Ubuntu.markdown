@@ -43,23 +43,115 @@ sudo apt-get update
 sudo apt-get install oracle-java13-installer
 ```
 
-## 1.4 CapsLock <->  한글키 변경 (Optional)
 
-xev 를 통해서 키를 눌러보면서 keycode 그리고 키 이름을 알 수 있습니다.<br>
-개인 키보드는 다음과 같습니다.
+## 1.5 FCITX5 Hangul
 
- - capslock: keycode 66 (keysym 0xffe5, Caps_Lock)
- - 한영: keycode 108 (keysym 0xff31, Hangul)
-
-CapsLock 그리고 한영키를 서로 바꾸려면 다음과 같이 합니다.
 
 ```bash
-xmodmap -e "keycode 66 = Hangul"
-xmodmap -e "keycode 108 = Caps_Lock"
+$ sudo apt install fcitx5 fcitx5-hangul fcitx5-config-qt fcitx5-configtool
+
+$ im-config -n fcitx5
+$ fcitx5-configtool
+```
+
+```bash
+# 다음을 실행후, 한글키를 눌러서 어떤 값이 나오는지 확인
+$ xev | grep key
+   state 0x18, keycode 108 (keysym 0xffea, Alt_R), same_screen YES,
+   
+   
+# 이후 다음처럼 수정
+$ vi ~/.Xmodmap
+```
+
+```bash
+keycode 108 = Hangul
+```
+
+이후 다음과 같이 실행
+```bash
+$ xmodmap ~/.Xmodmap
+```
+
+시작프로그램에 등록
+
+```bash
+$ vi ~/.config/autostart/xmodmap.desktop
+```
+
+xmodmap.desktop
+```bash
+[Desktop Entry]
+Type=Application
+Exec=xmodmap /home/anderson/.Xmodmap
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Xmodmap
+Comment=Load custom key mappings
 ```
 
 
-## 1.5 벼루 (Optional)
+
+
+ - 아래 그림과 같이 설정합니다. 
+   - Hangul
+   - Keyboard - English (US)
+
+<img src="{{ page.asset_path }}fcitx5-configure.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+
+
+## 1.5 IBus Hangul
+
+.Xmodmap 파일 생성후 다음을 추가
+
+```bash
+$ vi ~/.Xmodmap
+```
+
+```bash
+keycode 108 = Hangul
+```
+
+
+```bash
+$ mkdir -p ~/.config/autostart
+```
+
+```bash
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/xmodmap /home/$USER/.Xmodmap
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Apply Xmodmap
+Comment=Set custom keymap
+```
+
+
+```
+$ ibus-setup
+```
+
+1. Input Method >> Korean - Hangul 추가
+2. Korean - Hangul >> Preferences >> Korean - Korean (101/104-key compatible) 추가
+
+<img src="{{ page.asset_path }}input-method-korean-hangul-2.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+<img src="{{ page.asset_path }}ibus-setup-hangul-setup.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+다음을 실행해서 Hangul 이 나오는지 확인
+
+```bash
+$ xev | grep key
+```
+
+
+## ~~1.5 벼루 (Optional)~~
 
 **한글 104키**로 해야 함
 
@@ -76,10 +168,13 @@ sudo apt install pulseeffects  # Sound Equalizer for Ubuntu 20.04
 sudo apt install -y lsp-plugins
 
 # Pillow Ubuntu Libraries 
-sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev
 
 ### Ruby Image Libraries (Optional)
 sudo apt-get install optipng pngquant gifsicle pngcrush advancecomp pngnq jhead jpegoptim
+
+### 그외 
+sudo apt-get install vim git net-tools
 ```
 
 
@@ -99,8 +194,11 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 # Hostname Version
 # export PS1='\[\033[00;36m\]$(hostname) \u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 
-# Java
+# Java (Ubuntu 22.04)
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+
+# Java (Ubuntu 24.04)
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 
 # CUDA
 export CUDAHOME=/usr/local/cuda
@@ -135,6 +233,16 @@ unzip D2Coding-Ver1.3.2-20180524.zip
 ```
 
 
+## 1.10 gnome-tweaks 
+
+```bash
+sudo apt install gnome-tweaks
+gnome-tweaks
+```
+
+이후 다음을 설정 
+ 
+ - Fonts -> Scaling Factor : 1.10 으로 증가
 
 # 2. Optional Installation
 
@@ -144,60 +252,64 @@ unzip D2Coding-Ver1.3.2-20180524.zip
 
 ```bash
 $ sudo apt install conky-all
+$ mkdir ~/.conky
+$ cd ~/.conky
+$ wget https://raw.githubusercontent.com/fisadev/conky-draw/refs/heads/master/conky_draw.lua
+$ wget https://raw.githubusercontent.com/fisadev/conky-draw/refs/heads/master/conky_draw_config.lua
 $ vi ~/.conkyrc
+
 ```
 
-```yaml
+```bash
+{% raw %}
 conky.config = {
-	
-	update_interval = 1,
-	cpu_avg_samples = 2,
-	net_avg_samples = 2,
-	out_to_console = false,
-	override_utf8_locale = true,
-	double_buffer = true,
-	no_buffers = true,
-	text_buffer_size = 32768,
-	imlib_cache_size = 0,
-	own_window = true,
-	own_window_type = 'normal',
-	own_window_argb_visual = true,
-	own_window_argb_value = 50,
-	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
-	border_inner_margin = 5,
-	border_outer_margin = 0,
-	xinerama_head = 1,
-	alignment = 'bottom_right',
-	gap_x = 0,
-	gap_y = 33,
-	draw_shades = false,
-	draw_outline = false,
-	draw_borders = false,
-	draw_graph_borders = false,
-	use_xft = true,
-	font = 'Ubuntu Mono:size=12',
-	xftalpha = 0.8,
-	uppercase = false,
-	default_color = 'white',
-	own_window_colour = '#000000',
-	minimum_width = 300, minimum_height = 0,
-	alignment = 'top_right',
-
+    update_interval = 1,
+    cpu_avg_samples = 2,
+    net_avg_samples = 2,
+    out_to_console = false,
+    override_utf8_locale = true,
+    double_buffer = true,
+    no_buffers = true,
+    text_buffer_size = 32768,
+    imlib_cache_size = 0,
+    own_window = true,
+    own_window_type = 'normal',
+    own_window_argb_visual = true,
+    own_window_argb_value = 50,
+    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    border_inner_margin = 5,
+    border_outer_margin = 0,
+    alignment = 'top_right',
+    gap_x = 0,
+    gap_y = 33,
+    draw_shades = false,
+    draw_outline = false,
+    draw_borders = false,
+    draw_graph_borders = false,
+    use_xft = true,
+    font = 'Ubuntu Mono:size=14',
+    xftalpha = 0.8,
+    uppercase = false,
+    default_color = 'white',
+    own_window_colour = '#000000',
+    minimum_width = 350, minimum_height = 0,
 };
+
 conky.text = [[
 ${time %H:%M:%S}${alignr}${time %Y-%m-%d}
-${voffset -16}${font sans-serif:bold:size=18}${alignc}${time %H:%M}${font}
-${font}${voffset -4}
-${font sans-serif:bold:size=10}SYSTEM ${hr 2}
-${font sans-serif:normal:size=8}$sysname $kernel $alignr $machine
+${voffset -16}${font sans-serif:bold:size=22}${alignc}${time %H:%M}${font}
+${font}
+
+${font sans-serif:bold:size=12}SYSTEM ${hr 2}
+${font sans-serif:normal:size=10}$sysname $kernel $alignr $machine
 Host:$alignr$nodename
 Uptime:$alignr$uptime
 File System: $alignr${fs_type}
 Processes: $alignr ${execi 1000 ps aux | wc -l}
 
-${font sans-serif:bold:size=10}CPU ${hr 2}
-${font sans-serif:normal:size=8}${execi 1000 grep model /proc/cpuinfo | cut -d : -f2 | tail -1 | sed 's/\s//'}
-${font sans-serif:normal:size=8}${cpugraph cpu1}
+${font sans-serif:bold:size=12}CPU ${hr 2}
+${font sans-serif:normal:size=10}${execi 1000 grep model /proc/cpuinfo | cut -d : -f2 | tail -1 | sed 's/\s//'}
+${font sans-serif:normal:size=10}${cpugraph cpu1}
 CPU01: ${cpu cpu1}% ${cpubar cpu1}
 CPU02: ${cpu cpu2}% ${cpubar cpu2}
 CPU03: ${cpu cpu3}% ${cpubar cpu3}
@@ -214,47 +326,50 @@ CPU13: ${cpu cpu13}% ${cpubar cpu13}
 CPU14: ${cpu cpu14}% ${cpubar cpu14}
 CPU15: ${cpu cpu15}% ${cpubar cpu15}
 CPU16: ${cpu cpu16}% ${cpubar cpu16}
-CPU17: ${cpu cpu17}% ${cpubar cpu17}
-CPU18: ${cpu cpu18}% ${cpubar cpu18}
 
 
+${font sans-serif:bold:size=12}NVIDIA GPU ${hr 2}
+${font sans-serif:normal:size=10}
+GPU Frequency: $alignr ${nvidia gpufreq} MHz
+GPU Temp: $alignr ${nvidia temp}°C
+GPU Usage: $alignr ${execi 1000 nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits}%
+GPU Memory Usage: $alignr ${execi 1000 nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits}MB / ${execi 1000 nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits}MB
 
-${font sans-serif:bold:size=10}Nvidia ${hr 2}
-${font sans-serif:normal:size=8}
-GPU Frequency: $alignr ${nvidia gpufreq} Mhz
-Temperature:   $alignr ${nvidia temp} Degree
-
-${font sans-serif:bold:size=10}MEMORY ${hr 2}
-${font sans-serif:normal:size=8}RAM $alignc $mem / $memmax $alignr $memperc%
-$membar
+${font sans-serif:bold:size=12}MEMORY ${hr 2}
+${font sans-serif:normal:size=10}RAM $alignc $mem / $memmax $alignr $memperc%
+${membar 15}
 SWAP $alignc ${swap} / ${swapmax} $alignr ${swapperc}%
-${swapbar}
+${swapbar 15}
 
-${font sans-serif:bold:size=10}DISK USAGE ${hr 2}
-${font sans-serif:normal:size=8}/ $alignc ${fs_used /} / ${fs_size /} $alignr ${fs_used_perc /}%
+${font sans-serif:bold:size=12}DISK USAGE ${hr 2}
+${font sans-serif:normal:size=10}/ $alignc ${fs_used /} / ${fs_size /} $alignr ${fs_used_perc /}%
 ${fs_bar /}
 
-${font Ubuntu:bold:size=10}NETWORK ${hr 2}
-${font sans-serif:normal:size=8}Local IPs:${alignr}External IP:
-${execi 1000 ip a | grep inet | grep -vw lo | grep -v inet6 | cut -d \/ -f1 | sed 's/[^0-9\.]*//g'}  ${alignr}${execi 1000  wget -q -O- http://ipecho.net/plain; echo}
-${font sans-serif:normal:size=8}Down: ${downspeed enp0s3}  ${alignr}Up: ${upspeed enp0s3} 
-${color lightgray}${downspeedgraph enp0s3 80,130 } ${alignr}${upspeedgraph enp0s3 80,130 }$color
-${font sans-serif:bold:size=10}TOP PROCESSES ${hr 2}
-${font sans-serif:normal:size=8}Name $alignr PID   CPU%   MEM%${font sans-serif:normal:size=8}
-${top name 1} $alignr ${top pid 1} ${top cpu 1}% ${top mem 1}%
-${top name 2} $alignr ${top pid 2} ${top cpu 2}% ${top mem 2}%
-${top name 3} $alignr ${top pid 3} ${top cpu 3}% ${top mem 3}%
-${top name 4} $alignr ${top pid 4} ${top cpu 4}% ${top mem 4}%
-${top name 5} $alignr ${top pid 5} ${top cpu 5}% ${top mem 5}%
-${top name 6} $alignr ${top pid 6} ${top cpu 6}% ${top mem 6}%
-${top name 7} $alignr ${top pid 7} ${top cpu 7}% ${top mem 7}%
-${top name 8} $alignr ${top pid 8} ${top cpu 8}% ${top mem 8}%
-${top name 9} $alignr ${top pid 9} ${top cpu 9}% ${top mem 9}%
-${top name 10} $alignr ${top pid 10} ${top cpu 10}% ${top mem 10}%
+${font sans-serif:bold:size=12}NETWORK ${hr 2}
+${font sans-serif:normal:size=10}Download: ${downspeed enp14s0} kB/s
+${downspeedgraph enp14s0 000000 00ff00}
+${font sans-serif:normal:size=10}Upload:   ${upspeed enp14s0} kB/s
+${upspeedgraph enp14s0 000000 ff0000}
+
 ]];
+{% endraw %}
 ```
 
+다음과 같이 concky를 부팅시마다 실행하도록 만듭니다. 
 
+```bash
+$ mkdir -p ~/.config/autostart
+$ vi ~/.config/autostart/conky.desktop
+```
+
+```bash
+[Desktop Entry]
+Type=Application
+Exec=conky
+Name=Conky
+Comment=Start Conky at login
+X-GNOME-Autostart-enabled=true
+```
 
 
 ## 2.2 Gradle 

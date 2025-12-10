@@ -100,13 +100,45 @@ alias nouveau off
 alias lbm-nouveau off
 ```
 
+```bash
+sudo update-initramfs -u
+sudo systemctl restart gdm
+```
+
+### Disable GDM
+
+다음은 GDM을 disable 시킵니다. <br>
+아래의 명령어를 실행시킨 이후 WaylandEnable=false 를 찾아서 설정합니다. 
+
+```bash
+$ sudo vi /etc/gdm3/custom.conf
+```
+
 이후 다음의 명령어로 부팅을 업데이트 해줍니다.
 
 ```bash
-sudo update-initramfs -u
+sudo systemctl restart gdm
 ```
 
-이후 reboot 시킵니다.
+### Grub 설정
+
+```bash
+sudo vi /etc/default/grub
+```
+
+```bash
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nvidia-drm.modeset=1"
+```
+
+- nvidia-drm.modeset=1 <- 이건 1 은 사용하겠다, 
+- nvidia-drm.modeset=0 <- 이건 안 사용하겠다 false 의미
+
+
+```bash
+sudo update-grub
+sudo reboot
+```
+
 
 ### Verify Nvidia Driver Installation
 

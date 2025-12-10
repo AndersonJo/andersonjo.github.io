@@ -1,0 +1,167 @@
+---
+layout: post
+title:  "ROS2 X11 - Setting up a Devcontainer for ROS2 with X11 Forwarding"
+date:   2024-11-05 01:00:00
+categories: "robotistics"
+asset_path: /assets/images/
+tags: ['vscode', 'gazebo', 'x11']
+---
+
+# Introduction
+
+rviz, gazebo, 같은 GUI 툴을 사용하기 위해서는 X11 forwarding이 필요합니다.<br>
+이때 VS Code Devcontainer를 사용하면, X11 forwarding을 쉽게 설정은 필수 입니다.<br> 
+해당 글에서는 ROS2 개발환경에서 GUI툴을 사용하기 위한 설정 방법을 설명합니다. 
+
+
+
+# 2. Setting up 
+
+## 2.1 Host Setup
+
+먼저 호스트에서 X11 forwarding을 사용하기 위해서는, 다음과 같은 설정이 필요합니다.<br>
+
+```bash
+# Allow X11 forwarding
+xhost +local:docker
+xhost +local:root
+
+# Check DISPLAY variable
+export DISPLAY=${DISPLAY:-:0}
+
+# Check X11 Socket and set permissions 
+X11_SOCKET="/tmp/.X11-unix/X${DISPLAY##*:}"
+sudo chmod 666 "$X11_SOCKET"
+
+# Create .Xauthority if it doesn't exist
+if [ ! -f ~/.Xauthority ]; then
+    echo "Creating .Xauthority file..."
+    touch ~/.Xauthority 2>/dev/null || echo "Could not create .Xauthority"
+    xauth generate $DISPLAY . trusted 2>/dev/null || echo "Could not generate xauth"
+else
+    echo "✓ .Xauthority file exists"
+fi
+```
+
+
+## 2.2 .devcontainer.json
+
+```json
+{
+  "name": "ROS2 + RL Devcontainer with X11 GUI",
+  "dockerFile": "Dockerfile",
+  "build": {
+    "args": {
+      "USER_UID": "1001",
+      "USER_GID": "1001",
+      "USERNAME": "user"
+    }
+  },
+  "runArgs": [
+    "--net=host",
+    "--dns=8.8.8.8",
+    "--dns=8.8.4.4",
+    "--privileged",
+    "--cap-add=SYS_PTRACE",
+    "--security-opt=seccomp:unconfined",
+
+    // X11 GUI 지원을 위한 볼륨 및 환경 변수
+    "--volume=/tmp/.X11-unix:/tmp/.X11-unix:rw",
+    "--volume=${env:HOME}/.Xauthority:/home/user/.Xauthority:rw",
+    "--volume=/dev/dri:/dev/dri:rw",
+    "--env=DISPLAY=${env:DISPLAY:-:0}",
+    "--env=XAUTHORITY=/home/user/.Xauthority",
+    "--env=QT_X11_NO_MITSHM=1",
+    "--env=XDG_RUNTIME_DIR=/tmp/runtime-user",
+    "--tmpfs=/tmp/runtime-user:rw,noexec,nosuid,size=100m",
+    "--env=XDG_SESSION_TYPE=x11",
+    "--env=LIBGL_ALWAYS_INDIRECT=0",
+    "--env=LIBGL_ALWAYS_SOFTWARE=0",
+
+    // GPU 및 NVIDIA 드라이버 연동
+    "--env=NVIDIA_VISIBLE_DEVICES=all",
+    "--env=NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute",
+    "--gpus=all"
+  ],
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "remoteUser": "user",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "username": "user",
+      "uid": "1001",
+      "gid": "1001",
+      "upgradePackages": true,
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true,
+      "installOhMyZshConfig": true,
+      "configureGitLfsAndNonInteractiveGit": true,
+      "nonInteractiveTimeZone": false
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "ms-python.python",
+        "ms-python.flake8",
+        "ms-python.pylint",
+        "twxs.cmake",
+        "ms-vscode.cmake-tools",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        "ms-iot.vscode-ros",
+        "nonanonno.vscode-ros2",
+        "DotJoshJohnson.xml",
+        "streetsidesoftware.code-spell-checker",
+        "eamodio.gitlens",
+        "ms-vscode.live-server",
+        "ms-vscode-remote.remote-containers",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.formatting.provider": "black",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "cmake.configureOnOpen": false,
+        "C_Cpp.default.includePath": [
+          "/opt/ros/humble/include/**",
+          "/usr/include/**",
+          "/usr/local/include/**",
+          "${workspaceFolder}/src/**",
+          "${workspaceFolder}/install/**"
+        ],
+        "C_Cpp.default.compilerPath": "/usr/bin/gcc",
+        "C_Cpp.default.cStandard": "c11",
+        "C_Cpp.default.cppStandard": "c++17",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "files.associations": {
+          "*.launch": "xml",
+          "*.xacro": "xml",
+          "*.urdf": "xml"
+        }
+      }
+    }
+  },
+  "forwardPorts": [
+    8080,
+    8888
+  ],
+  "portsAttributes": {
+    "8080": {
+      "label": "Web Server",
+      "onAutoForward": "notify"
+    },
+    "8888": {
+      "label": "Jupyter",
+      "onAutoForward": "notify"
+    }
+  }
+}
+```

@@ -212,7 +212,7 @@ $ npm config set cafile /etc/ssl/cert.pem
 
 {% highlight bash %}
 $ sudo apt-get install graphviz
-$ pip install -v numpy scikit-learn scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz 
+$ pip install -v numpy scikit-learn scipy matplotlib ipython jupyter pandas sympy keras pydot-ng graphviz hf_transfer
 $ pip install --upgrade jupyterlab mpl-interactions[jupyter] jupyterlab-code-formatter black isort autopep8
 $ jupyter server extension enable --py jupyterlab_code_formatter
 {% endhighlight %}
@@ -238,3 +238,13 @@ $ jupyter lab
 커널 선택시 만들어진 커널을 선택 할 수 있습니다.
 
 <img src="{{ page.asset_path }}select-kernel-pyenv-jupyterlab.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
+
+
+## 4.6 HuggingFace 
+
+vi ~/.bashrc 한 다음에 다음을 추가
+
+```bash
+# HuggingFace
+export HF_HUB_ENABLE_HF_TRANSFER=1
+```
