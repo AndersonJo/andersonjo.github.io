@@ -9,12 +9,22 @@ tags: ['sfpt', 'oracle']
 
 
 
-# Hot Keys
+# 1. Hot Keys
+
+## 1.1 Hot Keys
 
 | Category     | Title          | Hot Key            | Description         |
 |:-------------|:---------------|:-------------------|:--------------------|
 | Antigravity  | Open Command   | CTRL + SHIFT + P   |                     |
 |              | Terminal       | CTRL + `           | Open/focus terminal |
+
+## 1.2 Command
+
+| Category | Command                      | Description          |
+|:---------|:-----------------------------|:---------------------|
+| Python   | Python: Select Interpreter   | 특정 버젼 Python 선택 가능   |
+
+
 
 
 # 2. Extensions
@@ -33,8 +43,53 @@ Python 실행하고 하려면 해당 extensions 도 설치해야 함. <br>
 <img src="{{ page.asset_path }}antigravity-sftp-04.png" class="img-responsive img-rounded img-fluid center" style="border: 2px solid #333333">
 
 
+## 2.2 Remote-SSH: Connect to SSH Host...
 
-## 2.2 FTP/SFTP/SSH Sync Tool
+먼저 **~/.ssh/config** 에 다음을 작성
+
+```bash
+Host oracle
+    HostName 134.185.117.137
+    Port 22
+    User ubuntu
+    IdentityFile C:\Users\anderson\.ssh\id_ed25519
+    ControlMaster auto
+    ControlPath ~/.ssh/cm-%r@%h:%p
+    ControlPersist 10m
+```
+
+Bastion 에서는 다음과 같이 설정
+
+```bash
+# Bastion 호스트 서버
+Host oracle-bastion
+    HostName 1.2.3.4
+    Port 22
+    User ec2-user
+    IdentityFile C:/Users/anderson/.ssh/bastion.pem
+    IdentitiesOnly yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    
+# 실제 내부 서버 정의
+Host oracle
+    HostName 10.0.1.15
+    Port 22
+    User ubuntu
+    IdentityFile C:/Users/anderson/.ssh/id_ed25519
+    IdentitiesOnly yes
+    
+    ProxyJump oracle-bastion
+
+    ControlMaster auto
+    ControlPath ~/.ssh/cm-%r@%h:%p
+    ControlPersist 10m
+```
+
+
+
+
+## 2.3 FTP/SFTP/SSH Sync Tool
 
 FTP/SFTP/SSH Sync 툴에서 + 를 클릭<br>
 여기서 해당 remote를 대표하는 이름을 적어 넣습니다.
