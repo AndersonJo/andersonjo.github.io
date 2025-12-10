@@ -60,6 +60,17 @@ Host oracle
     ControlPersist 10m
 ```
 
+윈도우에서는 Multiplexing (한번 만든 SSH연결을 여러 세션이 같이 쓰게 하는 기능) 끄는게 좋아
+
+```bash
+Host oracle
+    HostName 134.185.117.137
+    Port 22
+    User ubuntu
+    IdentityFile C:\Users\anderson\.ssh\id_ed25519
+```
+
+
 Bastion 에서는 다음과 같이 설정
 
 ```bash
