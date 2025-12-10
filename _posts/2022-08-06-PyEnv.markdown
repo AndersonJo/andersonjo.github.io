@@ -12,13 +12,21 @@ tags: ['virtualenv', 'format']
 Dependencies 는 다음과 같습니다.
 
 {% highlight bash %}
-$ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev lzma liblzma-dev libbz2-dev  
+# Ubuntu
+$ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev lzma liblzma-dev libbz2-dev
+
+# Mac 
+$ brew install openssl readline sqlite3 xz tcl-tk gcc autoconf libtool cmake gzip bzip2 zlibd
 {% endhighlight %}
 
 PyEnv 설치는 다음과 같이 합니다. 
 
 {% highlight bash %}
+# Ubuntu + Mac
 $ curl https://pyenv.run | bash
+
+# Mac with homebrew
+$ brew install pyenv
 {% endhighlight %}
 
 update 그리고 uninstall 은 다음과 같이 합니다.
