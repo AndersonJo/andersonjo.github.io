@@ -44,22 +44,6 @@ $ sudo apt --installed list | grep nvidia-driver
 
 ## Checking Supported CUDA Version
 
-- [Pytorch supported CUDA version 확인](https://pytorch.org/get-started/locally/)
-- [Tensorflow supported CUDA version 확인](https://www.tensorflow.org/install/pip?hl=ko)
-
-CUDA Toolkit version 
- - [CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local)
-
-| Pytorch CUDA | Tensorflow CUDA |
-|:-------------|:----------------|
-| 11.8         | 11.8            |
-| 12.1         |                 |
-
-CUDNN
-
-| Pytorch CUDA | Tensorflow CUDA | Nvidia Version |
-|:-------------|:----------------|:---------------|
-|              | 8.6.0           | 520            |
 
 
 
@@ -71,15 +55,21 @@ CUDNN
 ```bash
 $ sudo ubuntu-drivers list --gpgpu
 
-nvidia-driver-470-server, (kernel modules provided by linux-modules-nvidia-470-server-generic-hwe-22.04)
-nvidia-driver-535-server, (kernel modules provided by linux-modules-nvidia-535-server-generic-hwe-22.04)
-nvidia-driver-535-open, (kernel modules provided by linux-modules-nvidia-535-open-generic-hwe-22.04)
-nvidia-driver-470, (kernel modules provided by linux-modules-nvidia-470-generic-hwe-22.04)
-nvidia-driver-535, (kernel modules provided by linux-modules-nvidia-535-generic-hwe-22.04)
-nvidia-driver-545, (kernel modules provided by nvidia-dkms-545)
-nvidia-driver-545-open, (kernel modules provided by nvidia-dkms-545-open)
-nvidia-driver-535-server-open, (kernel modules provided by linux-modules-nvidia-535-server-open-generic-hwe-22.04)
+nvidia-driver-570-server-open, (kernel modules provided by linux-modules-nvidia-570-server-open-generic-hwe-24.04)
+nvidia-driver-580-server-open, (kernel modules provided by linux-modules-nvidia-580-server-open-generic-hwe-24.04)
+nvidia-driver-535-server, (kernel modules provided by linux-modules-nvidia-535-server-generic-hwe-24.04)
+nvidia-driver-570-server, (kernel modules provided by linux-modules-nvidia-570-server-generic-hwe-24.04)
+nvidia-driver-535, (kernel modules provided by linux-modules-nvidia-535-generic-hwe-24.04)
+nvidia-driver-580-server, (kernel modules provided by linux-modules-nvidia-580-server-generic-hwe-24.04)
+nvidia-driver-570-open, (kernel modules provided by linux-modules-nvidia-570-open-generic-hwe-24.04)
+nvidia-driver-580-open, (kernel modules provided by linux-modules-nvidia-580-open-generic-hwe-24.04)
+nvidia-driver-535-server-open, (kernel modules provided by linux-modules-nvidia-535-server-open-generic-hwe-24.04)
+nvidia-driver-570, (kernel modules provided by linux-modules-nvidia-570-generic-hwe-24.04)
+nvidia-driver-535-open, (kernel modules provided by linux-modules-nvidia-535-open-generic-hwe-24.04)
+nvidia-driver-580, (kernel modules provided by linux-modules-nvidia-580-generic-hwe-24.04)
 ```
+
+3090 에서 내 컴퓨터에서 돌아가는 버젼은 nvidia-driver-570-open
 
 이후 설치 합니다. <br>
 2024년 6월 기준으로 **520** 에다가 CUDA Toolkit 11.8 이 잘 작동합니다. (Ubuntu 22.04)<br>
@@ -90,9 +80,7 @@ nvidia-driver-535-server-open, (kernel modules provided by linux-modules-nvidia-
 $ sudo apt install linux-headers-$(uname -r)
 
 # Nvidia 드라이버 설치
-# xxx 부분은 예를 들어서 "520" 
-$ sudo apt install nvidia-common-xxx
-$ sudo apt install nvidia-dkms-xxx
+# xxx 부분은 예를 들어서 "570-open" 등으로 넣어줍니다.
 $ sudo apt install nvidia-driver-xxx
 $ sudo apt install nvidia-settings
 ```
@@ -104,19 +92,27 @@ $ dpkg --get-selections | grep nvidia
 $ dpkg --get-selections | grep cuda
 ```
 
+## Secure Boot
 
-## Installing CUDA Toolkit 11.8
-
-- [CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=runfile_local)
-  - 이때 중요한건 runfile (local) 을 선택해서 다운로드 받고 실행해야 합니다.
-  - 다른것 deb 로 실행시 에러가 납니다. 
+Secure Boot 이 켜져 있으면 드라어버가 정상적으로 로드가 안될수 있습니다. <br>
+이 경우에는 다음을 실행합니다. 
 
 ```bash
-$ wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run
-$ sudo sh cuda_11.8.0_520.61.05_linux.run
+sudo update-secureboot-policy --enroll-key
 ```
 
-실행후 메뉴 화면에서 오직 CUDA Toolkit 만 설치하도록 합니다. 
+암호 쓰라고 나오고, 암호 쓰고 재부팅 하면, 이전에 썼던 암호를 다시 쓰고, MOK enrollment를 설정합니다. <br>
+
+
+## Installing CUDA Toolkit
+
+```bash
+# CUDA 툴킷 설치
+sudo apt install nvidia-cuda-toolkit
+
+# 버젼 확인
+nvcc --version
+```
 
 
 ## Install CuDNN

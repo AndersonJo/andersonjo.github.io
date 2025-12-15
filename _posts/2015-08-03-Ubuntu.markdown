@@ -467,3 +467,32 @@ Categories=Network;
 MimeType=x-scheme-handler/tg;
 X-Desktop-File-Install-Version=0.22
 ```
+
+
+## 2.7 부팅후 멈춤 현상 - 터미널/크롬 1분동안 안됨
+
+문제의 로그 
+
+```bash
+1min 30.172s xdg-desktop-portal.service  ← 문제 발견!
+
+Dependency failed for xdg-desktop-portal-gnome.service
+```
+
+확인
+
+```bash
+$ journalctl --user -u xdg-desktop-portal.service -b --no-pager
+$ journalctl --user -u xdg-desktop-portal-gnome.service -b --no-pager
+```
+
+해결책
+
+```bash
+# GNOME 포털 비활성화 (GTK 포털로 대체)
+sudo mv /usr/share/xdg-desktop-portal/portals/gnome.portal \
+        /usr/share/xdg-desktop-portal/portals/gnome.portal.bak
+
+# 재부팅
+sudo reboot
+```
