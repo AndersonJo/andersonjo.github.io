@@ -1,0 +1,198 @@
+---
+layout: post
+title:  "K3s + Nvidia Container Toolkit + vLLM"
+date:   2025-12-20 01:00:00
+categories: "development"
+asset_path: /assets/images/
+tags: ['gpu', 'pod', 'docker', 'helm']
+---
+
+# 1. Installation
+
+## 1.1 Install K3s
+
+```bash
+curl -sfL https://get.k3s.io | sh -
+
+# 이후 설정
+mkdir -p ~/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chown $(id -u):$(id -g) ~/.kube/config
+chmod 600 ~/.kube/config
+export KUBECONFIG=$HOME/.kube/config
+```
+
+.bashrc 에 저장
+
+```bash
+# K3s
+export KUBECONFIG=$HOME/.kube/config
+```
+
+
+## 1.2 Install Helm
+
+helm은 package manager로서 apt, yum, brew 같은 것
+
+
+Ubuntu 설치시
+
+```bash
+# Snap 으로 설치시
+sudo snap install helm --classic
+
+# Apt 로 설치시 (위에 걸로 하면됨)
+sudo apt-get install curl gpg apt-transport-https --yes
+curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+```
+
+설치 확인
+
+```bash
+helm version
+helm list
+```
+
+
+## 1.3 Nvidia Container Tookit
+
+> K3s는 기본적으로 containerd를 사용합니다. <br>
+> 따라서 “Docker 컨테이너에서 GPU 사용”과 “K3s Pod에서 GPU 사용”은 설정 위치가 다릅니다.
+
+
+```bash
+# Install prerequisites
+$ sudo apt-get update && sudo apt-get install -y --no-install-recommends curl gnupg2
+
+# Configure the production repository
+$ curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+# Install
+$ sudo apt-get update
+
+# 설치
+$ export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.18.1-1
+  sudo apt-get install -y \
+      nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+      nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+      libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+      libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
+```
+
+아래처럼 설정하면 Docker Container 가 Nvidia GPU 를 사용 하도록 설정해 줍니다. <br>
+`nvidia-ctk runtime configure --runtime=docker` 실행시 /etc/docker/daemon.json 에 세팅값이 설정됩니다
+
+```bash
+# Docker 에서 GPU 사용 가능하게 해줌
+# Docker runtime config
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+
+# Verify (Docker)
+docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
+```
+
+Containerd 에서 GPU 사용은 다음과 같이 합니다. <br> 
+K3s는 Containerd 를 사용 (반드시 설치 해야 함)
+
+```bash
+# K3s 에서 GPU 사용 가능하게 해줌 (K3s 는 Containerd 사용)
+sudo nvidia-ctk runtime configure \
+  --runtime=containerd \
+  --config=/var/lib/rancher/k3s/agent/etc/containerd/config.toml
+
+sudo systemctl restart containerd
+sudo systemctl restart k3s
+kubectl rollout restart daemonset nvdp-nvidia-device-plugin -n nvidia-device-plugin
+
+```
+
+
+
+## 1.4 Nvidia Device Plugin + GPU Feature Discovery (GFD)
+
+Kubernetes 에서 GPU를 자원(resource)로 인식하게 만드는 컴포넌트<br> 
+cpu, memory 지정은 기본적으로 지원되는데, gpu: 2 이런건 Nvidia device plugin을 설치해야지 됨
+
+### RuntimeClass 생성
+
+K3s의 팟이 nvidia-container-runtime을 사용하도록 RuntimeClass를 먼저 생성합니다.
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: nvidia
+handler: nvidia
+EOF
+```
+
+### 실제 설치
+
+(여기서는 helm 으로 설치 방법을 알려줌)
+ - `gfd.enabled=true` 
+     - GPU Feature Discovery 활성화
+     - GPU가 존재하는 노드에 자동으로 라벨 부착
+     - nodeAffinity 조건을 만족시켜 Device Plugin DaemonSet이 정상적으로 실행됨
+
+```bash
+helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
+helm repo update
+
+# 어떤 버젼 있는지 확인
+helm search repo nvdp --devel
+
+# 위에서 확인한 버젼을 사용해서 설치/업그레이드
+helm upgrade -i nvdp nvdp/nvidia-device-plugin \
+  --namespace nvidia-device-plugin \
+  --create-namespace \
+  --set gfd.enabled=true \
+  --set runtimeClassName=nvidia \
+  --version 0.18.0
+```
+
+설치 확인
+
+```bash
+# DaemonSet 확인
+$ kubectl get pods -n nvidia-device-plugin -o wide
+NAME                                                    READY   STATUS    RESTARTS        AGE    IP           NODE                   NOMINATED NODE   READINESS GATES
+nvdp-node-feature-discovery-gc-6476cc6bf4-t655p         1/1     Running   0               55m    10.42.0.23   anderson-ubuntu-3090   <none>           <none>
+nvdp-node-feature-discovery-master-58788687cc-tzl9v     1/1     Running   0               55m    10.42.0.22   anderson-ubuntu-3090   <none>           <none>
+nvdp-node-feature-discovery-worker-849zk                1/1     Running   1 (2m25s ago)   55m    10.42.0.26   anderson-ubuntu-3090   <none>           <none>
+nvdp-nvidia-device-plugin-gpu-feature-discovery-m2fz8   1/1     Running   0               2m4s   10.42.0.34   anderson-ubuntu-3090   <none>           <none>
+nvdp-nvidia-device-plugin-prt9m                         1/1     Running   0               2m4s   10.42.0.33   anderson-ubuntu-3090   <none>           <none>
+
+$ kubectl get ds -n nvidia-device-plugin
+NAME                                              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                 AGE
+nvdp-node-feature-discovery-worker                1         1         1       1            1           <none>                        72m
+nvdp-nvidia-device-plugin                         1         1         1       1            1           <none>                        72m
+nvdp-nvidia-device-plugin-gpu-feature-discovery   1         1         1       1            1           <none>                        72m
+nvdp-nvidia-device-plugin-mps-control-daemon      0         0         0       0            0           nvidia.com/mps.capable=true   72m
+
+```
+
+
+
+
+
+
+# Uninstall
+
+```bash
+helm uninstall nvdp -n nvidia-device-plugin
+kubectl delete namespace nvidia-device-plugin
+```
+
+
+확인
+
+```bash
+kubectl get pods -A | grep -i nvidia || true
+kubectl get ds -A | grep -i nvidia || true```
