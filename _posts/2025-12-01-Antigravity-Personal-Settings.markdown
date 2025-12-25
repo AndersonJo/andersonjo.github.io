@@ -19,6 +19,8 @@ tags: ['sfpt', 'oracle']
 |:-------------|:---------------|:-------------------|:--------------------|
 | Antigravity  | Open Command   | CTRL + SHIFT + P   |                     |
 |              | Terminal       | CTRL + `           | Open/focus terminal |
+|              | Word Wrap      | ALT + Z            | Toggle Word Wrap    |
+
 
 ## 1.2 Command
 
