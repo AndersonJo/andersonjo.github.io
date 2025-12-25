@@ -326,6 +326,27 @@ spec:
 
 
 
+
+## 2.4 vLLM Serve Options
+
+주요 옵션들을 정리하면 다음과 같습니다.
+
+| Option                            | Description                           | Usage                           |
+|:----------------------------------|:--------------------------------------|:--------------------------------|
+| `--model`                         | 사용할 모델의 이름 또는 경로                      | `vllm serve facebook/opt-125m`  |
+| `--tensor-parallel-size`, `-tp`   | Tensor Parallelism을 위한 GPU 개수         | `-tp 2`                         |
+| `--pipeline-parallel-size`, `-pp` | Pipeline Parallelism을 위한 GPU 개수       | `-pp 2`                         |
+| `--gpu-memory-utilization`        | GPU 메모리 사용률 (기본값 0.9)                 | `--gpu-memory-utilization 0.95` |
+| `--max-model-len`                 | 모델의 최대 컨텍스트 길이 제한                     | `--max-model-len 4096`          |
+| `--trust-remote-code`             | 모델의 커스텀 코드 실행 허용 (필요시)                | `--trust-remote-code`           |
+| `--dtype`                         | 데이터 타입 설정 (auto, float16, bfloat16 등) | `--dtype bfloat16`              |
+| `--quantization`, `-q`            | 양자화 설정 (awq, gptq, bitsandbytes 등)    | `-q awq`                        |
+| `--enforce-eager`                 | CUDA Graph 대신 Eager 모드 사용 (디버깅용)      | `--enforce-eager`               |
+| `--served-model-name`             | API에서 노출될 모델 이름 변경                    | `--served-model-name my-gpt`    |
+| `--api-key`                       | API 접속을 위한 API Key 설정                 | `--api-key mysecret`            |
+| `--enable-lora`                   | LoRA 어댑터 사용 활성화                       | `--enable-lora`                 |
+
+
 # Uninstall
 
 ```bash
