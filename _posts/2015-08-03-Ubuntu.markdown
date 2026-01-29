@@ -262,6 +262,7 @@ $ vi ~/.conkyrc
 
 ```bash
 {% raw %}
+
 conky.config = {
     update_interval = 1,
     cpu_avg_samples = 2,
@@ -294,6 +295,8 @@ conky.config = {
     own_window_colour = '#000000',
     minimum_width = 350, minimum_height = 0,
 };
+
+
 
 conky.text = [[
 ${time %H:%M:%S}${alignr}${time %Y-%m-%d}
@@ -334,6 +337,12 @@ GPU Frequency: $alignr ${nvidia gpufreq} MHz
 GPU Temp: $alignr ${nvidia temp}°C
 GPU Usage: $alignr ${execi 1000 nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits}%
 GPU Memory Usage: $alignr ${execi 1000 nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits}MB / ${execi 1000 nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits}MB
+
+${font sans-serif:bold:size=12}POWER ${hr 2}${font sans-serif:normal:size=10}
+CPU Power (PPT): $alignr ${execi 2 sensors | grep 'PPT' | awk '{print $2}'} W
+${execgraph "sensors | grep 'PPT' | awk '{print $2}'" 25,000 000000 00ff00}
+GPU Power: $alignr ${execi 2 nvidia-smi --query-gpu=power.draw --format=csv,noheader,nounits} W / ${execi 6000 nvidia-smi --query-gpu=power.limit --format=csv,noheader,nounits} W
+${execgraph "nvidia-smi --query-gpu=power.draw --format=csv,noheader,nounits" 25,000 000000 ff0000}
 
 ${font sans-serif:bold:size=12}MEMORY ${hr 2}
 ${font sans-serif:normal:size=10}RAM $alignc $mem / $memmax $alignr $memperc%
