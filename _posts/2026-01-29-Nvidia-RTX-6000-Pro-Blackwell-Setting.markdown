@@ -77,13 +77,27 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cusparse/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/nccl/lib
 ```
 
-
 ```bash
 $ pip install "tf-nightly[and-cuda]"
 
 # 테스트
 $ python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
 ```
+
+
+if we use \[and-cuda\], it automatically downloads cudnn, cublas, ... nccl.<br>
+However if you want to install all of them manually, you can do it like this. 
+
+```bash
+pip install nvidia-cudnn-cu12 \
+            nvidia-cublas-cu12 \
+            nvidia-cufft-cu12 \
+            nvidia-curand-cu12 \
+            nvidia-cusolver-cu12 \
+            nvidia-cusparse-cu12 \
+            nvidia-nccl-cu12
+```
+
 
 here's a bit more complex test. 
 
@@ -115,6 +129,26 @@ def test_tensorflow():
 
 test_tensorflow()
 ```
+
+# 3. vLLM
+
+ - here, we need to install nightly version
+
+```python
+$ pip install vllm --pre --extra-index-url https://wheels.vllm.ai/nightly
+```
+
+```bash
+python -m vllm.entrypoints.openai.api_server \
+    --model moonshotai/Kimi-K2.5 \
+    --tensor-parallel-size 1 \
+    --gpu-memory-utilization 0.95 \
+    --trust-remote-code \
+    --served-model-name kimi-k2.5 \
+    --max-model-len 32768
+    
+```
+
 
 
 # Stable Diffusion WebUI
