@@ -10,8 +10,7 @@ tags: ['pytorch', 'tensorflow', 'cuda']
 # 1. Install Easy CUDA
 
 We're going to install Pytorch on CUDA-13.0<br> 
-you need to run both cu12 and cu13.<br>
-just run all of them below. <br>
+depending on version, you need to run either cu12 or cu13. 
 
 ```bash
 # for CUDNN 12 & 13
@@ -25,6 +24,11 @@ pip install nvidia-cudnn-cu12 \
 
 # for CUDNN 13
 pip install nvidia-cudnn-cu13 \
+            nvidia-cublas \
+            nvidia-cufft \
+            nvidia-curand \
+            nvidia-cusolver \
+            nvidia-cusparse \
             nvidia-nccl-cu13
 ```
 
@@ -57,6 +61,28 @@ go to https://pytorch.org and find your matched version.
  - PyTorch Build: Latest Stable
  - CUDA 13.0
 
+
+create `requirements.txt`
+
+```txt
+nvidia-cudnn-cu13
+nvidia-cublas
+nvidia-cufft
+nvidia-curand
+nvidia-cusolver
+nvidia-cusparse
+nvidia-nccl-cu13
+torch 
+torchvision 
+--index-url https://download.pytorch.org/whl/cu130
+```
+
+```bash
+$ uv pip install -r requirements.txt --system
+```
+
+
+If you want to install `torch` independently, run it like this.
 
 ```bash
 $ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
