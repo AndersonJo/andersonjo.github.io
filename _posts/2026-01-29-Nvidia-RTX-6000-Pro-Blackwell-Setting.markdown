@@ -12,6 +12,7 @@ tags: ['pytorch', 'tensorflow', 'cuda']
 We're going to install Pytorch on CUDA-13.0<br> 
 depending on version, you need to run either cu12 or cu13. 
 
+
 ```bash
 # for CUDNN 12 & 13
 pip install nvidia-cudnn-cu12 \
@@ -65,6 +66,8 @@ go to https://pytorch.org and find your matched version.
 create `requirements.txt`
 
 ```txt
+--index-url https://pypi.org/simple
+--extra-index-url https://download.pytorch.org/whl/cu130
 nvidia-cudnn-cu13
 nvidia-cublas
 nvidia-cufft
@@ -74,7 +77,7 @@ nvidia-cusparse
 nvidia-nccl-cu13
 torch 
 torchvision 
---index-url https://download.pytorch.org/whl/cu130
+
 ```
 
 ```bash
