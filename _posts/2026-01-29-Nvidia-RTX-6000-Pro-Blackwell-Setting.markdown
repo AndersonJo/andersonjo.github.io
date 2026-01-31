@@ -9,6 +9,9 @@ tags: ['pytorch', 'tensorflow', 'cuda']
 
 # 1. Install Easy CUDA
 
+We're going to install Pytorch on CUDA-13.0<br> 
+you need to run both cu12 and cu13.<br>
+just run all of them below. <br>
 
 ```bash
 # for CUDNN 12 & 13
