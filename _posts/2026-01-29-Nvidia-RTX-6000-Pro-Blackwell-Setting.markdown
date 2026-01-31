@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Nvidia RTX 6000 Pro Blackwell Workstation 600w Settings"
+title:  "Nvidia RTX 6000 Pro Blackwell Workstation Settings"
 date:   2026-01-29 01:00:00
 categories: "format"
 asset_path: /assets/images/
