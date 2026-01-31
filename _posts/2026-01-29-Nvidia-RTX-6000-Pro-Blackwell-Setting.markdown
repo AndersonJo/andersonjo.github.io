@@ -53,16 +53,12 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/nccl/lib
 
 # 2. Install Pytorch
 
-It's better to install Pytorch preview (nightly) version.<br>
-I use CUDA Version 13.1
-
 go to https://pytorch.org and find your matched version. 
- - PyTorch Build: Preview (Nightly)
+ - PyTorch Build: Latest Stable
  - CUDA 13.0
 
 
 ```bash
-#$ pip install --pre torch torchvision --index-url https://download.pytorch.org/whl/nightly/cu130
 $ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
 
 # check pytorch version
