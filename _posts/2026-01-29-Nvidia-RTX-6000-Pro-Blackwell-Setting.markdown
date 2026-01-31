@@ -7,61 +7,14 @@ asset_path: /assets/images/
 tags: ['pytorch', 'tensorflow', 'cuda']
 ---
 
-# 1. Install Easy CUDA
-
-We're going to install Pytorch on CUDA-13.0<br> 
-depending on version, you need to run either cu12 or cu13. 
-
-
-```bash
-# for CUDNN 12 & 13
-pip install nvidia-cudnn-cu12 \
-            nvidia-cublas-cu12 \
-            nvidia-cufft-cu12 \
-            nvidia-curand-cu12 \
-            nvidia-cusolver-cu12 \
-            nvidia-cusparse-cu12 \
-            nvidia-nccl-cu12
-
-# for CUDNN 13
-pip install nvidia-cudnn-cu13 \
-            nvidia-cublas \
-            nvidia-cufft \
-            nvidia-curand \
-            nvidia-cusolver \
-            nvidia-cusparse \
-            nvidia-nccl-cu13
-```
-
-
-modify ~/.bashrc
-
-NVIDIA_HOME is different, depending on your python version
-
-
-```bash
-# CUDA
-NVIDIA_HOME="$HOME/.pyenv/versions/3.12.10/lib/python3.12/site-packages/nvidia"
-
-# 2. 필요한 라이브러리 경로들을 LD_LIBRARY_PATH에 추가
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cudnn/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cublas/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cufft/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/curand/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cusolver/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cusparse/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/nccl/lib
-```
 
 
 
 
-# 2. Install Pytorch
+# 1. Install Pytorch
 
-go to https://pytorch.org and find your matched version. 
- - PyTorch Build: Latest Stable
- - CUDA 13.0
 
+## 1.1 Pytorch with CUDA 13.0
 
 create `requirements.txt`
 
@@ -77,7 +30,7 @@ nvidia-cusparse
 nvidia-nccl-cu13
 torch 
 torchvision 
-
+transformers
 ```
 
 ```bash
@@ -85,16 +38,61 @@ $ uv pip install -r requirements.txt --system
 ```
 
 
-If you want to install `torch` independently, run it like this.
+## 1.2 Pytorch with CUDA 12.8
+
+
+create `requirements.txt`
+
+
+```txt
+--index-url https://pypi.org/simple
+--extra-index-url https://download.pytorch.org/whl/cu128
+nvidia-cudnn-cu12
+nvidia-cublas-cu12
+nvidia-cufft-cu12
+nvidia-curand-cu12
+nvidia-cusolver-cu12
+nvidia-cusparse-cu12
+nvidia-nccl-cu12
+torch 
+torchvision 
+transformers
+```
 
 ```bash
-$ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
+$ uv pip install -r requirements.txt --system
+```
 
-# check pytorch version
+
+## 1.3 setting .bashrc 
+
+
+modify ~/.bashrc<br>
+NVIDIA_HOME is different, depending on your python version
+
+
+```bash
+# CUDA
+NVIDIA_HOME="$HOME/.pyenv/versions/3.12.10/lib/python3.12/site-packages/nvidia"
+
+# 2. Add necessary libraries into LD_LIBRARY_PATH에
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cu13/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cudnn/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cublas/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cufft/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/curand/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cusolver/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/cusparse/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVIDIA_HOME}/nccl/lib
+```
+
+
+## 1.4 Test
+
+```bash
 $ python -c "import torch; print(torch.__version__)"
 ```
 
-here you can test it like this
 
 ```python
 import time
