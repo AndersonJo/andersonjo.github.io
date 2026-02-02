@@ -365,7 +365,7 @@ models:
 you can create vllm
 
 ```bash
-python3 -m vllm.entrypoints.openai.api_server \ 
+python3 -m vllm.entrypoints.openai.api_server \
     --model Qwen/Qwen3-Coder-30B-A3B-Instruct \
     --dtype auto \
     --tensor-parallel-size 1 \
