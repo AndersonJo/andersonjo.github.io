@@ -77,6 +77,51 @@ Input x
 {% endraw %}
 ```
 
+### Matrix 크기 예제
+
+구체적인 숫자로 이해해보자. `d=64, k=32, r=4`로 설정한 경우:
+
+|        행렬         |   크기    | 파라미터 수 | 설명                    |
+|:-----------------:|:-------:|:------:|:----------------------|
+|      $$W_0$$      | 64 × 32 | 2,048  | 원본 weight (frozen)    |
+|       $$A$$       | 4 × 32  |  128   | LoRA down-projection  |
+|       $$B$$       | 64 × 4  |  256   | LoRA up-projection    |
+| $$\Delta W = BA$$ | 64 × 32 |   -    | $$W_0$$와 같은 크기로 복원    |
+
+**LoRA 파라미터**: $$A + B = 128 + 256 = 384$$ (Full의 **18.75%**)
+
+### Numpy 예제
+
+```python
+import numpy as np
+
+# 차원 설정
+d, k, r = 64, 32, 4  # d: output dim, k: input dim, r: rank
+alpha = 4  # scaling factor
+
+# 행렬 생성
+W0 = np.random.randn(d, k)  # (64, 32) - frozen 원본 weight
+A = np.random.randn(r, k)   # (4, 32)  - LoRA down-projection
+B = np.zeros((d, r))        # (64, 4)  - LoRA up-projection (zero init!)
+
+# Input
+x = np.random.randn(k)      # (32,) - input vector
+
+# Forward Pass: h = W₀x + (α/r) * BAx
+h_frozen = W0 @ x           # (64,) - 원본 경로
+h_lora = (alpha / r) * B @ (A @ x)  # (64,) - LoRA 경로
+h = h_frozen + h_lora       # (64,) - 최종 output
+
+print(f"W0: {W0.shape}, A: {A.shape}, B: {B.shape}")
+print(f"Full params: {d * k} | LoRA params: {r * k + d * r}")
+# 출력: Full params: 2048 | LoRA params: 384
+```
+
+**핵심 포인트**:
+- `A @ x`: (4, 32) × (32,) → **(4,)** — 32차원을 4차원으로 압축
+- `B @ (A @ x)`: (64, 4) × (4,) → **(64,)** — 다시 64차원으로 확장
+- 학습 시작 시 `B=0`이므로 $$\Delta W = BA = 0$$ → 원본과 동일하게 시작
+
 ## 2.2 초기화
 
 - **A**: Kaiming/Gaussian 초기화
