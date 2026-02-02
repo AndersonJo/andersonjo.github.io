@@ -4,7 +4,7 @@ title:  "Nvidia RTX 6000 Pro Blackwell Workstation Settings"
 date:   2026-01-29 01:00:00
 categories: "format"
 asset_path: /assets/images/
-tags: ['pytorch', 'tensorflow', 'cuda']
+tags: ['pytorch', 'tensorflow', 'cuda', "continue"]
 ---
 
 
@@ -296,20 +296,81 @@ $ pip install vllm
 
 ```bash
 python -m vllm.entrypoints.openai.api_server \
-    --model openai/gpt-oss-20b \
+    --model Qwen/Qwen3-Coder-30B-A3B-Instruct \
     --tensor-parallel-size 1 \
-    --gpu-memory-utilization 0.5 \
+    --gpu-memory-utilization 0.3 \
     --trust-remote-code \
-    --max-model-len 5096
+    --max-model-len 35096
 ```
 
 
 
 
-# Stable Diffusion WebUI
+# 5. Stable Diffusion WebUI
 
 
 ```bash
 $ export STABLE_DIFFUSION_REPO=https://github.com/joypaul162/Stability-AI-stablediffusion.git
 $ ./webui.sh
+```
+
+
+# 6. CONTINUE on Pycharm 
+
+CONTINUE is a plugin for llm in Pycharm. 
+
+
+config.yaml
+
+
+```aiexclude
+name: Local Config
+version: 1.0.0
+schema: v1
+models:
+  - name: Llama 3.1 8B
+    provider: ollama
+    model: llama3.1:8b
+    roles:
+      - chat
+      - edit
+      - apply
+  - name: Qwen2.5-Coder 1.5B
+    provider: ollama
+    model: qwen2.5-coder:1.5b-base
+    roles:
+      - autocomplete
+  - name: Nomic Embed
+    provider: ollama
+    model: nomic-embed-text:latest
+    roles:
+      - embed
+  - name: Qwen3-Coder-30B (Local)
+    provider: openai
+    model: Qwen/Qwen3-Coder-30B-A3B-Instruct
+    apiBase: http://localhost:8045/v1
+#    apiKey: my-secret-key
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete
+  - name: Nomic Embed
+    provider: ollama
+    model: nomic-embed-text:latest
+    roles:
+      - embed
+```
+
+you can create vllm
+
+```bash
+python3 -m vllm.entrypoints.openai.api_server \ 
+    --model Qwen/Qwen3-Coder-30B-A3B-Instruct \
+    --dtype auto \
+    --tensor-parallel-size 1 \
+    --gpu-memory-utilization 0.95 \
+    --trust-remote-code \
+    --max-model-len 50000 \
+    --port 8045
 ```
