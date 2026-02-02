@@ -11,23 +11,33 @@ tags: [lora, fine-tuning, unsloth, llm]
 
 ## 1.1 문제: Full Fine-Tuning
 
-Full Fine-Tuning은 모든 파라미터 $$W \in \mathbb{R}^{d \times k}$$를 업데이트한다.
+Full Fine-Tuning은 모든 파라미터 $$ W \in \mathbb{R}^{d \times k} $$를 업데이트한다.
 
-$$W' = W_0 + \Delta W$$
+$$ W' = W_0 + \Delta W $$
 
 **문제점**: 70B 모델 기준 $$\Delta W$$만 해도 140GB+ 메모리 필요.
 
-## 1.2 LoRA의 핵심 통찰
+## 1.2 LoRA의 핵심
 
-> Fine-tuning시 weight 변화량 $$\Delta W$$는 **Low-Rank** 구조를 가진다.
+> Fine-tuning시 weight 변화량 $$\Delta W$$는 **Low-Rank** 구조를 가진다. <br>
+> **Low-Rank = 압축 가능하다**는 뜻<br>
+> JPEG 압축처럼 원본 10MB → 500KB로 줄여도 품질이 비슷한 이유는, <br> 
+> 정보에 **중복과 패턴**이 있기 때문.
+>
+> LLM Fine-tuning도 마찬가지. <br>
+> 연구 결과, weight 변화량이 엄청 복잡하게 변하는 게 아니라 <br> 
+> **몇 개의 주요 방향으로만 변한다**는 것을 발견 
+> 이미 언어를 잘 아는 LLM에게 "의료 용어 좀 더 잘 알아듣게" 같은 미세 조정만 하면 되기 때문
 
 즉, $$\Delta W$$를 두 개의 작은 행렬로 분해 가능:
 
 $$\Delta W = BA$$
 
-- $$B \in \mathbb{R}^{d \times r}$$
-- $$A \in \mathbb{R}^{r \times k}$$  
-- $$r \ll \min(d, k)$$ (보통 8~64)
+$$ \begin{align}
+B &\in \mathbb{R}^{d \times r} \\
+A &\in \mathbb{R}^{r \times k} \\
+r &\ll \min(d, k)
+\end{align} $$
 
 ## 1.3 파라미터 비교
 
@@ -46,6 +56,7 @@ $$\Delta W = BA$$
 $$h = W_0 x + \frac{\alpha}{r} \cdot BAx$$
 
 ```
+{% raw %}
 Input x
     │
     ├─────────────────┐
@@ -63,6 +74,7 @@ Input x
               │
               ▼
            Output h
+{% endraw %}
 ```
 
 ## 2.2 초기화
