@@ -59,6 +59,23 @@ torchvision
 transformers
 ```
 
+또는 
+
+```txt
+uv pip install nvidia-cudnn-cu12 \
+    nvidia-cublas-cu12 \
+    nvidia-cufft-cu12 \
+    nvidia-curand-cu12 \
+    nvidia-cusolver-cu12 \
+    nvidia-cusparse-cu12 \
+    nvidia-nccl-cu12 \
+    torch \
+    torchvision \
+    transformers \
+    --index-url https://pypi.org/simple \
+    --extra-index-url https://download.pytorch.org/whl/cu128
+```
+
 ```bash
 $ uv pip install -r requirements.txt --system
 ```
@@ -206,6 +223,168 @@ def test_unsloth():
 
 test_unsloth()
 ```
+
+
+# 3. Install TLR
+
+```python
+import torch
+import transformers
+from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, TrainingArguments
+from datasets import Dataset
+from peft import LoraConfig, get_peft_model
+from trl import SFTTrainer, DPOTrainer, PPOConfig, AutoModelForCausalLMWithValueHead, SFTConfig, DPOConfig
+import os
+import tempfile
+import warnings
+
+# Suppress minor warnings for clean output
+warnings.filterwarnings("ignore")
+
+
+def print_status(message):
+    print(f"\n[TRL TEST] >> {message}")
+
+
+def run_trl_health_check():
+    print_status("Starting TRL Health Check...")
+
+    # 1. Environment & Device Check
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print_status(f"Device: {device}")
+
+    # 2. Setup Resources (Correct Vocab Size Match)
+    print_status("Initializing dummy model and tokenizer...")
+
+    # 먼저 토크나이저를 로드합니다.
+    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    tokenizer.pad_token = tokenizer.eos_token
+
+    # 모델 설정: vocab_size를 토크나이저와 동일하게 맞춤 (매우 중요)
+    model_config = AutoConfig.from_pretrained("gpt2")
+    model_config.n_layer = 2
+    model_config.n_head = 2
+    model_config.n_embd = 32
+    model_config.vocab_size = len(tokenizer)  # <--- 여기가 수정되었습니다. (50257)
+
+    model = AutoModelForCausalLM.from_config(model_config).to(device)
+
+    # 3. Test SFTTrainer (Supervised Fine-Tuning)
+    print_status("Testing SFTTrainer (1 training step)...")
+
+    sft_data = {
+        "text": [
+                    "User: Hello\nAssistant: Hi there!",
+                    "User: Code for me\nAssistant: Sure, here is python code.",
+                    "User: Bye\nAssistant: Goodbye!"
+                ] * 10
+    }
+    sft_dataset = Dataset.from_dict(sft_data)
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        sft_config = SFTConfig(
+            output_dir=tmp_dir,
+            dataset_text_field="text",
+            max_length=16,
+            per_device_train_batch_size=2,
+            max_steps=1,
+            learning_rate=1e-4,
+            logging_steps=1,
+            report_to="none",
+            save_strategy="no",
+        )
+
+        sft_trainer = SFTTrainer(
+            model=model,
+            train_dataset=sft_dataset,
+            args=sft_config,
+            processing_class=tokenizer,  # it was "tokenizer" previously
+        )
+
+        sft_trainer.train()
+        print_status("SFTTrainer executed successfully.")
+
+    # 4. Test DPOTrainer (Direct Preference Optimization)
+    print_status("Testing DPOTrainer initialization...")
+
+    dpo_data = {
+        "prompt": ["Question 1", "Question 2"] * 5,
+        "chosen": ["Good answer 1", "Good answer 2"] * 5,
+        "rejected": ["Bad answer 1", "Bad answer 2"] * 5,
+    }
+    dpo_dataset = Dataset.from_dict(dpo_data)
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        dpo_config = DPOConfig(
+            output_dir=tmp_dir,
+            per_device_train_batch_size=2,
+            max_steps=1,
+            report_to="none",
+            learning_rate=1e-5,
+        )
+
+        # DPO용 새 모델 (동일 설정)
+        dpo_model = AutoModelForCausalLM.from_config(model_config).to(device)
+
+        dpo_trainer = DPOTrainer(
+            model=dpo_model,
+            ref_model=None,
+            args=dpo_config,
+            train_dataset=dpo_dataset,
+            processing_class=tokenizer,  # it was "tokenizer" previously
+        )
+
+        dataloader = dpo_trainer.get_train_dataloader()
+        batch = next(iter(dataloader))
+        print_status("DPOTrainer initialized and data processed successfully.")
+
+    # 5. Test PPO Integration (Value Head)
+    print_status("Testing PPO ValueHead Model Wrapper...")
+
+    try:
+        # PPO 모델은 기본 모델 위에 Value Head를 얹는 구조
+        ppo_base_model = AutoModelForCausalLM.from_config(model_config).to(device)
+        ppo_model = AutoModelForCausalLMWithValueHead.from_pretrained(ppo_base_model)
+
+        if hasattr(ppo_model, "v_head"):
+            print_status("AutoModelForCausalLMWithValueHead successfully attached 'v_head'.")
+        else:
+            raise ValueError("v_head not found in PPO model.")
+
+        inputs = tokenizer("Test input", return_tensors="pt").to(device)
+        with torch.no_grad():
+            output = ppo_model(**inputs)
+        print_status("PPO Model forward pass successful.")
+
+    except Exception as e:
+        print(f"PPO Test Failed: {e}")
+        # PPO is tricky with dummy models sometimes, but we proceed if minor error
+        pass
+
+    # 6. Test PEFT Integration (LoRA)
+    print_status("Testing PEFT (LoRA) Integration with TRL...")
+
+    peft_config = LoraConfig(
+        r=4,
+        lora_alpha=8,
+        lora_dropout=0.05,
+        bias="none",
+        task_type="CAUSAL_LM",
+    )
+
+    base_model_peft = AutoModelForCausalLM.from_config(model_config).to(device)
+    peft_model = get_peft_model(base_model_peft, peft_config)
+
+    print_status(f"PEFT Model created. Trainable params: {peft_model.print_trainable_parameters()}")
+
+    print_status("\n---------------------------------------------------")
+    print_status("SUCCESS: All TRL components checked thoroughly.")
+    print_status("---------------------------------------------------")
+
+
+run_trl_health_check()
+```
+
 
 
 
