@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Precision (Kernel Selection) - Only Hopper swizzling is supported for values"
+title:  "Precision and Kernel Selection - Only Hopper swizzling is supported for values"
 date:   2026-01-04 01:00:00
 categories: "format"
 asset_path: /assets/images/
@@ -34,7 +34,40 @@ but my GPU (Nvidia RTX 6000 PRO Blackwell) does not support Hopper Kernel.<br>
 in short, the safest workaround is to avoid "MXFP4" and use "BF16".
 
 
-# 2. Precision  
+# 2. Kernel Selection Flow
+
+This is a simplified internal routing view.  
+The actual checks are more granular and framework-specific.
+
+```
+Kernel Selection
+├─ Op: GEMM / Linear / Matmul
+│  ├─ Check device capability (SM, architecture)
+│  │  ├─ Hopper? -> allow TMA/Swizzle paths
+│  │  ├─ Blackwell? -> allow FP4/NVFP4 paths
+│  │  └─ Other -> generic Tensor Core or CUDA paths
+│  ├─ Check precision / format
+│  │  ├─ FP32/TF32 -> cuBLAS / TF32-enabled GEMM
+│  │  ├─ BF16/FP16 -> Tensor Core GEMM
+│  │  ├─ FP8 -> FP8 kernels (often Hopper-optimized)
+│  │  ├─ FP4/NVFP4 -> FP4 kernels (often Blackwell-optimized)
+│  │  └─ MXFP4 -> MXFP4 kernels (specialized, high constraints)
+│  ├─ Check library availability
+│  │  ├─ Triton kernel exists? -> Triton path
+│  │  ├─ CUTLASS/TensorRT path? -> vendor path
+│  │  └─ Fallback -> cuBLAS / default GEMM
+│  └─ Check runtime flags
+│     ├─ load_in_4bit / quant config -> quantized kernel
+│     ├─ use_cache -> cache-aware kernel
+│     └─ debug/disable flags -> safe fallback
+```
+
+Practical takeaway: **selection is multi-stage**.  
+If any stage assumes unsupported hardware, compilation can fail early.
+
+
+
+# 3. Precision  
 
 Depending on the precision (BF16/FP16/FP8/MXFP4/etc...), it selects different kernels.<br>
 Here I summarized the precisions and kernels. 
@@ -63,7 +96,7 @@ Precision/Format
    └─ Dequant (scale restore path)
 ```
 
-# 3. Entire Error Log
+# 4. Entire Error Log
 
 ```bash
 # Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>Solve x^5 + 3x^4 - 10 = Traceback (most recent call last):
