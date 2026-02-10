@@ -487,9 +487,18 @@ python -m vllm.entrypoints.openai.api_server \
 
 # 5. Stable Diffusion WebUI
 
+ - python: 3.10.17
+ - 
 
 ```bash
 $ export STABLE_DIFFUSION_REPO=https://github.com/joypaul162/Stability-AI-stablediffusion.git
+
+# Install specific setuptools
+$ source ./venv/bin/activate
+$ pip install setuptools==69.5.1
+$ deactivate 
+
+# 설치
 $ ./webui.sh
 ```
 
