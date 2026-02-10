@@ -153,5 +153,82 @@ $$\text{메모리}: 140\text{GB} \rightarrow \sim24\text{GB}$$
 
 # 6. Unsloth Code
 
+실제 Text-to-SQL 파인튜닝을 위한 코드 구현입니다.<br> 
+앞서 다룬 LoRA Hyperparameters가 코드에 어떻게 적용되는지 확인합니다.
 
+## 6.1 Model & LoRA Configuration
 
+Scaling Factor($\frac{\alpha}{r}$)를 설정하는 단계입니다.
+
+```python
+# Initialize Model with LoRA settings
+model = GptOssModel(
+    model_config=ModelConfig(
+        model_name="unsloth/gpt-oss-20b",
+        max_seq_length=4096
+    ),
+    lora_config=LoRAConfig(
+        r=16,           # Rank (r): SQL 로직 학습을 위해 8보다 높은 16 설정
+        lora_alpha=32   # Alpha (α): Scaling factor = 32/16 = 2.0
+    )
+)
+```
+- r=16: SQL 쿼리 생성과 같은 복잡한 논리 구조를 학습하기 위해 기본값(8)보다 Rank를 높여 표현력(Expressiveness)을 확보
+- lora_alpha=32: $\Delta W$의 영향력을 2배로 설정하여($\text{scaling}=2.0$), 새로운 데이터셋(SQL)의 특징을 더 강하게 반영
+
+## 6.2 Trainer Configuration (SFT)
+
+Unsloth의 장점인 메모리 효율성을 극대화하기 위한 SFTTrainer 설정입니다.
+
+```python
+trainer = SFTTrainer(
+    model=model.model,
+    processing_class=model.tokenizer,
+    train_dataset=train_dataset,
+    args=SFTConfig(
+        # Memory Optimization
+        per_device_train_batch_size=8,
+        gradient_accumulation_steps=32,  # Effective Batch Size = 8 * 32 = 256
+        
+        # Optimizer & Precision
+        optim="adamw_8bit",              # Optimizer State 메모리 절약
+        fp16=False,
+        bf16=True,                       # Ampere(RTX 30/40/6000) 이상에서 필수
+        
+        # Learning Rate Schedule
+        learning_rate=2e-4,
+        warmup_steps=5,
+        max_steps=30,
+        output_dir="outputs",
+    ),
+)
+```
+
+- gradient_accumulation_steps=32:
+  - 물리적 메모리 한계로 Batch Size를 작게(8) 가져가는 대신, 32번의 step 동안 gradient를 누적해 업데이트
+  - 결과적으로 대용량 배치(256)로 학습하는 것과 유사한 수렴 안정성을 확보
+  - per_device_train_batch_size=8 이게 실제 batch size
+  - 수식: $$\text{Effective Batch Size} = \text{Micro Batch Size} \times \text{Accumulation Steps} \times \text{Num GPUs}$$
+    - $$\text{Total Batch Size} = 8 \times 32 \times 1 = \mathbf{256}$$
+  - 메모리는 배치 8만큼만 쓰면서, 학습 효과는 배치 256인 것처럼 낼 수 있음
+  
+- optim="adamw_8bit":
+  - 일반 AdamW(32-bit) 대비 Optimizer state가 차지하는 VRAM을 1/4 수준으로 줄여 OOM(Out of Memory)을 방지
+
+- bf16=True:
+  - FP16보다 표현 가능한 수의 범위(Dynamic Range)가 넓어 학습 중 발산(NaN)할 확률이 낮습니다. 
+  - RTX 6000 Pro 환경에 최적화
+
+## 6.3 Training & Saving
+
+전체 파라미터($W$)가 아닌 LoRA Adapter($A, B$)만 학습을 진행합니다.
+
+```python
+# Start Training (Updates only A and B matrices)
+trainer.train()
+
+# Save LoRA Adapters
+model.save("./text2sql_lora_model")
+```
+ - 학습이 끝나면 원본 모델(GB 단위)은 그대로 두고, 학습된 **LoRA weight(MB 단위)**만 저장합니다.
+ - 추론 시에는 원본 모델에 이 Adapter를 동적으로 로드하여 사용하게 됩니다.
