@@ -467,18 +467,21 @@ if you install both torch and vllm, vllm downgrade your torch -> the downgraded 
 
 ```bash
 # Run in virtualenv
-$ pyenv virtualenv 3.12.10 vllm
+$ pyenv virtualenv 3.12.12 vllm
 $ pyenv activate vllm
 $ pip install vllm 
 
 ```
 
 ```bash
-python -m vllm.entrypoints.openai.api_server \
-    --model Qwen/Qwen3-Coder-30B-A3B-Instruct \
+vllm serve openai/gpt-oss-20b \
+    --host 127.0.0.1 \
+    --port 8082 \
     --tensor-parallel-size 1 \
     --gpu-memory-utilization 0.3 \
     --trust-remote-code \
+    --async-scheduling \
+    --max-num-batched-tokens 8192 \
     --max-model-len 35096
 ```
 
