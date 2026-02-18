@@ -506,6 +506,16 @@ $ ./webui.sh
 ```
 
 
+disk error issue (this is just a personal issue. just skip it)
+
+```bash
+$ sudo umount -l /dev/nvme1n1p2
+$ sudo ntfsfix -d /dev/nvme1n1p2
+$ sudo mount /dev/nvme1n1p2 /media/anderson/HynixP41
+```
+
+
+
 # 6. CONTINUE on Pycharm 
 
 CONTINUE is a plugin for llm in Pycharm. 
