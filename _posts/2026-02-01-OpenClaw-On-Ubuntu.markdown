@@ -16,6 +16,19 @@ $ git clone git@github.com:openclaw/openclaw.git
 $ ./docker-setup.sh
 ```
 
+Change docker-compose.yml.<br>
+I added `extra_hosts : "host.docker.internal:host-gateway"`. 
+
+```yaml
+services:
+  openclaw-gateway:
+    image: ${OPENCLAW_IMAGE:-openclaw:local}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+
+
+
 install brew manually.<br>
 it seesm the docker container doesn't have brew and during installation it fails if brew is not installed. 
 
@@ -58,7 +71,7 @@ no need to restart the openclaw container.
 
 ```bash
 # change address to 172.17.0.1
-sed -i 's/127.0.0.1/172.17.0.1/' ~/.openclaw/openclaw.json
+sed -i 's/127.0.0.1/host.docker.internal/' ~/.openclaw/openclaw.json
 
 # change vLLM API key (1234)
 sed -i 's/"VLLM_API_KEY"/"1234"/' ~/.openclaw/openclaw.json
