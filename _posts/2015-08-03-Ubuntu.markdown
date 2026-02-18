@@ -506,6 +506,7 @@ sudo mv /usr/share/xdg-desktop-portal/portals/gnome.portal \
 sudo reboot
 ```
 
+
 ## 2.8 Docker 
 
 현재 Docker version 이 너무 높아서 기존 legacy 지원하는 app 에서 문제를 일으킴. 
