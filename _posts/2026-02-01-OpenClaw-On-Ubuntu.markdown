@@ -70,7 +70,7 @@ connect to Docker terminal and then change the connection information like this.
 no need to restart the openclaw container. 
 
 ```bash
-# change address to 172.17.0.1
+# change address to host.docker.internal
 sed -i 's/127.0.0.1/host.docker.internal/' ~/.openclaw/openclaw.json
 
 # change vLLM API key (1234)
