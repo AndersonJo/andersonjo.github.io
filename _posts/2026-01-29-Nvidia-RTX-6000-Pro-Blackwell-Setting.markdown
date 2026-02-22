@@ -498,7 +498,8 @@ $ export STABLE_DIFFUSION_REPO=https://github.com/joypaul162/Stability-AI-stable
 
 # Install specific setuptools
 $ source ./venv/bin/activate
-$ pip install setuptools==69.5.1
+$ pip install https://github.com/openai/CLIP/archive/d50d76daa670286dd6cacf3bcd80b5e4823fc8e1.zip --no-build-isolation
+$ pip install setuptools==69.5.1 wheel
 $ deactivate 
 
 # 설치
