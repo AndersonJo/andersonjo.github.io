@@ -457,6 +457,110 @@ test_tensorflow()
 ```
 
 
+# 3. Install Tensorflow from Source 
+
+이 문서는 Blackwell GPU(`compute capability 12.0a`)에서 TensorFlow를 GPU로 동작시키기 위해, 소스에서 휠을 빌드하고 설치한 실제 절차를 정리합니다.
+
+
+## 3.1 Prerequisite
+
+```bash
+$ python3 --version
+Python 3.12.12
+
+
+$ nvcc --version
+...
+Cuda compilation tools, release 12.0, V12.0.140
+Build cuda_12.0.r12.0/compiler.32267302_0
+
+
+$ bazel  --version
+bazel 7.7.0
+```
+
+### 3.2 Clone Tensorflow
+
+master branch 사용
+
+```bash
+$ git clone --depth=1 https://github.com/tensorflow/tensorflow.git
+$ cd tensorflow
+```
+
+이후 모든 설치는 해당 tensorflow 디렉토리 내에서 이루어지는 것을 가정합니다. 
+
+
+### 3.3 Bazel
+
+`tensorflow/.tf_configure.bazelrc` 파일을 만들고 python 위치를 조정합니다.<br> 
+아래 위치는 수정을 해야 합니다. 
+
+```bash
+cat > ".tf_configure.bazelrc" <<'EOF'
+build --action_env PYTHON_BIN_PATH="/home/anderson/.pyenv/versions/3.12.12/bin/python3"
+build --action_env PYTHON_LIB_PATH="/home/anderson/.pyenv/versions/3.12.12/lib/python3.12/site-packages"
+EOF
+```
+
+아래와 같이 설치 합니다. 
+
+```bash
+~/.local/bin/bazel --output_base=/home/anderson/build/.bazel_cache build \
+  //tensorflow/tools/pip_package:wheel \
+  --config=cuda \
+  --config=cuda_wheel \
+  --repo_env=HERMETIC_CUDA_VERSION=12.8.1 \
+  --repo_env=HERMETIC_CUDNN_VERSION=9.8.0 \
+  --repo_env=TF_CUDA_COMPUTE_CAPABILITIES=sm_80,sm_86,sm_89,sm_90,sm_100,compute_120 \
+  --action_env=PATH="/home/anderson/build/.bazel_cache/external/cuda_nvcc/bin:$PATH" \
+  --jobs=28 \
+  --local_ram_resources=24576
+```
+
+- `--config=cuda_wheel`이 없으면 wheel 빌드 단계에서 실패할 수 있습니다.
+- `--repo_env=TF_CUDA_COMPUTE_CAPABILITIES=...compute_120`을 넣지 않으면 환경에 따라 `compute_35` 관련 NVCC 오류가 발생할 수 있습니다.
+- `--action_env=PATH=...cuda_nvcc/bin`은 빌드 툴이 hermetic `ptxas`를 먼저 찾도록 강제합니다.
+
+
+### 3.4 Install wheel
+
+Bazel 빌드가 성공하면 다음과 같은 위치에 wheel파일이 생성 됩니다. (현재 tensorflow directory 위치중) 
+
+```bash
+bazel-bin/tensorflow/tools/pip_package/wheel_house/tensorflow-2.22.0.dev0+selfbuilt-cp312-cp312-linux_x86_64.whl
+```
+
+다음과 같이 설치합니다. 
+```bash
+$ python -m pip  install --upgrade --force-reinstall \
+    "/home/anderson/build/tensorflow/bazel-bin/tensorflow/tools/pip_package/wheel_house/tensorflow-2.22.0.dev0+selfbuilt-cp312-cp312-linux_x86_64.whl"
+```
+
+테스트 검증
+```bash
+"/home/anderson/.pyenv/versions/tensroflow-nightly/bin/python3" - <<'PY'
+import tensorflow as tf
+print("TF", tf.__version__)
+print("Built with CUDA:", tf.test.is_built_with_cuda())
+print("GPUs:", tf.config.list_physical_devices("GPU"))
+with tf.device("/GPU:0"):
+    a = tf.random.normal([2048, 2048])
+    b = tf.random.normal([2048, 2048])
+    c = tf.matmul(a, b)
+print("Matmul device:", c.device)
+print("Matmul mean:", float(tf.reduce_mean(c).numpy()))
+PY
+```
+
+
+```bash
+ -> device: 0, name: NVIDIA RTX PRO 6000 Blackwell Workstation Edition, pci bus id: 0000:01:00.0, compute capability: 12.0a
+Matmul device: /job:localhost/replica:0/task:0/device:GPU:0
+Matmul mean: -0.0573207288980484
+```
+
+
 
 # 4. Install vLLM
 
