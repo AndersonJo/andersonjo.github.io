@@ -77,40 +77,19 @@ export PS1='\[\033[00;36m\]\u:\[\033[0;33m\]\W$(parse_git_branch)>\[\033[00m\]'
 {% endhighlight %}
 
 
+## 1.3 iTerm2 글로벌 단축키 설정
 
-## 1.3 키 바인딩 설정
+1. "단축어" 앱 실행
+2. 새 단축어 생성 (+ 버튼)
+3. 'AppleScript 실행' 동작 추가 후 아래 코드 입력:
+4. 코드 부분 다 지우고, 아래와 같이 적음
+```
+tell application "iTerm" to create window with profile "Anderson"
+```
 
-**`HOME`, `END` 키를 줄의 처음, 끝으로 보내도록 설정**
- 
-{% highlight bash %}
-$ mkdir -p ~/Library/KeyBindings/
-$ vi ~/Library/KeyBindings/DefaultKeyBinding.dict
-{% endhighlight %}
-
-이후 다음의 내용을 넣습니다. 
-
-{% highlight bash %}
-{
-    "\UF729"  = moveToBeginningOfLine:; // home
-    "\UF72B"  = moveToEndOfLine:; // end
-    "$\UF729" = moveToBeginningOfLineAndModifySelection:; // shift-home
-    "$\UF72B" = moveToEndOfLineAndModifySelection:; // shift-end
-    "@\U007F"  = deleteWordBackward:; // cmd + backspace
-}
-{% endhighlight %}
-
-그외 대부분의 기본 세팅값들은 .. `/System/Library/Frameworks/AppKit.framework/Resources/StandardKeyBinding.dict` 에 있습니다.
-
-**Terminal 에서의 변경**
-
-`Preferences > Profiles > Settings > Keyboard.` 에서 변경이 가능합니다. 
-
- - 라인의 처음으로 이동: `\033OH`
- - 라인의 마지막으로 이동: `\033OF`
-
-
-설정이 완료된 이후, 컴퓨터 재시작 필요.
-
+5. 단축어 이름을 'iTerm2 새 창'으로 저장
+6. 우측 상단 정보(i) 버튼 클릭 -> '키보드 단축키 추가'
+7. 사용할 단축키 입력 (예: Control + Option + T)
 
 ## 1.4 그외 터미널 설정
 
