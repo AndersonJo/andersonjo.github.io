@@ -1,0 +1,108 @@
+---
+layout: post
+title:  "MLX LM on MacBook"
+date:   2026-05-19 01:00:00
+categories: ""
+asset_path: /assets/images/
+tags: []
+---
+
+Apple 실리콘에서 MLX 로컬 추론용 `mlx-lm`을 빨리 깔고 확인할 때 그대로 쓰려고 모아 둔 메모입니다. 모델 ID만 바꿔 붙여넣으면 됩니다.
+
+# 1. Installation
+
+```bash
+pip install -U mlx-lm
+```
+
+
+# 2. Fast Set Up
+
+## 2.1 Server
+
+Short Version
+
+```bash
+mlx_lm.server --model mlx-community/gemma-4-26b-a4b-8bit --port 8080
+```
+
+Longer Version — 서버 실행 시점에 **기본 샘플링·토큰 상한·호스트·로그**를 같이 잡습니다. 클라이언트가 요청 바디에서 `temperature` / `max_tokens` 등을 보내면 보통 그 값이 우선합니다.
+
+```bash
+mlx_lm.server \
+  --model mlx-community/gemma-4-26b-a4b-8bit \
+  --host 127.0.0.1 \
+  --port 8080 \
+  --log-level INFO \
+  --max-tokens 4096 \
+  --temp 0.7 \
+  --top-p 0.95 \
+  --top-k 40 \
+  --min-p 0 \
+  --decode-concurrency 2 \
+  --prompt-concurrency 2 \
+  --trust-remote-code
+```
+
+- `--max-tokens`: 요청에서 안 주었을 때 쓰이는 생성 길이 기본값(버전별 기본은 보통 더 작음).
+- `--temp` / `--top-p` / `--top-k` / `--min-p`: 같은 맥락의 기본 샘플링. `curl`처럼 요청 안에 명시하면 덮어씀.
+- `--decode-concurrency` / `--prompt-concurrency`: 동시 요청들을 어떻게 묶어 돌릴지(머신 여유 없으면 1로 낮춤).
+- 토크나이저 커스텀 코드 때문에 로딩 에러 나면 `--trust-remote-code` 유지.
+
+
+## 2.2 Inference
+
+출력 한 번만 받아서 패키지·다운로드·추론이 살았는지 보려면:
+
+```bash
+export MODEL='mlx-community/gemma-4-26b-a4b-8bit'
+mlx_lm.generate --model "$MODEL" -p 'Say hi in one short sentence.'
+```
+
+실제 글처럼 짧게 써 보기:
+
+```bash
+export MODEL='mlx-community/gemma-4-26b-a4b-8bit'
+mlx_lm.generate --model "$MODEL" --max-tokens 256 --temp 0.7 --top-p 0.95 \
+  --prompt '안녕. AI 미래에 대해서 논문작성'
+```
+
+## 서버 띄우고 API로 찍어보기
+
+터미널 A — 서버:
+
+```bash
+export MODEL='mlx-community/gemma-4-26b-a4b-8bit'
+mlx_lm.server --model "$MODEL" --host 127.0.0.1 --port 8080
+```
+
+터미널 B — 헬스처럼 한 번 호출(OpenAI 형식 채팅):
+
+```bash
+curl -sS http://127.0.0.1:8080/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model": "'"$MODEL"'",
+    "messages": [{"role": "user", "content": "Reply with exactly: pong"}],
+    "max_tokens": 32,
+    "temperature": 0.2
+  }' | python3 -m json.tool
+```
+
+`choices[0].message.content` 에 응답이 오면 클라이언트 연동도 같은 호스트로 이어 붙이면 됩니다.
+
+## 대화형으로 손코딩 전에 놀아보기
+
+```bash
+mlx_lm.chat --model "$MODEL"
+```
+
+종료는 보통 터미널 종료 신호로 나가면 됩니다.
+
+## 속도만 대략 재보기 (선택)
+
+```bash
+mlx_lm.benchmark --model "$MODEL" -p 256 -g 128 -n 3
+```
+
+더 세게 조이고 싶으면 각각 `--help`. 설치되어 있는 서브커맨드 목록은 `python -m mlx_lm`.
