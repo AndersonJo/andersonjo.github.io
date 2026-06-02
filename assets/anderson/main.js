@@ -1,126 +1,89 @@
-var app = angular.module('andersonApp', ['ui.bootstrap', 'ngRoute']);
+const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-// Angular 의 TAG {{ }} 기본값을 변경시킵니다. -> {( )}
-app.config([
-    '$interpolateProvider', function ($interpolateProvider) {
-        return $interpolateProvider.startSymbol('{(').endSymbol(')}');
+function andersonDate(input) {
+    const date = new Date(input);
+    return MONTH_ABBR[date.getMonth()] + ' ' + date.getDate() + ' ' + date.getFullYear();
+}
+
+function randint(max, min = 0) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+async function fetchCSVLines(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return text.split('\n').filter(line => line.trim().length > 0);
+}
+
+function renderPosts(posts, searchText) {
+    const list = document.getElementById('post-list');
+    if (!list) return;
+
+    const query = (searchText || '').toLowerCase();
+    const filtered = query
+        ? posts.filter(p =>
+            p.title.toLowerCase().includes(query) ||
+            p.categories.some(c => c.toLowerCase().includes(query)) ||
+            (p.tags && p.tags.some(t => t.toLowerCase().includes(query)))
+          )
+        : posts;
+
+    list.innerHTML = filtered.map(post => {
+        const tagTitle = post.tags ? post.tags.join(', ') : '';
+        return `<li>
+            <span class="post-date">${andersonDate(post.date)}</span> -
+            <span class="post-category">${post.categories.join(' ')}</span>
+            <a class="post-comment-count" href="${post.url}#disqus_thread"></a>
+            <div>
+                <a class="post-link post-tag" href="${post.url}"
+                   data-bs-toggle="tooltip" data-bs-placement="right"
+                   title="${tagTitle}">
+                    ${post.title}
+                </a>
+            </div>
+        </li>`;
+    }).join('');
+
+    list.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        new bootstrap.Tooltip(el);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const posts = typeof global_post_data !== 'undefined' ? global_post_data : [];
+    const searchInput = document.getElementById('search-input');
+
+    if (searchInput) {
+        renderPosts(posts, '');
+        searchInput.addEventListener('input', function () {
+            renderPosts(posts, this.value);
+        });
     }
-]);
 
-app.config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.when('/category/:category', {})
-}]);
+    try {
+        const statements = await fetchCSVLines('/assets/anderson/bible.csv');
+        const bibleEl = document.getElementById('bible-statement');
+        if (bibleEl && statements.length > 0) {
+            bibleEl.textContent = statements[randint(statements.length - 1)];
+        }
+    } catch (_) {}
 
-
-app.filter('andersonDate', function () {
-    var month_abbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return function (input) {
-        var date = new Date(input);
-        var month = date.getMonth();
-        month = month_abbr[month];
-        return month + ' ' + date.getDate() + ' ' + date.getFullYear() + ' ';
-    }
+    try {
+        const categories = await fetchCSVLines('/assets/anderson/fast_categories.csv');
+        const catContainer = document.getElementById('fast-categories');
+        if (catContainer && categories.length > 0) {
+            catContainer.innerHTML = categories.map(cat =>
+                `<button type="button" class="fast_category" data-category="${cat}">${cat}</button>`
+            ).join('');
+            catContainer.querySelectorAll('.fast_category').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const cat = this.dataset.category;
+                    if (searchInput) {
+                        searchInput.value = cat;
+                        renderPosts(posts, cat);
+                    }
+                });
+            });
+        }
+    } catch (_) {}
 });
-
-app.filter('tagFilter', function () {
-    return function (input) {
-        return input.join(', ')
-    }
-});
-
-app.factory('tools', ['$http', function ($http) {
-
-    /**
-     * [min, max]
-     * max is inclusive
-     */
-    var randint = function (max, min) {
-        if (min == undefined) {
-            min = 0;
-        }
-        return Math.floor(Math.random() * (max - min + 1) + min)
-    };
-
-    var get_bible_statement = function (callback) {
-        var url = '/assets/anderson/bible.csv';
-        return $http.get(url).then(function (response) {
-            var statements = response.data.split('\n');
-            statements = statements.filter(function (value) {
-                return value.trim().length > 0;
-            });
-
-            var random_int = randint(statements.length - 1);
-            callback(statements[random_int]);
-        })
-    };
-
-    var get_fast_categories = function (callback) {
-        var url = '/assets/anderson/fast_categories.csv';
-        return $http.get(url).then(function (response) {
-            var data = response.data.split('\n');
-            data = data.filter(function (value) {
-                return value.trim().length > 0;
-            });
-            callback(data);
-        })
-    };
-
-    var get_expertise = function (callback) {
-        var url = '/assets/anderson/expertise.csv';
-        return $http.get(url).then(function (response) {
-            var data = response.data.split('\n');
-            data = data.filter(function (value) {
-                return value.trim().length > 0;
-            });
-            callback(data);
-        })
-    };
-
-
-    return {
-        randint: randint,
-        get_bible_statement: get_bible_statement,
-        get_fast_categories: get_fast_categories,
-        get_expertise: get_expertise
-    }
-}]);
-
-app.controller('AndersonPostContoller', ['$scope', '$location', '$route', 'tools', function ($scope, $location, $route, tools) {
-    // Set Posts
-    $scope.posts = global_post_data;
-
-    // Changing Search Text
-    $scope.change_search = function (text) {
-        $scope.searchText = text;
-    };
-
-    // $route.current를 하면은 undefined가 나온다.
-    // 이를 해결하기 위해서 $watch를 걸어주고, 값이 변경이 되면은 검색어를 바꿔준다.
-    $scope.$watch(function () {
-        return $route.current
-    }, function (newValue, oldValue) {
-        if (newValue !== undefined && newValue != oldValue) {
-            var category = newValue.params.category;
-            $scope.change_search(category);
-        }
-        else{
-            $scope.change_search('');
-        }
-    });
-
-    // Set Good Bible Statement
-    tools.get_bible_statement(function (statement) {
-        $scope.bible_statement = statement;
-    });
-
-    // Set Fast Categories
-    tools.get_fast_categories(function (data) {
-        $scope.fast_categories = data;
-    });
-
-    // Set Expertise
-    tools.get_expertise(function (data) {
-        $scope.expertise = data;
-    });
-
-}]);
