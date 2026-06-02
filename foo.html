@@ -4,33 +4,24 @@ layout: default
 
 <div class="home">
     <div>
-        <script>
-            var global_post_data = [{% for page in site.pages %} {% if page.title %}
-            {"date":"{{page.date}}", "categories": ["{{page.categories}}"], "url": "{{page.url}}", "title": "{{page.title}}", "tags":{{page.tags | jsonify}} },{% endif %} {% endfor %}];
-        </script>
         <div class="form-group">
             <input type="text" id="search-input" class="form-control" placeholder="Search">
-
-            <!-- 성경 구절 -->
             <div id="bible-statement" style="font-family:'Jeju Gothic', serif;color:#D50F36; margin-top:5px; margin-bottom:10px;"></div>
-
-            <!-- 빠른 카테고리 -->
             <div id="fast-categories"></div>
         </div>
 
         <h1>Pages</h1>
         <ul class="posts" id="post-list"></ul>
+
+        <script>
+            var global_post_data = [{% for page in site.pages %}{% if page.title %}{"date":"{{page.date | date: "%Y-%m-%d"}}","categories":["{{page.categories}}"],"url":"{{page.url}}","title":{{page.title | jsonify}},"tags":{{page.tags | jsonify}}},{% endif %}{% endfor %}];
+            initPostSearch(global_post_data);
+            loadBibleVerse();
+            loadFastCategories(global_post_data);
+        </script>
     </div>
     <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
     <style>
-        .posts .tooltip-inner {
-            color: #fff;
-            font-size: 1.2em;
-            background-color: #0A4183;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, .25);
-            animation: fadein 0.3s;
-        }
-
         .fast_category {
             padding: 2px 5px;
             margin: 0 7px 3px 0;
@@ -38,14 +29,9 @@ layout: default
             border-radius: 5px;
             background-color: #d43f3a;
             color: #fff;
+            cursor: pointer;
         }
-        .fast_category:hover {
-            background-color: #c12e2a;
-        }
-
-        .posts .post-comment-count {
-            font-size: 15px;
-            color: #888;
-        }
+        .fast_category:hover { background-color: #c12e2a; }
+        .posts .post-comment-count { font-size: 15px; color: #888; }
     </style>
 </div>

@@ -2,17 +2,16 @@ const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep
 
 function andersonDate(input) {
     const date = new Date(input);
+    if (isNaN(date.getTime())) return '';
     return MONTH_ABBR[date.getMonth()] + ' ' + date.getDate() + ' ' + date.getFullYear();
 }
 
-function randint(max, min = 0) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-async function fetchCSVLines(url) {
-    const response = await fetch(url);
-    const text = await response.text();
-    return text.split('\n').filter(line => line.trim().length > 0);
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
 }
 
 function renderPosts(posts, searchText) {
@@ -22,68 +21,74 @@ function renderPosts(posts, searchText) {
     const query = (searchText || '').toLowerCase();
     const filtered = query
         ? posts.filter(p =>
-            p.title.toLowerCase().includes(query) ||
-            p.categories.some(c => c.toLowerCase().includes(query)) ||
-            (p.tags && p.tags.some(t => t.toLowerCase().includes(query)))
+            String(p.title).toLowerCase().includes(query) ||
+            (p.categories || []).some(c => c.toLowerCase().includes(query)) ||
+            (p.tags || []).some(t => String(t).toLowerCase().includes(query))
           )
         : posts;
 
-    list.innerHTML = filtered.map(post => {
-        const tagTitle = post.tags ? post.tags.join(', ') : '';
-        return `<li>
-            <span class="post-date">${andersonDate(post.date)}</span> -
-            <span class="post-category">${post.categories.join(' ')}</span>
-            <a class="post-comment-count" href="${post.url}#disqus_thread"></a>
-            <div>
-                <a class="post-link post-tag" href="${post.url}"
-                   data-bs-toggle="tooltip" data-bs-placement="right"
-                   title="${tagTitle}">
-                    ${post.title}
-                </a>
-            </div>
-        </li>`;
+    list.innerHTML = filtered.map(function(post) {
+        const tagTitle = escapeHtml((post.tags || []).join(', '));
+        const title = escapeHtml(post.title || '');
+        const url = escapeHtml(post.url || '#');
+        const cats = (post.categories || []).join(' ');
+        return '<li>'
+            + '<span class="post-date">' + andersonDate(post.date) + '</span> - '
+            + '<span class="post-category">' + escapeHtml(cats) + '</span>'
+            + '<a class="post-comment-count" href="' + url + '#disqus_thread"></a>'
+            + '<div><a class="post-link post-tag" href="' + url + '" title="' + tagTitle + '">'
+            + title
+            + '</a></div>'
+            + '</li>';
     }).join('');
 
-    list.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
-        new bootstrap.Tooltip(el);
-    });
+    if (typeof bootstrap !== 'undefined') {
+        list.querySelectorAll('[title]').forEach(function(el) {
+            new bootstrap.Tooltip(el);
+        });
+    }
 }
 
-document.addEventListener('DOMContentLoaded', async function () {
-    const posts = typeof global_post_data !== 'undefined' ? global_post_data : [];
-    const searchInput = document.getElementById('search-input');
-
+function initPostSearch(posts) {
+    renderPosts(posts, '');
+    var searchInput = document.getElementById('search-input');
     if (searchInput) {
-        renderPosts(posts, '');
-        searchInput.addEventListener('input', function () {
+        searchInput.addEventListener('input', function() {
             renderPosts(posts, this.value);
         });
     }
+}
 
-    try {
-        const statements = await fetchCSVLines('/assets/anderson/bible.csv');
-        const bibleEl = document.getElementById('bible-statement');
-        if (bibleEl && statements.length > 0) {
-            bibleEl.textContent = statements[randint(statements.length - 1)];
-        }
-    } catch (_) {}
+function loadBibleVerse() {
+    fetch('/assets/anderson/bible.csv')
+        .then(function(r) { return r.text(); })
+        .then(function(text) {
+            var lines = text.split('\n').filter(function(l) { return l.trim().length > 0; });
+            if (!lines.length) return;
+            var el = document.getElementById('bible-statement');
+            if (el) el.textContent = lines[Math.floor(Math.random() * lines.length)];
+        })
+        .catch(function() {});
+}
 
-    try {
-        const categories = await fetchCSVLines('/assets/anderson/fast_categories.csv');
-        const catContainer = document.getElementById('fast-categories');
-        if (catContainer && categories.length > 0) {
-            catContainer.innerHTML = categories.map(cat =>
-                `<button type="button" class="fast_category" data-category="${cat}">${cat}</button>`
-            ).join('');
-            catContainer.querySelectorAll('.fast_category').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const cat = this.dataset.category;
-                    if (searchInput) {
-                        searchInput.value = cat;
-                        renderPosts(posts, cat);
-                    }
+function loadFastCategories(posts) {
+    fetch('/assets/anderson/fast_categories.csv')
+        .then(function(r) { return r.text(); })
+        .then(function(text) {
+            var cats = text.split('\n').filter(function(l) { return l.trim().length > 0; });
+            var container = document.getElementById('fast-categories');
+            if (!container || !cats.length) return;
+            container.innerHTML = cats.map(function(cat) {
+                return '<button type="button" class="fast_category" data-cat="' + escapeHtml(cat) + '">' + escapeHtml(cat) + '</button>';
+            }).join('');
+            container.querySelectorAll('.fast_category').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var cat = this.dataset.cat;
+                    var input = document.getElementById('search-input');
+                    if (input) { input.value = cat; }
+                    renderPosts(posts, cat);
                 });
             });
-        }
-    } catch (_) {}
-});
+        })
+        .catch(function() {});
+}

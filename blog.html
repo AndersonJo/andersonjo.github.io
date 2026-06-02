@@ -4,10 +4,6 @@ layout: default
 
 <div class="home">
     <div>
-        <script>
-            var global_post_data = [{% for post in site.posts %}
-            {"date":"{{post.date}}", "categories": ["{{post.categories}}"], "url": "{{post.url}}", "title": "{{post.title}}", "tags":{{post.tags | jsonify}} }, {% endfor %}];
-        </script>
         <div class="form-group">
             <input type="text" id="search-input" class="form-control" placeholder="Search">
 
@@ -20,17 +16,16 @@ layout: default
 
         <h1>Posts</h1>
         <ul class="posts" id="post-list"></ul>
+
+        <script>
+            var global_post_data = [{% for post in site.posts %}{"date":"{{post.date | date: "%Y-%m-%d"}}","categories":["{{post.categories}}"],"url":"{{post.url}}","title":{{post.title | jsonify}},"tags":{{post.tags | jsonify}}},{% endfor %}];
+            initPostSearch(global_post_data);
+            loadBibleVerse();
+            loadFastCategories(global_post_data);
+        </script>
     </div>
     <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
     <style>
-        .posts .tooltip-inner {
-            color: #fff;
-            font-size: 1.2em;
-            background-color: #0A4183;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, .25);
-            animation: fadein 0.3s;
-        }
-
         .fast_category {
             padding: 2px 5px;
             margin: 0 7px 3px 0;
@@ -38,14 +33,9 @@ layout: default
             border-radius: 5px;
             background-color: #d43f3a;
             color: #fff;
+            cursor: pointer;
         }
-        .fast_category:hover {
-            background-color: #c12e2a;
-        }
-
-        .posts .post-comment-count {
-            font-size: 15px;
-            color: #888;
-        }
+        .fast_category:hover { background-color: #c12e2a; }
+        .posts .post-comment-count { font-size: 15px; color: #888; }
     </style>
 </div>
