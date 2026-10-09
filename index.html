@@ -1,41 +1,241 @@
----
-layout: default
----
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incredible AI</title>
+<meta name="description" content="Incredible AI builds AI products that turn imagination into characters. Our first app is Lumiel.">
+<meta property="og:title" content="Incredible AI">
+<meta property="og:description" content="AI that turns imagination into characters. Meet Lumiel.">
+<meta property="og:image" content="https://incredible.ai/assets/incredible/lumiel-4.webp">
+<link rel="icon" href="assets/incredible/lumiel-icon.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F7FA;
+  --surface: #FFFFFF;
+  --ink: #1A1A2E;
+  --muted: #6B7280;
+  --border: #E5E7EB;
+  --primary: #E6386E;
+  --primary-soft: #FDF0F5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111218;
+    --surface: #1B1C24;
+    --ink: #F1F1F5;
+    --muted: #9CA3AF;
+    --border: #2A2B35;
+    --primary: #FF5C8A;
+    --primary-soft: #2A1820;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Poppins", "Noto Sans KR", system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+}
+a { color: inherit; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
 
-<div class="home">
-    <div>
-        <div class="form-group">
-            <input type="text" id="search-input" class="form-control" placeholder="Search">
+/* Bilingual: show only the active language */
+html[lang="ko"] [lang="en"], html[lang="en"] [lang="ko"] { display: none; }
 
-            <!-- 성경 구절 -->
-            <div id="bible-statement" style="font-family:'Apple SD Gothic Neo', 'Malgun Gothic', 'Nanum Gothic', sans-serif;color:#D50F36; margin-top:5px; margin-bottom:10px;"></div>
+/* Nav */
+nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+.brand { font-weight: 700; font-size: 1.1rem; text-decoration: none; letter-spacing: -0.01em; }
+.brand span { color: var(--primary); }
+.links { display: flex; align-items: center; gap: 22px; font-size: 0.92rem; }
+.links a { text-decoration: none; color: var(--muted); }
+.links a:hover { color: var(--ink); }
+.lang { border: 1px solid var(--border); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 0.82rem; cursor: pointer; }
 
-            <!-- 빠른 카테고리 -->
-            <div id="fast-categories"></div>
-        </div>
+/* Hero */
+.hero { padding: 96px 0 72px; text-align: center; }
+.eyebrow { display: inline-block; font-size: 0.8rem; font-weight: 600; color: var(--primary); background: var(--primary-soft); padding: 4px 12px; border-radius: 999px; margin-bottom: 20px; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.15; margin: 0 0 20px; letter-spacing: -0.02em; }
+h1 em { font-style: normal; color: var(--primary); }
+.lede { font-size: 1.1rem; color: var(--muted); max-width: 620px; margin: 0 auto 32px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; text-decoration: none; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { filter: brightness(1.06); }
 
-        <h1>Posts</h1>
-        <ul class="posts" id="post-list"></ul>
+/* Lumiel */
+section { padding: 72px 0; }
+.product { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.product-head { display: flex; align-items: center; gap: 18px; margin-bottom: 14px; }
+.product-head img { width: 64px; height: 64px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.12); }
+h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0; letter-spacing: -0.01em; }
+.tagline { color: var(--primary); font-weight: 600; margin: 2px 0 0; }
+.product p.desc { color: var(--muted); max-width: 640px; margin: 0 0 36px; }
 
-        <script>
-            var global_post_data = [{% for post in site.posts %}{"date":"{{post.date | date: "%Y-%m-%d"}}","categories":["{{post.categories}}"],"url":"{{post.url}}","title":{{post.title | jsonify}},"tags":{{post.tags | jsonify}}},{% endfor %}];
-            initPostSearch(global_post_data);
-            loadBibleVerse();
-            loadFastCategories(global_post_data);
-        </script>
+.gallery { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 44px; }
+.gallery img { width: 100%; aspect-ratio: 9 / 13; object-fit: cover; border-radius: 14px; display: block; box-shadow: 0 8px 16px rgba(0,0,0,.08); }
+
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
+.feature { border: 1px solid var(--border); border-radius: 16px; padding: 22px; background: var(--bg); }
+.feature .num { font-size: 0.8rem; font-weight: 600; color: var(--primary); }
+.feature h3 { margin: 6px 0 6px; font-size: 1.05rem; }
+.feature p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+.play { display: inline-flex; align-items: center; gap: 12px; background: var(--ink); color: var(--bg); padding: 10px 20px 10px 16px; border-radius: 12px; text-decoration: none; }
+.play svg { width: 26px; height: 26px; }
+.play small { display: block; font-size: 0.7rem; opacity: .75; line-height: 1.2; }
+.play strong { display: block; font-size: 1.05rem; line-height: 1.2; }
+.play.soon { opacity: .85; cursor: default; }
+
+/* Contact */
+.contact { text-align: center; }
+.contact p { color: var(--muted); margin: 10px 0 24px; }
+
+footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 0.85rem; }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--ink); }
+
+@media (max-width: 820px) {
+  .gallery { grid-template-columns: repeat(3, 1fr); }
+  .features { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .wrap { padding: 0 16px; }
+  .links a.hide-sm { display: none; }
+  .hero { padding: 64px 0 48px; }
+  section { padding: 56px 0; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .gallery img:nth-child(n+5) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="/">Incredible<span>.</span>AI</a>
+    <div class="links">
+      <a class="hide-sm" href="#lumiel">Lumiel</a>
+      <a href="/blog/"><span lang="ko">블로그</span><span lang="en">Blog</span></a>
+      <a class="hide-sm" href="#contact"><span lang="ko">문의</span><span lang="en">Contact</span></a>
+      <button class="lang" id="lang-toggle" type="button" aria-label="Switch language">EN</button>
     </div>
-    <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-    <style>
-        .fast_category {
-            padding: 2px 5px;
-            margin: 0 7px 3px 0;
-            border: transparent;
-            border-radius: 5px;
-            background-color: #d43f3a;
-            color: #fff;
-            cursor: pointer;
-        }
-        .fast_category:hover { background-color: #c12e2a; }
-        .posts .post-comment-count { font-size: 15px; color: #888; }
-    </style>
-</div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Incredible AI</div>
+    <h1 lang="ko">상상을 <em>캐릭터</em>로,<br>캐릭터를 <em>이야기</em>로</h1>
+    <h1 lang="en">Imagination into <em>characters</em>,<br>characters into <em>stories</em></h1>
+    <p class="lede" lang="ko">Incredible AI는 이미지 생성과 대화형 AI로 누구나 자신만의 캐릭터를 만들고, 그 캐릭터와 함께 이야기를 써 내려갈 수 있는 제품을 만듭니다.</p>
+    <p class="lede" lang="en">Incredible AI builds products where anyone can create their own character with generative AI — and then keep writing the story together with it.</p>
+    <a class="btn btn-primary" href="#lumiel"><span lang="ko">Lumiel 보기</span><span lang="en">Meet Lumiel</span> →</a>
+  </div>
+</header>
+
+<section class="product" id="lumiel">
+  <div class="wrap">
+    <div class="product-head">
+      <img src="assets/incredible/lumiel-icon.webp" alt="Lumiel app icon">
+      <div>
+        <h2><span lang="ko">루미엘</span><span lang="en">Lumiel</span></h2>
+        <p class="tagline"><span lang="ko">내가 쓴 판타지를 현실로</span><span lang="en">Your fantasy, brought to life</span></p>
+      </div>
+    </div>
+    <p class="desc" lang="ko">사진 한 장으로 애니메이션 캐릭터를 만들고, 공개된 캐릭터들과 대화하고, 옷을 입히고, 사진을 찍어 보세요. 모든 사진에서 같은 얼굴을 유지하도록 설계된 캐릭터 앱입니다.</p>
+    <p class="desc" lang="en">Turn a photo into an anime character, then chat with, dress up and photograph any published character. Every image keeps the same face — consistency is the product.</p>
+
+    <div class="gallery">
+      <img src="assets/incredible/lumiel-1.webp" alt="" loading="lazy">
+      <img src="assets/incredible/lumiel-2.webp" alt="" loading="lazy">
+      <img src="assets/incredible/lumiel-3.webp" alt="" loading="lazy">
+      <img src="assets/incredible/lumiel-4.webp" alt="" loading="lazy">
+      <img src="assets/incredible/lumiel-5.webp" alt="" loading="lazy">
+      <img src="assets/incredible/lumiel-6.webp" alt="" loading="lazy">
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <div class="num">01</div>
+        <h3><span lang="ko">만들기</span><span lang="en">Create</span></h3>
+        <p lang="ko">사진을 올리면 AI가 애니메이션 얼굴 후보를 그려 줍니다. 마음에 드는 얼굴을 고르고 성격과 세계관을 입혀 공개하세요.</p>
+        <p lang="en">Upload a photo and pick from AI-drawn anime faces. Give it a persona and a world, then publish.</p>
+      </div>
+      <div class="feature">
+        <div class="num">02</div>
+        <h3><span lang="ko">대화하기</span><span lang="en">Chat</span></h3>
+        <p lang="ko">캐릭터는 감정을 가진 사람처럼 반응합니다. 말과 행동으로 관계를 쌓고 이야기를 이어 가세요.</p>
+        <p lang="en">Characters respond like someone with real feelings. Build the relationship through words and actions.</p>
+      </div>
+      <div class="feature">
+        <div class="num">03</div>
+        <h3><span lang="ko">사진 찍기</span><span lang="en">Photo shoot</span></h3>
+        <p lang="ko">분위기를 고르면 지금의 대화와 옷차림이 반영된 사진이 만들어집니다. 얼굴은 언제나 그대로.</p>
+        <p lang="en">Pick a vibe and get a photo that reflects the current scene and outfit — always with the same face.</p>
+      </div>
+    </div>
+
+    <a class="play soon" id="play-badge" aria-label="Google Play">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#34A853" d="M3.6 1.8 13.5 12l-9.9 10.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1z"/><path fill="#FBBC04" d="m17 8.4-3.5 3.6L17 15.6l3.9-2.2c.8-.5.8-1.6 0-2.1L17 8.4z"/><path fill="#4285F4" d="M3.6 1.8c.3-.2.8-.2 1.2 0L17 8.4 13.5 12 3.6 1.8z"/><path fill="#EA4335" d="M13.5 12 17 15.6 4.8 22.2c-.4.2-.9.2-1.2 0L13.5 12z"/></svg>
+      <span>
+        <small id="play-small"><span lang="ko">곧 출시</span><span lang="en">Coming soon on</span></small>
+        <strong>Google Play</strong>
+      </span>
+    </a>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2><span lang="ko">문의</span><span lang="en">Get in touch</span></h2>
+    <p lang="ko">제휴, 제품, 그 밖의 무엇이든 편하게 연락 주세요.</p>
+    <p lang="en">Partnerships, product questions, or anything else — we'd love to hear from you.</p>
+    <a class="btn btn-primary" href="mailto:support@incredible.ai">support@incredible.ai</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Incredible AI</span>
+    <span><a href="/blog/"><span lang="ko">블로그</span><span lang="en">Blog</span></a> · <a href="mailto:support@incredible.ai">support@incredible.ai</a></span>
+  </div>
+</footer>
+
+<script>
+  // Set PLAY_URL once Lumiel is public on Google Play; the badge then becomes a link.
+  const PLAY_URL = "";
+
+  const root = document.documentElement;
+  const toggle = document.getElementById("lang-toggle");
+
+  function setLang(lang) {
+    root.lang = lang;
+    toggle.textContent = lang === "ko" ? "EN" : "한국어";
+    try { localStorage.setItem("lang", lang); } catch (e) {}
+  }
+
+  let saved = null;
+  try { saved = localStorage.getItem("lang"); } catch (e) {}
+  setLang(saved || ((navigator.language || "").toLowerCase().startsWith("ko") ? "ko" : "en"));
+  toggle.addEventListener("click", () => setLang(root.lang === "ko" ? "en" : "ko"));
+
+  if (PLAY_URL) {
+    const badge = document.getElementById("play-badge");
+    badge.href = PLAY_URL;
+    badge.target = "_blank";
+    badge.rel = "noopener";
+    badge.classList.remove("soon");
+    document.getElementById("play-small").innerHTML = '<span lang="ko">다운로드</span><span lang="en">Get it on</span>';
+  }
+</script>
+</body>
+</html>
